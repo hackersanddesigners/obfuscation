@@ -79,5 +79,4 @@ a, a:hover, a:active, a:visited {
 a:hover {
   text-decoration: underline;
 }
-
 </style>
