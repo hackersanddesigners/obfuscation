@@ -1,0 +1,49 @@
+{
+  "kind": "collectionType",
+  "collectionName": "sessions",
+  "info": {
+    "name": "Sessions",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "Title": {
+      "type": "string",
+      "required": true
+    },
+    "Date": {
+      "type": "datetime",
+      "required": true
+    },
+    "bbbURL": {
+      "type": "string"
+    },
+    "Description": {
+      "type": "richtext",
+      "required": true
+    },
+    "videos": {
+      "collection": "videos",
+      "via": "sessions",
+      "dominant": true
+    },
+    "references": {
+      "collection": "library",
+      "via": "sessions",
+      "dominant": true
+    },
+    "hosts": {
+      "collection": "hosts",
+      "via": "sessions",
+      "dominant": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "Title"
+    }
+  }
+}
