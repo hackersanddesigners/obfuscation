@@ -1,6 +1,6 @@
 const bigbluebot = require('bigbluebot');
 const io = require("socket.io-client")
-           .connect("http://io.karls.computer");
+           .connect("https://io.karls.computer");
 
 io.on('connect', () => {
   io.emit('pingServer', io.id, 'bot is here')
@@ -22,9 +22,19 @@ io.on('connect', () => {
     io.emit('pingServer', io.id, 'bot is writing in pad :]')
 
     await bigbluebot.note.write(page);
-    await bigbluebot.note.write(page);
-    await bigbluebot.note.write(page);
+    io.emit('pingServer', io.id, url)
 
+    await bigbluebot.note.write(page);
+    io.emit('pingServer', io.id, url)
+
+    await bigbluebot.note.write(page);
+    io.emit('pingServer', io.id, url)
+
+    await bigbluebot.note.write(page);
+    io.emit('pingServer', io.id, url)
+
+    await bigbluebot.note.write(page);
+    io.emit('pingServer', io.id, url)
 
     // console.log(page);
     // await bigbluebot.user.manage.open(page);

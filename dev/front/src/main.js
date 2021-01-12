@@ -6,7 +6,7 @@ import VueMarkdown from 'vue-markdown'
 import VueSocketIO from 'vue-socket.io'
 import SocketIO from 'socket.io-client'
 
-const socketConnection = SocketIO('http://io.karls.computer');
+const socketConnection = SocketIO('https://io.karls.computer');
 // const socketConnection = SocketIO('http://localhost:3090');
 
 Vue.use(new VueSocketIO({
