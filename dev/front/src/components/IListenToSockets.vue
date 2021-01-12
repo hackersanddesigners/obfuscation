@@ -1,10 +1,13 @@
 <template>
   <div>
-    <p v-if="isConnected">You're connected to the server!</p>
+    <p v-if="isConnected">You're connected to the swarm, waiting for bot.</p>
     <p v-if="socketMessage">
-        {{ socketMessage.user }} : {{ socketMessage.msg }} 
+        {{ socketMessage.user }}: {{ socketMessage.msg }} 
     </p>
-    <p><button @click="ping()">Ping Everyone</button></p>
+    <p>
+        <input ref="message" type="text" placeholder="message">
+        <button @click="sendMessage()">send</button>
+    </p>
     <iframe v-if="padURL" :src="padURL" id="pad"></iframe>
   </div>
 </template>
@@ -20,7 +23,6 @@ export default {
   },
   mounted() {
     this.$socket.name = 'usr'
-    console.log(this.$socket)
   },
   sockets: {
     connect() {
@@ -34,13 +36,14 @@ export default {
       this.socketMessage = JSON.parse(data)
       if (this.socketMessage.msg.includes('http')) {
         this.padURL = this.socketMessage.msg
-        console.log(this.padURL)
       }
     }
   },
   methods: {
-    ping() {
-      this.$socket.emit('pingServer', this.$socket.id, 'ping')
+    sendMessage() {
+      const message = this.$refs.message.value
+      this.$socket.emit('pingServer', this.$socket.id, message)
+      this.$refs.message.input = ''
     }
   }
 }
