@@ -1,0 +1,84 @@
+{
+  "url": {
+    "host": null,
+    "locale": "html5client/locale?locale",
+    "demo": "demo/demoHTML5.jsp?action=create",
+    "user": {
+      "param": "username"
+    },
+    "moderator": {
+      "param": "isModerator",
+      "value": true
+    },
+    "meeting": {
+      "param": "meetingname",
+      "name": "Demo Meeting"
+    }
+  },
+  "api": {
+    "secret": null,
+    "path": "bigbluebutton/api",
+    "password": {
+      "moderator": "mp",
+      "attendee": "ap"
+    }
+  },
+  "bot": {
+    "population": 1,
+    "wait": 2000,
+    "life": 60000
+  },
+  "browser": {
+    "headless": true,
+    "endpoint": null,
+    "token": null,
+    "path": null,
+    "lang": "en",
+    "window": {
+      "width": 1280,
+      "height": 720
+    },
+    "pool": {
+      "population": 1,
+      "size": {
+        "min": 1,
+        "max": 10
+      }
+    }
+  },
+  "content": {
+    "whiteboard": {
+      "distance": 10,
+      "pencil": {
+        "points": 5
+      }
+    },
+    "chat": {
+      "lines": 5
+    },
+    "note": {
+      "lines": 5
+    }
+  },
+  "screenshot": {
+    "enabled": false,
+    "path": "/tmp"
+  },
+  "delay": {
+    "connection": 15000,
+    "relief": 1000,
+    "animation": 2000,
+    "type": 100
+  },
+  "timeout": {
+    "selector": 60000
+  },
+  "logger": {
+    "level": "info"
+  },
+  "misc": {
+    "meeting": {
+      "end": false
+    }
+  }
+}

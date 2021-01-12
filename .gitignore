@@ -112,6 +112,6 @@ build
 
 # Custom
 .vscode
-dist
+#dist
 .nuxt
 .env
