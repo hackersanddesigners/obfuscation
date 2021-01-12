@@ -1,0 +1,54 @@
+<template>
+  <div>
+    <p v-if="isConnected">You're connected to the server!</p>
+    <p v-if="socketMessage">
+        {{ socketMessage.user }} : {{ socketMessage.msg }} 
+    </p>
+    <p><button @click="ping()">Ping Everyone</button></p>
+    <iframe v-if="padURL" :src="padURL" id="pad"></iframe>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      isConnected: false,
+      socketMessage: null,
+      padURL: ''
+    }
+  },
+  mounted() {
+    this.$socket.name = 'usr'
+    console.log(this.$socket)
+  },
+  sockets: {
+    connect() {
+      this.isConnected = true;
+    },
+    disconnect() {
+      this.isConnected = false;
+      console.log('this method was fired by the socket server. eg: io.emit("customEmit", data)')
+    },
+    broadcast(data) {
+      this.socketMessage = JSON.parse(data)
+      if (this.socketMessage.msg.includes('http')) {
+        this.padURL = this.socketMessage.msg
+        console.log(this.padURL)
+      }
+    }
+  },
+  methods: {
+    ping() {
+      this.$socket.emit('pingServer', this.$socket.id, 'ping')
+    }
+  }
+}
+</script>
+<style scoped>
+#pad {
+    height: 700px;
+    width: 350px;
+    border: 0.5px solid black;
+}
+</style>

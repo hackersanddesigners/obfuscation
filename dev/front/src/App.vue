@@ -25,8 +25,6 @@ export default {
   created() {
     this.CheckForMobile()
     window.addEventListener('resize', this.CheckForMobile)
-
-    this.getLanguage()
   },
   methods: {
     CheckForMobile() {
@@ -38,10 +36,6 @@ export default {
         this.isMobile = false
       }
     },
-    getLanguage() {
-      this.lang = navigator.language
-      EventBus.$root.lang = navigator.language
-    }
   }
 }
 </script>
@@ -58,10 +52,10 @@ export default {
 }
 
 html, body {
-  margin: 0;
-  padding: 0;
+  /* margin: 0; */
+  /* padding: 0; */
   height: 100%;
-  background: linear-gradient(0deg, var(--paler-yellow) 0%, var(--palest-yellow) 50%, var(--palest-yellow) 100%);
+  /* background: linear-gradient(0deg, var(--paler-yellow) 0%, var(--palest-yellow) 50%, var(--palest-yellow) 100%); */
   overflow: hidden;
 }
 #app {

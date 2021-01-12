@@ -5,29 +5,35 @@
       hidden: !loaded
     }"
   >
+  <h1>obfuscated platframe</h1>
+  <IListenToSockets />
   </div>
 </template>
 
 <script>
 import smoothscroll from 'smoothscroll-polyfill'
 import { EventBus } from '../EventBus.js'
+import IListenToSockets from '../components/IListenToSockets'
 
 export default {
   name: 'Home',
   components: {
+    IListenToSockets
   },
   data() {
     return {
       loaded: false,
       msg: 'loading...',
       isMobile: EventBus.$root.isMobile ? true : false,
+      sessions: []
     }
   },
   created() {
     if (EventBus.$root.isMobile) this.isMobile = true
-    this.$http.get(this.$apiURL + '/sections')
+
+    this.$http.get(this.$apiURL + '/sessions')
       .then((response) => { 
-        this.sections = response.data
+        this.sessions = response.data
         this.loaded = true
         this.msg = 'ready.'
       })
@@ -57,7 +63,7 @@ export default {
 <style>
 #home {
   box-sizing: border-box;
-  height: 100%;
-  width: 100%;
+  /* height: 100%; */
+  /* width: 100%; */
 }
 </style>
