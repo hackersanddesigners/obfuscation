@@ -4,7 +4,7 @@
     class="user"
     :class="{
       uid: uid,
-      isMe: isMe
+      me: isMe
     }"
     :style="{ color: color }"
   >
@@ -19,6 +19,9 @@
       :x="x"
       :y="y"
       :typing="typing"
+      :hovered="cursorHovered"
+      @mouseover.native="cursorHovered=true"
+      @mouseleave.native="cursorHovered=false"
     />
   </div>
 </template>
@@ -42,6 +45,7 @@ export default {
       x: null,
       y: null,
       typing: '',
+      cursorHovered: false,
     }
   },
   mounted() {
@@ -56,7 +60,6 @@ export default {
 <style scoped>
 div.user {
   /* display: inline; */
-  font-weight: bold;
 }
 
 </style>

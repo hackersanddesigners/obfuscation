@@ -4,6 +4,8 @@
     class="cursorContainer"
     :class="{
       uid: uid,
+      hover: hovered,
+      typing: typing
     }"
     :style="{ 
       left: (100*x - 1) + '%',
@@ -15,15 +17,19 @@
       ref="input"
       class="input"
       type="text" 
-      placeholder="send message"
+      placeholder="type message & press enter"
     />
+    <span v-else-if="hovered" class="input">{{ name }}</span>
     <span v-else class="input">{{ typing }}</span>
     <div class="cursor"
       :style="{
         background: color,
       }"
-    ></div>
-    <!-- <span class="name"> {{ name }} </span> -->
+    >
+      <!-- {{ name }} -->
+      <span v-if="typing" class="name">{{ name }}</span>
+      <span v-else class="name"></span>
+    </div>
   </div>
 </template>
 
@@ -39,10 +45,12 @@ export default {
     'isMe',
     'x',
     'y',
-    'typing'
+    'typing',
+    'hovered'
   ], 
   data() {
     return {
+      // hovered: false,
     }
   },
   mounted() {
@@ -57,20 +65,39 @@ export default {
 <style scoped>
 .cursorContainer {
   position: absolute;
-  cursor: none;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+  align-items: flex-start;
+  /* pointer-events: none; */
+  cursor: none;
+}
+.me .cursorContainer {
+  z-index: 350;
   /* pointer-events: none; */
 }
 .cursorContainer .cursor {
-  width: 15px;
-  height: 15px;
+  width: 20px;
+  max-width: 20px;
+  height: 20px;
   border-radius: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+.cursorContainer .cursor .name {
+  color: white;
+  margin-bottom: -1px;
+}
+.cursorContainer.typing  .cursor {
+  width: auto;
+  max-width: 450px;
+  padding: 0px 7.5px;
 }
 .cursorContainer .input {
+  width: 450px;
   height: 15px;
-  width: 100px;
   padding: 0px;
   font-size: inherit;
   font-family: inherit;

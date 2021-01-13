@@ -182,7 +182,7 @@ export default {
               author: this.me.name,
               content: input.value,
               color: this.me.color,
-              x: this.me.x + 0.01,
+              x: this.me.x + 0.005,
               y: this.me.y - 0.02
             }
             this.announceTyping(message)
@@ -192,6 +192,10 @@ export default {
               this.announceMessage(message)
               input.placeholder = ''
               // localStorage.messages.push(message)
+            }
+            if (key == 27) {
+              input.value = ''
+              input.blur()
             }
           }
           // this.$refs.me.typing = true
@@ -230,5 +234,6 @@ export default {
 #userland {
   width: 100%;
   height: 100%;
+  font-family: monospace;
 }
 </style>
