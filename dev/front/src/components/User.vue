@@ -3,18 +3,22 @@
     v-if="uid"
     class="user"
     :class="{
-      uid: uid
+      uid: uid,
+      isMe: isMe
     }"
     :style="{ color: color }"
   >
     <span> {{ name }} </span>
     <span>({{ (100*x).toFixed(2) }} , {{ (100*y).toFixed(2) }})</span>
     <Cursorr
+      ref="Cursor"
       :uid="uid" 
       :name="name" 
       :color="color" 
+      :isMe=isMe
       :x="x"
       :y="y"
+      :typing="typing"
     />
   </div>
 </template>
@@ -31,16 +35,18 @@ export default {
     'uid',
     'name',
     'color',
+    'isMe'
   ], 
   data() {
     return {
       x: null,
-      y: null
+      y: null,
+      typing: '',
     }
   },
   mounted() {
     // setInterval(() => {
-      // console.log(this.x, this.y)
+    //   console.log(this.typing)
     // }, 1000)
   },
   methods: {
