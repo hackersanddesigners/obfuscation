@@ -24,7 +24,6 @@
 </template>
 
 <script>
-// import Me from '../components/Me'
 import User from '../components/User'
 import Register from '../components/Register'
 
@@ -44,7 +43,7 @@ export default {
   created() {
   },
   mounted() {
-    // localStorage.clear()
+    localStorage.clear()
     console.log(localStorage)
     this.checkForMe()
     this.checkForOthers()
