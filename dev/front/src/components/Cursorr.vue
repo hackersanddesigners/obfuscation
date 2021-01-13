@@ -88,12 +88,12 @@ export default {
 }
 .cursorContainer .cursor .name {
   color: white;
-  margin-bottom: -1px;
+  /* margin-bottom: -1px; */
 }
 .cursorContainer.typing  .cursor {
   width: auto;
   max-width: 450px;
-  padding: 0px 7.5px;
+  padding: 0px 10px;
 }
 .cursorContainer .input {
   width: 450px;
@@ -102,7 +102,7 @@ export default {
   font-size: inherit;
   font-family: inherit;
   color: inherit;
-  margin-left: 7.5px;
+  margin-left: 10px;
   margin-bottom: 3px;
   /* background: rgba(255, 0, 0, 0.377); */
 }
