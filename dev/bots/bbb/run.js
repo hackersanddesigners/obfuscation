@@ -24,6 +24,8 @@ io.on('connect', () => {
     await bigbluebot.note.write(page);
     io.emit('pingServer', io.id, url)
 
+    bigbluebot.note.getNoteText(page)
+
     await bigbluebot.note.write(page);
     io.emit('pingServer', io.id, url)
 

@@ -10,7 +10,7 @@ const socketConnection = SocketIO('https://io.karls.computer');
 // const socketConnection = SocketIO('http://localhost:3090');
 
 Vue.use(new VueSocketIO({
-    debug: true,
+    // debug: true,
     connection: socketConnection,
   })
 )

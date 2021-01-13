@@ -9,8 +9,9 @@
 </template>
 
 <script>
-import Home from './views/Home.vue'
 import { EventBus } from './EventBus.js'
+import smoothscroll from 'smoothscroll-polyfill'
+import Home from './views/Home.vue'
 
 export default {
   name: 'App',
@@ -25,6 +26,7 @@ export default {
   created() {
     this.CheckForMobile()
     window.addEventListener('resize', this.CheckForMobile)
+    smoothscroll.polyfill()
   },
   methods: {
     CheckForMobile() {
@@ -59,7 +61,7 @@ html, body {
   overflow: hidden;
 }
 #app {
-  font-size: 9pt;
+  font-size: 10pt;
   line-height: 1.1;
   height: 100%;
   width: 100vw;

@@ -34,7 +34,7 @@ export default {
     },
     broadcast(data) {
       this.socketMessage = JSON.parse(data)
-      if (this.socketMessage.msg.includes('http')) {
+      if (this.socketMessage.msg.data.includes('http')) {
         this.padURL = this.socketMessage.msg
       }
     }

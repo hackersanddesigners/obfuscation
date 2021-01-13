@@ -5,27 +5,46 @@
       hidden: !loaded
     }"
   >
-  <h1>obfuscated platframe</h1>
-  <IListenToSockets />
+    <h1>obfuscated platframe</h1>
+    <!-- <IListenToSockets /> -->
+    <!-- <Register
+      v-if="!me" 
+      @registered="saveMe"
+    />
+    <User
+      v-if="me"
+      :user="me"
+    />
+    <User 
+      v-for="user in users"
+      ref="users"
+      :key="user.name"
+      :user="user" 
+    /> -->
+    <Userland />
   </div>
 </template>
 
 <script>
-import smoothscroll from 'smoothscroll-polyfill'
 import { EventBus } from '../EventBus.js'
-import IListenToSockets from '../components/IListenToSockets'
+// import IListenToSockets from '../components/IListenToSockets'
+// import User from '../components/User'
+// import Register from '../components/Register'
+import Userland from '../components/Userland'
 
 export default {
   name: 'Home',
   components: {
-    IListenToSockets
+    // IListenToSockets,
+    // User,
+    // Register
+    Userland
   },
   data() {
     return {
       loaded: false,
-      msg: 'loading...',
+      status: 'loading...',
       isMobile: EventBus.$root.isMobile ? true : false,
-      sessions: []
     }
   },
   created() {
@@ -43,17 +62,15 @@ export default {
       }) 
   },
   mounted() {
-    smoothscroll.polyfill()
     this.$router.afterEach((to) => { 
-      let slug = to.path.split('/')[1]
-      this.handleRouting(slug)
+      this.slug = to.path.split('/')[1]
+      this.handleRouting(this.slug)
     })
   },
   methods: {
     handleRouting(slug) {
-      this.stopEverything()
       if (slug) {
-        this.slug = slug
+        console.log(slug)
       }
     },
   }
@@ -63,7 +80,7 @@ export default {
 <style>
 #home {
   box-sizing: border-box;
-  /* height: 100%; */
-  /* width: 100%; */
+  height: 100%;
+  width: 100%;
 }
 </style>
