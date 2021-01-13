@@ -45,12 +45,10 @@ export default {
 .messageContainer {
   position: absolute;
   cursor: none;
+  padding: 0px 10px;
   /* pointer-events: none; */
 }
 .messageContainer .message {
-  width: 15px;
-  height: 15px;
-  border-radius: 15px;
 }
 
 </style>

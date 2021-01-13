@@ -182,7 +182,7 @@ export default {
               author: this.me.name,
               content: input.value,
               color: this.me.color,
-              x: this.me.x + 0.005,
+              x: this.me.x,
               y: this.me.y - 0.02
             }
             this.announceTyping(message)
