@@ -68,6 +68,10 @@ export default {
   text-decoration: none;
   margin: 0px;
 }
+.messageContainer .message iframe {
+  width: 300px !important;
+  height: 650px !important;
+}
 /* .messageContainer .message blockquote, */
 /* .messageContainer .message blockquote p, */
 
