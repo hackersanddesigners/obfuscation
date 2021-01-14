@@ -1,5 +1,5 @@
 <template>
-  <p
+  <div
     v-if="uid"
     class="messageContainer"
     :class="{
@@ -15,7 +15,7 @@
     <vue-markdown class="message"> {{ content }} </vue-markdown>
     <!-- <span class="message"> {{ content }} </span> -->
     <!-- <span class="author"> {{ author }} </span> -->
-  </p>
+  </div>
 </template>
 
 <script>
@@ -54,6 +54,9 @@ export default {
 }
 .messageContainer .message {
   text-decoration: none;
+}
+.messageContainer .message p {
+  margin: 0;
 }
 .messageContainer .author {
   opacity: 0;
