@@ -101,7 +101,7 @@ export default {
 .cursorContainer.typing  .cursor {
   width: auto;
   max-width: 450px;
-  padding: 0px 5px;
+  padding: 0px 10px;
 }
 .cursorContainer .input {
   width: auto;

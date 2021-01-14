@@ -8,7 +8,7 @@
     }"
     :style="{ 
       left: (100*x) + '%',
-      top: (100*y) + '%',
+      top: (100*y + 1.3) + '%',
       color: color,
     }"
   >
@@ -77,9 +77,8 @@ export default {
 }
 
 .messageContainer.hover .message {
-  /* text-decoration: underline; */
-  /* padding: 1px 10px; */
   border-color: unset;
+  padding: 1px 10px;
 }
 .messageContainer.hover .author {
   opacity: 1;
