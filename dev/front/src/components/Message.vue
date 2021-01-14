@@ -78,7 +78,7 @@ export default {
 
 .messageContainer.hover .message {
   /* text-decoration: underline; */
-  padding: 1px 10px;
+  /* padding: 1px 10px; */
   border-color: unset;
 }
 .messageContainer.hover .author {
