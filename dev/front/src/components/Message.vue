@@ -7,8 +7,8 @@
       hover: hovered
     }"
     :style="{ 
-      left: (100*x - 1) + '%',
-      top: (100*y - 1) + '%',
+      left: (100*x) + '%',
+      top: (100*y) + '%',
       color: color,
     }"
   >
@@ -46,7 +46,7 @@ export default {
 <style scoped>
 .messageContainer {
   position: absolute;
-  padding: 0px 10px;
+  /* padding: 0px 10px; */
   display: flex;
   flex-direction: column;
   /* pointer-events: none; */
