@@ -20,9 +20,9 @@
       :key="user.uid"
       :uid="user.uid" 
       :name="user.name" 
-      :color="user.color" 
+      :color="user.color"
     />
-    <Message
+    <!-- <Message
       v-for="message in messages"
       ref="Messages"
       :key="message.author + message.content"
@@ -32,14 +32,14 @@
       :color="message.color"
       :x="message.x"
       :y="message.y"
-    />
+    /> -->
   </div>
 </template>
 
 <script>
 import User from '../components/User'
 import Register from '../components/Register'
-import Message from './Message.vue'
+// import Message from './Message.vue'
 
 export default {
   name: 'Userland',
@@ -47,13 +47,13 @@ export default {
     // Me,
     Register,
     User,
-    Message
+    // Message
   },
   data() {
     return {
       me: null,
       users: [],
-      messages: []
+      // messages: []
     }
   },
   created() {
@@ -79,23 +79,23 @@ export default {
       const type = data.msg.type
       const message = data.msg.contents
       if (user.uid !== this.me.uid) {
-        if (!this.findUser(user)) {
-          this.saveUser(user)
+        let existingUser = this.findUser(user)
+        if (!existingUser) {
+          existingUser = this.saveUser(user)
           await new Promise(r => setTimeout(r, 500))
         }
-        // if (data.msg.type == 'newUser') {
-        //   this.saveUser(user)
-        const User = this.$refs.Users.find(U => U.uid === user.uid)
+        const User = this.$refs.Users.find(U => U.uid === existingUser.uid)
         if (type == 'position') {
           this.track(user)
         }
         if (type == 'typing') {
+          // existingUser.typing = message.content
           User.typing = message.content
-          // console.log(User.typing)
         }
         if (type == 'message') {
+          // existingUser.typing = ''
           User.typing = ''
-          this.messages.push(message)
+          User.messages.push(message)
           // localStorage.messages.push(message)
         }
       }
@@ -133,7 +133,8 @@ export default {
     },
     saveUser(user) {
       this.users.push(user)
-      console.log(user)
+      user = this.findUser(user)
+      return user
     },
     announceUser() {
       this.sendMessage({
@@ -175,6 +176,9 @@ export default {
         document.addEventListener('keyup', (e) => {
           const key = e.which || e.keyCode
           const input = this.$refs.me.$refs.Cursor.$refs.input
+          // if (!user.messages) {
+          //   user.messages = []
+          // }
           input.focus()
           if (input.value) {
             let message = {
@@ -188,7 +192,7 @@ export default {
             this.announceTyping(message)
             if (key == 13) {
               input.value = ''
-              this.messages.push(message)
+              this.$refs.me.messages.push(message)
               this.announceMessage(message)
               input.placeholder = ''
               // localStorage.messages.push(message)

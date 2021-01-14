@@ -4,6 +4,7 @@
     class="messageContainer"
     :class="{
       uid: uid,
+      hover: hovered
     }"
     :style="{ 
       left: (100*x - 1) + '%',
@@ -11,9 +12,8 @@
       color: color,
     }"
   >
-    <span class="author">{{ author }}</span>: 
-    <span class="message">{{ content }}</span>
-    <!-- <span class="name"> {{ name }} </span> -->
+    <span class="message"> {{ content }} </span>
+    <!-- <span class="author"> {{ author }} </span> -->
   </p>
 </template>
 
@@ -30,9 +30,11 @@ export default {
     'color',
     'x',
     'y',
+    'hovered'
   ], 
   data() {
     return {
+      // hovered: Boolean
     }
   },
   mounted() {
@@ -44,11 +46,24 @@ export default {
 <style scoped>
 .messageContainer {
   position: absolute;
-  cursor: none;
   padding: 0px 10px;
+  display: flex;
+  flex-direction: column;
   /* pointer-events: none; */
 }
 .messageContainer .message {
+  text-decoration: none;
+}
+.messageContainer .author {
+  opacity: 0;
+  /* transition: all 0.2s ease; */
+}
+
+.messageContainer.hover .message {
+  text-decoration: underline;
+}
+.messageContainer.hover .author {
+  opacity: 1;
 }
 
 </style>
