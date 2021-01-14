@@ -12,6 +12,7 @@
       color: color,
     }"
   >
+    <vue-markdown class="message"> {{ content }} </vue-markdown>
     <span class="message"> {{ content }} </span>
     <!-- <span class="author"> {{ author }} </span> -->
   </p>
