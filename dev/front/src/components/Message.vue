@@ -12,7 +12,12 @@
       color: color,
     }"
   >
-    <vue-markdown class="message"> {{ content }} </vue-markdown>
+    <vue-markdown 
+      class="message"
+      :source="content"
+    > 
+    <!-- {{ content }}  -->
+    </vue-markdown>
     <!-- <span class="message"> {{ content }} </span> -->
     <!-- <span class="author"> {{ author }} </span> -->
   </div>
@@ -44,27 +49,37 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style>
 .messageContainer {
   position: absolute;
-  /* padding: 0px 10px; */
   display: flex;
   flex-direction: column;
+  
   /* pointer-events: none; */
 }
 .messageContainer .message {
+  border: 1px solid;
+  border-color: transparent;
+  padding: 1px 5px;
+  border-radius: 15px;
+  transition: all 0.2s ease;
+}
+.messageContainer .message * {
   text-decoration: none;
+  margin: 0px;
 }
-.messageContainer .message p {
-  margin: 0;
-}
+/* .messageContainer .message blockquote, */
+/* .messageContainer .message blockquote p, */
+
 .messageContainer .author {
   opacity: 0;
   /* transition: all 0.2s ease; */
 }
 
 .messageContainer.hover .message {
-  text-decoration: underline;
+  /* text-decoration: underline; */
+  padding: 1px 10px;
+  border-color: unset;
 }
 .messageContainer.hover .author {
   opacity: 1;
