@@ -71,6 +71,8 @@ export default {
 .messageContainer .message iframe {
   width: 300px !important;
   height: 650px !important;
+  border: none !important;
+  border-radius: 15px;
 }
 /* .messageContainer .message blockquote, */
 /* .messageContainer .message blockquote p, */
