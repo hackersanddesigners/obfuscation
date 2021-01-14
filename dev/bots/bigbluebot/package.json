@@ -1,0 +1,63 @@
+{
+  "_from": "bigbluebot",
+  "_id": "bigbluebot@1.4.0",
+  "_inBundle": false,
+  "_integrity": "sha512-WYd6bxKORD6xNkBS3mau4BYFFE5EI0aRuFHaUQNv+MTgZZ4w9lX5ZyYYNWenaZshxprPCYFh1SWQfOcqKamZWw==",
+  "_location": "/bigbluebot",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "bigbluebot",
+    "name": "bigbluebot",
+    "escapedName": "bigbluebot",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/bigbluebot/-/bigbluebot-1.4.0.tgz",
+  "_shasum": "709adc2c9cd05eed5c5cdd09fae013a10b9a0e93",
+  "_spec": "bigbluebot",
+  "_where": "/Users/km/Desktop/obfuscation",
+  "author": {
+    "name": "Pedro Beschorner Marin",
+    "email": "pedrobmarin@gmail.com"
+  },
+  "bugs": {
+    "url": "https://github.com/mconf/bigbluebot/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "axios": "^0.20.0",
+    "crypto-js": "^4.0.0",
+    "dotenv": "^8.2.0",
+    "faker": "^5.1.0",
+    "generic-pool": "^3.7.1",
+    "puppeteer": "^5.5.0"
+  },
+  "deprecated": false,
+  "description": "BigBlueButton bots",
+  "directories": {
+    "lib": "./lib"
+  },
+  "homepage": "https://github.com/mconf/bigbluebot#readme",
+  "keywords": [
+    "bigbluebutton",
+    "puppeteer"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "name": "bigbluebot",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mconf/bigbluebot.git"
+  },
+  "scripts": {
+    "start": "node example.js"
+  },
+  "version": "1.4.0"
+}
