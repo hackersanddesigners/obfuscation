@@ -1,7 +1,22 @@
 
 <template>
   <div id="userland">
-    <h3>Users</h3>
+    <Grid 
+      :hidden="tableHidden"
+    />
+    <!-- <h1>obfuscated platframe</h1> -->
+    <!-- <header>
+      <div class="tools">
+        <input 
+          type="checkbox" 
+          name="grid" 
+          value='true' 
+          @click="tableHidden!=tableHidden"
+        />
+        <label for="grid">grid</label>
+      </div>
+    </header> -->
+    <!-- <p id="usersLabel">users</p> -->
     <Register
       v-if="!me" 
       @registered="saveMe"
@@ -22,38 +37,26 @@
       :name="user.name" 
       :color="user.color"
     />
-    <!-- <Message
-      v-for="message in messages"
-      ref="Messages"
-      :key="message.author + message.content"
-      :uid="message.author + message.content"
-      :author="message.author"
-      :content="message.content"
-      :color="message.color"
-      :x="message.x"
-      :y="message.y"
-    /> -->
   </div>
 </template>
 
 <script>
-import User from '../components/User'
-import Register from '../components/Register'
-// import Message from './Message.vue'
+import Grid from './Grid'
+import User from './User'
+import Register from './Register'
 
 export default {
   name: 'Userland',
   components: {
-    // Me,
+    Grid,
     Register,
     User,
-    // Message
   },
   data() {
     return {
       me: null,
       users: [],
-      // messages: []
+      tableHidden: false,
     }
   },
   created() {
@@ -167,8 +170,8 @@ export default {
       if (user.uid == this.me.uid) {
         document.addEventListener('mousemove', (e) => {
           // if (!this.$refs.me.typing) {
-            this.me.x = this.$refs.me.x = e.clientX / window.innerWidth
-            this.me.y = this.$refs.me.y = e.clientY / window.innerHeight
+            this.me.x = this.$refs.me.x = 100 * e.clientX / window.innerWidth
+            this.me.y = this.$refs.me.y = 100 * e.clientY / window.innerHeight
             this.announcePosition(this.me) 
           // }
           e.preventDefault()
@@ -180,28 +183,33 @@ export default {
           //   user.messages = []
           // }
           input.focus()
-          if (input.value) {
+          // if (input.value && input.value != ' ') {
             let message = {
               uid: this.me.uid,
               author: this.me.name,
               content: input.value,
+              time: ((new Date()).getTime()),
               color: this.me.color,
-              x: this.me.x,
-              y: this.me.y - 0.02
+              // x: this.me.x,
+              // y: this.me.y,
+              x: Math.floor(this.me.x / 2) * 2,
+              y: Math.floor(this.me.y / 2) * 2,
             }
             this.announceTyping(message)
             if (key == 13) {
-              input.value = ''
-              this.$refs.me.messages.push(message)
-              this.announceMessage(message)
-              input.placeholder = ''
+              if (input.value && input.value != ' ') {
+                input.value = ''
+                this.$refs.me.messages.push(message)
+                this.announceMessage(message)
+                input.placeholder = ''
+              }
               // localStorage.messages.push(message)
             }
             if (key == 27) {
               input.value = ''
               input.blur()
             }
-          }
+          // }
           // this.$refs.me.typing = true
           e.preventDefault()
         })
@@ -239,5 +247,9 @@ export default {
   width: 100%;
   height: 100%;
   font-family: monospace;
+}
+#usersLabel {
+  font-weight: bold;
+  margin: 0.5vh 0.5vw;
 }
 </style>

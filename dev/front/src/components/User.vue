@@ -2,14 +2,22 @@
   <div
     v-if="uid"
     class="user"
-    :class="{
-      uid: uid,
-      me: isMe
-    }"
+    :class="[
+      uid,
+      {
+        me: isMe
+      }
+    ]"
     :style="{ color: color }"
   >
-    <span> {{ name }} </span>
-    <span>({{ (100*x).toFixed(2) }} , {{ (100*y).toFixed(2) }})</span>
+    <p 
+      class="userLabel"
+      @mouseover="!isMe ? hovered=true : null"
+      @mouseleave="hovered=false"
+    >
+      <span>({{ (x).toFixed(2) }}, {{ (y).toFixed(2) }})</span>
+      <span> {{ name }} </span>
+    </p>
     <Cursorr
       ref="Cursor"
       :uid="uid" 
@@ -26,10 +34,11 @@
     <Message
       v-for="message in messages"
       ref="Messages"
-      :key="message.author + message.content"
-      :uid="message.author + message.content"
+      :key="message.author + message.time + message.content"
+      :uid="message.author"
       :author="message.author"
       :content="message.content"
+      :time="message.time"
       :color="message.color"
       :x="message.x"
       :y="message.y"
@@ -80,5 +89,7 @@ export default {
 div.user {
   /* display: inline; */
 }
-
+.userLabel {
+  margin: 0.5vh 0.5vw;
+}
 </style>

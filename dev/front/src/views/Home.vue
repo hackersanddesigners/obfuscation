@@ -5,7 +5,6 @@
       hidden: !loaded
     }"
   >
-    <h1>obfuscated platframe</h1>
     <!-- <IListenToSockets /> -->
     <!-- <Register
       v-if="!me" 

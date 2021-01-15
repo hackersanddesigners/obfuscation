@@ -54,8 +54,8 @@ export default {
 }
 
 html, body {
-  /* margin: 0; */
-  /* padding: 0; */
+  margin: 0;
+  padding: 0;
   height: 100%;
   /* background: linear-gradient(0deg, var(--paler-yellow) 0%, var(--palest-yellow) 50%, var(--palest-yellow) 100%); */
   overflow: hidden;

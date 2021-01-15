@@ -2,28 +2,28 @@
   <div
     v-if="uid"
     class="messageContainer"
-    :class="{
-      uid: uid,
-      hover: hovered
-    }"
+    :class="[
+      uid,
+      {
+        hover: hovered
+      } 
+    ]"
     :style="{ 
-      left: (100*x) + '%',
-      top: (100*y + 1.3) + '%',
+      left: (x) + '%',
+      top: (y) + '%',
       color: color,
     }"
   >
-    <vue-markdown 
-      class="message"
-      :source="content"
-    > 
-    <!-- {{ content }}  -->
-    </vue-markdown>
+    <vue-markdown class="message"> {{ content }} </vue-markdown>
+    <span class="time"> {{ fromNow(time) }} </span>
     <!-- <span class="message"> {{ content }} </span> -->
     <!-- <span class="author"> {{ author }} </span> -->
   </div>
 </template>
 
 <script>
+import moment from 'moment'
+
 export default {
   name: 'Message',
   components: {
@@ -33,6 +33,7 @@ export default {
     'author',
     'isMe',
     'content',
+    'time',
     'color',
     'x',
     'y',
@@ -46,6 +47,9 @@ export default {
   mounted() {
   },
   methods: {
+    fromNow(time) {
+      return moment(time).fromNow()
+    }
   }
 }
 </script>
@@ -53,8 +57,8 @@ export default {
 .messageContainer {
   position: absolute;
   display: flex;
-  flex-direction: column;
-  
+  /* flex-direction: column; */
+  align-items: center;
   /* pointer-events: none; */
 }
 .messageContainer .message {
@@ -63,6 +67,16 @@ export default {
   padding: 1px 5px;
   border-radius: 15px;
   transition: all 0.2s ease;
+}
+.messageContainer .time {
+  margin: 5px;
+  opacity: 0;
+  width: 0;
+  font-size: 8pt;
+  color: grey;
+  transition: opacity 0.2s ease;
+  white-space: nowrap;
+  pointer-events: none;
 }
 .messageContainer .message * {
   text-decoration: none;
@@ -74,9 +88,6 @@ export default {
   border: none !important;
   border-radius: 15px;
 }
-/* .messageContainer .message blockquote, */
-/* .messageContainer .message blockquote p, */
-
 .messageContainer .author {
   opacity: 0;
   /* transition: all 0.2s ease; */
@@ -86,8 +97,11 @@ export default {
   border-color: unset;
   padding: 1px 10px;
 }
-.messageContainer.hover .author {
+.messageContainer.hover .time {
   opacity: 1;
 }
+/* .messageContainer.hover .author {
+  opacity: 1;
+} */
 
 </style>
