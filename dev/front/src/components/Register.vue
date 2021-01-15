@@ -16,13 +16,14 @@
 
 <script>
 import jscolor from '@eastdesire/jscolor'
-import { uid } from 'uid'
 
 export default {
   name: 'RegisterUser',
+  props: [
+    'me',
+  ],
   data() {
     return {
-      me: null,
       colorPickerOpts: {
         format: 'rgba', 
         previewPosition: 'right', 
@@ -37,27 +38,15 @@ export default {
   },
   mounted() {
     jscolor.presets.default = this.colorPickerOpts
-    this.$refs.color.value = this.randomColor()
+    this.$refs.color.value = this.me.color
   },
   methods: {
-    randomColor() {
-      const 
-        r = Math.floor(Math.random() * 256),
-        g = Math.floor(Math.random() * 256),
-        b = Math.floor(Math.random() * 256),
-        a = 1,
-        color = `rgb(${r}, ${g}, ${b}, ${a})`
-      return color
-    },
     save() {
-      const me = {
-        uid: uid(),
+      const newMe = {
         name: this.$refs.name.value,
-        color: this.$refs.color.value
+        color: this.$refs.color.value,
       }
-      this.me = me
-      this.$emit('registered', me)
-      localStorage.me = JSON.stringify(me)
+      this.$emit('registered', newMe)
     }
   }
 }
@@ -72,7 +61,8 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: rgba(211, 211, 211, 0.801);
+  background: rgba(255, 255, 255, 0.945);
+  z-index: 1000;
 }
 #register {
   max-width: 260px;
@@ -82,7 +72,12 @@ export default {
   flex-direction: column;
 }
 input {
+  background: rgb(245, 245, 245);
   border: none;
+  outline: none;
+  /* border: 0.5px solid lightgray; */
+  padding: 2px 10px;
+  border-radius: 10px;
   margin-top: 5px;
 }
 </style>

@@ -18,7 +18,8 @@
     </header> -->
     <!-- <p id="usersLabel">users</p> -->
     <Register
-      v-if="!me" 
+      v-if="!registered" 
+      :me="me"
       @registered="saveMe"
     />
     <User
@@ -41,6 +42,8 @@
 </template>
 
 <script>
+import { uid } from 'uid'
+
 import Grid from './Grid'
 import User from './User'
 import Register from './Register'
@@ -54,28 +57,67 @@ export default {
   },
   data() {
     return {
-      me: null,
+      registered: this.checkForMe(),
+      visited: this.checkIfVisited(),
+      // me: null,
+      me: {
+        uid: uid(),
+        connected: false,
+        name: 'newUser-' + uid(),
+        color: this.randomColor(),
+        x: 0,
+        y: 0,
+        messages: [],
+      },
       users: [],
       tableHidden: false,
     }
   },
   created() {
+    // localStorage.clear()
+    // console.log(localStorage)
+
+    // check if user is registered and get their datas value
+    
+    if (this.registered) {
+      this.me = JSON.parse(localStorage.me)
+      // this.$refs.me.messages = this.me.messages
+    // if not registered, check if previously visited and get the
+    // previously defined UID
+
+    } else if (this.visited) {
+      this.me.uid = localStorage.uid
+      this.me.color = localStorage.color
+
+    // if not visited, store the generated UID and color for 
+    // later reference (e.i. when the user comes back to register) 
+
+    } else {
+      localStorage.uid = this.me.uid
+      localStorage.color = this.me.color
+    }
+
+    // start tracking cursor
+
+    this.track(this.me)
+
+    // this.checkForOthers()
+    this.checkForMessages()
+    // this.track(this.me)
   },
   mounted() {
-    // localStorage.clear()
-    console.log(localStorage)
-    this.checkForMe()
-    this.checkForOthers()
-    this.checkForMessages()
+    
   },
   sockets: {
     connect() { 
-      this.isConnected = true 
-      if (this.me) {
-        this.announceUser(this.me)
-      }
+      this.me.connected = true 
+      // if (this.me) {
+      //   this.announceUser(this.me)
+      // }
     },
-    disconnect() { this.isConnected = false },
+    disconnect() { 
+      this.me.connected = false 
+    },
     async broadcast(data) {
       data = JSON.parse(data)
       const user = data.user
@@ -87,19 +129,28 @@ export default {
           existingUser = this.saveUser(user)
           await new Promise(r => setTimeout(r, 500))
         }
-        const User = this.$refs.Users.find(U => U.uid === existingUser.uid)
+        const ExistingUser = this.$refs.Users.find(U => U.uid === existingUser.uid)
+        if (type == 'user') {
+          existingUser.name = user.name
+          existingUser.color = user.color
+          ExistingUser.messages = user.messages
+        }
         if (type == 'position') {
           this.track(user)
-        }
-        if (type == 'typing') {
-          // existingUser.typing = message.content
-          User.typing = message.content
-        }
-        if (type == 'message') {
-          // existingUser.typing = ''
-          User.typing = ''
-          User.messages.push(message)
-          // localStorage.messages.push(message)
+        } else if (type == 'typing') {
+          existingUser.typing = message.content
+          ExistingUser.typing = message.content
+        } else if (type == 'message') {
+          user.messages.forEach(message => {
+            const exisitngMessage = this.findUserMessage(ExistingUser, message)
+            if (!exisitngMessage) {
+              // console.log(existingUser.messages, message)
+              existingUser.messages.push(message)
+              ExistingUser.messages.push(message)
+              existingUser.typing = ''
+              ExistingUser.typing = ''
+            }
+          })
         }
       }
     }
@@ -107,9 +158,13 @@ export default {
   methods: {
     checkForMe() {
       if (localStorage.me) {
-        this.me = JSON.parse(localStorage.me)
-        this.track(this.me)
-      } 
+        return true
+      }
+    },
+    checkIfVisited() {
+      if (localStorage.uid) {
+        return true
+      }
     },
     checkForOthers() {
       if (localStorage.users) {
@@ -126,13 +181,19 @@ export default {
       }
     },
     findUser(user) {
-      const found = this.users.find(u => u.uid === user.uid)
-      return found
+      const foundUser = this.users.find(u => u.uid === user.uid)
+      return foundUser
     },
-    saveMe(me) {
-      this.me = me
-      this.announceUser(me)
-      this.track(this.me)
+    findUserMessage(user, message) {
+      const foundMessage = user.messages.find(m => m.uid === message.uid)
+      return foundMessage
+    },
+    saveMe(newMe) {
+      this.me.name = newMe.name
+      this.me.color = newMe.color
+      localStorage.me = JSON.stringify(this.me)
+      this.announceUser(this.me)
+      this.registered = true
     },
     saveUser(user) {
       this.users.push(user)
@@ -141,7 +202,7 @@ export default {
     },
     announceUser() {
       this.sendMessage({
-        type: 'newUser',
+        type: 'user',
         contents: ''
       })
     },
@@ -177,41 +238,44 @@ export default {
           e.preventDefault()
         })
         document.addEventListener('keyup', (e) => {
-          const key = e.which || e.keyCode
-          const input = this.$refs.me.$refs.Cursor.$refs.input
-          // if (!user.messages) {
-          //   user.messages = []
-          // }
-          input.focus()
-          // if (input.value && input.value != ' ') {
-            let message = {
-              uid: this.me.uid,
-              author: this.me.name,
-              content: input.value,
-              time: ((new Date()).getTime()),
-              color: this.me.color,
-              // x: this.me.x,
-              // y: this.me.y,
-              x: Math.floor(this.me.x / 2) * 2,
-              y: Math.floor(this.me.y / 2) * 2,
-            }
-            this.announceTyping(message)
-            if (key == 13) {
-              if (input.value && input.value != ' ') {
-                input.value = ''
-                this.$refs.me.messages.push(message)
-                this.announceMessage(message)
-                input.placeholder = ''
+          if (this.registered) {
+            const key = e.which || e.keyCode
+            const input = this.$refs.me.$refs.Cursor.$refs.input
+            // if (!user.messages) {
+            //   user.messages = []
+            // }
+            input.focus()
+            // if (input.value && input.value != ' ') {
+              let message = {
+                uid: this.me.uid + ((new Date()).getTime()),
+                author: this.me.name,
+                content: input.value,
+                time: ((new Date()).getTime()),
+                color: this.me.color,
+                // x: this.me.x,
+                // y: this.me.y,
+                x: Math.floor(this.me.x / 2) * 2,
+                y: Math.floor(this.me.y / 2) * 2,
               }
-              // localStorage.messages.push(message)
-            }
-            if (key == 27) {
-              input.value = ''
-              input.blur()
-            }
-          // }
-          // this.$refs.me.typing = true
-          e.preventDefault()
+              this.announceTyping(message)
+              if (key == 13) {
+                if (input.value && input.value != ' ') {
+                  input.value = ''
+                  this.me.messages.push(message)
+                  this.$refs.me.messages.push(message)
+                  localStorage.me = JSON.stringify(this.me)
+                  this.announceMessage(message)
+                  input.placeholder = ''
+                }
+              }
+              if (key == 27) {
+                input.value = ''
+                input.blur()
+              }
+            // }
+            // this.$refs.me.typing = true
+            e.preventDefault()
+          }
         })
       } else {
           // console.log('this.$refs =>', this.$refs)
@@ -238,7 +302,17 @@ export default {
     //       User.y = user.y
     //   }
     // },
-  }
+    randomColor() {
+      const 
+        r = Math.floor(Math.random() * 256),
+        g = Math.floor(Math.random() * 256),
+        b = Math.floor(Math.random() * 256),
+        a = 1,
+        color = `rgb(${r}, ${g}, ${b}, ${a})`
+      return color
+    },
+  },
+  
 }
 </script>
 

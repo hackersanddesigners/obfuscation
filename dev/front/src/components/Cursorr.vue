@@ -117,6 +117,7 @@ export default {
 .cursorContainer input,
 .cursorContainer input:hover,
 .cursorContainer input:active {
+  width: 400px;
   border: none;
   outline: none;
   background: transparent;

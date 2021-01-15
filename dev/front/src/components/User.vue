@@ -67,8 +67,8 @@ export default {
   ], 
   data() {
     return {
-      x: null,
-      y: null,
+      x: 0,
+      y: 0,
       typing: '',
       messages: [],
       // cursorHovered: false,
