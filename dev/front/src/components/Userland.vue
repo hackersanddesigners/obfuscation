@@ -75,6 +75,11 @@ export default {
   },
   created() {
     // localStorage.clear()
+
+    if (!this.me.messages) {
+      localStorage.clear()
+      window.location.reload(true)
+    }
     // console.log(localStorage)
 
     // check if user is registered and get their datas value
