@@ -53,12 +53,13 @@ export default {
   }
 }
 </script>
+
 <style>
 .messageContainer {
   position: absolute;
   display: flex;
   /* flex-direction: column; */
-  align-items: center;
+  align-items: flex-start;
   /* pointer-events: none; */
   cursor: text;
 }
@@ -66,11 +67,11 @@ export default {
   border: 1px solid;
   border-color: transparent;
   padding: 1px 5px;
-  border-radius: 15px;
+  border-radius: 12px;
   transition: all 0.2s ease;
 }
 .messageContainer .time {
-  margin: 5px;
+  margin: 4px 5px;
   opacity: 0;
   width: 0;
   font-size: 8pt;

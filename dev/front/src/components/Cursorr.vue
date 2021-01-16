@@ -15,7 +15,7 @@
       v-if="isMe" 
       ref="input"
       class="input"
-      type="text" 
+      type="textarea" 
       placeholder="type message & press enter"
     />
     <!-- <span v-else-if="hovered" class="input">{{ name }}</span> -->
@@ -69,6 +69,7 @@ export default {
   justify-content: flex-end;
   align-items: flex-start;
   cursor: none;
+  /* transition: all 0.2s ease; */
 }
 .cursorContainer * {
   cursor: none !important;
@@ -82,7 +83,7 @@ export default {
   width: 20px;
   max-width: 20px;
   height: 20px;
-  border-radius: 15px;
+  border-radius: 12px;
   display: flex;
   justify-content: center;
   align-items: center;

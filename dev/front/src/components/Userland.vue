@@ -85,7 +85,7 @@ export default {
     
     if (this.registered) {
       this.me = JSON.parse(localStorage.me)
-      
+
     // if not registered, check if previously visited and get the
     // previously defined UID
 
@@ -237,7 +237,9 @@ export default {
           // if (!this.$refs.me.typing) {
             this.me.x = this.$refs.me.x = 100 * e.clientX / window.innerWidth
             this.me.y = this.$refs.me.y = 100 * e.clientY / window.innerHeight
-            this.announcePosition(this.me) 
+            // if((Math.floor(this.me.x)) % 3 === 0) {
+              this.announcePosition(this.me) 
+            // }
           // }
           e.preventDefault()
         })
@@ -262,7 +264,8 @@ export default {
                 y: Math.floor(this.me.y / 2) * 2,
               }
               this.announceTyping(message)
-              if (key == 13) {
+              if (key == 13 && !e.shiftKey) {
+                // console.log('send')
                 if (input.value && input.value != ' ') {
                   input.value = ''
                   this.me.messages.push(message)
@@ -271,6 +274,11 @@ export default {
                   this.announceMessage(message)
                   input.placeholder = ''
                 }
+              } else if (key == 13 && e.shiftKey) { 
+                // console.log('return')
+                input.value = input.value + '<br>'
+                // input.value = input.value + '\n'
+                console.log(input.value)
               }
               if (key == 27) {
                 input.value = ''
