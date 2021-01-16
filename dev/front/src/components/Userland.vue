@@ -74,8 +74,7 @@ export default {
     }
   },
   created() {
-    localStorage.clear()
-
+    // localStorage.clear()
     // if (!this.me.messages) {
     //   localStorage.clear()
     //   window.location.reload(true)
@@ -86,7 +85,7 @@ export default {
     
     if (this.registered) {
       this.me = JSON.parse(localStorage.me)
-      // this.$refs.me.messages = this.me.messages
+      
     // if not registered, check if previously visited and get the
     // previously defined UID
 
@@ -146,7 +145,7 @@ export default {
           existingUser.typing = message.content
           ExistingUser.typing = message.content
         } else if (type == 'message') {
-          user.messages.forEach(message => {
+          // user.messages.forEach(message => {
             const exisitngMessage = this.findUserMessage(ExistingUser, message)
             if (!exisitngMessage) {
               // console.log(existingUser.messages, message)
@@ -155,7 +154,7 @@ export default {
               existingUser.typing = ''
               ExistingUser.typing = ''
             }
-          })
+          // })
         }
       }
     }

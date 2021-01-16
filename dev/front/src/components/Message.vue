@@ -60,6 +60,7 @@ export default {
   /* flex-direction: column; */
   align-items: center;
   /* pointer-events: none; */
+  cursor: text;
 }
 .messageContainer .message {
   border: 1px solid;
