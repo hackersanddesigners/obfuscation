@@ -59,19 +59,22 @@ export default {
   position: absolute;
   display: flex;
   /* flex-direction: column; */
-  align-items: flex-start;
+  align-items: baseline;
   /* pointer-events: none; */
   cursor: text;
+  /* padding-top: 2px; */
 }
 .messageContainer .message {
+  box-sizing: border-box;
   border: 1px solid;
   border-color: transparent;
   padding: 1px 5px;
   border-radius: 12px;
   transition: all 0.2s ease;
+  line-height: 1.5;
 }
 .messageContainer .time {
-  margin: 4px 5px;
+  margin: 0px 5px;
   opacity: 0;
   width: 0;
   font-size: 8pt;
