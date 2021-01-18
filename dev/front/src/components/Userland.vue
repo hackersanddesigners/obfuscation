@@ -17,6 +17,9 @@
       </div>
     </header> -->
     <!-- <p id="usersLabel">users</p> -->
+    <div id="lounge">
+      <span> cursor lounge</span>
+    </div>
     <Register
       v-if="!registered" 
       :me="me"
@@ -387,5 +390,23 @@ export default {
 #usersLabel {
   font-weight: bold;
   margin: 0.5vh 0.5vw;
+}
+#lounge {
+  position: absolute;
+  width: 100%;
+  height: 6%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  /* background: rgba(0, 0, 0, 0.062); */
+  border-bottom: 1px solid grey;
+}
+#lounge span {
+  box-sizing: border-box;
+  margin-top: auto;
+  padding: 0.25vh 0.5vw;
+  width: 10%;
+  border-top: 1px solid grey;
+  border-right: 1px solid grey;
 }
 </style>

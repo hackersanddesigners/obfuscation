@@ -10,14 +10,14 @@
     ]"
     :style="{ '--userColor': color }"
   >
-    <p 
+    <!-- <p 
       class="userLabel"
       @mouseover="!isMe ? hovered=true : null"
       @mouseleave="hovered=false"
     >
       <span>({{ (x).toFixed(2) }}, {{ (y).toFixed(2) }})</span>
       <span> {{ name }} </span>
-    </p>
+    </p> -->
     <Cursorr
       ref="Cursor"
       :uid="uid" 
