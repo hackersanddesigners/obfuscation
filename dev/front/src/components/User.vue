@@ -8,7 +8,7 @@
         me: isMe
       }
     ]"
-    :style="{ color: color }"
+    :style="{ '--userColor': color }"
   >
     <p 
       class="userLabel"
@@ -88,6 +88,7 @@ export default {
 <style scoped>
 div.user {
   /* display: inline; */
+  color: var(--userColor);
 }
 .userLabel {
   margin: 0.5vh 0.5vw;

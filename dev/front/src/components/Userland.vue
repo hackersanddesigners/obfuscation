@@ -127,6 +127,7 @@ export default {
       const user = data.user
       const type = data.msg.type
       const message = data.msg.contents
+
       if (user.uid !== this.me.uid) {
         let existingUser = this.findUser(user)
         if (!existingUser) {
@@ -134,16 +135,19 @@ export default {
           await new Promise(r => setTimeout(r, 500))
         }
         const ExistingUser = this.$refs.Users.find(U => U.uid === existingUser.uid)
+
         if (type == 'user') {
           existingUser.name = user.name
           existingUser.color = user.color
           ExistingUser.messages = user.messages
-        }
-        if (type == 'position') {
+
+        } else if (type == 'position') {
           this.track(user)
+
         } else if (type == 'typing') {
           existingUser.typing = message.content
           ExistingUser.typing = message.content
+
         } else if (type == 'message') {
           // user.messages.forEach(message => {
             const exisitngMessage = this.findUserMessage(ExistingUser, message)
@@ -197,7 +201,9 @@ export default {
       this.me.color = newMe.color
       localStorage.me = JSON.stringify(this.me)
       this.announceUser(this.me)
-      this.registered = true
+      setTimeout(() => {
+        this.registered = true
+      }, 1500)
     },
     saveUser(user) {
       this.users.push(user)
@@ -205,115 +211,159 @@ export default {
       return user
     },
     announceUser() {
-      this.sendMessage({
+      this.sendToPeers({
         type: 'user',
         contents: ''
       })
     },
     announcePosition() {
-      this.sendMessage({
+      this.sendToPeers({
         type: 'position',
         contents: ''
       })
     },
     announceMessage(message) {
-      this.sendMessage({
+      this.sendToPeers({
         type: 'message',
         contents: message
       })
     },
     announceTyping(message) {
-      this.sendMessage({
+      this.sendToPeers({
         type: 'typing',
         contents: message
       })
     },
-    sendMessage(msg) {
+    sendToPeers(msg) {
       this.$socket.emit('pingServer', this.me, msg)
+    },
+    computeMessages(messages, currentMessage) {
+      const firstMessage = messages[0]
+      const lastMessage = messages[messages.length-1]
+      const previousMessage = messages[messages.indexOf(currentMessage)-1]
+      const nextMessage = messages[messages.indexOf(currentMessage)+1]
+      return [firstMessage, lastMessage, previousMessage, nextMessage]
+    },
+    constructMessage(text) {
+      const message = {
+        uid: this.me.uid + ((new Date()).getTime()),
+        author: this.me.name,
+        content: text,
+        time: ((new Date()).getTime()),
+        color: this.me.color,
+        x: Math.floor(this.me.x / 2) * 2,
+        y: Math.floor(this.me.y / 2) * 2,
+      }
+      return message
     },
     track(user) {
       if (user.uid == this.me.uid) {
         document.addEventListener('mousemove', (e) => {
-          // if (!this.$refs.me.typing) {
             this.me.x = this.$refs.me.x = 100 * e.clientX / window.innerWidth
             this.me.y = this.$refs.me.y = 100 * e.clientY / window.innerHeight
             // if((Math.floor(this.me.x)) % 3 === 0) {
               this.announcePosition(this.me) 
             // }
-          // }
           e.preventDefault()
         })
+
+        let currentMessage
+        // const input = this.$refs.me.$refs.Cursor.$refs.input
+
         document.addEventListener('keyup', (e) => {
           if (this.registered) {
-            const key = e.which || e.keyCode
+
             const input = this.$refs.me.$refs.Cursor.$refs.input
-            // if (!user.messages) {
-            //   user.messages = []
-            // }
-            input.focus()
-            // if (input.value && input.value != ' ') {
-              let message = {
-                uid: this.me.uid + ((new Date()).getTime()),
-                author: this.me.name,
-                content: input.value,
-                time: ((new Date()).getTime()),
-                color: this.me.color,
-                // x: this.me.x,
-                // y: this.me.y,
-                x: Math.floor(this.me.x / 2) * 2,
-                y: Math.floor(this.me.y / 2) * 2,
+            const key = e.which || e.keyCode
+            const [ 
+                    firstMessage, 
+                    lastMessage, 
+                    previousMessage, 
+                    nextMessage
+                  ]
+                = this.computeMessages(this.me.messages, currentMessage)
+
+            if (input !== document.activeElement) {
+              if (key >= 48 && key <= 90) {
+                const char = String.fromCharCode(key)
+                input.value = char              
               }
-              this.announceTyping(message)
-              if (key == 13 && !e.shiftKey) {
-                // console.log('send')
-                if (input.value && input.value != ' ') {
-                  input.value = ''
-                  this.me.messages.push(message)
-                  this.$refs.me.messages.push(message)
-                  localStorage.me = JSON.stringify(this.me)
-                  this.announceMessage(message)
-                  input.placeholder = ''
-                }
-              } else if (key == 13 && e.shiftKey) { 
-                // console.log('return')
-                input.value = input.value + '<br>'
-                // input.value = input.value + '\n'
-                console.log(input.value)
+              input.focus()
+            }
+
+            const message = this.constructMessage(input.value)
+            this.announceTyping(message)
+
+            if (key == 27) {
+              input.value = ''
+              input.blur()
+
+            } else if (key == 38) {
+              if (!currentMessage) {
+                currentMessage = lastMessage
+                input.value = currentMessage.content
+                input.select()
+              } else if (previousMessage) {
+                currentMessage = previousMessage
+                input.value = currentMessage.content
+                input.select()
+              } else {
+                currentMessage = firstMessage
+                input.value = currentMessage.content
               }
-              if (key == 27) {
+
+            } else if (key == 40) {
+              if (currentMessage && nextMessage) {
+                currentMessage = nextMessage
+                input.value = currentMessage.content
+                input.select()
+              }
+
+            } else if (key == 13 && e.shiftKey) { 
+              input.value = input.value + '<br>'
+
+            } else if (key == 13 && !e.shiftKey) {
+              if (message.content && message.content != ' ') {
+                this.me.messages.push(message)
+                this.$refs.me.messages.push(message)
+                localStorage.me = JSON.stringify(this.me)
+                this.announceMessage(message)
+                currentMessage = undefined
                 input.value = ''
-                input.blur()
+                input.placeholder = ''
               }
-            // }
-            // this.$refs.me.typing = true
+            }
+
             e.preventDefault()
           }
         })
+
+        document.addEventListener('click', (e) => {
+          if (this.registered) {
+
+            const input = this.$refs.me.$refs.Cursor.$refs.input
+            const message = this.constructMessage(input.value)
+
+            if (message.content && message.content != ' ') {
+              this.me.messages.push(message)
+              this.$refs.me.messages.push(message)
+              localStorage.me = JSON.stringify(this.me)
+              this.announceMessage(message)
+              currentMessage = undefined
+              input.value = ''
+              input.placeholder = ''
+            }
+
+            e.preventDefault()
+          }
+        })
+
       } else {
-          // console.log('this.$refs =>', this.$refs)
-          // console.log('this.$refs.me =>', this.$refs.me)
-          // console.log('this.$refs.Users =>', this.$refs.Users)
-          const User = this.$refs.Users.find(u => u.uid == user.uid)
-          User.x = user.x
-          User.y = user.y
+        const User = this.$refs.Users.find(u => u.uid == user.uid)
+        User.x = user.x
+        User.y = user.y
       }
     },
-    // type(user) {
-    //   if (user.uid == this.me.uid) {
-    //     this.$el.addEventListener('click', (e) => {
-    //       if (!this.$refs.me.typing) {
-    //         this.me.x = this.$refs.me.x = e.clientX / window.innerWidth
-    //         this.me.y = this.$refs.me.y = e.clientY / window.innerHeight
-    //         this.announcePosition(this.me) 
-    //       }
-    //       e.preventDefault()
-    //     })
-    //   } else {
-    //       const User = this.$refs.Users.find(u => u.uid == user.uid)
-    //       User.x = user.x
-    //       User.y = user.y
-    //   }
-    // },
     randomColor() {
       const 
         r = Math.floor(Math.random() * 256),

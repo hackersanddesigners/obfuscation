@@ -11,7 +11,6 @@
     :style="{ 
       left: (x) + '%',
       top: (y) + '%',
-      color: color,
     }"
   >
     <vue-markdown class="message"> {{ content }} </vue-markdown>
@@ -73,6 +72,20 @@ export default {
   transition: all 0.2s ease;
   line-height: 1.5;
 }
+.messageContainer .message * {
+  text-decoration: none;
+  margin: 0px;
+}
+.messageContainer .message *::selection {
+  background: var(--userColor);
+  color: white;
+}
+.messageContainer .message iframe {
+  width: 300px !important;
+  height: 650px !important;
+  border: none !important;
+  border-radius: 15px;
+}
 .messageContainer .time {
   margin: 0px 5px;
   opacity: 0;
@@ -82,16 +95,6 @@ export default {
   transition: opacity 0.2s ease;
   white-space: nowrap;
   pointer-events: none;
-}
-.messageContainer .message * {
-  text-decoration: none;
-  margin: 0px;
-}
-.messageContainer .message iframe {
-  width: 300px !important;
-  height: 650px !important;
-  border: none !important;
-  border-radius: 15px;
 }
 .messageContainer .author {
   opacity: 0;

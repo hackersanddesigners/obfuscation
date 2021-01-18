@@ -18,14 +18,8 @@
       type="textarea" 
       placeholder="type message & press enter"
     />
-    <!-- <span v-else-if="hovered" class="input">{{ name }}</span> -->
     <span v-else class="input">{{ typing }}</span>
-    <div class="cursor"
-      :style="{
-        background: color,
-      }"
-    >
-      <!-- <span v-if="!isMe && (typing || hovered)" class="name">{{ name }}</span> -->
+    <div class="cursor">
       <span v-if="(typing || hovered)" class="name">{{ isMe ? "me" : name }}</span>
       <span v-else class="name"></span>
     </div>
@@ -87,6 +81,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  background: var(--userColor);
   transition: all 0.2s ease;
   /* opacity: 0; */
 }
@@ -114,6 +109,11 @@ export default {
   margin-left: 10px;
   margin-bottom: 3px;
   /* background: rgba(255, 0, 0, 0.377); */
+}
+.cursorContainer input::selection,
+.cursorContainer .input::selection {
+  background: var(--userColor);
+  color: white;
 }
 .cursorContainer input,
 .cursorContainer input:hover,
