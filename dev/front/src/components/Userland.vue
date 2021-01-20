@@ -108,8 +108,6 @@ export default {
   },
   data() {
     return {
-      registered: this.checkForMe(),
-      visited: this.checkIfVisited(),
       me: {
         uid: uid(),
         connected: false,
@@ -120,6 +118,8 @@ export default {
         typing: String,
         messages: [],
       },
+      registered: this.checkForMe(),
+      visited: this.checkIfVisited(),
       users: {},
       storedUsers: {},
       connectedUsers: {},
@@ -168,70 +168,64 @@ export default {
 
     this.track(this.me)
 
-    // this.checkForOthers()
-    this.checkForMessages()
+    if (this.checkForDB()) {
+      this.users = JSON.parse(localStorage.users)
+    }
     // this.track(this.me)
   },
   mounted() {
-
     
   },
   sockets: {
     connect() { 
       this.me.connected = true 
-      // if (this.me) {
-        this.announceUser(this.me)
-      // }
+      this.announceUser()
     },
     disconnect() { 
       this.me.connected = false 
+      if (this.checkForDB) {
+        this.saveDB()
+      }
+    },
+    dbSync(data) {
+      console.log(data)
     },
     async broadcast(data) {
       data = JSON.parse(data)
       const user = data.user
       const type = data.msg.type
-      // const message = data.msg.contents
+      const content = data.msg.content
 
       if (user.uid !== this.me.uid) {
-        // let existingUser = this.findUser(user)
-        // let existingUser = this.users[user.uid]
-        // if (!existingUser) {
-          // existingUser = this.saveUser(user)
         this.$set(this.users, user.uid, user)
         let existingUser = this.users[user.uid]
-          // await new Promise(r => setTimeout(r, 500))
-        // }
-
-        // const ExistingUser = this.$refs.Users.find(U => U.uid === existingUser.uid)
 
         if (type == 'user') {
-        
-        console.log(existingUser)
-          // existingUser.name = user.name
-          // existingUser.color = user.color
-          // ExistingUser.messages = user.messages
+          this.announceDB()
 
         } else if (type == 'position') {
-          this.track(user)
+          // console.log(user)
 
         } else if (type == 'typing') {
-          // existingUser.typing = message.content
-          // ExistingUser.typing = message.content
+          // console.log(user)
 
         } else if (type == 'message') {
-          // user.messages.forEach(message => {
-            // const exisitngMessage = this.findUserMessage(ExistingUser, message)
-            // if (!exisitngMessage) {
-              // console.log(existingUser.messages, message)
-              // existingUser.messages.push(message)
-              // ExistingUser.messages.push(message)
-              // existingUser.typing = ''
-              // ExistingUser.typing = ''
-            // }
-          // })
+          // console.log(user)
+
         } else if (type == 'disconnect') {
           existingUser.connected = false
         }
+      }
+      if (type == 'db') {
+        const db = content
+        // console.log(db)
+        for (let key in db) {
+          const user = db[key]
+          if (key !== this.me.uid) {
+            this.$set(this.users, key, user)
+          } 
+        }
+        this.saveDB()
       }
     }
   },
@@ -239,104 +233,95 @@ export default {
     checkForMe() {
       if (localStorage.me) {
         return true
+      } else {
+        console.log("you've been here before.")
       }
     },
     checkIfVisited() {
       if (localStorage.uid) {
         return true
-      }
-    },
-    checkForOthers() {
-      if (localStorage.users) {
-        this.users = JSON.parse(localStorage.users)
       } else {
-        console.log('no one else is here')
+        console.log("you're new.")
       }
     },
-    checkForMessages() {
-      // if (localStorage.messages) {
-      //   this.messages = JSON.parse(localStorage.messages)
-      // } else {
-      //   localStorage.messages = ''
-      // }
+    checkForDB() {
+      if (localStorage.users) {
+        return true
+      } else {
+        console.log("you haven't made a userDb yet.")
+      }
     },
-    findUser(user) {
-      // const foundUser = this.users.find(u => u.uid === user.uid)
-      const foundUser = this.users[user.uid]
-      return foundUser
-    },
-    findUserMessage(user, message) {
-      const foundMessage = user.messages.find(m => m.uid === message.uid)
-      return foundMessage
-    },
-    saveMe(newMe) {
-      this.me.name = newMe.name
-      this.me.color = newMe.color
+    saveMe(newLook) {
+      this.me.name = newLook.name
+      this.me.color = newLook.color
+      this.announceUser()
+      this.registered = true
       localStorage.me = JSON.stringify(this.me)
-      // localStorage.me = this.me
-      this.announceUser(this.me)
-      this.createStrapiUser(this.me)
-      // setTimeout(() => {
-        this.registered = true
-      // }, 1500)
     },
-    saveUser(user) {
-      // this.users.push(user)
-      // this.users[user.uid] = user
-      this.$set(this.users, user.uid, user)
-      // localStorage.me = JSON.stringify(this.me)
-      user = this.findUser(user)
-      return user
+    saveDB() {
+      localStorage.users = JSON.stringify(this.users)
     },
     announceUser() {
       this.sendToPeers({
         type: 'user',
-        contents: ''
+        content: ''
       })
     },
     announcePosition() {
       this.sendToPeers({
         type: 'position',
-        contents: ''
-      })
-    },
-    announceMessage(message) {
-      this.sendToPeers({
-        type: 'message',
-        contents: message
+        content: ''
       })
     },
     announceTyping(string) {
       this.sendToPeers({
         type: 'typing',
-        contents: string
+        content: string
+      })
+    },
+    announceMessage(message) {
+      this.sendToPeers({
+        type: 'message',
+        content: message
+      })
+    },
+    announceDB() {
+      // const DB = this.users
+      // DB[this.me.uid] = this.me
+      this.sendToPeers({
+        type: 'db',
+        content: this.users
       })
     },
     sendToPeers(msg) {
       this.$socket.emit('pingServer', this.me, msg)
     },
-    computeMessages(messages, currentMessage) {
-      const firstMessage = messages[0]
-      const lastMessage = messages[messages.length-1]
-      const previousMessage = messages[messages.indexOf(currentMessage)-1]
-      const nextMessage = messages[messages.indexOf(currentMessage)+1]
-      return [firstMessage, lastMessage, previousMessage, nextMessage]
-    },
-    constructMessage(text) {
-      const time = ((new Date()).getTime())
-      const message = {
-        uid: this.me.uid + time,
-        author: this.me.name,
-        content: text,
-        time: time,
-        color: this.me.color,
-        x: Math.floor(this.me.x / 2) * 2,
-        y: Math.floor(this.me.y / 2) * 2,
-      }
-      return message
-    },
-    createStrapiUser(user) {
-      console.log(user)
+    // checkForOthers() {
+    //   if (localStorage.users) {
+    //     this.users = JSON.parse(localStorage.users)
+    //   } else {
+    //     console.log("you haven't saved a userDb yet.")
+    //   }
+    // },
+    // findUser(user) {
+    //   // const foundUser = this.users.find(u => u.uid === user.uid)
+    //   const foundUser = this.users[user.uid]
+    //   return foundUser
+    // },
+    // findUserMessage(user, message) {
+    //   const foundMessage = user.messages.find(m => m.uid === message.uid)
+    //   return foundMessage
+    // },
+    // saveUser(user) {
+    //   // this.users.push(user)
+    //   // this.users[user.uid] = user
+    //   this.$set(this.users, user.uid, user)
+    //   // localStorage.me = JSON.stringify(this.me)
+    //   user = this.findUser(user)
+    //   return user
+    // },
+        // createStrapiUser(user) {
+      // console.log(user)
       // const data = {
       //   info: this.$refs.note.value
       // }
@@ -353,22 +338,19 @@ export default {
       //     setTimeout(() => { this.sent = false }, 2000)
       //   })
       //   .catch(err => { console.log(err) })
-    },
-    clearLocalStorage(e) {
-      console.log('clearing storage')
-      localStorage.clear()
-      window.location.reload(true)
-      e.stopPropagation()
-    },
-    clearMessages(e) {
-      this.me.messages = []
-      this.me.typing = ''
-      localStorage.me = JSON.stringify(this.me)
-      e.stopPropagation()
-    },
-    toggleGrid(e) {
-      this.grid =! this.grid
-      e.stopPropagation()
+    // },
+    constructMessage(text) {
+      const time = ((new Date()).getTime())
+      const message = {
+        uid: this.me.uid + time,
+        author: this.me.name,
+        content: text,
+        time: time,
+        color: this.me.color,
+        x: Math.floor(this.me.x / 2) * 2,
+        y: Math.floor(this.me.y / 2) * 2,
+      }
+      return message
     },
     track(user) {
       if (user.uid == this.me.uid) {
@@ -381,7 +363,7 @@ export default {
             // this.me.x = this.$refs.me.x = 100 * e.clientX / window.innerWidth
             // this.me.y = this.$refs.me.y = 100 * e.clientY / window.innerHeight
             // if((Math.floor(this.me.x)) % 3 === 0) {
-              this.announcePosition(this.me) 
+            this.announcePosition(this.me) 
             // }
           e.preventDefault()
         })
@@ -490,6 +472,29 @@ export default {
         // User.y = user.y
       }
     },
+    computeMessages(messages, currentMessage) {
+      const firstMessage = messages[0]
+      const lastMessage = messages[messages.length-1]
+      const previousMessage = messages[messages.indexOf(currentMessage)-1]
+      const nextMessage = messages[messages.indexOf(currentMessage)+1]
+      return [firstMessage, lastMessage, previousMessage, nextMessage]
+    },
+    clearLocalStorage(e) {
+      console.log('clearing storage')
+      localStorage.clear()
+      window.location.reload(true)
+      e.stopPropagation()
+    },
+    clearMessages(e) {
+      this.me.messages = []
+      this.me.typing = ''
+      localStorage.me = JSON.stringify(this.me)
+      e.stopPropagation()
+    },
+    toggleGrid(e) {
+      this.grid =! this.grid
+      e.stopPropagation()
+    },
     randomColor() {
       const 
         r = Math.floor(Math.random() * 256),
@@ -525,6 +530,7 @@ header .lounge {
   flex-direction: column;
   align-items: flex-start;
   border-bottom: 1px solid grey;
+  background: white;
 }
 header .lounge span {
   box-sizing: border-box;
@@ -540,6 +546,8 @@ header .tools {
   display: flex;
   align-items: center;
   border-bottom: 1px solid grey;
+  background: white;
+
 }
 header .tools span {
   box-sizing: border-box;

@@ -5,38 +5,17 @@
       hidden: !loaded
     }"
   >
-    <!-- <IListenToSockets /> -->
-    <!-- <Register
-      v-if="!me" 
-      @registered="saveMe"
-    />
-    <User
-      v-if="me"
-      :user="me"
-    />
-    <User 
-      v-for="user in users"
-      ref="users"
-      :key="user.name"
-      :user="user" 
-    /> -->
     <Userland />
   </div>
 </template>
 
 <script>
 import { EventBus } from '../EventBus.js'
-// import IListenToSockets from '../components/IListenToSockets'
-// import User from '../components/User'
-// import Register from '../components/Register'
 import Userland from '../components/Userland'
 
 export default {
   name: 'Home',
   components: {
-    // IListenToSockets,
-    // User,
-    // Register
     Userland
   },
   data() {

@@ -27,7 +27,7 @@
     /> -->
     <span v-else class="input">{{ typing }}</span>
     <div class="cursor">
-      <span v-if="(typing || hovered)" class="name">{{ isMe ? "me" : connected ? name : name + '(offline)' }}</span>
+      <span v-if="(typing || hovered)" class="name">{{ isMe ? "me" : connected ? name : name + ' (offline)' }}</span>
       <span v-else class="name"></span>
     </div>
   </div>
@@ -118,7 +118,7 @@ export default {
   color: inherit;
   margin-left: 10px;
   margin-bottom: 3px;
-  /* cursor: none; */
+  cursor: none;
   /* pointer-events: none; */
   /* background: rgba(255, 0, 0, 0.377); */
 }
@@ -140,6 +140,7 @@ export default {
   border: none;
   outline: none;
   background: transparent;
+  cursor: none;
 }
 
 </style>

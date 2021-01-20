@@ -43,11 +43,11 @@ export default {
   },
   methods: {
     save() {
-      const newMe = {
+      const newLook = {
         name: this.$refs.name.value,
         color: this.$refs.color.value,
       }
-      this.$emit('registered', newMe)
+      this.$emit('registered', newLook)
     }
   }
 }

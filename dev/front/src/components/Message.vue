@@ -11,7 +11,7 @@
     :style="{ 
       left: `${x}%`,
       top: `${y}%`,
-      '--blur': `blur(${ (now - time) / 1000000 }px)`
+      '--blur': `blur(${ (now - time) / 10000000 }px)`
     }"
   >
     <vue-markdown class="message"> {{ content }} </vue-markdown>
