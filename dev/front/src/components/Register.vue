@@ -18,7 +18,7 @@
 import jscolor from '@eastdesire/jscolor'
 
 export default {
-  name: 'RegisterUser',
+  name: 'Register',
   props: [
     'me',
   ],
@@ -38,6 +38,7 @@ export default {
   },
   mounted() {
     jscolor.presets.default = this.colorPickerOpts
+    // this.$refs.name.value = this.me.name
     this.$refs.color.value = this.me.color
   },
   methods: {
@@ -61,7 +62,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: rgba(255, 255, 255, 0.945);
+  background: rgba(255, 255, 255, 0.603);
   z-index: 1000;
 }
 #register {

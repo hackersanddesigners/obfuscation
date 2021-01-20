@@ -8,7 +8,7 @@
         me: isMe
       }
     ]"
-    :style="{ '--userColor': color }"
+    :style="{ '--userColor': connected ? color : 'lightgrey' }"
   >
     <!-- <p 
       class="userLabel"
@@ -28,14 +28,15 @@
       :y="y"
       :typing="typing"
       :hovered="hovered"
+      :connected="connected"
       @mouseover.native="!isMe ? hovered=true : null"
       @mouseleave.native="hovered=false"
     />
     <Message
       v-for="message in messages"
       ref="Messages"
-      :key="message.author + message.time + message.content"
-      :uid="message.author"
+      :key="message.uid"
+      :uid="message.uid"
       :author="message.author"
       :content="message.content"
       :time="message.time"
@@ -64,13 +65,18 @@ export default {
     'name',
     'color',
     'isMe',
+    'connected',
+    'x',
+    'y',
+    'typing',
+    'messages'
   ], 
   data() {
     return {
-      x: 0,
-      y: 0,
-      typing: '',
-      messages: [],
+      // x: 0,
+      // y: 0,
+      // typing: '',
+      // messages: [],
       // cursorHovered: false,
       // messageHovered: false,
       hovered: false

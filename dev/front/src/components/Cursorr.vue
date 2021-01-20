@@ -15,12 +15,19 @@
       v-if="isMe" 
       ref="input"
       class="input"
-      type="textarea" 
+      type="text" 
       placeholder="type message & press enter"
+      autofocus
     />
+    <!-- <textarea 
+      v-if="isMe" 
+      ref="input"
+      class="input"
+      placeholder="type message & press enter"
+    /> -->
     <span v-else class="input">{{ typing }}</span>
     <div class="cursor">
-      <span v-if="(typing || hovered)" class="name">{{ isMe ? "me" : name }}</span>
+      <span v-if="(typing || hovered)" class="name">{{ isMe ? "me" : connected ? name : name + '(offline)' }}</span>
       <span v-else class="name"></span>
     </div>
   </div>
@@ -39,7 +46,8 @@ export default {
     'x',
     'y',
     'typing',
-    'hovered'
+    'hovered',
+    'connected'
   ], 
   data() {
     return {
@@ -62,21 +70,21 @@ export default {
   flex-direction: column;
   justify-content: flex-end;
   align-items: flex-start;
-  cursor: none;
+  /* cursor: none; */
   /* transition: all 0.2s ease; */
 }
 .cursorContainer * {
-  cursor: none !important;
+  /* cursor: none !important; */
 }
 .me .cursorContainer {
-  z-index: 0;
   /* pointer-events: none; */
-  cursor: none;
+  pointer-events: none;
+  /* cursor: none; */
 }
 .cursorContainer .cursor {
-  width: 20px;
-  max-width: 20px;
-  height: 20px;
+  width: 2vh;
+  max-width: 2vh;
+  height: 2vh;
   border-radius: 12px;
   display: flex;
   justify-content: center;
@@ -92,6 +100,7 @@ export default {
 }
 .cursorContainer .cursor .name {
   color: white;
+  white-space: nowrap;
   /* margin-bottom: -1px; */
 }
 .cursorContainer.typing  .cursor {
@@ -100,6 +109,7 @@ export default {
   padding: 0px 10px;
 }
 .cursorContainer .input {
+  /* min-width: 220px; */
   width: auto;
   height: 15px;
   padding: 0px;
@@ -108,6 +118,8 @@ export default {
   color: inherit;
   margin-left: 10px;
   margin-bottom: 3px;
+  /* cursor: none; */
+  /* pointer-events: none; */
   /* background: rgba(255, 0, 0, 0.377); */
 }
 .cursorContainer input::selection,
@@ -115,9 +127,15 @@ export default {
   background: var(--userColor);
   color: white;
 }
+.cursorContainer textarea,
+.cursorContainer textarea:hover,
+.cursorContainer textarea:active,
 .cursorContainer input,
 .cursorContainer input:hover,
 .cursorContainer input:active {
+  overflow: hidden;
+  line-height: 1.6;
+  resize: none;
   width: 400px;
   border: none;
   outline: none;

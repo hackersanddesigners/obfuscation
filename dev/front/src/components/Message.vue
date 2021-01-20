@@ -57,20 +57,18 @@ export default {
 .messageContainer {
   position: absolute;
   display: flex;
-  /* flex-direction: column; */
   align-items: baseline;
-  /* pointer-events: none; */
   cursor: text;
-  /* padding-top: 2px; */
 }
 .messageContainer .message {
   box-sizing: border-box;
   border: 1px solid;
   border-color: transparent;
-  padding: 1px 5px;
+  padding: 0px 5px;
   border-radius: 12px;
   transition: all 0.2s ease;
-  line-height: 1.5;
+  /* line-height: 1.65; */
+  line-height: 1.9vh;
 }
 .messageContainer .message * {
   text-decoration: none;
@@ -90,8 +88,8 @@ export default {
   margin: 0px 5px;
   opacity: 0;
   width: 0;
-  font-size: 8pt;
-  color: grey;
+  font-size: 7pt;
+  color: rgb(161, 161, 161);
   transition: opacity 0.2s ease;
   white-space: nowrap;
   pointer-events: none;
@@ -103,7 +101,7 @@ export default {
 
 .messageContainer.hover .message {
   border-color: unset;
-  padding: 1px 10px;
+  padding: 0px 10px;
 }
 .messageContainer.hover .time {
   opacity: 1;
