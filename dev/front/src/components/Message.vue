@@ -9,8 +9,9 @@
       } 
     ]"
     :style="{ 
-      left: (x) + '%',
-      top: (y) + '%',
+      left: `${x}%`,
+      top: `${y}%`,
+      '--blur': `blur(${ (now - time) / 1000000 }px)`
     }"
   >
     <vue-markdown class="message"> {{ content }} </vue-markdown>
@@ -40,7 +41,7 @@ export default {
   ], 
   data() {
     return {
-      // hovered: Boolean
+      now: (new Date()).getTime()
     }
   },
   mounted() {
@@ -59,6 +60,8 @@ export default {
   display: flex;
   align-items: baseline;
   cursor: text;
+  filter: var(--blur);
+  transition: filter 0.2 ease;
 }
 .messageContainer .message {
   box-sizing: border-box;
@@ -99,6 +102,10 @@ export default {
   /* transition: all 0.2s ease; */
 }
 
+.messageContainer.hover {
+  filter: blur(0px);
+  transition: filter 0.2 ease;
+}
 .messageContainer.hover .message {
   border-color: unset;
   padding: 0px 10px;
