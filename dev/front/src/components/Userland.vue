@@ -183,9 +183,9 @@ export default {
     },
     disconnect() { 
       this.me.connected = false 
-      if (this.checkForDB) {
-        this.saveDB()
-      }
+      // if (this.checkForDB) {
+        // this.saveDB()
+      // }
     },
     dbSync(data) {
       console.log(data)
@@ -523,8 +523,13 @@ export default {
 header {
   position: absolute;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
 }
 header .lounge {
+  width: 100%;
   height: 6vh;
   display: flex;
   flex-direction: column;
@@ -534,30 +539,35 @@ header .lounge {
 }
 header .lounge span {
   box-sizing: border-box;
-  margin-top: auto;
+  /* margin-top: auto; */
   /* padding: 0.25vh 0.5vw; */
   padding: 0vh 0.5vw;
   line-height: 1.9vh;
   width: 10%;
-  border-top: 1px solid grey;
+  border-bottom: 1px solid grey;
   border-right: 1px solid grey;
 }
 header .tools {
+  width: 10%;
+  height: 8vh;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   border-bottom: 1px solid grey;
+  border-right: 1px solid grey;
   background: white;
+  line-height: 1.9vh;
 
 }
 header .tools span {
   box-sizing: border-box;
   padding: 0vh 0.5vw;
   line-height: 1.9vh;
-  width: 10%;
-  border-right: 1px solid grey;
+  width: 100%;
+  border-bottom: 1px solid grey;
 }
 header .tools div {
-  margin: 0px 10px;
+  margin: 0.1vh 0.5vw;
   display: flex;
   align-items: center;
 }

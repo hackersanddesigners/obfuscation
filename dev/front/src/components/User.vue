@@ -8,7 +8,7 @@
         me: isMe
       }
     ]"
-    :style="{ '--userColor': connected ? color : color }"
+    :style="{ '--userColor': connected ? color : 'lightgrey' }"
   >
     <!-- <p 
       class="userLabel"
