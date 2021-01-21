@@ -34,7 +34,7 @@
         </div>
       </div>
       <div id="userList">
-        <span class="title"> options </span>
+        <span class="title"> participants </span>
         <ul>
           <UserLabel
             :key="me.uid"
