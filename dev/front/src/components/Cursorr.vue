@@ -78,8 +78,8 @@ export default {
 }
 .me .cursorContainer {
   /* pointer-events: none; */
-  pointer-events: none;
-  /* cursor: none; */
+  /* pointer-events: none; */
+  cursor: none;
 }
 .cursorContainer .cursor {
   width: 2vh;

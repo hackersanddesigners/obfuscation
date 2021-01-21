@@ -11,10 +11,27 @@
       @editeduser="saveMe"
     />
     <header :class="{ blur: !registered || editing }" >
-      <!-- <div class="lounge">
+      <!-- <div id="lounge">
         <span class="title"> cursor lounge </span>
       </div> -->
-      <div class="tools">
+      <div id="minimap">
+        <!-- <div 
+          id="viewport"
+          ref="viewport"
+        /> -->
+        <Viewport
+          id="viewport"
+          ref="viewport"
+          :width="windowWidth / zoomIndex"
+          :height="windowHeight / zoomIndex"
+          :left="windowLeft / zoomIndex"
+          :top="windowTop / zoomIndex"
+
+          v-dragged.prevent="dragViewport"
+        />
+
+      </div>
+      <div id="tools">
         <span class="title"> options </span>
         <!-- <div class="grid">
           <input 
@@ -161,16 +178,14 @@ import Grid from './Grid'
 import User from './User'
 import Register from './Register'
 import EditUser from './EditUser'
-import UserLabel from './UserLabel.vue'
-
-// import L from 'leaflet'
-// import Tile from './Tile'
+import UserLabel from './UserLabel'
+import Viewport from './Viewport'
 
 export default {
   name: 'Userland',
   components: {
     Grid,
-    // Tile,
+    Viewport,
     Register,
     EditUser,
     User,
@@ -188,32 +203,25 @@ export default {
         typing: String,
         messages: [],
       },
-      registered: this.checkForMe(),
-      visited: this.checkIfVisited(),
+
+      users: {},
+
       editing: false,
       scrolling: false,
-      users: {},
-      storedUsers: {},
-      connectedUsers: {},
+      dragging: false,
+      registered: this.checkForMe(),
+      visited: this.checkIfVisited(),
+
       grid: true,
-      // tileComponent: {
-      //   name: 'tile-component',
-      //   props: {
-      //     coords: {
-      //       type: Object,
-      //       required: true
-      //     }
-      //   },
-      //   template: '<div>Coords: {{coords.x}}, {{coords.y}}, {{coords.z}}</div>'
-      // },
+      zoomIndex: 25,
+      windowWidth: window.innerWidth,
+      windowHeight: window.innerHeight,
+      windowLeft: null,
+      windowTop: null,
     }
   },
   created() {
     // localStorage.clear()
-    // if (!this.me.messages) {
-    //   localStorage.clear()
-    //   window.location.reload(true)
-    // }
     // console.log(localStorage)
 
     // check if user is registered and get their datas value
@@ -238,31 +246,29 @@ export default {
 
     // start tracking cursor
 
-    this.track(this.me)
+    this.track()
 
     if (this.checkForDB()) {
       this.users = JSON.parse(localStorage.users)
     }
-    // this.track(this.me)
+
   },
   mounted() {
     smoothscroll.polyfill()
 
     const userlandContainer = this.$refs.userlandContainer
 
-    userlandContainer.addEventListener('scroll', (e) => {
-      this.scrolling = true
-      // console.log(0.01 * this.me.x * userlandContainer.offsetWidth)
-      // let x = 0.2 * 100 * (userlandContainer.scrollLeft + e.clientX * userlandContainer.scrollLeft) / userlandContainer.offsetWidth
-      // let y = 0.2 * 100 * (userlandContainer.scrollTop + e.clientX * userlandContainer.scrollLeft) /userlandContainer.offsetHeight
-      // let x = 0.2 * 100 * (userlandContainer.scrollLeft + 0.01 * this.me.x * userlandContainer.offsetWidth) / userlandContainer.offsetWidth
-      // let y = 0.2 * 100 * (userlandContainer.scrollTop + 0.01 * this.me.y * userlandContainer.offsetHeight) / userlandContainer.offsetHeight
-      // this.$set(this.me, 'x', x)
-      // this.$set(this.me, 'y', y)
-      // // if((Math.floor(this.me.x)) % 3 === 0) {
-      // this.announcePosition(this.me) 
-      e.preventDefault()
-      this.scrolling = false
+    this.windowLeft = userlandContainer.scrollLeft
+    this.windowTop = userlandContainer.scrollTop
+
+    window.addEventListener('resize', () => {
+      this.windowWidth = window.innerWidth
+      this.windowHeight = window.innerHeight
+    })
+
+    userlandContainer.addEventListener('scroll', () => {
+      this.windowLeft = userlandContainer.scrollLeft
+      this.windowTop = userlandContainer.scrollTop
     })
 
     const center = { 
@@ -283,9 +289,6 @@ export default {
     },
     disconnect() { 
       this.me.connected = false 
-      // if (this.checkForDB) {
-        // this.saveDB()
-      // }
     },
     dbSync(data) {
       console.log(data)
@@ -353,13 +356,6 @@ export default {
         console.log("you're new.")
       }
     },
-    checkForDB() {
-      if (localStorage.users) {
-        return true
-      } else {
-        console.log("you haven't made a userDb yet.")
-      }
-    },
     saveMe(newLook) {
       this.me.name = newLook.name
       this.me.color = newLook.color
@@ -367,6 +363,13 @@ export default {
       this.registered = true
       this.editing = false
       localStorage.me = JSON.stringify(this.me)
+    },
+    checkForDB() {
+      if (localStorage.users) {
+        return true
+      } else {
+        console.log("you haven't made a userDb yet.")
+      }
     },
     saveDB() {
       localStorage.users = JSON.stringify(this.users)
@@ -411,63 +414,32 @@ export default {
       this.$socket.emit('pingServer', this.me, msg)
     },
     scrollToUser(user, e) {
-
       const center = { 
         x: this.$refs.userland.offsetWidth * 0.01 * user.x - window.innerWidth / 2,
         y: this.$refs.userland.offsetHeight* 0.01 * user.y - window.innerHeight / 2
       }
-
       this.$refs.userlandContainer.scroll({
         left: center.x,
         top: center.y,
         behavior: 'smooth'
       })
-
       e.stopPropagation()
     },
-    // checkForOthers() {
-    //   if (localStorage.users) {
-    //     this.users = JSON.parse(localStorage.users)
-    //   } else {
-    //     console.log("you haven't saved a userDb yet.")
-    //   }
-    // },
-    // findUser(user) {
-    //   // const foundUser = this.users.find(u => u.uid === user.uid)
-    //   const foundUser = this.users[user.uid]
-    //   return foundUser
-    // },
-    // findUserMessage(user, message) {
-    //   const foundMessage = user.messages.find(m => m.uid === message.uid)
-    //   return foundMessage
-    // },
-    // saveUser(user) {
-    //   // this.users.push(user)
-    //   // this.users[user.uid] = user
-    //   this.$set(this.users, user.uid, user)
-    //   // localStorage.me = JSON.stringify(this.me)
-    //   user = this.findUser(user)
-    //   return user
-    // },
-        // createStrapiUser(user) {
-      // console.log(user)
-      // const data = {
-      //   info: this.$refs.note.value
-      // }
-      // const formData = new FormData()
-      // formData.append('data', JSON.stringify(data))
-      // formData.append('files.message', this.voiceMessage.data, this.voiceMessage.name)
-
-      // this.$http
-      //   .post(`${this.$apiURL}/voice-messages`, formData)
-      //   .then(res => { 
-      //     console.log(res) 
-      //     this.voiceMessage = null
-      //     this.sent = true
-      //     setTimeout(() => { this.sent = false }, 2000)
-      //   })
-      //   .catch(err => { console.log(err) })
-    // },
+    dragViewport({ deltaX, deltaY, first, last }) {
+      const userlandContainer = this.$refs.userlandContainer
+      if (first) {
+        this.dragging = true
+        return
+      }
+      if (last) {
+        this.dragging = false
+        return
+      }
+      userlandContainer.scroll({
+        left: this.windowLeft + deltaX * this.zoomIndex,
+        top: this.windowTop + deltaY * this.zoomIndex,
+      })
+    },
     constructMessage(text) {
       const time = ((new Date()).getTime())
       const message = {
@@ -483,129 +455,122 @@ export default {
       }
       return message
     },
-    track(user) {
-      if (user.uid == this.me.uid) {
-        let x, y
-        document.addEventListener('mousemove', (e) => {
-          // if(!this.scrolling) {
-            const userlandContainer = this.$refs.userlandContainer
-            // const userlandContainer = this.$refs.userlandContainer
-            // x = 100 * e.clientX / window.innerWidth
-            // y = 100 * e.clientY / window.innerHeight
-            x = 0.2 * 100 * (userlandContainer.scrollLeft + e.clientX) / userlandContainer.offsetWidth
-            y = 0.2 * 100 * (userlandContainer.scrollTop + e.clientY) /userlandContainer.offsetHeight
-            this.$set(this.me, 'x', x)
-            this.$set(this.me, 'y', y)
-            // if((Math.floor(this.me.x)) % 3 === 0) {
-            this.announcePosition(this.me) 
-            // }
+    track() {
+      let x, y
+      document.addEventListener('mousemove', (e) => {
+        // if(!this.scrolling) {
+          const userlandContainer = this.$refs.userlandContainer
+          // const userlandContainer = this.$refs.userlandContainer
+          // x = 100 * e.clientX / window.innerWidth
+          // y = 100 * e.clientY / window.innerHeight
+          x = 0.2 * 100 * (userlandContainer.scrollLeft + e.clientX) / userlandContainer.offsetWidth
+          y = 0.2 * 100 * (userlandContainer.scrollTop + e.clientY) /userlandContainer.offsetHeight
+          this.$set(this.me, 'x', x)
+          this.$set(this.me, 'y', y)
+          // if((Math.floor(this.me.x)) % 3 === 0) {
+          this.announcePosition(this.me) 
           // }
-          e.preventDefault()
-        })
+        // }
+        e.preventDefault()
+      })
 
-        let currentMessage
-        // const input = this.$refs.me.$refs.Cursor.$refs.input
+      let currentMessage
+      // const input = this.$refs.me.$refs.Cursor.$refs.input
 
-        document.addEventListener('keyup', (e) => {
-          if (this.registered && !this.editing) {
+      document.addEventListener('keyup', (e) => {
+        if (this.registered && !this.editing) {
 
-            const input = this.$refs.me.$refs.Cursor.$refs.input
-            const key = e.which || e.keyCode
-            const [ 
-                    firstMessage, 
-                    lastMessage, 
-                    previousMessage, 
-                    nextMessage
-                  ]
-                = this.computeMessages(this.me.messages, currentMessage)
+          const input = this.$refs.me.$refs.Cursor.$refs.input
+          const key = e.which || e.keyCode
+          const [ 
+                  firstMessage, 
+                  lastMessage, 
+                  previousMessage, 
+                  nextMessage
+                ]
+              = this.computeMessages(this.me.messages, currentMessage)
 
-            if (input !== document.activeElement) {
-              if (key >= 48 && key <= 90) {
-                const char = String.fromCharCode(key)
-                input.value = char              
-              }
-              input.focus()
+          if (input !== document.activeElement) {
+            if (key >= 48 && key <= 90) {
+              const char = String.fromCharCode(key)
+              input.value = char              
             }
-
-            const message = this.constructMessage(input.value)
-            this.me.typing = message.content
-            this.announceTyping(message)
-
-            if (key == 27) {
-              input.value = ''
-              input.blur()
-
-            } else if (key == 38) {
-              if (!currentMessage) {
-                currentMessage = lastMessage
-                input.value = currentMessage.content
-                input.select()
-              } else if (previousMessage) {
-                currentMessage = previousMessage
-                input.value = currentMessage.content
-                input.select()
-              } else {
-                currentMessage = firstMessage
-                input.value = currentMessage.content
-              }
-
-            } else if (key == 40) {
-              if (currentMessage && nextMessage) {
-                currentMessage = nextMessage
-                input.value = currentMessage.content
-                input.select()
-              }
-
-            // } else if (key == 13 && e.shiftKey) {
-            //   // input.style.height = input.scrollHeight + 15 + 'px'
-            //   // input.value = input.value + '\n'
-            //   input.value = input.value + '<br>'
-
-            } else if (key == 13 && !e.shiftKey) {
-              if (message.content && message.content != ' ') {
-                input.value = input.value - '\n'
-                this.me.messages.push(message)
-                this.me.typing = ''
-                // this.$refs.me.messages.push(message)
-                localStorage.me = JSON.stringify(this.me)
-                this.announceMessage(message)
-                currentMessage = undefined
-                input.value = ''
-                input.placeholder = ''
-                // input.style.height = '15px'
-              }
-            }
-
-            e.preventDefault()
+            input.focus()
           }
-        })
 
-        document.addEventListener('click', (e) => {
-          if (this.registered) {
-            console.log('send')
+          const message = this.constructMessage(input.value)
+          this.me.typing = message.content
+          this.announceTyping(message)
 
-            const input = this.$refs.me.$refs.Cursor.$refs.input
-            const message = this.constructMessage(input.value)
+          if (key == 27) {
+            input.value = ''
+            input.blur()
 
+          } else if (key == 38) {
+            if (!currentMessage) {
+              currentMessage = lastMessage
+              input.value = currentMessage.content
+              input.select()
+            } else if (previousMessage) {
+              currentMessage = previousMessage
+              input.value = currentMessage.content
+              input.select()
+            } else {
+              currentMessage = firstMessage
+              input.value = currentMessage.content
+            }
+
+          } else if (key == 40) {
+            if (currentMessage && nextMessage) {
+              currentMessage = nextMessage
+              input.value = currentMessage.content
+              input.select()
+            }
+
+          // } else if (key == 13 && e.shiftKey) {
+          //   // input.style.height = input.scrollHeight + 15 + 'px'
+          //   // input.value = input.value + '\n'
+          //   input.value = input.value + '<br>'
+
+          } else if (key == 13 && !e.shiftKey) {
             if (message.content && message.content != ' ') {
+              input.value = input.value - '\n'
               this.me.messages.push(message)
+              this.me.typing = ''
               // this.$refs.me.messages.push(message)
               localStorage.me = JSON.stringify(this.me)
               this.announceMessage(message)
               currentMessage = undefined
               input.value = ''
               input.placeholder = ''
+              // input.style.height = '15px'
             }
-            e.stopPropagation()
-            e.preventDefault()
           }
-        })
 
-      } else {
-        // const User = this.$refs.Users.find(u => u.uid == user.uid)
-        // User.x = user.x
-        // User.y = user.y
-      }
+          e.preventDefault()
+        }
+      })
+
+      document.addEventListener('click', (e) => {
+        if (this.registered) {
+          console.log('send')
+
+          const input = this.$refs.me.$refs.Cursor.$refs.input
+          const message = this.constructMessage(input.value)
+
+          if (message.content && message.content != ' ') {
+            this.me.messages.push(message)
+            // this.$refs.me.messages.push(message)
+            localStorage.me = JSON.stringify(this.me)
+            this.announceMessage(message)
+            currentMessage = undefined
+            input.value = ''
+            input.placeholder = ''
+          }
+          e.stopPropagation()
+          e.preventDefault()
+        }
+      })
     },
     computeMessages(messages, currentMessage) {
       const firstMessage = messages[0]
@@ -640,8 +605,6 @@ export default {
       e.stopPropagation()
     },
     clearDB(e) {
-      // this.me.messages = []
-      // localStorage.me = JSON.stringify(this.me)
       this.users = {}
       this.announceClearDB()
       e.stopPropagation()
@@ -663,7 +626,9 @@ export default {
 <style>
 header {
   position: absolute;
-  width: 100%;
+  /* width: 100%; */
+  margin-left: 2vh;
+  margin-top: 2vh;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -672,7 +637,14 @@ header {
   transition: filter 0.3s ease;
 
 }
-header .lounge {
+header #minimap {
+  box-sizing: border-box;
+  height: 20vh;
+  width: 20vw;
+  background: white;
+  border: 1px solid grey;
+}
+header #lounge {
   width: 100%;
   height: 6vh;
   display: flex;
@@ -681,7 +653,7 @@ header .lounge {
   border-bottom: 1px solid grey;
   background: white;
 }
-header .lounge .title {
+header #lounge .title {
   box-sizing: border-box;
   /* margin-top: auto; */
   /* padding: 0.25vh 0.5vw; */
@@ -691,41 +663,43 @@ header .lounge .title {
   border-bottom: 1px solid grey;
   border-right: 1px solid grey;
 }
-header .tools {
-  width: 10%;
+header #tools {
+  box-sizing: border-box;
+  margin-top: 2vh;
+  width: 10vw;
   height: 10vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  border-bottom: 1px solid grey;
-  border-right: 1px solid grey;
+  border: 1px solid grey;
   background: white;
   line-height: 1.9vh;
 
 }
-header .tools .title {
+header #tools .title {
   box-sizing: border-box;
   padding: 0vh 0.5vw;
   line-height: 1.9vh;
   width: 100%;
   border-bottom: 1px solid grey;
 }
-header .tools div {
+header #tools div {
   margin: 0.2vh 0.5vw;
   display: flex;
   align-items: center;
 }
-header .tools .db input {
+header #tools .db input {
   /* background: red; */
   color: red;
 }
 header #userList {
+  box-sizing: border-box;
+  margin-top: 2vh;
+  width: 12vw;
   display: flex;
   flex-direction: column;
-  width: 10%;
   background: white;
-  border-bottom: 1px solid grey;
-  border-right: 1px solid grey;
+  border: 1px solid grey;
 }
 header #userList .title {
 box-sizing: border-box;
