@@ -1,8 +1,7 @@
 <template>
   <div
-    v-if="uid"
-    class="user"
     :class="[
+      'user',
       uid,
       {
         me: isMe

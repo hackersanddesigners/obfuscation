@@ -1,28 +1,9 @@
-
 <template>
-  <div id="userland">
-    <!-- <l-map ref="myMap">  -->
-      <!-- <l-tile-layer 
-        url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
-      ></l-tile-layer> -->
-      <!-- <l-grid-layer 
-        :tile-component="tileComponent"
-      ></l-grid-layer> -->
-      <!-- <l-grid-layer> -->
-        <!-- <Tile /> -->
-      <!-- </l-grid-layer> -->
-      <!-- <l-marker 
-        :lat-lng="[47.413220, -1.219482]"
-      ></l-marker> -->
-    <Grid 
-      :hidden="!grid"
-    />
-    <!-- <h1>obfuscated platframe</h1> -->
-    <!-- <p id="usersLabel">users</p> -->
+  <div>
     <header>
-      <div class="lounge">
+      <!-- <div class="lounge">
         <span> cursor lounge </span>
-      </div>
+      </div> -->
       <div class="tools">
         <span> options </span>
         <div class="grid">
@@ -35,14 +16,14 @@
           />
           <label for="grid">grid</label>
         </div>
-        <div class="messages">
+        <!-- <div class="messages">
           <input
             type="button"
             name="messages" 
             value="clear messages"
             @click="clearMessages($event)"
           />
-        </div>
+        </div> -->
         <div class="storage">
           <input
             type="button"
@@ -52,51 +33,109 @@
           />
         </div>
       </div>
+      <div id="userList">
+        <ul>
+          <UserLabel
+            :key="me.uid"
+            :uid="me.uid" 
+            :name="me.name" 
+            :color="me.color"
+            :connected="me.connected"
+            :x="me.x"
+            :y="me.y"
+            :isMe="true"
+            :typing="me.typing"
+            @click.native="editing=true"
+          />
+          <UserLabel
+            v-for="(user) in users"
+            :key="user.uid"
+            :uid="user.uid" 
+            :name="user.name" 
+            :color="user.color"
+            :connected="user.connected"
+            :x="user.x"
+            :y="user.y"
+            :typing="user.typing"
+            @click.native="scrollToUser(user, $event)"
+          />
+        </ul>
+      </div>
     </header>
-
     <Register
       v-if="!registered" 
       :me="me"
       @registered="saveMe"
     />
+    <EditUser
+      v-if="editing" 
+      :me="me"
+      @editeduser="saveMe"
+    />
+    <div id="userlandContainer" ref="userlandContainer">
+      <div id="userland" ref="userland">
+        <!-- <l-map ref="myMap">  -->
+          <!-- <l-tile-layer 
+            url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
+          ></l-tile-layer> -->
+          <!-- <l-grid-layer 
+            :tile-component="tileComponent"
+          ></l-grid-layer> -->
+          <!-- <l-grid-layer> -->
+            <!-- <Tile /> -->
+          <!-- </l-grid-layer> -->
+          <!-- <l-marker 
+            :lat-lng="[47.413220, -1.219482]"
+          ></l-marker> -->
+        <Grid 
+          :hidden="!grid"
+        />
+        <!-- <h1>obfuscated platframe</h1> -->
+        <!-- <p id="usersLabel">users</p> -->
 
-    <User
-      v-if="me"
-      ref="me"
-      :uid="me.uid" 
-      :name="me.name" 
-      :color="me.color" 
-      :isMe=true
-      :connected="me.connected"
-      :x="me.x"
-      :y="me.y"
-      :messages="me.messages"
-    />
-    <User 
-      v-for="(user) in users"
-      ref="Users"
-      :key="user.uid"
-      :uid="user.uid" 
-      :name="user.name" 
-      :color="user.color"
-      :connected="user.connected"
-      :x="user.x"
-      :y="user.y"
-      :typing="user.typing"
-      :messages="user.messages"
-    />
-    <!-- </l-map> -->
+        <User
+          v-if="me"
+          ref="me"
+          :uid="me.uid" 
+          :name="me.name" 
+          :color="me.color" 
+          :isMe=true
+          :connected="me.connected"
+          :x="me.x"
+          :y="me.y"
+          :messages="me.messages"
+        />
+        <User 
+          v-for="(user) in users"
+          ref="Users"
+          :key="user.uid"
+          :uid="user.uid" 
+          :name="user.name" 
+          :color="user.color"
+          :connected="user.connected"
+          :x="user.x"
+          :y="user.y"
+          :typing="user.typing"
+          :messages="user.messages"
+        />
+        <!-- </l-map> -->
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import { uid } from 'uid'
-// import L from 'leaflet'
+import smoothscroll from 'smoothscroll-polyfill'
 
 import Grid from './Grid'
-// import Tile from './Tile'
 import User from './User'
 import Register from './Register'
+import EditUser from './EditUser'
+import UserLabel from './UserLabel.vue'
+
+// import L from 'leaflet'
+// import Tile from './Tile'
 
 export default {
   name: 'Userland',
@@ -104,7 +143,9 @@ export default {
     Grid,
     // Tile,
     Register,
+    EditUser,
     User,
+    UserLabel,
   },
   data() {
     return {
@@ -120,6 +161,7 @@ export default {
       },
       registered: this.checkForMe(),
       visited: this.checkIfVisited(),
+      editing: false,
       users: {},
       storedUsers: {},
       connectedUsers: {},
@@ -174,7 +216,19 @@ export default {
     // this.track(this.me)
   },
   mounted() {
-    
+    smoothscroll.polyfill()
+
+    const center = { 
+      x: (this.$refs.userland.offsetWidth - window.innerWidth) / 2,
+      y: (this.$refs.userland.offsetHeight - window.innerHeight) / 2
+    }
+
+    this.$refs.userlandContainer.scroll({
+      left: center.x,
+      top: center.y,
+      behavior: 'smooth'
+    })
+
   },
   sockets: {
     connect() { 
@@ -256,6 +310,7 @@ export default {
       this.me.color = newLook.color
       this.announceUser()
       this.registered = true
+      this.editing = false
       localStorage.me = JSON.stringify(this.me)
     },
     saveDB() {
@@ -295,6 +350,21 @@ export default {
     },
     sendToPeers(msg) {
       this.$socket.emit('pingServer', this.me, msg)
+    },
+    scrollToUser(user, e) {
+
+      const center = { 
+        x: this.$refs.userland.offsetWidth * 0.01 * user.x - window.innerWidth / 2,
+        y: this.$refs.userland.offsetHeight* 0.01 * user.y - window.innerHeight / 2
+      }
+
+      this.$refs.userlandContainer.scroll({
+        left: center.x,
+        top: center.y,
+        behavior: 'smooth'
+      })
+
+      e.stopPropagation()
     },
     // checkForOthers() {
     //   if (localStorage.users) {
@@ -347,8 +417,10 @@ export default {
         content: text,
         time: time,
         color: this.me.color,
-        x: Math.floor(this.me.x / 2) * 2,
-        y: Math.floor(this.me.y / 2) * 2,
+        // x: Math.floor(this.me.x / 2) * 2,
+        // y: Math.floor(this.me.y / 2) * 2,
+        x: Math.floor(this.me.x / 0.4) * 0.4,
+        y: Math.floor(this.me.y / 0.4) * 0.4,
       }
       return message
     },
@@ -356,8 +428,12 @@ export default {
       if (user.uid == this.me.uid) {
         let x, y
         document.addEventListener('mousemove', (e) => {
-            x = 100 * e.clientX / window.innerWidth
-            y = 100 * e.clientY / window.innerHeight
+            const userlandContainer = this.$refs.userlandContainer
+            // const userlandContainer = this.$refs.userlandContainer
+            // x = 100 * e.clientX / window.innerWidth
+            // y = 100 * e.clientY / window.innerHeight
+            x = 0.2 * 100 * (userlandContainer.scrollLeft + e.clientX) / userlandContainer.offsetWidth
+            y = 0.2 * 100 * (userlandContainer.scrollTop + e.clientY) /userlandContainer.offsetHeight
             this.$set(this.me, 'x', x)
             this.$set(this.me, 'y', y)
             // this.me.x = this.$refs.me.x = 100 * e.clientX / window.innerWidth
@@ -372,7 +448,7 @@ export default {
         // const input = this.$refs.me.$refs.Cursor.$refs.input
 
         document.addEventListener('keyup', (e) => {
-          if (this.registered) {
+          if (this.registered && !this.editing) {
 
             const input = this.$refs.me.$refs.Cursor.$refs.input
             const key = e.which || e.keyCode
@@ -510,16 +586,6 @@ export default {
 </script>
 
 <style>
-#userland {
-  width: 100%;
-  height: 100%;
-  font-family: monospace;
-  font-size: 9pt;
-}
-#usersLabel {
-  font-weight: bold;
-  margin: 0.5vh 0.5vw;
-}
 header {
   position: absolute;
   width: 100%;
@@ -527,6 +593,7 @@ header {
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
+  z-index: 1;
 }
 header .lounge {
   width: 100%;
@@ -549,7 +616,7 @@ header .lounge span {
 }
 header .tools {
   width: 10%;
-  height: 8vh;
+  height: 6vh;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -570,5 +637,40 @@ header .tools div {
   margin: 0.1vh 0.5vw;
   display: flex;
   align-items: center;
+}
+header #userList ul {
+  margin: 0;
+  padding: 0;
+}
+#userlandContainer {
+  box-sizing: border-box;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  overflow: scroll;
+}
+#userland {
+  /* box-sizing: border-box; */
+  position: absolute;
+  /* float: left; */
+  /* padding: 500px 0px; */
+  /* padding: 500px 0px; */
+  top: 0;
+  left: 0;
+  /* top: -100%;
+  left: -100%; */
+  height: 500%;
+  width: 500%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: scroll;
+  transition: transform 0.5s ease;
+
+  /* width: 100%;
+  height: 100%; */
+  font-family: monospace;
+  font-size: 9pt;
 }
 </style>

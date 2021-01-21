@@ -7,8 +7,8 @@
       typing: typing || hovered
     }"
     :style="{ 
-      left: (x - 1) + '%',
-      top: (y - 0.75) + '%'
+      left: (x -  0.2 * 1) + '%',
+      top: (y -  0.2 * 0.75) + '%'
     }"
   >
     <input 

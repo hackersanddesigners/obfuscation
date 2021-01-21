@@ -23,6 +23,8 @@ export default {
   props: [ 'hidden' ],
   data() {
     return {
+      // y: 250,
+      // x: 250,
       y: 50,
       x: 50,
     }
@@ -40,6 +42,7 @@ table {
   border-collapse: collapse;
   opacity: 0.075;
   transition: opacity 0.2s ease;
+  pointer-events: none;
 }
 table.hidden {
   opacity: 0;

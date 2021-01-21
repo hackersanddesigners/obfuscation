@@ -81,4 +81,7 @@ input {
   border-radius: 10px;
   margin-top: 5px;
 }
+input[type="button"] {
+  cursor: pointer;
+}
 </style>
