@@ -9,7 +9,7 @@
       }
     ]"
     :style="{ 
-      '--userColor': connected ? color : color,
+      '--userColor': connected ? color : 'lightgrey',
     }"
   >
     <Cursorr
@@ -82,6 +82,6 @@ export default {
   color: var(--userColor);
 }
 .user.disconnected {
-  filter: grayscale(1) brightness(3);
+  /* filter: grayscale(1) brightness(3); */
 }
 </style>

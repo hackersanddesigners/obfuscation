@@ -187,6 +187,8 @@ export default {
       windowHeight: window.innerHeight,
       windowLeft: null,
       windowTop: null,
+
+      doNotSave: false,
     }
   },
   created() {
@@ -258,6 +260,9 @@ export default {
     },
     disconnect() { 
       this.me.connected = false 
+      if (!this.doNotSave) {
+        localStorage.me = JSON.stringify(this.me)
+      }
     },
     dbSync(data) {
       console.log(data)
@@ -512,7 +517,7 @@ export default {
               // input.style.height = '15px'
             }
           }
-
+          e.stopPropagation()
           e.preventDefault()
         }
       })
@@ -546,6 +551,7 @@ export default {
       return [firstMessage, lastMessage, previousMessage, nextMessage]
     },
     clearLocalStorage(e) {
+      this.doNotSave = true
       localStorage.clear()
       window.location.reload(true)
       e.stopPropagation()

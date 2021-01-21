@@ -42,4 +42,7 @@ export default {
   border: 1px solid grey;
   cursor: move;
 }
+#viewport:hover {
+  border-color: red;
+}
 </style>
