@@ -11,14 +11,11 @@
       @editeduser="saveMe"
     />
     <header :class="{ blur: !registered || editing }" >
+      <!-- <h1>obfuscated platframe</h1> -->
       <!-- <div id="lounge">
         <span class="title"> cursor lounge </span>
       </div> -->
       <div id="minimap">
-        <!-- <div 
-          id="viewport"
-          ref="viewport"
-        /> -->
         <Viewport
           id="viewport"
           ref="viewport"
@@ -29,20 +26,9 @@
 
           v-dragged.prevent="dragViewport"
         />
-
       </div>
       <div id="tools">
         <span class="title"> options </span>
-        <!-- <div class="grid">
-          <input 
-            type="checkbox" 
-            name="grid" 
-            :value="grid" 
-            checked
-            @click="toggleGrid($event)"
-          />
-          <label for="grid">grid</label>
-        </div> -->
         <div class="grid">
           <input 
             type="button" 
@@ -120,25 +106,9 @@
       :class="{ blur: !registered || editing }"
     >
       <div id="userland" ref="userland">
-        <!-- <l-map ref="myMap">  -->
-          <!-- <l-tile-layer 
-            url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
-          ></l-tile-layer> -->
-          <!-- <l-grid-layer 
-            :tile-component="tileComponent"
-          ></l-grid-layer> -->
-          <!-- <l-grid-layer> -->
-            <!-- <Tile /> -->
-          <!-- </l-grid-layer> -->
-          <!-- <l-marker 
-            :lat-lng="[47.413220, -1.219482]"
-          ></l-marker> -->
         <Grid 
           :hidden="!grid"
         />
-        <!-- <h1>obfuscated platframe</h1> -->
-        <!-- <p id="usersLabel">users</p> -->
-
         <User
           v-if="me"
           ref="me"
@@ -164,7 +134,6 @@
           :typing="user.typing"
           :messages="user.messages"
         />
-        <!-- </l-map> -->
       </div>
     </div>
   </div>
@@ -212,7 +181,7 @@ export default {
       registered: this.checkForMe(),
       visited: this.checkIfVisited(),
 
-      grid: true,
+      grid: false,
       zoomIndex: 25,
       windowWidth: window.innerWidth,
       windowHeight: window.innerHeight,
@@ -460,9 +429,6 @@ export default {
       document.addEventListener('mousemove', (e) => {
         // if(!this.scrolling) {
           const userlandContainer = this.$refs.userlandContainer
-          // const userlandContainer = this.$refs.userlandContainer
-          // x = 100 * e.clientX / window.innerWidth
-          // y = 100 * e.clientY / window.innerHeight
           x = 0.2 * 100 * (userlandContainer.scrollLeft + e.clientX) / userlandContainer.offsetWidth
           y = 0.2 * 100 * (userlandContainer.scrollTop + e.clientY) /userlandContainer.offsetHeight
           this.$set(this.me, 'x', x)
@@ -553,7 +519,7 @@ export default {
 
       document.addEventListener('click', (e) => {
         if (this.registered) {
-          console.log('send')
+          console.log('click')
 
           const input = this.$refs.me.$refs.Cursor.$refs.input
           const message = this.constructMessage(input.value)
@@ -638,6 +604,7 @@ header {
 
 }
 header #minimap {
+  position: relative;
   box-sizing: border-box;
   height: 20vh;
   width: 20vw;
@@ -713,6 +680,7 @@ header #userList ul {
   padding: 0;
 }
 #userlandContainer {
+  cursor: none;
   box-sizing: border-box;
   position: absolute;
   height: 100%;

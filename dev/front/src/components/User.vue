@@ -4,19 +4,14 @@
       'user',
       uid,
       {
-        me: isMe
+        me: isMe,
+        disconnected: !connected
       }
     ]"
-    :style="{ '--userColor': connected ? color : 'lightgrey' }"
+    :style="{ 
+      '--userColor': connected ? color : color,
+    }"
   >
-    <!-- <p 
-      class="userLabel"
-      @mouseover="!isMe ? hovered=true : null"
-      @mouseleave="hovered=false"
-    >
-      <span>({{ (x).toFixed(2) }}, {{ (y).toFixed(2) }})</span>
-      <span> {{ name }} </span>
-    </p> -->
     <Cursorr
       ref="Cursor"
       :uid="uid" 
@@ -73,30 +68,20 @@ export default {
   ], 
   data() {
     return {
-      // x: 0,
-      // y: 0,
-      // typing: '',
-      // messages: [],
-      // cursorHovered: false,
-      // messageHovered: false,
       hovered: false
     }
   },
   mounted() {
-    // setInterval(() => {
-    //   console.log(this.messages)
-    // }, 1000)
   },
   methods: {
   }
 }
 </script>
 <style scoped>
-div.user {
-  /* display: inline; */
+.user {
   color: var(--userColor);
 }
-.userLabel {
-  margin: 0.5vh 0.5vw;
+.user.disconnected {
+  filter: grayscale(1) brightness(3);
 }
 </style>

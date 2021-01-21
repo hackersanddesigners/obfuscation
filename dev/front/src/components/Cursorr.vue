@@ -109,7 +109,7 @@ export default {
   padding: 0px 10px;
 }
 .cursorContainer .input {
-  /* min-width: 220px; */
+  min-width: 220px;
   width: auto;
   height: 15px;
   padding: 0px;
@@ -136,7 +136,7 @@ export default {
   overflow: hidden;
   line-height: 1.6;
   resize: none;
-  width: 400px;
+  /* width: 400px; */
   border: none;
   outline: none;
   background: transparent;
