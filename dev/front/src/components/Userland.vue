@@ -1,12 +1,22 @@
 <template>
   <div>
-    <header>
+    <Register
+      v-if="!registered" 
+      :me="me"
+      @registered="saveMe"
+    />
+    <EditUser
+      v-if="editing" 
+      :me="me"
+      @editeduser="saveMe"
+    />
+    <header :class="{ blur: !registered || editing }" >
       <!-- <div class="lounge">
         <span class="title"> cursor lounge </span>
       </div> -->
       <div class="tools">
         <span class="title"> options </span>
-        <div class="grid">
+        <!-- <div class="grid">
           <input 
             type="checkbox" 
             name="grid" 
@@ -15,20 +25,36 @@
             @click="toggleGrid($event)"
           />
           <label for="grid">grid</label>
+        </div> -->
+        <div class="grid">
+          <input 
+            type="button" 
+            name="grid" 
+            :value="grid ? 'hide grid' : 'show grid'" 
+            @click="toggleGrid($event)"
+          />
         </div>
-        <div class="messages">
+        <!-- <div class="messages">
           <input
             type="button"
             name="messages" 
             value="clear messages"
             @click="clearMessages($event)"
           />
+        </div> -->
+        <div class="edituser">
+          <input
+            type="button"
+            name="edituser" 
+            value="edit appearance"
+            @click="editing=true"
+          />
         </div>
         <div class="storage">
           <input
             type="button"
             name="storage" 
-            value="clear storage"
+            value="delete me"
             @click="clearLocalStorage($event)"
           />
         </div>
@@ -36,7 +62,7 @@
           <input
             type="button"
             name="db" 
-            value="clear database"
+            value="delete everything"
             @click="clearDB($event)"
           />
         </div>
@@ -54,7 +80,7 @@
             :y="me.y"
             :isMe="true"
             :typing="me.typing"
-            @click.native="editing=true"
+            @click.native="scrollToUser(me, $event)"
           />
           <UserLabel
             v-for="(user) in users"
@@ -71,17 +97,11 @@
         </ul>
       </div>
     </header>
-    <Register
-      v-if="!registered" 
-      :me="me"
-      @registered="saveMe"
-    />
-    <EditUser
-      v-if="editing" 
-      :me="me"
-      @editeduser="saveMe"
-    />
-    <div id="userlandContainer" ref="userlandContainer">
+    <div 
+      id="userlandContainer" 
+      ref="userlandContainer"
+      :class="{ blur: !registered || editing }"
+    >
       <div id="userland" ref="userland">
         <!-- <l-map ref="myMap">  -->
           <!-- <l-tile-layer 
@@ -298,7 +318,7 @@ export default {
       }
       if (type == 'db') {
         const db = content
-        console.log('got DB from peer: ', db)
+        console.log('got DB from swarm: ', db)
         for (let key in db) {
           const user = db[key]
           if (key !== this.me.uid) {
@@ -314,7 +334,7 @@ export default {
         localStorage.users = JSON.stringify(this.users)
         this.me.messages = []
         localStorage.me = JSON.stringify(this.me)
-
+        window.location.reload(true)
       }
     }
   },
@@ -649,6 +669,8 @@ header {
   justify-content: flex-start;
   align-items: flex-start;
   z-index: 1;
+  transition: filter 0.3s ease;
+
 }
 header .lounge {
   width: 100%;
@@ -674,7 +696,7 @@ header .tools {
   height: 10vh;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   border-bottom: 1px solid grey;
   border-right: 1px solid grey;
   background: white;
@@ -689,9 +711,13 @@ header .tools .title {
   border-bottom: 1px solid grey;
 }
 header .tools div {
-  margin: 0.1vh 0.5vw;
+  margin: 0.2vh 0.5vw;
   display: flex;
   align-items: center;
+}
+header .tools .db input {
+  /* background: red; */
+  color: red;
 }
 header #userList {
   display: flex;
@@ -718,6 +744,7 @@ header #userList ul {
   height: 100%;
   width: 100%;
   overflow: scroll;
+  transition: filter 0.3s ease;
 }
 #userland {
   /* box-sizing: border-box; */

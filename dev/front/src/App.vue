@@ -75,4 +75,7 @@ a, a:hover, a:active, a:visited {
 a:hover {
   text-decoration: underline;
 }
+.blur {
+  filter: blur(5px);
+}
 </style>

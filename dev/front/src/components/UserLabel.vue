@@ -16,8 +16,9 @@
     <span>
       {{ isMe ? "me" : connected ? name : name + ' (offline)' }} 
     </span>
-    <span v-if="!isMe && hovered"> → </span> 
-    <span v-else-if="isMe && hovered"> → edit profile</span> 
+    <span v-if="hovered"> → </span> 
+    <!-- <span v-if="!isMe && hovered"> → </span>  -->
+    <!-- <span v-else-if="isMe && hovered"> → edit profile</span>  -->
   </li>
 </template>
 
@@ -55,8 +56,10 @@ li {
   list-style: none;
   padding: 0;
   margin: 0.5vh 0.5vw;
-  color: var(--userColor);
   font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  color: var(--userColor);
   cursor: pointer;
 }
 </style>
