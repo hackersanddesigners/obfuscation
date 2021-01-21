@@ -2,10 +2,10 @@
   <div>
     <header>
       <!-- <div class="lounge">
-        <span> cursor lounge </span>
+        <span class="title"> cursor lounge </span>
       </div> -->
       <div class="tools">
-        <span> options </span>
+        <span class="title"> options </span>
         <div class="grid">
           <input 
             type="checkbox" 
@@ -34,6 +34,7 @@
         </div>
       </div>
       <div id="userList">
+        <span class="title"> options </span>
         <ul>
           <UserLabel
             :key="me.uid"
@@ -162,6 +163,7 @@ export default {
       registered: this.checkForMe(),
       visited: this.checkIfVisited(),
       editing: false,
+      scrolling: false,
       users: {},
       storedUsers: {},
       connectedUsers: {},
@@ -218,17 +220,33 @@ export default {
   mounted() {
     smoothscroll.polyfill()
 
+    const userlandContainer = this.$refs.userlandContainer
+
+    userlandContainer.addEventListener('scroll', (e) => {
+      this.scrolling = true
+      // console.log(0.01 * this.me.x * userlandContainer.offsetWidth)
+      // let x = 0.2 * 100 * (userlandContainer.scrollLeft + e.clientX * userlandContainer.scrollLeft) / userlandContainer.offsetWidth
+      // let y = 0.2 * 100 * (userlandContainer.scrollTop + e.clientX * userlandContainer.scrollLeft) /userlandContainer.offsetHeight
+      // let x = 0.2 * 100 * (userlandContainer.scrollLeft + 0.01 * this.me.x * userlandContainer.offsetWidth) / userlandContainer.offsetWidth
+      // let y = 0.2 * 100 * (userlandContainer.scrollTop + 0.01 * this.me.y * userlandContainer.offsetHeight) / userlandContainer.offsetHeight
+      // this.$set(this.me, 'x', x)
+      // this.$set(this.me, 'y', y)
+      // // if((Math.floor(this.me.x)) % 3 === 0) {
+      // this.announcePosition(this.me) 
+      e.preventDefault()
+      this.scrolling = false
+    })
+
     const center = { 
       x: (this.$refs.userland.offsetWidth - window.innerWidth) / 2,
       y: (this.$refs.userland.offsetHeight - window.innerHeight) / 2
     }
 
-    this.$refs.userlandContainer.scroll({
+    userlandContainer.scroll({
       left: center.x,
       top: center.y,
       behavior: 'smooth'
     })
-
   },
   sockets: {
     connect() { 
@@ -428,6 +446,7 @@ export default {
       if (user.uid == this.me.uid) {
         let x, y
         document.addEventListener('mousemove', (e) => {
+          // if(!this.scrolling) {
             const userlandContainer = this.$refs.userlandContainer
             // const userlandContainer = this.$refs.userlandContainer
             // x = 100 * e.clientX / window.innerWidth
@@ -436,11 +455,10 @@ export default {
             y = 0.2 * 100 * (userlandContainer.scrollTop + e.clientY) /userlandContainer.offsetHeight
             this.$set(this.me, 'x', x)
             this.$set(this.me, 'y', y)
-            // this.me.x = this.$refs.me.x = 100 * e.clientX / window.innerWidth
-            // this.me.y = this.$refs.me.y = 100 * e.clientY / window.innerHeight
             // if((Math.floor(this.me.x)) % 3 === 0) {
             this.announcePosition(this.me) 
             // }
+          // }
           e.preventDefault()
         })
 
@@ -604,7 +622,7 @@ header .lounge {
   border-bottom: 1px solid grey;
   background: white;
 }
-header .lounge span {
+header .lounge .title {
   box-sizing: border-box;
   /* margin-top: auto; */
   /* padding: 0.25vh 0.5vw; */
@@ -626,7 +644,7 @@ header .tools {
   line-height: 1.9vh;
 
 }
-header .tools span {
+header .tools .title {
   box-sizing: border-box;
   padding: 0vh 0.5vw;
   line-height: 1.9vh;
@@ -638,7 +656,22 @@ header .tools div {
   display: flex;
   align-items: center;
 }
-header #userList ul {
+header #userList {
+  display: flex;
+  flex-direction: column;
+  width: 10%;
+  background: white;
+  border-bottom: 1px solid grey;
+  border-right: 1px solid grey;
+}
+header #userList .title {
+box-sizing: border-box;
+  padding: 0vh 0.5vw;
+  line-height: 1.9vh;
+  width: 100%;
+  border-bottom: 1px solid grey;
+}
+header #userList ul { 
   margin: 0;
   padding: 0;
 }

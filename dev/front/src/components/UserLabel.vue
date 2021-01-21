@@ -14,10 +14,10 @@
        {{ y.toFixed(2) }})
     </span> -->
     <span>
-      {{ connected ? name : name + ' (offline)' }} 
+      {{ isMe ? "me" : connected ? name : name + ' (offline)' }} 
     </span>
     <span v-if="!isMe && hovered"> → </span> 
-    <span v-else-if="isMe && hovered"> → edit your profile</span> 
+    <span v-else-if="isMe && hovered"> → edit profile</span> 
   </li>
 </template>
 
