@@ -16,20 +16,28 @@
           />
           <label for="grid">grid</label>
         </div>
-        <!-- <div class="messages">
+        <div class="messages">
           <input
             type="button"
             name="messages" 
             value="clear messages"
             @click="clearMessages($event)"
           />
-        </div> -->
+        </div>
         <div class="storage">
           <input
             type="button"
             name="storage" 
             value="clear storage"
             @click="clearLocalStorage($event)"
+          />
+        </div>
+        <div class="db">
+          <input
+            type="button"
+            name="db" 
+            value="clear database"
+            @click="clearDB($event)"
           />
         </div>
       </div>
@@ -290,7 +298,7 @@ export default {
       }
       if (type == 'db') {
         const db = content
-        // console.log(db)
+        console.log('got DB from peer: ', db)
         for (let key in db) {
           const user = db[key]
           if (key !== this.me.uid) {
@@ -298,6 +306,15 @@ export default {
           } 
         }
         this.saveDB()
+      }
+      if (type == 'clear-db') {
+        const db = content
+        console.log(db)
+        this.users = db
+        localStorage.users = JSON.stringify(this.users)
+        this.me.messages = []
+        localStorage.me = JSON.stringify(this.me)
+
       }
     }
   },
@@ -359,10 +376,14 @@ export default {
       })
     },
     announceDB() {
-      // const DB = this.users
-      // DB[this.me.uid] = this.me
       this.sendToPeers({
         type: 'db',
+        content: this.users
+      })
+    },
+    announceClearDB() {
+      this.sendToPeers({
+        type: 'clear-db',
         content: this.users
       })
     },
@@ -574,19 +595,35 @@ export default {
       return [firstMessage, lastMessage, previousMessage, nextMessage]
     },
     clearLocalStorage(e) {
-      console.log('clearing storage')
       localStorage.clear()
       window.location.reload(true)
       e.stopPropagation()
     },
     clearMessages(e) {
-      this.me.messages = []
+      for (let m = 0; m < this.me.messages.length; m ++) {
+        const message = this.me.messages[m]
+        message.deleted = true
+        // this.$set(message, key, user)
+      }
+      // for (let key in db) {
+      //   const user = db[key]
+      //   if (key !== this.me.uid) {
+      //     this.$set(this.users, key, user)
+      //   } 
+      // }
       this.me.typing = ''
       localStorage.me = JSON.stringify(this.me)
       e.stopPropagation()
     },
     toggleGrid(e) {
       this.grid =! this.grid
+      e.stopPropagation()
+    },
+    clearDB(e) {
+      // this.me.messages = []
+      // localStorage.me = JSON.stringify(this.me)
+      this.users = {}
+      this.announceClearDB()
       e.stopPropagation()
     },
     randomColor() {
@@ -634,7 +671,7 @@ header .lounge .title {
 }
 header .tools {
   width: 10%;
-  height: 6vh;
+  height: 10vh;
   display: flex;
   flex-direction: column;
   align-items: flex-start;

@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="uid"
+    v-if="uid && !deleted"
     class="messageContainer"
     :class="[
       uid,
@@ -11,7 +11,7 @@
     :style="{ 
       left: `${x}%`,
       top: `${y}%`,
-      '--blur': `blur(${ (now - time) / 10000000 }px)`
+      '--blur': `blur(${ (now - time) / 100000000 }px)`
     }"
   >
     <vue-markdown class="message"> {{ content }} </vue-markdown>
@@ -37,7 +37,8 @@ export default {
     'color',
     'x',
     'y',
-    'hovered'
+    'hovered',
+    'deleted'
   ], 
   data() {
     return {

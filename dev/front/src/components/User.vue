@@ -43,6 +43,7 @@
       :x="message.x"
       :y="message.y"
       :hovered="hovered"
+      :deleted="message.deleted"
       @mouseover.native="hovered=true"
       @mouseleave.native="hovered=false"
     />
