@@ -2,10 +2,15 @@
   <li
     :class="[
       'userLabel',
-      uid,
-      { me: isMe }
+      user.uid,
+      { 
+        me: isMe 
+      }
     ]"
-    :style="{ '--userColor': connected ? color : 'lightgrey' }"
+    :style="{ 
+      '--userColor': user.connected ? user.color : 'lightgrey' 
+    }"
+
     @mouseover="hovered=true"
     @mouseleave="hovered=false"
   >
@@ -13,14 +18,12 @@
       ({{ x.toFixed(2) }},
        {{ y.toFixed(2) }})
     </span> -->
+
     <span>
       ●
     </span>
-    <!-- <span>
-      {{ isMe ? "me" : connected ? name : name + ' (offline)' }} 
-    </span> -->
     <span>
-      {{ isMe ? "me" : name }} 
+      {{ isMe ? "me" : user.name }} 
     </span>
     <span> {{ hovered ? '→' : ''  }}</span> 
   </li>
@@ -32,14 +35,8 @@ export default {
   components: {
   },
   props: [ 
-    'uid',
-    'name',
-    'color',
     'isMe',
-    'connected',
-    'x',
-    'y',
-    'typing',
+    'user'
   ], 
   data() {
     return {
@@ -47,9 +44,6 @@ export default {
     }
   },
   mounted() {
-    // setInterval(() => {
-    //   console.log(this.messages)
-    // }, 1000)
   },
   methods: {
   }

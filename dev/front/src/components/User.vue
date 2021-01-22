@@ -2,43 +2,35 @@
   <div
     :class="[
       'user',
-      uid,
+      user.uid,
       {
         me: isMe,
-        disconnected: !connected
+        disconnected: !user.connected
       }
     ]"
     :style="{ 
-      '--userColor': connected ? color : 'lightgrey',
+      '--userColor': user.connected ? user.color : 'lightgrey',
     }"
   >
     <Cursorr
       ref="Cursor"
-      :uid="uid" 
-      :name="name" 
-      :color="color" 
+
+      :user="user"
       :isMe="isMe"
-      :x="x"
-      :y="y"
-      :typing="typing"
       :hovered="hovered"
-      :connected="connected"
+
       @mouseover.native="!isMe ? hovered=true : null"
       @mouseleave.native="hovered=false"
     />
     <Message
-      v-for="message in messages"
+      v-for="message in user.messages"
       ref="Messages"
+
       :key="message.uid"
-      :uid="message.uid"
-      :author="message.author"
-      :content="message.content"
-      :time="message.time"
-      :color="message.color"
-      :x="message.x"
-      :y="message.y"
+      :message="message"
+      :isMe="isMe"
       :hovered="hovered"
-      :deleted="message.deleted"
+
       @mouseover.native="hovered=true"
       @mouseleave.native="hovered=false"
     />
@@ -56,15 +48,8 @@ export default {
     Message
   },
   props: [ 
-    'uid',
-    'name',
-    'color',
-    'isMe',
-    'connected',
-    'x',
-    'y',
-    'typing',
-    'messages'
+    'user',
+    'isMe'
   ], 
   data() {
     return {

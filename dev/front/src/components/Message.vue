@@ -1,23 +1,21 @@
 <template>
   <div
-    v-if="uid && !deleted"
-    class="messageContainer"
+    v-if="message.uid && !message.deleted"
     :class="[
-      uid,
+      'messageContainer',
+      message.uid,
       {
         hover: hovered
       } 
     ]"
     :style="{ 
-      left: `${x}%`,
-      top: `${y}%`,
-      '--blur': `blur(${ (now - time) / 100000000 }px)`
+      left: `${ message.x }%`,
+      top: `${ message.y }%`,
+      '--blur': `blur(${ (now - message.time) / 100000000 }px)`
     }"
   >
-    <vue-markdown class="message"> {{ content }} </vue-markdown>
-    <span class="time"> {{ fromNow(time) }} </span>
-    <!-- <span class="message"> {{ content }} </span> -->
-    <!-- <span class="author"> {{ author }} </span> -->
+    <vue-markdown class="message"> {{ message.content }} </vue-markdown>
+    <span class="time"> {{ fromNow(message.time) }} </span>
   </div>
 </template>
 
@@ -29,16 +27,9 @@ export default {
   components: {
   },
   props: [ 
-    'uid',
-    'author',
     'isMe',
-    'content',
-    'time',
-    'color',
-    'x',
-    'y',
-    'hovered',
-    'deleted'
+    'message',
+    'hovered'
   ], 
   data() {
     return {

@@ -28,23 +28,15 @@
             type="button" 
             name="grid" 
             :value="grid ? 'hide grid' : 'show grid'" 
-            @click="toggleGrid($event)"
+            @click.stop="grid = !grid"
           />
         </div>
-        <!-- <div class="messages">
-          <input
-            type="button"
-            name="messages" 
-            value="clear messages"
-            @click="clearMessages($event)"
-          />
-        </div> -->
         <div class="edituser">
           <input
             type="button"
             name="edituser" 
             value="edit appearance"
-            @click="editing=true"
+            @click.stop="editing = true"
           />
         </div>
         <div class="storage">
@@ -52,7 +44,7 @@
             type="button"
             name="storage" 
             value="delete me"
-            @click="clearLocalStorage($event)"
+            @click.stop="deleteMe()"
           />
         </div>
         <div class="db">
@@ -60,7 +52,7 @@
             type="button"
             name="db" 
             value="delete everything"
-            @click="clearDB($event)"
+            @click.stop="announce('clear-db')"
           />
         </div>
       </div>
@@ -68,28 +60,17 @@
         <span class="title"> participants </span>
         <ul>
           <UserLabel
-            :key="me.uid"
-            :uid="me.uid" 
-            :name="me.name" 
-            :color="me.color"
-            :connected="me.connected"
-            :x="me.x"
-            :y="me.y"
+            :user="me"
             :isMe="true"
-            :typing="me.typing"
-            @click.native="scrollToUser(me, $event)"
+
+            @click.native.stop="scrollTo(getUserPosition(me), 'smooth')"
           />
           <UserLabel
-            v-for="(user) in connectedUsersFirst()"
+            v-for="user in connectedUsersFirst()"
             :key="user.uid"
-            :uid="user.uid" 
-            :name="user.name" 
-            :color="user.color"
-            :connected="user.connected"
-            :x="user.x"
-            :y="user.y"
-            :typing="user.typing"
-            @click.native="scrollToUser(user, $event)"
+            :user="user"
+            
+            @click.native.stop="scrollTo(getUserPosition(user), 'smooth')"
           />
         </ul>
       </div>
@@ -103,30 +84,17 @@
         <Grid 
           :hidden="!grid"
         />
-        <User
-          v-if="me"
+        <User 
           ref="me"
-          :uid="me.uid" 
-          :name="me.name" 
-          :color="me.color" 
-          :isMe=true
-          :connected="me.connected"
-          :x="me.x"
-          :y="me.y"
-          :messages="me.messages"
+          :key="me.uid"
+          :user="me"
+          :isMe="true"
         />
         <User 
-          v-for="(user) in users"
+          v-for="user in users"
           ref="Users"
           :key="user.uid"
-          :uid="user.uid" 
-          :name="user.name" 
-          :color="user.color"
-          :connected="user.connected"
-          :x="user.x"
-          :y="user.y"
-          :typing="user.typing"
-          :messages="user.messages"
+          :user="user"
         />
       </div>
     </div>
@@ -163,17 +131,20 @@ export default {
         color: this.randomColor(),
         x: 0,
         y: 0,
-        typing: String,
+        typing: null,
         messages: [],
       },
 
       users: {},
 
+      doNotSave: false,
+
       editing: false,
       scrolling: false,
       dragging: false,
-      registered: this.checkForMe(),
-      visited: this.checkIfVisited(),
+      registered: localStorage.me,
+      visited: localStorage.uid,
+      hasDB: localStorage.users,
 
       grid: false,
       zoomIndex: 25,
@@ -181,13 +152,9 @@ export default {
       windowHeight: window.innerHeight,
       windowLeft: null,
       windowTop: null,
-
-      doNotSave: false,
     }
   },
   created() {
-    // localStorage.clear()
-    // console.log(localStorage)
 
     // check if user is registered and get their datas value
     
@@ -209,16 +176,19 @@ export default {
       localStorage.color = this.me.color
     }
 
+    // check if user hsa a DB of users
+
+    if (this.hasDB) {
+      this.users = JSON.parse(localStorage.users)
+    }
+
     // start tracking cursor
 
     this.track()
 
-    if (this.checkForDB()) {
-      this.users = JSON.parse(localStorage.users)
-    }
-
   },
   mounted() {
+
     smoothscroll.polyfill()
 
     window.addEventListener('resize', () => {
@@ -241,29 +211,31 @@ export default {
       y: (this.$refs.userland.offsetHeight - window.innerHeight) / 2
     }
     this.scrollTo(center, 'smooth')
+
   },
   sockets: {
+
     connect() { 
       this.me.connected = true 
       this.announce('user')
-      
     },
+
     disconnect() { 
       this.me.connected = false 
       if (!this.doNotSave) {
         localStorage.me = JSON.stringify(this.me)
       }
     },
-    dbSync(data) {
-      console.log(data)
-    },
-    async broadcast(data) {
+
+    broadcast(data) {
       data = JSON.parse(data)
+      
       const user = data.user
       const type = data.msg.type
       const content = data.msg.content
 
       if (user.uid !== this.me.uid) {
+
         this.$set(this.users, user.uid, user)
         let existingUser = this.users[user.uid]
 
@@ -283,7 +255,9 @@ export default {
           existingUser.connected = false
         }
       }
+
       if (type == 'db') {
+
         const db = content
         console.log('got DB from swarm: ', db)
         for (let key in db) {
@@ -292,34 +266,32 @@ export default {
             this.$set(this.users, key, user)
           } 
         }
-        this.saveDB()
-      }
-      if (type == 'clear-db') {
-        const db = content
-        console.log(db)
-        this.users = db
         localStorage.users = JSON.stringify(this.users)
+
+      }
+
+      if (type == 'clear-db') {
+        this.users = {}
+        localStorage.users = JSON.stringify(this.users)
+
         this.me.messages = []
         localStorage.me = JSON.stringify(this.me)
+
         window.location.reload(true)
       }
+
     }
+
   },
   methods: {
-    checkForMe() {
-      if (localStorage.me) {
-        return true
-      } else {
-        console.log("you've been here before.")
-      }
+
+    announce(type, content) {
+      this.$socket.emit('pingServer', this.me, {
+        type: type,
+        content: content
+      })
     },
-    checkIfVisited() {
-      if (localStorage.uid) {
-        return true
-      } else {
-        console.log("you're new.")
-      }
-    },
+
     saveMe(newLook) {
       this.me.name = newLook.name
       this.me.color = newLook.color
@@ -328,30 +300,13 @@ export default {
       this.editing = false
       localStorage.me = JSON.stringify(this.me)
     },
-    checkForDB() {
-      if (localStorage.users) {
-        return true
-      } else {
-        console.log("you haven't made a userDb yet.")
-      }
+
+    deleteMe() {
+      this.doNotSave = true
+      localStorage.clear()
+      window.location.reload(true)
     },
-    saveDB() {
-      localStorage.users = JSON.stringify(this.users)
-    },
-    announce(type, content) {
-      this.$socket.emit('pingServer', this.me, {
-        type: type,
-        content: content
-      })
-    },
-    scrollToUser(user, e) {
-      const center = { 
-        x: this.$refs.userland.offsetWidth * 0.01 * user.x - window.innerWidth / 2,
-        y: this.$refs.userland.offsetHeight* 0.01 * user.y - window.innerHeight / 2
-      }
-      this.scrollTo(center, 'smooth')
-      e.stopPropagation()
-    },
+
     constructMessage(text) {
       const time = ((new Date()).getTime())
       const message = {
@@ -360,30 +315,28 @@ export default {
         content: text,
         time: time,
         color: this.me.color,
-        // x: Math.floor(this.me.x / 2) * 2,
-        // y: Math.floor(this.me.y / 2) * 2,
         x: Math.floor(this.me.x / 0.4) * 0.4,
         y: Math.floor(this.me.y / 0.4) * 0.4,
       }
       return message
     },
+
     track() {
       let x, y
+
       document.addEventListener('mousemove', (e) => {
-        // if(!this.scrolling) {
-          const userlandContainer = this.$refs.userlandContainer
-          x = 0.2 * 100 * (userlandContainer.scrollLeft + e.clientX) / userlandContainer.offsetWidth
-          y = 0.2 * 100 * (userlandContainer.scrollTop + e.clientY) /userlandContainer.offsetHeight
-          this.$set(this.me, 'x', x)
-          this.$set(this.me, 'y', y)
-          // if((Math.floor(this.me.x)) % 3 === 0) {
-          this.announce('position')
-          // }
-        // }
+        const userlandContainer = this.$refs.userlandContainer
+
+        x = 0.2 * 100 * (userlandContainer.scrollLeft + e.clientX) / userlandContainer.offsetWidth
+        y = 0.2 * 100 * (userlandContainer.scrollTop + e.clientY) /userlandContainer.offsetHeight
+        this.$set(this.me, 'x', x)
+        this.$set(this.me, 'y', y)
+        this.announce('position')
         e.preventDefault()
       })
 
-      let currentMessage
+      let msgs = this.me.messages
+      let current
       // const input = this.$refs.me.$refs.Cursor.$refs.input
 
       document.addEventListener('keyup', (e) => {
@@ -391,13 +344,6 @@ export default {
 
           const input = this.$refs.me.$refs.Cursor.$refs.input
           const key = e.which || e.keyCode
-          const [ 
-                  firstMessage, 
-                  lastMessage, 
-                  previousMessage, 
-                  nextMessage
-                ]
-              = this.computeMessages(this.me.messages, currentMessage)
 
           if (input !== document.activeElement) {
             if (key >= 48 && key <= 90) {
@@ -411,58 +357,56 @@ export default {
           this.me.typing = message.content
           this.announce('typing')
 
+          const 
+            first = msgs[0],
+            last = msgs[msgs.length-1],
+            previous = msgs[msgs.indexOf(current) - 1],
+            next = msgs[msgs.indexOf(current) + 1]
+
           if (key == 27) {
             input.value = ''
             input.blur()
 
           } else if (key == 38) {
-            if (!currentMessage) {
-              currentMessage = lastMessage
-              input.value = currentMessage.content
+            if (!current) {
+              current = last
+              input.value = current.content
               input.select()
-            } else if (previousMessage) {
-              currentMessage = previousMessage
-              input.value = currentMessage.content
+            } else if (previous) {
+              current = previous
+              input.value = current.content
               input.select()
             } else {
-              currentMessage = firstMessage
-              input.value = currentMessage.content
+              current = first
+              input.value = current.content
             }
 
           } else if (key == 40) {
-            if (currentMessage && nextMessage) {
-              currentMessage = nextMessage
-              input.value = currentMessage.content
+            if (current && next) {
+              current = next
+              input.value = current.content
               input.select()
             }
 
-          // } else if (key == 13 && e.shiftKey) {
-          //   // input.style.height = input.scrollHeight + 15 + 'px'
-          //   // input.value = input.value + '\n'
-          //   input.value = input.value + '<br>'
-
-          } else if (key == 13 && !e.shiftKey) {
+          } else if (key == 13) {
             if (message.content && message.content != ' ') {
-              input.value = input.value - '\n'
-              this.me.messages.push(message)
+              msgs.push(message)
               this.me.typing = ''
-              // this.$refs.me.messages.push(message)
               localStorage.me = JSON.stringify(this.me)
-              // this.announceMessage(message)
               this.announce('message', message)
-              currentMessage = undefined
+              current = undefined
               input.value = ''
               input.placeholder = ''
-              // input.style.height = '15px'
             }
           }
+
           e.stopPropagation()
           e.preventDefault()
         }
       })
 
       document.addEventListener('click', (e) => {
-        if (this.registered) {
+        if (this.registered && !this.editing) {
           console.log('click')
 
           const input = this.$refs.me.$refs.Cursor.$refs.input
@@ -470,56 +414,19 @@ export default {
 
           if (message.content && message.content != ' ') {
             this.me.messages.push(message)
-            // this.$refs.me.messages.push(message)
             localStorage.me = JSON.stringify(this.me)
-            this.announceMessage(message)
-            currentMessage = undefined
+            this.announce('message', message)
+            current = undefined
             input.value = ''
             input.placeholder = ''
           }
+
           e.stopPropagation()
           e.preventDefault()
         }
       })
     },
-    computeMessages(messages, currentMessage) {
-      const firstMessage = messages[0]
-      const lastMessage = messages[messages.length-1]
-      const previousMessage = messages[messages.indexOf(currentMessage)-1]
-      const nextMessage = messages[messages.indexOf(currentMessage)+1]
-      return [firstMessage, lastMessage, previousMessage, nextMessage]
-    },
-    clearLocalStorage(e) {
-      this.doNotSave = true
-      localStorage.clear()
-      window.location.reload(true)
-      e.stopPropagation()
-    },
-    clearMessages(e) {
-      for (let m = 0; m < this.me.messages.length; m ++) {
-        const message = this.me.messages[m]
-        message.deleted = true
-        // this.$set(message, key, user)
-      }
-      // for (let key in db) {
-      //   const user = db[key]
-      //   if (key !== this.me.uid) {
-      //     this.$set(this.users, key, user)
-      //   } 
-      // }
-      this.me.typing = ''
-      localStorage.me = JSON.stringify(this.me)
-      e.stopPropagation()
-    },
-    toggleGrid(e) {
-      this.grid =! this.grid
-      e.stopPropagation()
-    },
-    clearDB(e) {
-      this.users = {}
-      this.announce('clear-db', this.users)
-      e.stopPropagation()
-    },
+
     connectedUsersFirst() {
       const userArray = Object.values(this.users)
       userArray.sort((a, b) => {
@@ -532,6 +439,15 @@ export default {
       }
       return obj
     },
+
+    getUserPosition(user) {
+      const coords = {
+        x: this.$refs.userland.offsetWidth * 0.01 * user.x - window.innerWidth / 2,
+        y: this.$refs.userland.offsetHeight * 0.01 * user.y - window.innerHeight / 2
+      }
+      return coords
+    },
+
     scrollTo(to, behavior) {
       this.$refs.userlandContainer.scroll({
         left: to.x,
@@ -539,6 +455,7 @@ export default {
         behavior: behavior ? behavior : 'auto'
       })
     },
+
     randomColor() {
       const 
         r = Math.floor(Math.random() * 256),
@@ -548,6 +465,7 @@ export default {
         color = `rgb(${r}, ${g}, ${b}, ${a})`
       return color
     },
+
   },
   
 }
@@ -651,6 +569,11 @@ header #userList ul {
   width: 100%;
   overflow: scroll;
   transition: filter 0.3s ease;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+#userlandContainer::-webkit-scrollbar {
+  display: none;
 }
 #userland {
   /* box-sizing: border-box; */

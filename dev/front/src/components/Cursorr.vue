@@ -1,14 +1,16 @@
 <template>
   <div
-    v-if="uid"
-    class="cursorContainer"
-    :class="{
-      uid: uid,
-      typing: typing || hovered
-    }"
+    v-if="user.uid"
+    :class="[
+      'cursorContainer',
+      {
+        uid: user.uid,
+        typing: user.typing || hovered
+      }
+    ]"
     :style="{ 
-      left: (x -  0.2 * 1) + '%',
-      top: (y -  0.2 * 0.75) + '%'
+      left: ( user.x -  0.2 * 1 ) + '%',
+      top: ( user.y -  0.2 * 0.75 ) + '%'
     }"
   >
     <input 
@@ -19,15 +21,23 @@
       placeholder="type message & press enter"
       autofocus
     />
-    <!-- <textarea 
-      v-if="isMe" 
-      ref="input"
+    <span 
+      v-else 
       class="input"
-      placeholder="type message & press enter"
-    /> -->
-    <span v-else class="input">{{ typing }}</span>
+    >
+      {{ user.typing }}
+    </span>
     <div class="cursor">
-      <span v-if="(typing || hovered)" class="name">{{ isMe ? "me" : connected ? name : name + ' (offline)' }}</span>
+      <span 
+        v-if="( user.typing || hovered )" 
+        class="name"
+      >
+        {{ 
+          isMe ? "me" : 
+          user.connected ? user.name : 
+          user.name + ' (offline)' 
+        }}
+      </span>
       <span v-else class="name"></span>
     </div>
   </div>
@@ -39,25 +49,15 @@ export default {
   components: {
   },
   props: [ 
-    'uid',
-    'name',
-    'color',
     'isMe',
-    'x',
-    'y',
-    'typing',
+    'user',
     'hovered',
-    'connected'
   ], 
   data() {
     return {
-      // hovered: false,
     }
   },
   mounted() {
-    //   setInterval(() => {
-    //   console.log(this.typing)
-    // }, 1000)
   },
   methods: {
   }
