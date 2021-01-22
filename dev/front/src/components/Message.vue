@@ -108,8 +108,8 @@ export default {
   transition: filter 0.2 ease;
 }
 .messageContainer.hover .message {
-  border-color: unset;
-  padding: 0px 10px;
+  /* border-color: unset; */
+  /* padding: 0px 10px; */
 }
 .messageContainer.hover .time {
   opacity: 1;

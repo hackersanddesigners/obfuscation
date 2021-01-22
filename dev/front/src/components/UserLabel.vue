@@ -14,11 +14,15 @@
        {{ y.toFixed(2) }})
     </span> -->
     <span>
-      {{ isMe ? "me" : connected ? name : name + ' (offline)' }} 
+      ●
     </span>
-    <span v-if="hovered"> → </span> 
-    <!-- <span v-if="!isMe && hovered"> → </span>  -->
-    <!-- <span v-else-if="isMe && hovered"> → edit profile</span>  -->
+    <!-- <span>
+      {{ isMe ? "me" : connected ? name : name + ' (offline)' }} 
+    </span> -->
+    <span>
+      {{ isMe ? "me" : name }} 
+    </span>
+    <span> {{ hovered ? '→' : ''  }}</span> 
   </li>
 </template>
 
@@ -58,8 +62,15 @@ li {
   margin: 0.5vh 0.5vw;
   font-weight: bold;
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
+  align-items: center;
   color: var(--userColor);
   cursor: pointer;
+}
+li span {
+  margin-right: 0.5vw;
+}
+li span:last-of-type {
+  margin-left: auto;
 }
 </style>

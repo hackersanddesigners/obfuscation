@@ -11,22 +11,16 @@
       @editeduser="saveMe"
     />
     <header :class="{ blur: !registered || editing }" >
-      <!-- <h1>obfuscated platframe</h1> -->
-      <!-- <div id="lounge">
-        <span class="title"> cursor lounge </span>
-      </div> -->
-      <div id="minimap">
-        <Viewport
-          id="viewport"
-          ref="viewport"
-          :width="windowWidth / zoomIndex"
-          :height="windowHeight / zoomIndex"
-          :left="windowLeft / zoomIndex"
-          :top="windowTop / zoomIndex"
+      <h1>platframe</h1>
+      <Minimap 
+        :windowWidth="windowWidth"
+        :windowHeight="windowHeight"
+        :windowLeft="windowLeft"
+        :windowTop="windowTop"
+        :zoomIndex="zoomIndex"
 
-          v-dragged.prevent="dragViewport"
-        />
-      </div>
+        @newPosition="scrollTo($event)"
+      />
       <div id="tools">
         <span class="title"> options </span>
         <div class="grid">
@@ -86,7 +80,7 @@
             @click.native="scrollToUser(me, $event)"
           />
           <UserLabel
-            v-for="(user) in users"
+            v-for="(user) in connectedUsersFirst()"
             :key="user.uid"
             :uid="user.uid" 
             :name="user.name" 
@@ -148,19 +142,19 @@ import User from './User'
 import Register from './Register'
 import EditUser from './EditUser'
 import UserLabel from './UserLabel'
-import Viewport from './Viewport'
+import Minimap from './Minimap'
 
 export default {
   name: 'Userland',
   components: {
     Grid,
-    Viewport,
+    Minimap,
     Register,
     EditUser,
     User,
     UserLabel,
   },
-  data() {
+  data () {
     return {
       me: {
         uid: uid(),
@@ -227,15 +221,15 @@ export default {
   mounted() {
     smoothscroll.polyfill()
 
-    const userlandContainer = this.$refs.userlandContainer
-
-    this.windowLeft = userlandContainer.scrollLeft
-    this.windowTop = userlandContainer.scrollTop
-
     window.addEventListener('resize', () => {
       this.windowWidth = window.innerWidth
       this.windowHeight = window.innerHeight
     })
+
+    const userlandContainer = this.$refs.userlandContainer
+      
+    this.windowLeft = userlandContainer.scrollLeft
+    this.windowTop = userlandContainer.scrollTop
 
     userlandContainer.addEventListener('scroll', () => {
       this.windowLeft = userlandContainer.scrollLeft
@@ -246,17 +240,13 @@ export default {
       x: (this.$refs.userland.offsetWidth - window.innerWidth) / 2,
       y: (this.$refs.userland.offsetHeight - window.innerHeight) / 2
     }
-
-    userlandContainer.scroll({
-      left: center.x,
-      top: center.y,
-      behavior: 'smooth'
-    })
+    this.scrollTo(center, 'smooth')
   },
   sockets: {
     connect() { 
       this.me.connected = true 
-      this.announceUser()
+      this.announce('user')
+      
     },
     disconnect() { 
       this.me.connected = false 
@@ -278,7 +268,7 @@ export default {
         let existingUser = this.users[user.uid]
 
         if (type == 'user') {
-          this.announceDB()
+          this.announce('db', this.users)
 
         } else if (type == 'position') {
           // console.log(user)
@@ -333,7 +323,7 @@ export default {
     saveMe(newLook) {
       this.me.name = newLook.name
       this.me.color = newLook.color
-      this.announceUser()
+      this.announce('user')
       this.registered = true
       this.editing = false
       localStorage.me = JSON.stringify(this.me)
@@ -348,71 +338,19 @@ export default {
     saveDB() {
       localStorage.users = JSON.stringify(this.users)
     },
-    announceUser() {
-      this.sendToPeers({
-        type: 'user',
-        content: ''
+    announce(type, content) {
+      this.$socket.emit('pingServer', this.me, {
+        type: type,
+        content: content
       })
-    },
-    announcePosition() {
-      this.sendToPeers({
-        type: 'position',
-        content: ''
-      })
-    },
-    announceTyping(string) {
-      this.sendToPeers({
-        type: 'typing',
-        content: string
-      })
-    },
-    announceMessage(message) {
-      this.sendToPeers({
-        type: 'message',
-        content: message
-      })
-    },
-    announceDB() {
-      this.sendToPeers({
-        type: 'db',
-        content: this.users
-      })
-    },
-    announceClearDB() {
-      this.sendToPeers({
-        type: 'clear-db',
-        content: this.users
-      })
-    },
-    sendToPeers(msg) {
-      this.$socket.emit('pingServer', this.me, msg)
     },
     scrollToUser(user, e) {
       const center = { 
         x: this.$refs.userland.offsetWidth * 0.01 * user.x - window.innerWidth / 2,
         y: this.$refs.userland.offsetHeight* 0.01 * user.y - window.innerHeight / 2
       }
-      this.$refs.userlandContainer.scroll({
-        left: center.x,
-        top: center.y,
-        behavior: 'smooth'
-      })
+      this.scrollTo(center, 'smooth')
       e.stopPropagation()
-    },
-    dragViewport({ deltaX, deltaY, first, last }) {
-      const userlandContainer = this.$refs.userlandContainer
-      if (first) {
-        this.dragging = true
-        return
-      }
-      if (last) {
-        this.dragging = false
-        return
-      }
-      userlandContainer.scroll({
-        left: this.windowLeft + deltaX * this.zoomIndex,
-        top: this.windowTop + deltaY * this.zoomIndex,
-      })
     },
     constructMessage(text) {
       const time = ((new Date()).getTime())
@@ -439,7 +377,7 @@ export default {
           this.$set(this.me, 'x', x)
           this.$set(this.me, 'y', y)
           // if((Math.floor(this.me.x)) % 3 === 0) {
-          this.announcePosition(this.me) 
+          this.announce('position')
           // }
         // }
         e.preventDefault()
@@ -471,7 +409,7 @@ export default {
 
           const message = this.constructMessage(input.value)
           this.me.typing = message.content
-          this.announceTyping(message)
+          this.announce('typing')
 
           if (key == 27) {
             input.value = ''
@@ -510,7 +448,8 @@ export default {
               this.me.typing = ''
               // this.$refs.me.messages.push(message)
               localStorage.me = JSON.stringify(this.me)
-              this.announceMessage(message)
+              // this.announceMessage(message)
+              this.announce('message', message)
               currentMessage = undefined
               input.value = ''
               input.placeholder = ''
@@ -578,8 +517,27 @@ export default {
     },
     clearDB(e) {
       this.users = {}
-      this.announceClearDB()
+      this.announce('clear-db', this.users)
       e.stopPropagation()
+    },
+    connectedUsersFirst() {
+      const userArray = Object.values(this.users)
+      userArray.sort((a, b) => {
+        return a.connected === b.connected ? 0 : a.connected ? -1 : 1
+      })
+      let obj = {}
+      for (let u = 0 ; u < userArray.length; u++) {
+        const user = userArray[u]
+        obj[user.uid] = user
+      }
+      return obj
+    },
+    scrollTo(to, behavior) {
+      this.$refs.userlandContainer.scroll({
+        left: to.x,
+        top: to.y,
+        behavior: behavior ? behavior : 'auto'
+      })
     },
     randomColor() {
       const 
@@ -668,7 +626,7 @@ header #tools .db input {
 header #userList {
   box-sizing: border-box;
   margin-top: 2vh;
-  width: 12vw;
+  width: 14vw;
   display: flex;
   flex-direction: column;
   background: white;

@@ -23,10 +23,10 @@ export default {
   props: [ 'hidden' ],
   data() {
     return {
-      // y: 250,
-      // x: 250,
-      y: 50,
-      x: 50,
+      y: 250,
+      x: 250,
+      // y: 50,
+      // x: 50,
     }
   },
 }

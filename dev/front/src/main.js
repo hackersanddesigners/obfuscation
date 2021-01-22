@@ -38,6 +38,8 @@ Vue.component('vue-markdown', VueMarkdown)
 Vue.prototype.$http = Axios
 Vue.prototype.$apiURL = process.env.VUE_APP_API_URL
 
+Vue.config.productionTip = false
+
 new Vue({
   router,
   render: h => h(App),
