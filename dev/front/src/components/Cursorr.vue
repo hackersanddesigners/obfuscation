@@ -90,6 +90,7 @@ export default {
   justify-content: center;
   align-items: center;
   background: var(--userColor);
+  box-shadow: var(--userColor) 0px 0px 20px;
   transition: all 0.2s ease;
   /* opacity: 0; */
 }

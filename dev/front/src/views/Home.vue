@@ -18,6 +18,9 @@ export default {
   components: {
     Userland
   },
+  props: [
+    'slug'
+  ],
   data() {
     return {
       loaded: false,
@@ -38,10 +41,14 @@ export default {
         console.log(error)
         this.msg = 'there is an error :( contact karl <bonjour@moubarak.eu>'
       }) 
+
+    if (this.slug) {
+      this.handleRouting(this.slug)
+    }
   },
   mounted() {
     this.$router.afterEach((to) => { 
-      this.slug = to.path.split('/')[1]
+      this.slug = to.path.replace(this.$publicPath, '')
       this.handleRouting(this.slug)
     })
   },

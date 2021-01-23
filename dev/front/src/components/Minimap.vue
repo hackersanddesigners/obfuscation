@@ -1,15 +1,16 @@
 <template>
   <div id="minimap">
-  <Viewport
-    id="viewport"
-    ref="viewport"
-    :width="windowWidth / zoomIndex"
-    :height="windowHeight / zoomIndex"
-    :left="windowLeft / zoomIndex"
-    :top="windowTop / zoomIndex"
+    <Viewport
+      id="viewport"
+      ref="viewport"
 
-    v-dragged="dragViewport"
-  />
+      :width="windowWidth / zoomIndex"
+      :height="windowHeight / zoomIndex"
+      :left="windowLeft / zoomIndex"
+      :top="windowTop / zoomIndex"
+
+      v-dragged="dragViewport"
+    />
   </div>
 </template>
 
@@ -34,9 +35,6 @@ export default {
     }
   },
   mounted() {
-    // setInterval(() => {
-      // console.log(this.windowLeft)
-    // },300)
   },  
   methods: {
     dragViewport({ deltaX, deltaY, first, last }) {
@@ -57,6 +55,7 @@ export default {
   }
 }
 </script>
+
 <style scoped>
 #viewport {
   box-sizing: border-box;

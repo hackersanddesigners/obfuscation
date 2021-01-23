@@ -1,15 +1,5 @@
 <template>
   <div>
-    <Register
-      v-if="!registered" 
-      :me="me"
-      @registered="saveMe"
-    />
-    <EditUser
-      v-if="editing" 
-      :me="me"
-      @editeduser="saveMe"
-    />
     <header :class="{ blur: !registered || editing }" >
       <h1>platframe</h1>
       <Minimap 
@@ -21,59 +11,26 @@
 
         @newPosition="scrollTo($event)"
       />
-      <div id="tools">
-        <span class="title"> options </span>
-        <div class="grid">
-          <input 
-            type="button" 
-            name="grid" 
-            :value="grid ? 'hide grid' : 'show grid'" 
-            @click.stop="grid = !grid"
-          />
-        </div>
-        <div class="edituser">
-          <input
-            type="button"
-            name="edituser" 
-            value="edit appearance"
-            @click.stop="editing = true"
-          />
-        </div>
-        <div class="storage">
-          <input
-            type="button"
-            name="storage" 
-            value="delete me"
-            @click.stop="deleteMe()"
-          />
-        </div>
-        <div class="db">
-          <input
-            type="button"
-            name="db" 
-            value="delete everything"
-            @click.stop="announce('clear-db')"
-          />
-        </div>
-      </div>
-      <div id="userList">
-        <span class="title"> participants </span>
-        <ul>
-          <UserLabel
-            :user="me"
-            :isMe="true"
+      <Options
+        :registered="registered"
+        :editing="editing"
+        :name="me.name"
+        :color="me.color"
+        :grid="grid"
 
-            @click.native.stop="scrollTo(getUserPosition(me), 'smooth')"
-          />
-          <UserLabel
-            v-for="user in connectedUsersFirst()"
-            :key="user.uid"
-            :user="user"
-            
-            @click.native.stop="scrollTo(getUserPosition(user), 'smooth')"
-          />
-        </ul>
-      </div>
+        @grid="grid = !grid"
+        @editMe="editing = true"
+        @updateColor="updateColor"
+        @newMe="saveMe"
+        @deleteMe="deleteMe()"
+        @deleteEverything="announce('clear-db')"
+      />
+      <Userlist
+        :me="me"
+        :users="users"
+
+        @goTo="scrollTo(getUserPosition($event), 'smooth')"
+      />
     </header>
     <div 
       id="userlandContainer" 
@@ -106,21 +63,19 @@ import { uid } from 'uid'
 import smoothscroll from 'smoothscroll-polyfill'
 
 import Grid from './Grid'
-import User from './User'
-import Register from './Register'
-import EditUser from './EditUser'
-import UserLabel from './UserLabel'
 import Minimap from './Minimap'
+import Options from './Options.vue'
+import Userlist from './Userlist.vue'
+import User from './User'
 
 export default {
   name: 'Userland',
   components: {
     Grid,
     Minimap,
-    Register,
-    EditUser,
+    Options,
+    Userlist,
     User,
-    UserLabel,
   },
   data () {
     return {
@@ -292,6 +247,12 @@ export default {
       })
     },
 
+    updateColor(newLook) {
+      this.me.color = newLook.color
+      this.announce('user')
+      localStorage.me = JSON.stringify(this.me)
+    },
+
     saveMe(newLook) {
       this.me.name = newLook.name
       this.me.color = newLook.color
@@ -427,19 +388,6 @@ export default {
       })
     },
 
-    connectedUsersFirst() {
-      const userArray = Object.values(this.users)
-      userArray.sort((a, b) => {
-        return a.connected === b.connected ? 0 : a.connected ? -1 : 1
-      })
-      let obj = {}
-      for (let u = 0 ; u < userArray.length; u++) {
-        const user = userArray[u]
-        obj[user.uid] = user
-      }
-      return obj
-    },
-
     getUserPosition(user) {
       const coords = {
         x: this.$refs.userland.offsetWidth * 0.01 * user.x - window.innerWidth / 2,
@@ -475,8 +423,7 @@ export default {
 header {
   position: absolute;
   /* width: 100%; */
-  margin-left: 2vh;
-  margin-top: 2vh;
+  /* margin-top: 2vh; */
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -485,81 +432,17 @@ header {
   transition: filter 0.3s ease;
 
 }
+header h1 {
+  margin-left: 2vh;
+}
 header #minimap {
+  margin-left: 2vh;
   position: relative;
   box-sizing: border-box;
   height: 20vh;
   width: 20vw;
   background: white;
   border: 1px solid grey;
-}
-header #lounge {
-  width: 100%;
-  height: 6vh;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  border-bottom: 1px solid grey;
-  background: white;
-}
-header #lounge .title {
-  box-sizing: border-box;
-  /* margin-top: auto; */
-  /* padding: 0.25vh 0.5vw; */
-  padding: 0vh 0.5vw;
-  line-height: 1.9vh;
-  width: 10%;
-  border-bottom: 1px solid grey;
-  border-right: 1px solid grey;
-}
-header #tools {
-  box-sizing: border-box;
-  margin-top: 2vh;
-  width: 10vw;
-  height: 10vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  border: 1px solid grey;
-  background: white;
-  line-height: 1.9vh;
-
-}
-header #tools .title {
-  box-sizing: border-box;
-  padding: 0vh 0.5vw;
-  line-height: 1.9vh;
-  width: 100%;
-  border-bottom: 1px solid grey;
-}
-header #tools div {
-  margin: 0.2vh 0.5vw;
-  display: flex;
-  align-items: center;
-}
-header #tools .db input {
-  /* background: red; */
-  color: red;
-}
-header #userList {
-  box-sizing: border-box;
-  margin-top: 2vh;
-  width: 14vw;
-  display: flex;
-  flex-direction: column;
-  background: white;
-  border: 1px solid grey;
-}
-header #userList .title {
-box-sizing: border-box;
-  padding: 0vh 0.5vw;
-  line-height: 1.9vh;
-  width: 100%;
-  border-bottom: 1px solid grey;
-}
-header #userList ul { 
-  margin: 0;
-  padding: 0;
 }
 #userlandContainer {
   cursor: none;
@@ -599,4 +482,13 @@ header #userList ul {
   font-family: monospace;
   font-size: 9pt;
 }
+header.blur h1,
+header.blur #minimap,
+/* header.blur #options .title,
+header.blur #options div, */
+header.blur #userlist,
+#userlandContainer.blur {
+  filter: blur(10px);
+}
+
 </style>

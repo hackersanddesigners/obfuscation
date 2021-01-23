@@ -27,14 +27,12 @@ export default {
     }
   },
   mounted() {
-    // setInterval(() => {
-    //   console.log(this.messages)
-    // }, 1000)
   },
   methods: {
   }
 }
 </script>
+
 <style scoped>
 #viewport {
   box-sizing: border-box;

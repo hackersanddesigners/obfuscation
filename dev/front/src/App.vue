@@ -4,6 +4,7 @@
       :class="{ 
         mobile: isMobile,
       }" 
+      :slug="slug"
     />
   </div>
 </template>
@@ -20,7 +21,8 @@ export default {
   },
   data() {
     return {
-      isMobile: Boolean
+      isMobile: Boolean,
+      slug: window.location.pathname.replace(this.$publicPath, ''),
     }
   },
   created() {
@@ -44,38 +46,18 @@ export default {
 
 <style>
 :root {
-  --palest-yellow: rgb(248, 247, 242);
-  --paler-yellow: rgb(245, 214, 205);
-  --palest-yellow: rgb(226, 247, 206);
-  --dark-green: #02160f;
-  --dark-green: #525252;
-  --active: darkblue;
-  --active: rgb(5, 5, 196);
 }
 
 html, body {
   margin: 0;
   padding: 0;
   height: 100%;
-  /* background: linear-gradient(0deg, var(--paler-yellow) 0%, var(--palest-yellow) 50%, var(--palest-yellow) 100%); */
   overflow: hidden;
 }
 #app {
-  font-size: 10pt;
-  line-height: 1.1;
   height: 100%;
   width: 100vw;
-  color: var(--dark-green);
 }
 a, a:hover, a:active, a:visited {
-  color: var(--font-color);
-  cursor: pointer;
-  text-decoration: none;
-}
-a:hover {
-  text-decoration: underline;
-}
-.blur {
-  filter: blur(5px);
 }
 </style>
