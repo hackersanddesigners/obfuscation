@@ -7,9 +7,9 @@
   >
   <tbody>
     <Row 
-      v-for="index in y"
+      v-for="index in scale * definition"
       :key="index"
-      :x="x"
+      :x="scale * definition"
     />
   </tbody>
   </table>
@@ -20,13 +20,13 @@ import Row from './Row'
 export default {
   name: 'Grid',
   components: { Row },
-  props: [ 'hidden' ],
+  props: [ 
+    'scale',
+    'hidden'  
+  ],
   data() {
     return {
-      // y: 250,
-      // x: 250,
-      y: 50,
-      x: 50,
+      definition: 10
     }
   },
 }

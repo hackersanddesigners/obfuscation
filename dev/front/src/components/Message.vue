@@ -9,8 +9,8 @@
       } 
     ]"
     :style="{ 
-      left: `${ message.x }%`,
-      top: `${ message.y }%`,
+      left: `${ toNearestX(message.x, 0.4) }%`,
+      top: `${ toNearestX(message.y, 0.4) }%`,
       '--blur': `blur(${ (now - message.time) / 100000000 }px)`
     }"
   >
@@ -41,6 +41,9 @@ export default {
   methods: {
     fromNow(time) {
       return moment(time).fromNow()
+    },
+    toNearestX(num, X) {
+      return Math.floor(100 * num / X) * X
     }
   }
 }

@@ -1,5 +1,21 @@
 <template>
-  <div id="minimap">
+  <div 
+    id="minimap"
+    :style="{
+      height: `${ height }vh`,
+      width: `${ width }vw`
+    }"
+    >
+    <Cursorr
+      :user="me"
+      :scale="scale"
+    />
+    <Cursorr
+      v-for="user in users"
+      :key="user.uid"
+      :user="user"
+      :scale="scale"
+    />
     <Viewport
       id="viewport"
       ref="viewport"
@@ -15,23 +31,30 @@
 </template>
 
 <script>
+import Cursorr from './Cursorr.vue'
 import Viewport from './Viewport.vue'
 
 export default {
   name: 'Minimap',
   components: {
     Viewport,
+    Cursorr,
   },
   props: [ 
     'windowWidth',
     'windowHeight',
     'windowLeft',
     'windowTop',
-    'zoomIndex'
+    'scale',
+    'me',
+    'users'
   ], 
   data() {
     return {
-      unit: 'px'
+      height: 20,
+      width: 20,
+      zoomIndex: 5 * this.scale,
+      mini: true,
     }
   },
   mounted() {
@@ -57,13 +80,13 @@ export default {
 </script>
 
 <style scoped>
-#viewport {
+#minimap {
+  margin-left: 2vh;
+  /* height: 20vh;
+  width: 20vw; */
+  position: relative;
   box-sizing: border-box;
-  position: absolute;
+  background: white;
   border: 1px solid grey;
-  cursor: move;
-}
-#viewport:hover {
-  border-color: red;
 }
 </style>

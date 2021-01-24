@@ -8,11 +8,6 @@ import SocketIO from 'socket.io-client'
 
 import VueMarkdown from 'vue-markdown'
 import VDragged from 'v-dragged'
-import { Sketch } from 'vue-color'
-
-
-    // 'sketch-picker': sketch,
-    // 'chrome-picker': chrome,
 
 Vue.prototype.$http = Axios
 Vue.prototype.$apiURL = process.env.VUE_APP_API_URL
@@ -26,12 +21,11 @@ VueMarkdown.props.anchorAttributes.default = () => ({
 })
 
 Vue.component('vue-markdown', VueMarkdown)
-Vue.component('color-picker', Sketch)
 
 Vue.use(VDragged) 
 
-const socketConnection = SocketIO('https://io.karls.computer');
-// const socketConnection = SocketIO('http://localhost:3090');
+const socketConnection = SocketIO('https://io.karls.computer')
+// const socketConnection = SocketIO('http://localhost:3090')
 
 Vue.use(new VueSocketIO({
     connection: socketConnection,

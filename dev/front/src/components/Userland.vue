@@ -7,7 +7,10 @@
         :windowHeight="windowHeight"
         :windowLeft="windowLeft"
         :windowTop="windowTop"
-        :zoomIndex="zoomIndex"
+        :scale="scale"
+
+        :me="me"
+        :users="users"
 
         @newPosition="scrollTo($event)"
       />
@@ -37,8 +40,16 @@
       ref="userlandContainer"
       :class="{ blur: !registered || editing }"
     >
-      <div id="userland" ref="userland">
+      <div 
+        id="userland" 
+        ref="userland"
+        :style="{
+          height: `${ 100 * scale }%`,
+          width: `${ 100 * scale }%`
+        }"
+      >
         <Grid 
+          :scale="scale"
           :hidden="!grid"
         />
         <User 
@@ -46,6 +57,8 @@
           :key="me.uid"
           :user="me"
           :isMe="true"
+
+          @newPosition="updatePosition"
         />
         <User 
           v-for="user in users"
@@ -89,7 +102,6 @@ export default {
         typing: null,
         messages: [],
       },
-
       users: {},
 
       doNotSave: false,
@@ -101,12 +113,12 @@ export default {
       visited: localStorage.uid,
       hasDB: localStorage.users,
 
-      grid: false,
-      zoomIndex: 25,
       windowWidth: window.innerWidth,
       windowHeight: window.innerHeight,
       windowLeft: null,
       windowTop: null,
+      scale: 5,
+      grid: false,
     }
   },
   created() {
@@ -137,12 +149,12 @@ export default {
       this.users = JSON.parse(localStorage.users)
     }
 
+  },
+  mounted() {
+
     // start tracking cursor
 
     this.track()
-
-  },
-  mounted() {
 
     smoothscroll.polyfill()
 
@@ -247,12 +259,6 @@ export default {
       })
     },
 
-    updateColor(newLook) {
-      this.me.color = newLook.color
-      this.announce('user')
-      localStorage.me = JSON.stringify(this.me)
-    },
-
     saveMe(newLook) {
       this.me.name = newLook.name
       this.me.color = newLook.color
@@ -268,6 +274,25 @@ export default {
       window.location.reload(true)
     },
 
+    updateColor(newLook) {
+      this.me.color = newLook.color
+      this.announce('user')
+      localStorage.me = JSON.stringify(this.me)
+    },
+
+    updatePosition(newPosition) {
+      let x = (this.windowLeft + newPosition.x) / (this.windowWidth * this.scale)
+      let y = (this.windowTop + newPosition.y) / (this.windowHeight * this.scale)
+      this.$set(this.me, 'x', x)
+      this.$set(this.me, 'y', y)
+      this.announce('position')
+    },
+
+    updateTyping(text) {
+      this.me.typing = text
+      this.announce('typing')
+    },
+
     constructMessage(text) {
       const time = ((new Date()).getTime())
       const message = {
@@ -276,132 +301,41 @@ export default {
         content: text,
         time: time,
         color: this.me.color,
-        x: Math.floor(this.me.x / 0.4) * 0.4,
-        y: Math.floor(this.me.y / 0.4) * 0.4,
+        x: this.me.x,
+        y: this.me.y,
       }
       return message
     },
-
-    track() {
-      let x, y
-
-      document.addEventListener('mousemove', (e) => {
-        const userlandContainer = this.$refs.userlandContainer
-
-        x = 0.2 * 100 * (userlandContainer.scrollLeft + e.clientX) / userlandContainer.offsetWidth
-        y = 0.2 * 100 * (userlandContainer.scrollTop + e.clientY) /userlandContainer.offsetHeight
-        this.$set(this.me, 'x', x)
-        this.$set(this.me, 'y', y)
-        this.announce('position')
-        e.preventDefault()
-      })
-
-      let msgs = this.me.messages
-      let current
-      // const input = this.$refs.me.$refs.Cursor.$refs.input
-
-      document.addEventListener('keyup', (e) => {
-        if (this.registered && !this.editing) {
-
-          const input = this.$refs.me.$refs.Cursor.$refs.input
-          const key = e.which || e.keyCode
-
-          if (input !== document.activeElement) {
-            if (key >= 48 && key <= 90) {
-              const char = String.fromCharCode(key)
-              input.value = char              
-            }
-            input.focus()
-          }
-
-          const message = this.constructMessage(input.value)
-          this.me.typing = message.content
-          this.announce('typing')
-
-          const 
-            first = msgs[0],
-            last = msgs[msgs.length-1],
-            previous = msgs[msgs.indexOf(current) - 1],
-            next = msgs[msgs.indexOf(current) + 1]
-
-          if (key == 27) {
-            input.value = ''
-            input.blur()
-
-          } else if (key == 38) {
-            if (!current) {
-              current = last
-              input.value = current.content
-              input.select()
-            } else if (previous) {
-              current = previous
-              input.value = current.content
-              input.select()
-            } else {
-              current = first
-              input.value = current.content
-            }
-
-          } else if (key == 40) {
-            if (current && next) {
-              current = next
-              input.value = current.content
-              input.select()
-            }
-
-          } else if (key == 13) {
-            if (message.content && message.content != ' ') {
-              msgs.push(message)
-              this.me.typing = ''
-              localStorage.me = JSON.stringify(this.me)
-              this.announce('message', message)
-              current = undefined
-              input.value = ''
-              input.placeholder = ''
-            }
-          }
-
-          e.stopPropagation()
-          e.preventDefault()
-        }
-      })
-
-      document.addEventListener('click', (e) => {
-        if (this.registered && !this.editing) {
-          console.log('click')
-
-          const input = this.$refs.me.$refs.Cursor.$refs.input
-          const message = this.constructMessage(input.value)
-
-          if (message.content && message.content != ' ') {
-            this.me.messages.push(message)
-            localStorage.me = JSON.stringify(this.me)
-            this.announce('message', message)
-            current = undefined
-            input.value = ''
-            input.placeholder = ''
-          }
-
-          e.stopPropagation()
-          e.preventDefault()
-        }
-      })
-    },
-
-    getUserPosition(user) {
-      const coords = {
-        x: this.$refs.userland.offsetWidth * 0.01 * user.x - window.innerWidth / 2,
-        y: this.$refs.userland.offsetHeight * 0.01 * user.y - window.innerHeight / 2
+    
+    sendMessage(message) {
+      if (message.content && message.content != ' ') {
+        this.me.messages.push(message)
+        localStorage.me = JSON.stringify(this.me)
+        this.announce('message', message)
       }
-      return coords
     },
-
+ 
     scrollTo(to, behavior) {
       this.$refs.userlandContainer.scroll({
         left: to.x,
         top: to.y,
-        behavior: behavior ? behavior : 'auto'
+        behavior: behavior || 'auto'
       })
+    },
+
+    getUserPosition(user) {
+      user = this.toPixels(user)
+      return {
+        x: user.x - this.windowWidth / 2,
+        y: user.y - this.windowHeight / 2
+      }
+    },
+
+    toPixels(coords) {
+      return {
+        x: coords.x * this.scale * this.windowWidth,
+        y: coords.y * this.scale * this.windowHeight 
+      }
     },
 
     randomColor() {
@@ -414,6 +348,83 @@ export default {
       return color
     },
 
+    track() {
+      let input = this.$refs.me.$refs.Cursor.$refs.input // :]
+      let msgs = this.me.messages
+      let current
+
+      document.addEventListener('keyup', (e) => {
+        if (this.registered && !this.editing) {
+
+          const key = e.which || e.keyCode
+
+          if (input !== document.activeElement) {
+            input.focus()
+            if (key >= 48 && key <= 90) {
+              const char = String.fromCharCode(key)
+              input.value = char              
+            }
+          }
+
+          const 
+            first = msgs[0],
+            last = msgs[msgs.length-1],
+            previous = msgs[msgs.indexOf(current) - 1],
+            next = msgs[msgs.indexOf(current) + 1]
+
+          if (key == 38) {
+            if (!current) {
+              current = last
+            } else if (previous) {
+              current = previous
+            } else {
+              current = first
+            } 
+            input.value = current.content
+            input.select()
+
+          } else if (key == 40) {
+            if (current && next) {
+              current = next
+              input.value = current.content
+              input.select()
+            }
+
+          } else if (key == 13) {
+            const message = this.constructMessage(input.value)
+            this.sendMessage(message)
+            current = undefined
+            input.value = ''
+            input.placeholder = ''
+
+          } else if (key == 27) {
+            input.value = ''
+            input.blur()
+          }
+
+          this.updateTyping(input.value)
+
+          e.stopPropagation()
+          e.preventDefault()
+        }
+      })
+
+      document.addEventListener('click', () => {
+        if (this.registered && !this.editing) {
+
+          const message = this.constructMessage(input.value)
+
+          this.sendMessage(message)
+
+          current = undefined
+          input.value = ''
+          input.placeholder = ''
+
+        }
+      })
+    },
+
+
   },
   
 }
@@ -422,8 +433,6 @@ export default {
 <style>
 header {
   position: absolute;
-  /* width: 100%; */
-  /* margin-top: 2vh; */
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -434,15 +443,6 @@ header {
 }
 header h1 {
   margin-left: 2vh;
-}
-header #minimap {
-  margin-left: 2vh;
-  position: relative;
-  box-sizing: border-box;
-  height: 20vh;
-  width: 20vw;
-  background: white;
-  border: 1px solid grey;
 }
 #userlandContainer {
   cursor: none;
@@ -459,28 +459,18 @@ header #minimap {
   display: none;
 }
 #userland {
-  /* box-sizing: border-box; */
+  box-sizing: border-box;
   position: absolute;
-  /* float: left; */
-  /* padding: 500px 0px; */
-  /* padding: 500px 0px; */
   top: 0;
   left: 0;
-  /* top: -100%;
-  left: -100%; */
-  height: 500%;
-  width: 500%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   overflow: scroll;
-  transition: transform 0.5s ease;
-
-  /* width: 100%;
-  height: 100%; */
   font-family: monospace;
   font-size: 9pt;
+  background: rgba(0, 0, 0, 0.05);
 }
 header.blur h1,
 header.blur #minimap,

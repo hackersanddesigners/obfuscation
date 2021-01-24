@@ -21,6 +21,8 @@
 
       @mouseover.native="!isMe ? hovered=true : null"
       @mouseleave.native="hovered=false"
+
+      @newPosition="$emit('newPosition', $event)"
     />
     <Message
       v-for="message in user.messages"

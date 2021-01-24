@@ -5,16 +5,18 @@
       'cursorContainer',
       {
         uid: user.uid,
-        typing: user.typing || hovered
+        typing: !scale && (user.typing || hovered)
       }
     ]"
     :style="{ 
-      left: ( user.x -  0.2 * 1 ) + '%',
-      top: ( user.y -  0.2 * 0.75 ) + '%'
+      left: ( 100 * user.x -  0.2 * 1 ) + '%',
+      top: ( 100 * user.y -  0.2 * 0.75 ) + '%',
+      '--scale': scale ? scale : 1,
+      '--userColor': user.connected ? user.color : 'lightgrey',
     }"
   >
     <input 
-      v-if="isMe" 
+      v-if="!scale && isMe" 
       ref="input"
       class="input"
       type="text" 
@@ -22,14 +24,14 @@
       autofocus
     />
     <span 
-      v-else 
+      v-else-if="!scale"
       class="input"
     >
       {{ user.typing }}
     </span>
     <div class="cursor">
       <span 
-        v-if="( user.typing || hovered )" 
+        v-if="!scale && (user.typing || hovered)" 
         class="name"
       >
         {{ 
@@ -38,7 +40,7 @@
           user.name + ' (offline)' 
         }}
       </span>
-      <span v-else class="name"></span>
+      <span v-else-if="!scale" class="name"></span>
     </div>
   </div>
 </template>
@@ -49,8 +51,10 @@ export default {
   components: {
   },
   props: [ 
-    'isMe',
     'user',
+    'isMe',
+    'mini',
+    'scale',
     'hovered',
   ], 
   data() {
@@ -58,8 +62,22 @@ export default {
     }
   },
   mounted() {
+    if (this.isMe) {
+      this.trackCursor()
+    }
   },
   methods: {
+    trackCursor() {
+      document.addEventListener('mousemove', (e) => {
+
+        this.$emit('newPosition', { 
+          x: e.clientX,
+          y: e.clientY
+        })
+        e.preventDefault()
+
+      })
+    }  
   }
 }
 </script>
@@ -82,15 +100,15 @@ export default {
   cursor: none;
 }
 .cursorContainer .cursor {
-  width: 2vh;
-  max-width: 2vh;
-  height: 2vh;
+  width: calc(2vh / var(--scale));
+  max-width: calc(2vh / var(--scale));
+  height: calc(2vh / var(--scale));
   border-radius: 12px;
   display: flex;
   justify-content: center;
   align-items: center;
   background: var(--userColor);
-  box-shadow: var(--userColor) 0px 0px 20px;
+  box-shadow: var(--userColor) 0px 0px 30px;
   transition: all 0.2s ease;
   /* opacity: 0; */
 }
