@@ -5,6 +5,7 @@
       :registered="registered"
       :name="name"
       :color="color"
+      :usernames="usernames"
 
       @newMe="$emit('newMe', $event)"
       @updateColor="$emit('updateColor', $event)"
@@ -62,7 +63,8 @@ export default {
     'editing',
     'name',
     'color',
-    'grid'
+    'grid',
+    'usernames'
   ], 
   data() {
     return {

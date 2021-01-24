@@ -5,7 +5,9 @@
       hidden: !loaded
     }"
   >
-    <Userland />
+    <Userland 
+      :wantsToView="wantsToView"
+    />
   </div>
 </template>
 
@@ -26,14 +28,15 @@ export default {
       loaded: false,
       status: 'loading...',
       isMobile: EventBus.$root.isMobile ? true : false,
+      wantsToView: null
     }
   },
   created() {
     if (EventBus.$root.isMobile) this.isMobile = true
 
-    this.$http.get(this.$apiURL + '/sessions')
+    this.$http.get(this.$apiURL + '/hosts')
       .then((response) => { 
-        this.sessions = response.data
+        this.hosts = response.data
         this.loaded = true
         this.msg = 'ready.'
       })
@@ -54,8 +57,21 @@ export default {
   },
   methods: {
     handleRouting(slug) {
-      if (slug) {
-        console.log(slug)
+      let type, name
+      if (slug.startsWith("~")) {
+        type = 'user'
+        name = slug.slice(1)
+        if (name) {
+          console.log(name)
+        } else {
+          console.log('no username provided')
+        }
+      } else {
+        console.log('not a user')
+      }
+      this.wantsToView = {
+        type: type,
+        name: name
       }
     },
   }

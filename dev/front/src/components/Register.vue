@@ -17,6 +17,21 @@
             type="text" 
             placeholder="pick a display name"
           >
+          <p  
+            class="error" 
+            v-if="invalid"
+          >Your display name cannot contain any spaces or special characters.
+          </p>
+          <p 
+            class="error"
+            v-else-if="tooshort"
+          >Your display name must contain at least 3 characters.
+          </p>
+          <p 
+            class="error"
+            v-else-if="inuse"
+          >This name has already been taken by someone else.
+          </p>
           <input 
             ref="color" 
             type="text" 
@@ -55,7 +70,8 @@ export default {
   props: [
     'name',
     'color',
-    'registered'
+    'registered',
+    'usernames'
   ],
   data() {
     return {
@@ -69,6 +85,9 @@ export default {
         sliderSize: 13, 
         shadow: false
       },
+      invalid: false,
+      tooshort: false,
+      inuse: false,
     }
   },
   mounted() {
@@ -88,12 +107,24 @@ export default {
   methods: {
 
     save() {
-      const newMe = {
-        name: this.$refs.name.value,
-        color: this.$refs.color.value,
-        // slug: this.toSlug(this.$refs.name.value)
+      const name = this.$refs.name.value
+      const color = this.$refs.color.value
+
+      if (!this.validateChars(name)) {
+        this.invalid = true
+
+      } else if (!this.validateLength(name)) {
+        this.tooshort = true
+
+      } else if (!this.existingUser(name)) {
+        this.inuse = true
+      
+      } else {
+        this.$emit('newMe', {
+          name: name,
+          color: color,
+        })
       }
-      this.$emit('newMe', newMe)
     },
 
     cancel() {
@@ -109,6 +140,18 @@ export default {
         color: this.$refs.color.value 
       }
       this.$emit('updateColor', newMe)
+    },
+
+    validateChars(string) {
+      return /^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/.test(string)
+    },
+
+    validateLength(string) {
+      return string.length > 1
+    },
+
+    existingUser(string) {
+      return this.usernames.indexOf(string)
     },
 
     toSlug(str) {

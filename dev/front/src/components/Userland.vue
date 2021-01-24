@@ -20,6 +20,7 @@
         :name="me.name"
         :color="me.color"
         :grid="grid"
+        :usernames="getUserNames()"
 
         @grid="grid = !grid"
         @editMe="editing = true"
@@ -90,6 +91,9 @@ export default {
     Userlist,
     User,
   },
+  props: [
+    'wantsToView'
+  ],
   data () {
     return {
       me: {
@@ -173,11 +177,29 @@ export default {
       this.windowTop = userlandContainer.scrollTop
     })
 
-    const center = { 
-      x: (this.$refs.userland.offsetWidth - window.innerWidth) / 2,
-      y: (this.$refs.userland.offsetHeight - window.innerHeight) / 2
+
+    let firstPosition
+
+    if (this.wantsToView) {
+      const type = this.wantsToView.type
+      const name = this.wantsToView.name
+      if (type == 'user') {
+        const user = this.findUser(name)
+        firstPosition = this.getUserPosition(user)
+
+      } else if (type == 'page') {
+        console.log('page')
+      }
+
+    } else {
+      const center = { 
+        x: (this.$refs.userland.offsetWidth - window.innerWidth) / 2,
+        y: (this.$refs.userland.offsetHeight - window.innerHeight) / 2
+      }
+      firstPosition = center
     }
-    this.scrollTo(center, 'smooth')
+
+    this.scrollTo(firstPosition, 'smooth')
 
   },
   sockets: {
@@ -314,6 +336,12 @@ export default {
         this.announce('message', message)
       }
     },
+
+    findUser(name) {
+      let usersArray = Object.values(this.users)
+      let found = usersArray.find(u => u.name == name) 
+      return this.users[found.uid] 
+    },
  
     scrollTo(to, behavior) {
       this.$refs.userlandContainer.scroll({
@@ -338,6 +366,12 @@ export default {
       }
     },
 
+    getUserNames() {
+      let usersArray = Object.values(this.users)
+      let usernames = usersArray.map(user => user.name);
+      return usernames
+    },
+
     randomColor() {
       const 
         r = Math.floor(Math.random() * 256),
@@ -352,6 +386,7 @@ export default {
       let input = this.$refs.me.$refs.Cursor.$refs.input // :]
       let msgs = this.me.messages
       let current
+      let navigation
 
       document.addEventListener('keyup', (e) => {
         if (this.registered && !this.editing) {
@@ -364,6 +399,10 @@ export default {
               const char = String.fromCharCode(key)
               input.value = char              
             }
+          }
+
+          if (input.value == "~") {
+            navigation = true
           }
 
           const 
@@ -391,9 +430,19 @@ export default {
             }
 
           } else if (key == 13) {
-            const message = this.constructMessage(input.value)
-            this.sendMessage(message)
-            current = undefined
+
+            if (navigation) {
+              const name = input.value.slice(1)
+              const user = this.findUser(name)
+              this.scrollTo(this.getUserPosition(user), 'smooth')
+              navigation = false
+            
+            } else {
+              const message = this.constructMessage(input.value)
+              this.sendMessage(message)
+              current = undefined
+            }
+
             input.value = ''
             input.placeholder = ''
 
