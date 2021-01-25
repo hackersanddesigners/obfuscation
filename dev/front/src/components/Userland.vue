@@ -53,19 +53,22 @@
           :scale="scale"
           :hidden="!grid"
         />
-        <User 
+        <Cursorr
           ref="me"
-          :key="me.uid"
           :user="me"
           :isMe="true"
-
-          @newPosition="updatePosition"
+          @newPosition="updatePosition($event)"
         />
-        <User 
+        <Cursorr
           v-for="user in users"
-          ref="Users"
           :key="user.uid"
           :user="user"
+        />
+        <Message
+          v-for="message in messages"
+          ref="Messages"
+          :key="message.uid"
+          :message="message"
         />
       </div>
     </div>
@@ -78,9 +81,10 @@ import smoothscroll from 'smoothscroll-polyfill'
 
 import Grid from './Grid'
 import Minimap from './Minimap'
-import Options from './Options.vue'
-import Userlist from './Userlist.vue'
-import User from './User'
+import Options from './Options'
+import Userlist from './Userlist'
+import Cursorr from './Cursorr'
+import Message from './Message'
 
 export default {
   name: 'Userland',
@@ -89,7 +93,8 @@ export default {
     Minimap,
     Options,
     Userlist,
-    User,
+    Cursorr,
+    Message
   },
   props: [
     'wantsToView'
@@ -104,18 +109,20 @@ export default {
         x: 0,
         y: 0,
         typing: null,
-        messages: [],
       },
       users: {},
+      messages: {},
+
+      registered: localStorage.me,
+      visited: localStorage.uid,
+      hasUsers: localStorage.users,
+      hasMessages: localStorage.messages,
 
       doNotSave: false,
 
       editing: false,
       scrolling: false,
       dragging: false,
-      registered: localStorage.me,
-      visited: localStorage.uid,
-      hasDB: localStorage.users,
 
       windowWidth: window.innerWidth,
       windowHeight: window.innerHeight,
@@ -149,9 +156,12 @@ export default {
 
     // check if user hsa a DB of users
 
-    if (this.hasDB) {
-      this.users = JSON.parse(localStorage.users)
-    }
+    // if (this.hasUsers) {
+    //   this.users = JSON.parse(localStorage.users)
+    // }
+    // if (this.hasMessages) {
+    //   this.messages = JSON.parse(localStorage.messages)
+    // }
 
   },
   mounted() {
@@ -206,7 +216,7 @@ export default {
 
     connect() { 
       this.me.connected = true 
-      this.announce('user')
+      this.$socket.emit('user', this.me)
     },
 
     disconnect() { 
@@ -216,60 +226,93 @@ export default {
       }
     },
 
-    broadcast(data) {
-      data = JSON.parse(data)
-      
-      const user = data.user
-      const type = data.msg.type
-      const content = data.msg.content
-
+    user(data) {
+      const user = JSON.parse(data)
       if (user.uid !== this.me.uid) {
-
         this.$set(this.users, user.uid, user)
-        let existingUser = this.users[user.uid]
-
-        if (type == 'user') {
-          this.announce('db', this.users)
-
-        } else if (type == 'position') {
-          // console.log(user)
-
-        } else if (type == 'typing') {
-          // console.log(user)
-
-        } else if (type == 'message') {
-          // console.log(user)
-
-        } else if (type == 'disconnect') {
-          existingUser.connected = false
-        }
       }
+    },
 
-      if (type == 'db') {
-
-        const db = content
-        console.log('got DB from swarm: ', db)
-        for (let key in db) {
-          const user = db[key]
-          if (key !== this.me.uid) {
-            this.$set(this.users, key, user)
-          } 
-        }
-        localStorage.users = JSON.stringify(this.users)
-
+    position(data) {
+      const user = JSON.parse(data)
+      if (user.uid !== this.me.uid) {
+        this.$set(this.users, user.uid, user)
       }
+    },
 
-      if (type == 'clear-db') {
-        this.users = {}
-        localStorage.users = JSON.stringify(this.users)
-
-        this.me.messages = []
-        localStorage.me = JSON.stringify(this.me)
-
-        window.location.reload(true)
+    typing(data) {
+      const user = JSON.parse(data)
+      if (user.uid !== this.me.uid) {
+        this.$set(this.users, user.uid, user)
       }
+    },
 
+    message(data) {
+      const message = JSON.parse(data)
+      this.$set(this.messages, message.uid, message)
+    },
+
+    userDisconnect(data) {
+      const user = JSON.parse(data)
+      if (user.uid !== this.me.uid) {
+        this.$set(this.users, user.uid, user)
+      }
     }
+
+    // broadcast(data) {
+    //   data = JSON.parse(data)
+      
+    //   const user = data.user
+    //   const type = data.msg.type
+    //   const content = data.msg.content
+
+    //   if (user.uid !== this.me.uid) {
+
+    //     this.$set(this.users, user.uid, user)
+    //     let existingUser = this.users[user.uid]
+
+    //     if (type == 'user') {
+    //       this.announce('db', this.users)
+
+    //     } else if (type == 'position') {
+    //       // console.log(user)
+
+    //     } else if (type == 'typing') {
+    //       // console.log(user)
+
+    //     } else if (type == 'message') {
+    //       // console.log(user)
+
+    //     } else if (type == 'disconnect') {
+    //       existingUser.connected = false
+    //     }
+    //   }
+
+    //   if (type == 'db') {
+
+    //     const db = content
+    //     console.log('got DB from swarm: ', db)
+    //     for (let key in db) {
+    //       const user = db[key]
+    //       if (key !== this.me.uid) {
+    //         this.$set(this.users, key, user)
+    //       } 
+    //     }
+    //     localStorage.users = JSON.stringify(this.users)
+
+    //   }
+
+    //   if (type == 'clear-db') {
+    //     this.users = {}
+    //     localStorage.users = JSON.stringify(this.users)
+
+    //     this.me.messages = []
+    //     localStorage.me = JSON.stringify(this.me)
+
+    //     window.location.reload(true)
+    //   }
+
+    // }
 
   },
   methods: {
@@ -307,12 +350,12 @@ export default {
       let y = (this.windowTop + newPosition.y) / (this.windowHeight * this.scale)
       this.$set(this.me, 'x', x)
       this.$set(this.me, 'y', y)
-      this.announce('position')
+      this.$socket.emit('position', this.me)
     },
 
     updateTyping(text) {
       this.me.typing = text
-      this.announce('typing')
+      this.$socket.emit('typing', this.me)
     },
 
     constructMessage(text) {
@@ -331,9 +374,7 @@ export default {
     
     sendMessage(message) {
       if (message.content && message.content != ' ') {
-        this.me.messages.push(message)
-        localStorage.me = JSON.stringify(this.me)
-        this.announce('message', message)
+        this.$socket.emit('message', message)
       }
     },
 
@@ -383,7 +424,7 @@ export default {
     },
 
     track() {
-      let input = this.$refs.me.$refs.Cursor.$refs.input // :]
+      let input = this.$refs.me.$refs.input // :]
       let msgs = this.me.messages
       let current
       let navigation

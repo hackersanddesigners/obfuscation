@@ -11,7 +11,8 @@
     :style="{ 
       left: `${ toNearestX(message.x, 0.4) }%`,
       top: `${ toNearestX(message.y, 0.4) }%`,
-      '--blur': `blur(${ (now - message.time) / 100000000 }px)`
+      '--blur': `blur(${ (now - message.time) / 100000000 }px)`,
+      '--userColor': message.color,
     }"
   >
     <vue-markdown class="message"> {{ message.content }} </vue-markdown>
