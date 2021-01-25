@@ -34,6 +34,8 @@
       <Userlist
         :me="me"
         :users="users"
+        :messages="messages"
+        :moderator="moderator"
 
         @goTo="scrollTo(getUserPosition($event), 'smooth')"
       />
@@ -122,6 +124,7 @@ export default {
       visited: localStorage.uid,
       hasUsers: localStorage.users,
       hasMessages: localStorage.messages,
+      moderator: true,
 
       doNotSave: false,
 
@@ -134,7 +137,7 @@ export default {
       windowLeft: null,
       windowTop: null,
       scale: 5,
-      grid: false,
+      grid: true,
     }
   },
   created() {
@@ -235,6 +238,7 @@ export default {
       if (user.uid !== this.me.uid) {
         this.$set(this.users, user.uid, user)
         this.$socket.emit('users', this.users)
+        this.$socket.emit('messages', this.messages)
       }
     },
 
@@ -484,7 +488,7 @@ export default {
       let current
       let navigation
 
-      document.addEventListener('keyup', (e) => {
+      this.$refs.userlandContainer.addEventListener('keyup', (e) => {
         if (this.registered && !this.editing) {
 
           const key = e.which || e.keyCode
@@ -619,13 +623,17 @@ header h1 {
   font-size: 9pt;
   background: rgba(0, 0, 0, 0.05);
 }
+
+/* header.blur, */
 header.blur h1,
 header.blur #minimap,
-/* header.blur #options .title,
-header.blur #options div, */
+header.blur #options .title,
+/* header.blur #options div, */
 header.blur #userlist,
 #userlandContainer.blur {
   filter: blur(10px);
 }
+
+
 
 </style>

@@ -84,7 +84,7 @@ export default {
   margin-top: 2vh;
   margin-left: 2vh;
   min-width: 10vw;
-  height: 10vh;
+  /* height: 10vh; */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -101,12 +101,23 @@ export default {
   border-bottom: 1px solid grey;
 }
 #options div {
-  margin: 0.2vh 0.5vw;
+  margin: 2.5px 0.5vw;
   display: flex;
   align-items: center;
 }
 #options .db input {
   /* background: red; */
   color: red;
+}
+input {
+  border: none;
+  outline: none;
+  border: 0.5px solid lightgray;
+  padding: 2px 10px;
+  border-radius: 10px;
+  margin-top: 0px;
+}
+input[type="button"] {
+  cursor: pointer;
 }
 </style>

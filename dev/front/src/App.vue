@@ -57,6 +57,7 @@ html, body {
 #app {
   height: 100%;
   width: 100vw;
+  font-size: 10pt;
 }
 a, a:hover, a:active, a:visited {
 }

@@ -7,6 +7,7 @@
     :style="{ 
       left: `${ toNearestX(message.x, 0.4) }%`,
       top: `${ toNearestX(message.y, 0.4) }%`,
+      width: `${ message.content.length / 2 }px`,
       background: message.color,
       '--blur': `blur(${ (now - message.time) / 100000000 }px)`,
     }"
@@ -46,7 +47,6 @@ export default {
 .minimessage {
   position: absolute;
   height: 1px;
-  width: 5px;
   filter: var(--blur);
   transition: filter 0.2 ease;
 }

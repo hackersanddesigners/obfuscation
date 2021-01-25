@@ -49,11 +49,11 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .messageContainer {
   position: absolute;
   display: flex;
-  align-items: baseline;
+  align-items: center;
   cursor: text;
   filter: var(--blur);
   transition: filter 0.2 ease;
