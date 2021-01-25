@@ -25,7 +25,7 @@
       @newPosition="$emit('newPosition', $event)"
     />
     <Message
-      v-for="message in user.messages"
+      v-for="message in messages"
       ref="Messages"
 
       :key="message.uid"
@@ -51,6 +51,7 @@ export default {
   },
   props: [ 
     'user',
+    'messages',
     'isMe'
   ], 
   data() {

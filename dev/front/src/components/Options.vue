@@ -8,7 +8,8 @@
       :usernames="usernames"
 
       @newMe="$emit('newMe', $event)"
-      @updateColor="$emit('updateColor', $event)"
+      @newColor="$emit('newColor', $event)"
+      @register="$emit('register', $event)"
     />
     <span class="title"> options </span>
     <div class="grid">
@@ -82,7 +83,7 @@ export default {
   box-sizing: border-box;
   margin-top: 2vh;
   margin-left: 2vh;
-  width: 10vw;
+  min-width: 10vw;
   height: 10vh;
   display: flex;
   flex-direction: column;

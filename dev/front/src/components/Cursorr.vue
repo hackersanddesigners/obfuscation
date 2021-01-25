@@ -90,6 +90,7 @@ export default {
   align-items: flex-start;
   /* cursor: none; */
   /* transition: all 0.2s ease; */
+  color: var(--userColor);
 }
 .cursorContainer * {
   /* cursor: none !important; */

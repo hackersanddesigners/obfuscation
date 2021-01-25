@@ -1,9 +1,9 @@
 <template>
   <div
     v-if="message.uid && !message.deleted"
+    :id="message.uid"
     :class="[
       'messageContainer',
-      message.uid,
       {
         hover: hovered
       } 
@@ -11,8 +11,7 @@
     :style="{ 
       left: `${ toNearestX(message.x, 0.4) }%`,
       top: `${ toNearestX(message.y, 0.4) }%`,
-      '--blur': `blur(${ (now - message.time) / 100000000 }px)`,
-      '--userColor': message.color,
+      '--blur': `blur(${ (now - message.time) / 100000000 }px)`
     }"
   >
     <vue-markdown class="message"> {{ message.content }} </vue-markdown>

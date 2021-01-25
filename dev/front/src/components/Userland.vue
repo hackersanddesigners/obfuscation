@@ -24,10 +24,11 @@
 
         @grid="grid = !grid"
         @editMe="editing = true"
-        @updateColor="updateColor"
-        @newMe="saveMe"
+        @newColor="updateColor"
+        @newMe="updateAppearance"
+        @register="saveMe"
         @deleteMe="deleteMe()"
-        @deleteEverything="announce('clear-db')"
+        @deleteEverything="deleteEverything()"
       />
       <Userlist
         :me="me"
@@ -53,22 +54,21 @@
           :scale="scale"
           :hidden="!grid"
         />
-        <Cursorr
+        <User 
           ref="me"
+          :key="me.uid"
           :user="me"
           :isMe="true"
-          @newPosition="updatePosition($event)"
+          :messages="getUserMessages(me)"
+
+          @newPosition="updatePosition"
         />
-        <Cursorr
+        <User
           v-for="user in users"
+          ref="Users"
           :key="user.uid"
           :user="user"
-        />
-        <Message
-          v-for="message in messages"
-          ref="Messages"
-          :key="message.uid"
-          :message="message"
+          :messages="getUserMessages(user)"
         />
       </div>
     </div>
@@ -83,8 +83,14 @@ import Grid from './Grid'
 import Minimap from './Minimap'
 import Options from './Options'
 import Userlist from './Userlist'
-import Cursorr from './Cursorr'
-import Message from './Message'
+import User from './User'
+
+
+let 
+  userDBs = [], 
+  largestUserDB,
+  messagesDBs = [],
+  largestMessageDB
 
 export default {
   name: 'Userland',
@@ -93,8 +99,7 @@ export default {
     Minimap,
     Options,
     Userlist,
-    Cursorr,
-    Message
+    User
   },
   props: [
     'wantsToView'
@@ -156,12 +161,15 @@ export default {
 
     // check if user hsa a DB of users
 
-    // if (this.hasUsers) {
-    //   this.users = JSON.parse(localStorage.users)
-    // }
-    // if (this.hasMessages) {
-    //   this.messages = JSON.parse(localStorage.messages)
-    // }
+    if (this.hasUsers) {
+      this.users = JSON.parse(localStorage.users)
+    }
+
+    // check if user hsa a DB of messages
+
+    if (this.hasMessages) {
+      this.messages = JSON.parse(localStorage.messages)
+    }
 
   },
   mounted() {
@@ -223,6 +231,8 @@ export default {
       this.me.connected = false 
       if (!this.doNotSave) {
         localStorage.me = JSON.stringify(this.me)
+        localStorage.users = JSON.stringify(this.users)
+        localStorage.messages = JSON.stringify(this.messages)
       }
     },
 
@@ -230,13 +240,73 @@ export default {
       const user = JSON.parse(data)
       if (user.uid !== this.me.uid) {
         this.$set(this.users, user.uid, user)
+        this.$socket.emit('users', this.users)
       }
+    },
+
+    users(data) {
+      const receivedDB = JSON.parse(data)
+      userDBs.push(receivedDB)
+      userDBs.sort((a, b) => Object.keys(b).length -  Object.keys(a).length)
+      largestUserDB = userDBs[0]
+      userDBs.forEach(DB => {
+        for (let uid in DB) {
+          if (!largestUserDB[uid]) {
+            if (uid !== this.me.uid) {
+              largestUserDB[uid] = DB[uid]            
+            } else {
+              console.log('false alarm, its you.')
+            }
+          }
+        }
+      })
+      for (let uid in largestUserDB) {
+        const user = largestUserDB[uid]
+        if (uid !== this.me.uid) {
+          this.$set(this.users, uid, user)
+        } 
+      }
+      localStorage.users = JSON.stringify(this.users)
+    },
+
+    message(data) {
+      const message = JSON.parse(data)
+      this.$set(this.messages, message.uid, message)
+      this.$socket.emit('messages', this.messages)
+    },
+
+    messages(data) {
+      const receivedDB = JSON.parse(data)
+      messagesDBs.push(receivedDB)
+      messagesDBs.sort((a, b) => Object.keys(b).length -  Object.keys(a).length)
+      largestMessageDB = messagesDBs[0]
+      messagesDBs.forEach(DB => {
+        for (let uid in DB) {
+          if (!largestMessageDB[uid]) {
+            largestMessageDB[uid] = DB[uid]   
+          }
+        }
+      })
+      for (let uid in largestMessageDB) {
+        const message = largestMessageDB[uid]
+        this.$set(this.messages, uid, message)
+      }
+      localStorage.messages = JSON.stringify(this.messages)
     },
 
     position(data) {
       const user = JSON.parse(data)
       if (user.uid !== this.me.uid) {
         this.$set(this.users, user.uid, user)
+        localStorage.users = JSON.stringify(this.users)
+      }
+    },
+
+    appearance(data) {
+      const user = JSON.parse(data)
+      if (user.uid !== this.me.uid) {
+        this.$set(this.users, user.uid, user)
+        localStorage.users = JSON.stringify(this.users)
       }
     },
 
@@ -244,113 +314,74 @@ export default {
       const user = JSON.parse(data)
       if (user.uid !== this.me.uid) {
         this.$set(this.users, user.uid, user)
+        localStorage.users = JSON.stringify(this.users)
       }
-    },
-
-    message(data) {
-      const message = JSON.parse(data)
-      this.$set(this.messages, message.uid, message)
     },
 
     userDisconnect(data) {
       const user = JSON.parse(data)
       if (user.uid !== this.me.uid) {
         this.$set(this.users, user.uid, user)
+        localStorage.users = JSON.stringify(this.users)
       }
-    }
+    },
 
-    // broadcast(data) {
-    //   data = JSON.parse(data)
-      
-    //   const user = data.user
-    //   const type = data.msg.type
-    //   const content = data.msg.content
+    clearDBs() {
+      this.users = {}
+      localStorage.users = JSON.stringify(this.users)
+      this.messages = {}
+      localStorage.messages = JSON.stringify(this.messages)
 
-    //   if (user.uid !== this.me.uid) {
-
-    //     this.$set(this.users, user.uid, user)
-    //     let existingUser = this.users[user.uid]
-
-    //     if (type == 'user') {
-    //       this.announce('db', this.users)
-
-    //     } else if (type == 'position') {
-    //       // console.log(user)
-
-    //     } else if (type == 'typing') {
-    //       // console.log(user)
-
-    //     } else if (type == 'message') {
-    //       // console.log(user)
-
-    //     } else if (type == 'disconnect') {
-    //       existingUser.connected = false
-    //     }
-    //   }
-
-    //   if (type == 'db') {
-
-    //     const db = content
-    //     console.log('got DB from swarm: ', db)
-    //     for (let key in db) {
-    //       const user = db[key]
-    //       if (key !== this.me.uid) {
-    //         this.$set(this.users, key, user)
-    //       } 
-    //     }
-    //     localStorage.users = JSON.stringify(this.users)
-
-    //   }
-
-    //   if (type == 'clear-db') {
-    //     this.users = {}
-    //     localStorage.users = JSON.stringify(this.users)
-
-    //     this.me.messages = []
-    //     localStorage.me = JSON.stringify(this.me)
-
-    //     window.location.reload(true)
-    //   }
-
-    // }
+      window.location.reload(true)
+    },
 
   },
   methods: {
 
-    announce(type, content) {
-      this.$socket.emit('pingServer', this.me, {
-        type: type,
-        content: content
-      })
-    },
-
     saveMe(newLook) {
       this.me.name = newLook.name
       this.me.color = newLook.color
-      this.announce('user')
+      this.$socket.emit('user', this.me)
       this.registered = true
       this.editing = false
       localStorage.me = JSON.stringify(this.me)
     },
 
     deleteMe() {
+      this.me.deleted = true
+      this.getUserMessages(this.me).forEach(m => m.deleted = true)
+      this.$socket.emit('user', this.me)
+      this.$socket.emit('message', {})
       this.doNotSave = true
       localStorage.clear()
       window.location.reload(true)
     },
 
-    updateColor(newLook) {
-      this.me.color = newLook.color
-      this.announce('user')
-      localStorage.me = JSON.stringify(this.me)
+    deleteEverything() {
+      this.$socket.emit('clearDBs')
     },
 
     updatePosition(newPosition) {
       let x = (this.windowLeft + newPosition.x) / (this.windowWidth * this.scale)
       let y = (this.windowTop + newPosition.y) / (this.windowHeight * this.scale)
-      this.$set(this.me, 'x', x)
-      this.$set(this.me, 'y', y)
+      this.me.x = x
+      this.me.y = y
+      this.me.connected = true
       this.$socket.emit('position', this.me)
+    },
+
+    updateColor(newLook) {
+      this.me.color = newLook.color
+      this.$socket.emit('appearance', this.me)
+      localStorage.me = JSON.stringify(this.me)
+    },
+
+    updateAppearance(newLook) {
+      this.me.name = newLook.name
+      this.me.color = newLook.color
+      this.$socket.emit('appearance', this.me)
+      this.editing = false
+      localStorage.me = JSON.stringify(this.me)
     },
 
     updateTyping(text) {
@@ -358,38 +389,29 @@ export default {
       this.$socket.emit('typing', this.me)
     },
 
-    constructMessage(text) {
-      const time = ((new Date()).getTime())
-      const message = {
-        uid: this.me.uid + time,
-        author: this.me.name,
-        content: text,
-        time: time,
-        color: this.me.color,
-        x: this.me.x,
-        y: this.me.y,
-      }
-      return message
-    },
-    
     sendMessage(message) {
       if (message.content && message.content != ' ') {
         this.$socket.emit('message', message)
       }
     },
 
+    constructMessage(text) {
+      const time = ((new Date()).getTime())
+      const message = {
+        uid: this.me.uid + time,
+        author: this.me.uid,
+        content: text,
+        time: time,
+        x: this.me.x,
+        y: this.me.y,
+      }
+      return message
+    },
+
     findUser(name) {
       let usersArray = Object.values(this.users)
       let found = usersArray.find(u => u.name == name) 
       return this.users[found.uid] 
-    },
- 
-    scrollTo(to, behavior) {
-      this.$refs.userlandContainer.scroll({
-        left: to.x,
-        top: to.y,
-        behavior: behavior || 'auto'
-      })
     },
 
     getUserPosition(user) {
@@ -400,6 +422,23 @@ export default {
       }
     },
 
+    getUserNames() {
+      let usersArray = Object.values(this.users)
+      let usernames = usersArray.map(user => user.name);
+      return usernames
+    },
+
+    getUserMessages(user) {
+      let userMessages = []
+      for(let uid in this.messages) {
+        const message = this.messages[uid]
+        if (message.author == user.uid) {
+          userMessages.push(message)
+        }
+      }
+      return userMessages
+    },
+
     toPixels(coords) {
       return {
         x: coords.x * this.scale * this.windowWidth,
@@ -407,10 +446,12 @@ export default {
       }
     },
 
-    getUserNames() {
-      let usersArray = Object.values(this.users)
-      let usernames = usersArray.map(user => user.name);
-      return usernames
+    scrollTo(to, behavior) {
+      this.$refs.userlandContainer.scroll({
+        left: to.x,
+        top: to.y,
+        behavior: behavior || 'auto'
+      })
     },
 
     randomColor() {
@@ -424,8 +465,7 @@ export default {
     },
 
     track() {
-      let input = this.$refs.me.$refs.input // :]
-      let msgs = this.me.messages
+      let input = this.$refs.me.$refs.Cursor.$refs.input // :]
       let current
       let navigation
 
@@ -445,6 +485,8 @@ export default {
           if (input.value == "~") {
             navigation = true
           }
+
+          const msgs = this.getUserMessages(this.me)
 
           const 
             first = msgs[0],
@@ -512,6 +554,7 @@ export default {
 
         }
       })
+
     },
 
 

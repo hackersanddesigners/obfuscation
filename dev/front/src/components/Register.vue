@@ -100,7 +100,9 @@ export default {
     this.$refs.name.select()
 
     this.$nextTick(() => {
-      new jscolor(this.$refs.color)
+      if (this.registered) {
+        new jscolor(this.$refs.color)      
+      }
     })
     
   },
@@ -119,27 +121,40 @@ export default {
       } else if (!this.existingUser(name)) {
         this.inuse = true
       
+      } else if (this.registered) {
+        this.updateAppearance(name, color)
+
       } else {
-        this.$emit('newMe', {
-          name: name,
-          color: color,
-        })
+        this.register(name, color)
+
       }
     },
 
     cancel() {
-      const sameMe = {
+      this.$emit('newMe', {
         name: this.name,
         color: this.color
-      }
-      this.$emit('newMe', sameMe)
+      })
+    },
+
+    updateAppearance(name, color) {
+      this.$emit('newMe', {
+        name: name, 
+        color: color 
+      })
     },
 
     updateColor() {
-      const newMe = {
+      this.$emit('newColor', {
         color: this.$refs.color.value 
-      }
-      this.$emit('updateColor', newMe)
+      })
+    },
+
+    register(name, color) {
+      this.$emit('register', {
+        name: name,
+        color: color,
+      })
     },
 
     validateChars(string) {

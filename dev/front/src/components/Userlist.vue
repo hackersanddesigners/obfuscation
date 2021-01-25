@@ -58,7 +58,7 @@ export default {
   box-sizing: border-box;
   margin-top: 2vh;
   margin-left: 2vh;
-  width: 14vw;
+  min-width: 14vw;
   display: flex;
   flex-direction: column;
   background: white;
