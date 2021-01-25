@@ -11,6 +11,7 @@
 
         :me="me"
         :users="users"
+        :messages="messages"
 
         @newPosition="scrollTo($event)"
       />
@@ -77,7 +78,6 @@
 
 <script>
 import { uid } from 'uid'
-import smoothscroll from 'smoothscroll-polyfill'
 
 import Grid from './Grid'
 import Minimap from './Minimap'
@@ -178,12 +178,7 @@ export default {
 
     this.track()
 
-    smoothscroll.polyfill()
-
-    window.addEventListener('resize', () => {
-      this.windowWidth = window.innerWidth
-      this.windowHeight = window.innerHeight
-    })
+    // UI set-up
 
     const userlandContainer = this.$refs.userlandContainer
       
@@ -195,6 +190,15 @@ export default {
       this.windowTop = userlandContainer.scrollTop
     })
 
+    window.addEventListener('resize', () => {
+      this.windowWidth = window.innerWidth
+      this.windowHeight = window.innerHeight
+    })
+
+    const center = { 
+      x: (this.scale * this.windowWidth - this.windowWidth) / 2,
+      y: (this.scale * this.windowHeight - this.windowHeight) / 2
+    }
 
     let firstPosition
 
@@ -203,17 +207,16 @@ export default {
       const name = this.wantsToView.name
       if (type == 'user') {
         const user = this.findUser(name)
-        firstPosition = this.getUserPosition(user)
-
+        if (user) {
+          firstPosition = this.getUserPosition(user)
+        } else {
+          firstPosition = center
+        }
       } else if (type == 'page') {
         console.log('page')
       }
 
     } else {
-      const center = { 
-        x: (this.$refs.userland.offsetWidth - window.innerWidth) / 2,
-        y: (this.$refs.userland.offsetHeight - window.innerHeight) / 2
-      }
       firstPosition = center
     }
 
@@ -225,15 +228,6 @@ export default {
     connect() { 
       this.me.connected = true 
       this.$socket.emit('user', this.me)
-    },
-
-    disconnect() { 
-      this.me.connected = false 
-      if (!this.doNotSave) {
-        localStorage.me = JSON.stringify(this.me)
-        localStorage.users = JSON.stringify(this.users)
-        localStorage.messages = JSON.stringify(this.messages)
-      }
     },
 
     user(data) {
@@ -335,6 +329,16 @@ export default {
       window.location.reload(true)
     },
 
+    disconnect() { 
+      this.me.connected = false 
+      if (!this.doNotSave) {
+        localStorage.me = JSON.stringify(this.me)
+        localStorage.users = JSON.stringify(this.users)
+        localStorage.messages = JSON.stringify(this.messages)
+      }
+    },
+
+
   },
   methods: {
 
@@ -402,6 +406,7 @@ export default {
         author: this.me.uid,
         content: text,
         time: time,
+        color: this.me.color,
         x: this.me.x,
         y: this.me.y,
       }
@@ -411,7 +416,9 @@ export default {
     findUser(name) {
       let usersArray = Object.values(this.users)
       let found = usersArray.find(u => u.name == name) 
-      return this.users[found.uid] 
+      if (found) {
+        return this.users[found.uid] 
+      }
     },
 
     getUserPosition(user) {
@@ -437,6 +444,14 @@ export default {
         }
       }
       return userMessages
+    },
+
+    miniClick(e) {
+      console.log(e)
+      this.scrollTo({
+        x: e.clientX,
+        y: e.clientY
+      }, 'smooth')
     },
 
     toPixels(coords) {
@@ -516,8 +531,7 @@ export default {
 
             if (navigation) {
               const name = input.value.slice(1)
-              const user = this.findUser(name)
-              this.scrollTo(this.getUserPosition(user), 'smooth')
+              this.$router.push(`~${name}`)
               navigation = false
             
             } else {

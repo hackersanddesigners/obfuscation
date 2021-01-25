@@ -38,13 +38,13 @@
             data-jscolor=""
             @input="updateColor"
           > 
-          <input 
+          <!-- <input 
             v-if="registered"
             ref="cancel" 
             type="button" 
             value="cancel"
             @click.stop="cancel()" 
-          >
+          > -->
           <input 
             ref="submit" 
             type="button" 

@@ -13,6 +13,8 @@
 
 <script>
 import { EventBus } from '../EventBus.js'
+import smoothscroll from 'smoothscroll-polyfill'
+
 import Userland from '../components/Userland'
 
 export default {
@@ -33,6 +35,8 @@ export default {
   },
   created() {
     if (EventBus.$root.isMobile) this.isMobile = true
+    
+    smoothscroll.polyfill()
 
     this.$http.get(this.$apiURL + '/hosts')
       .then((response) => { 
@@ -51,8 +55,8 @@ export default {
   },
   mounted() {
     this.$router.afterEach((to) => { 
-      this.slug = to.path.replace(this.$publicPath, '')
-      this.handleRouting(this.slug)
+      const slug = to.path.replace(this.$publicPath, '')
+      this.handleRouting(slug)
     })
   },
   methods: {

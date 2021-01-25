@@ -16,6 +16,11 @@
       :user="user"
       :scale="scale"
     />
+    <MiniMessage
+      v-for="message in messages"
+      :key="message.uid"
+      :message="message"
+    />
     <Viewport
       id="viewport"
       ref="viewport"
@@ -32,6 +37,7 @@
 
 <script>
 import Cursorr from './Cursorr.vue'
+import MiniMessage from './MiniMessage.vue'
 import Viewport from './Viewport.vue'
 
 export default {
@@ -39,6 +45,7 @@ export default {
   components: {
     Viewport,
     Cursorr,
+    MiniMessage,
   },
   props: [ 
     'windowWidth',
@@ -47,7 +54,8 @@ export default {
     'windowTop',
     'scale',
     'me',
-    'users'
+    'users',
+    'messages'
   ], 
   data() {
     return {
@@ -60,6 +68,13 @@ export default {
   mounted() {
   },  
   methods: {
+    sendDesiredPosition(e) {
+      const newPosition = {
+        x: e.layerX * this.zoomIndex,
+        y: e.layerY * this.zoomIndex,
+      }
+      this.$emit('newPosition', newPosition)
+    },
     dragViewport({ deltaX, deltaY, first, last }) {
       if (first) {
         this.dragging = true

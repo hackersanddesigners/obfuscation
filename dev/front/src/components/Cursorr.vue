@@ -53,7 +53,6 @@ export default {
   props: [ 
     'user',
     'isMe',
-    'mini',
     'scale',
     'hovered',
   ], 
@@ -62,7 +61,7 @@ export default {
     }
   },
   mounted() {
-    if (this.isMe) {
+    if (this.isMe && !this.scale) {
       this.trackCursor()
     }
   },
@@ -129,7 +128,6 @@ export default {
   padding: 0px 10px;
 }
 .cursorContainer .input {
-  min-width: 220px;
   width: auto;
   height: 15px;
   padding: 0px;
