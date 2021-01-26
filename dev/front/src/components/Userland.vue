@@ -148,6 +148,13 @@ export default {
       grid: true,
     }
   },
+
+  watch: {
+    wantsToView(thing) {
+      this.route(thing.type, thing.name)
+    }
+  },
+
   created() {
 
     // check if user is registered and get their datas value
@@ -209,32 +216,15 @@ export default {
       this.windowHeight = window.innerHeight
     })
 
-    const center = { 
+    this.center = { 
       x: (this.scale * this.windowWidth - this.windowWidth) / 2,
       y: (this.scale * this.windowHeight - this.windowHeight) / 2
     }
 
-    let firstPosition
 
     if (this.wantsToView) {
-      const type = this.wantsToView.type
-      const name = this.wantsToView.name
-      if (type == 'user') {
-        const user = this.findUser(name)
-        if (user) {
-          firstPosition = this.getUserPosition(user)
-        } else {
-          firstPosition = center
-        }
-      } else if (type == 'page') {
-        console.log('page')
-      }
-
-    } else {
-      firstPosition = center
+      this.route(this.wantsToView.type, this.wantsToView.name)
     }
-
-    this.scrollTo(firstPosition, 'smooth')
 
   },
   sockets: {
@@ -433,6 +423,21 @@ export default {
       return message
     },
 
+    route(type, name) {
+      let position
+      if (type == 'user') {
+        const user = this.findUser(name)
+        if (user) {
+          position = this.getPosition(user)
+        } else {
+          position = this.center
+        }
+      } else if (type == 'page') {
+        position = this.position
+      }
+      this.scrollTo(position, 'smooth')
+    },
+
     findUser(name) {
       let usersArray = Object.values(this.users)
       let found = usersArray.find(u => u.name == name) 
@@ -566,20 +571,21 @@ export default {
 
           } else if (key == 13) {
 
-            if (navigation) {
-              const name = input.value.slice(1)
-              this.$router.push(`~${name}`)
+            const message = this.constructMessage(input.value)
+
+            if (announcement) {
+              message.announcement = true
+              announcement = false
+
+            } else if (navigation) {
+              message.navigation = true
+              this.$router.push(input.value)
               navigation = false
-            
-            } else {
-              const message = this.constructMessage(input.value)
-              if (announcement) {
-                message.announcement = true
-                announcement = false
-              }
-              this.sendMessage(message)
-              current = undefined
+      
             }
+            
+            this.sendMessage(message)
+            current = undefined
 
             input.value = ''
             input.placeholder = ''
