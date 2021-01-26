@@ -46,7 +46,7 @@
       id="userlandContainer" 
       ref="userlandContainer"
       :class="{ blur: !registered || editing }"
-      @scroll="updateViewerPosition()"
+      @scroll.stop.prevent="updateViewerPosition()"
     >
       <div 
         id="userland" 
@@ -217,14 +217,13 @@ export default {
       this.windowHeight = window.innerHeight
     })
 
-    this.center = { 
-      x: (this.scale * this.windowWidth - this.windowWidth) / 2,
-      y: (this.scale * this.windowHeight - this.windowHeight) / 2
-    }
-
-
     if (this.wantsToView) {
       this.route(this.wantsToView.type, this.wantsToView.name)
+    } else {
+      this.scrollTo({
+        x: (this.scale * this.windowWidth - this.windowWidth) / 2,
+        y: (this.scale * this.windowHeight - this.windowHeight) / 2
+      })
     }
 
   },
@@ -377,8 +376,10 @@ export default {
     updatePosition(newPosition) {
       let x = (this.windowLeft + newPosition.x) / (this.windowWidth * this.scale)
       let y = (this.windowTop + newPosition.y) / (this.windowHeight * this.scale)
-      this.me.x = x
-      this.me.y = y
+      // this.me.x = x
+      // this.me.y = y
+      this.$set(this.me, 'x', x)
+      this.$set(this.me, 'y', y)
       this.me.connected = true
       this.$socket.emit('position', this.me)
     },
