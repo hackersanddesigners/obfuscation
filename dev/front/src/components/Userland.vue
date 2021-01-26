@@ -217,25 +217,6 @@ export default {
       this.windowHeight = window.innerHeight
     })
 
-    // let scale = 1
-
-    // userland.addEventListener('wheel', (e) => {
-    //   // console.log(e)
-    //   // this.windowLeft += e.deltaX
-    //   // this.windowTop += e.deltaY
-    //   // this.updateViewerPosition()
-    //   e.preventDefault()
-    //   e.stopPropagation()
-
-    //   scale += e.deltaY * -0.01
-
-    //   // Restrict scale
-    //   scale = Math.min(Math.max(.125, scale), 4)
-
-    //   // Apply scale transform
-    //   this.$refs.userland.style.transform = `scale(${scale})`
-    // })
-
     // if there is a slug, navigate to it
 
     if (this.wantsToView) {
@@ -670,7 +651,6 @@ header h1 {
   margin-left: 2vh;
 }
 #userlandContainer {
-  cursor: none;
   box-sizing: border-box;
   position: absolute;
   height: 100%;
@@ -684,18 +664,16 @@ header h1 {
   display: none;
 }
 #userland {
+  /* cursor: none; */
   box-sizing: border-box;
   position: absolute;
-  top: 0;
-  left: 0;
-  /* display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center; */
-  /* overflow: hidden; */
+  top: 0px;
+  left: 0px;
+  overflow: hidden;
   font-family: monospace;
   font-size: 9pt;
   background: white;
+  transform-origin: center;
   /* font-family: 'zxx-noise'; */
   /* font-family: 'zxx-false'; */
   /* font-family: 'terminal';
