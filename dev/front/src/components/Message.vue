@@ -77,6 +77,10 @@ export default {
   text-decoration: none;
   margin: 0px;
 }
+.messageContainer .message a {
+  text-decoration: underline;
+  color: inherit;
+}
 .messageContainer .message iframe {
   width: 300px !important;
   height: 650px !important;
