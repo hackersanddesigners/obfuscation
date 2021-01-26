@@ -1,7 +1,7 @@
 <template>
   <div
     :class="[
-      'messageContainer',
+      'miniMessageContainer',
       { hover: hovered }
     ]"
     @mouseover="hovered = true"
@@ -43,13 +43,13 @@ export default {
 </script>
 
 <style scoped>
-.messageContainer {
+.miniMessageContainer {
   padding-left: 20px;
   display: flex;
   align-items: center;  
 
 }
-.messageContainer .message {
+.miniMessageContainer .message {
   flex: 0 0 40%;
   width: 100%;
   box-sizing: border-box;
@@ -58,18 +58,18 @@ export default {
   cursor: pointer;
   overflow: hidden;
 }
-.messageContainer .message::selection {
+.miniMessageContainer .message::selection {
   background: var(--userColor);
   color: white;
 }
-.messageContainer .time {
+.miniMessageContainer .time {
   flex: 0 0 29%;
   margin: 0px 5px;
   font-size: 7pt;
   color: lightgray;
   white-space: nowrap;
 }
-.messageContainer .delete {
+.miniMessageContainer .delete {
   color:grey;
   font-family: sans-serif;
   font-size: 8.5pt;
@@ -77,16 +77,16 @@ export default {
   padding: 2px 10px;
   cursor: pointer;
 }
-.messageContainer .goto {
+.miniMessageContainer .goto {
   margin-left: auto;
   margin-right: 5px;
   width: 2vw;
   cursor: pointer;
 }
-.messageContainer .delete:hover {
+.miniMessageContainer .delete:hover {
   text-decoration: underline;
 }
-.messageContainer.hover {
+.miniMessageContainer.hover {
   background: rgba(161, 161, 161, 0.116);
 }
 </style>

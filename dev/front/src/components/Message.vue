@@ -5,7 +5,8 @@
     :class="[
       'messageContainer',
       {
-        hover: hovered
+        hover: hovered,
+        announcement: message.announcement
       } 
     ]"
     :style="{ 
@@ -52,7 +53,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .messageContainer {
   position: absolute;
   display: flex;
@@ -71,6 +72,7 @@ export default {
   /* line-height: 1.65; */
   line-height: 1.9vh;
 }
+.messageContainer .message p,
 .messageContainer .message * {
   text-decoration: none;
   margin: 0px;
@@ -100,15 +102,11 @@ export default {
   filter: blur(0px);
   transition: filter 0.2 ease;
 }
-.messageContainer.hover .message {
-  /* border-color: unset; */
-  /* padding: 0px 10px; */
+.messageContainer.announcement .message {
+  border: 1px dashed;
 }
 .messageContainer.hover .time {
   opacity: 1;
 }
-/* .messageContainer.hover .author {
-  opacity: 1;
-} */
 
 </style>

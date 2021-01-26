@@ -5,7 +5,7 @@
       'cursorContainer',
       {
         uid: user.uid,
-        typing: !scale && (user.typing || hovered),
+        hovered: !scale && (user.typing || hovered),
         dragging: dragging
       }
     ]"
@@ -138,7 +138,7 @@ export default {
   /* background: rgba(255, 0, 0, 0.377); */
 }
 
-.cursorContainer.typing .cursor {
+.cursorContainer.hovered .cursor {
   width: auto;
   max-width: 450px;
   padding: 0px 7.5px;

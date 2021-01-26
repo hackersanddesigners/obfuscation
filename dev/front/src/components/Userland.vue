@@ -38,7 +38,7 @@
         :messages="messages"
         :moderator="moderator"
 
-        @goTo="scrollTo(getUserPosition($event), 'smooth')"
+        @goTo="scrollTo(getPosition($event), 'smooth')"
       />
     </header>
     <div 
@@ -282,6 +282,9 @@ export default {
       const message = JSON.parse(data)
       this.$set(this.messages, message.uid, message)
       this.$socket.emit('messages', this.messages)
+      if (message.announcement && (message.author !== this.me.uid)) {
+        this.scrollTo(this.getPosition(message), 'smooth')
+      }
     },
 
     messages(data) {
@@ -424,6 +427,8 @@ export default {
         color: this.me.color,
         x: this.me.x,
         y: this.me.y,
+        deleted: false,
+        announcement: false
       }
       return message
     },
@@ -436,11 +441,11 @@ export default {
       }
     },
 
-    getUserPosition(user) {
-      user = this.toPixels(user)
+    getPosition(obj) {
+      obj = this.toPixels(obj)
       return {
-        x: user.x - this.windowWidth / 2,
-        y: user.y - this.windowHeight / 2
+        x: obj.x - this.windowWidth / 2,
+        y: obj.y - this.windowHeight / 2
       }
     },
 
@@ -507,9 +512,12 @@ export default {
     },
 
     track() {
-      let input = this.$refs.me.$refs.Cursor.$refs.input // :]
-      let current
-      let navigation
+      let 
+        input = this.$refs.me.$refs.Cursor.$refs.input, // :]
+        current,
+        navigation,
+        announcement
+
 
       this.$refs.userlandContainer.addEventListener('keyup', (e) => {
         if (this.registered && !this.editing) {
@@ -526,6 +534,8 @@ export default {
 
           if (input.value == "~") {
             navigation = true
+          } else if (input.value == '!') {
+            announcement = true
           }
 
           const msgs = this.getUserMessages(this.me)
@@ -563,6 +573,10 @@ export default {
             
             } else {
               const message = this.constructMessage(input.value)
+              if (announcement) {
+                message.announcement = true
+                announcement = false
+              }
               this.sendMessage(message)
               current = undefined
             }
