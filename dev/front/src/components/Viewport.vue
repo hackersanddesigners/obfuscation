@@ -40,7 +40,7 @@ export default {
   border: 1px solid grey;
   cursor: move;
 }
-#viewport:hover {
+.hovered #viewport {
   border-color: red;
 }
 </style>

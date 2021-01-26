@@ -1,6 +1,9 @@
 <template>
   <div 
     id="minimap"
+    :class="{
+      hovered: hovered || dragging
+    }"
     :style="{
       height: `${ height }vh`,
       width: `${ width }vw`
@@ -24,6 +27,7 @@
       :key="message.uid"
       :message="message"
       :hovered="hovered"
+      :dragging="dragging"
     />
     <Viewport
       id="viewport"
@@ -59,7 +63,8 @@ export default {
     'scale',
     'me',
     'users',
-    'messages'
+    'messages',
+    'dragging'
   ], 
   data() {
     return {
@@ -82,11 +87,11 @@ export default {
     },
     dragViewport({ deltaX, deltaY, first, last }) {
       if (first) {
-        this.dragging = true
+        // this.dragging = true
         return
       }
       if (last) {
-        this.dragging = false
+        // this.dragging = false
         return
       }
       const newPosition = {

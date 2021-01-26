@@ -12,6 +12,7 @@
         :me="me"
         :users="users"
         :messages="messages"
+        :dragging="dragging"
 
         @newPosition="scrollTo($event, 'smooth')"
         @newDragPosition="scrollTo($event)"
@@ -583,7 +584,7 @@ export default {
               navigation = false
       
             }
-            
+
             this.sendMessage(message)
             current = undefined
 
@@ -636,7 +637,9 @@ header {
 
 }
 header h1 {
-  /* font-family: 'zxx-false'; */
+  font-family: 'zxx-noise';
+  font-size: 30px;
+  opacity: 0.4;
   margin-left: 2vh;
 }
 #userlandContainer {

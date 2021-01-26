@@ -3,7 +3,7 @@
     v-if="message.uid && !message.deleted"
     :class="[
       'minimessage',
-      { clear: hovered }
+      { clear: hovered || dragging }
     ]"
     :style="{ 
       left: `${ toNearestX(message.x, 0.4) }%`,
@@ -25,7 +25,8 @@ export default {
   },
   props: [ 
     'message',
-    'hovered'
+    'hovered',
+    'dragging'
   ], 
   data() {
     return {
