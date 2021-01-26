@@ -88,5 +88,6 @@ export default {
   box-sizing: border-box;
   height: 100%;
   width: 100%;
+  background: lightgray;
 }
 </style>

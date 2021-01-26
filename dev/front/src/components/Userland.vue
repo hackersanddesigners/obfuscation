@@ -46,7 +46,7 @@
       id="userlandContainer" 
       ref="userlandContainer"
       :class="{ blur: !registered || editing }"
-      @scroll.stop.prevent="updateViewerPosition()"
+      @scroll="updateViewerPosition($event)"
     >
       <div 
         id="userland" 
@@ -217,8 +217,32 @@ export default {
       this.windowHeight = window.innerHeight
     })
 
+    // let scale = 1
+
+    // userland.addEventListener('wheel', (e) => {
+    //   // console.log(e)
+    //   // this.windowLeft += e.deltaX
+    //   // this.windowTop += e.deltaY
+    //   // this.updateViewerPosition()
+    //   e.preventDefault()
+    //   e.stopPropagation()
+
+    //   scale += e.deltaY * -0.01
+
+    //   // Restrict scale
+    //   scale = Math.min(Math.max(.125, scale), 4)
+
+    //   // Apply scale transform
+    //   this.$refs.userland.style.transform = `scale(${scale})`
+    // })
+
+    // if there is a slug, navigate to it
+
     if (this.wantsToView) {
       this.route(this.wantsToView.type, this.wantsToView.name)
+
+    // else, land in the center
+
     } else {
       this.scrollTo({
         x: (this.scale * this.windowWidth - this.windowWidth) / 2,
@@ -380,6 +404,7 @@ export default {
       // this.me.y = y
       this.$set(this.me, 'x', x)
       this.$set(this.me, 'y', y)
+      // console.log(this.windowLeft, this.me.x)
       this.me.connected = true
       this.$socket.emit('position', this.me)
     },
@@ -484,6 +509,7 @@ export default {
     updateViewerPosition() {
       this.windowLeft = this.$refs.userlandContainer.scrollLeft
       this.windowTop = this.$refs.userlandContainer.scrollTop
+      console.log('scroll')
     },
 
     toPixels(coords) {
@@ -662,13 +688,14 @@ header h1 {
   position: absolute;
   top: 0;
   left: 0;
-  display: flex;
+  /* display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
-  overflow: scroll;
+  align-items: center; */
+  /* overflow: hidden; */
   font-family: monospace;
   font-size: 9pt;
+  background: white;
   /* font-family: 'zxx-noise'; */
   /* font-family: 'zxx-false'; */
   /* font-family: 'terminal';
