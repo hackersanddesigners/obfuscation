@@ -55,8 +55,8 @@ export default {
   src: url('./assets/fonts/zxx_noise-webfont.ttf');
 }
 @font-face {
-  font-family: 'zxx-noise';
-  src: url('./assets/fonts/zxx_noise-webfont.ttf');
+  font-family: 'terminal';
+  src: url('./assets/fonts/terminal-grotesque.ttf');
 }
 
 :root {

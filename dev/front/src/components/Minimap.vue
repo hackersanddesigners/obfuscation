@@ -7,6 +7,7 @@
     }"
       @mouseover.stop="hovered=true"
       @mouseleave.stop="hovered=false"
+      @mousedown="sendDesiredPosition($event)"
     >
     <Cursorr
       :user="me"
@@ -73,10 +74,9 @@ export default {
   },  
   methods: {
     sendDesiredPosition(e) {
-      console.log(e)
       const newPosition = {
-        x: (this.windowWidth + (e.layerX * this.zoomIndex)) / 2,
-        y: (this.windowHeight + (e.layerY * this.zoomIndex)) / 2,
+        x: ((e.layerX - this.windowWidth/(2*this.zoomIndex)) * this.zoomIndex),
+        y: ((e.layerY - this.windowHeight/(2*this.zoomIndex)) * this.zoomIndex),
       }
       this.$emit('newPosition', newPosition)
     },
@@ -93,7 +93,7 @@ export default {
         x: this.windowLeft + deltaX * this.zoomIndex,
         y: this.windowTop + deltaY * this.zoomIndex,
       }
-      this.$emit('newPosition', newPosition)
+      this.$emit('newDragPosition', newPosition)
     },
   }
 }
@@ -102,11 +102,10 @@ export default {
 <style scoped>
 #minimap {
   margin-left: 2vh;
-  /* height: 20vh;
-  width: 20vw; */
   position: relative;
   box-sizing: border-box;
   background: white;
   border: 1px solid grey;
+  cursor: pointer;
 }
 </style>

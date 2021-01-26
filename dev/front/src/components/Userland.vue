@@ -13,7 +13,8 @@
         :users="users"
         :messages="messages"
 
-        @newPosition="scrollTo($event)"
+        @newPosition="scrollTo($event, 'smooth')"
+        @newDragPosition="scrollTo($event)"
       />
       <Options
         :registered="registered"
@@ -563,7 +564,7 @@ export default {
 
       this.$refs.userlandContainer.addEventListener('click', () => {
         if (this.registered && !this.editing) {
-          
+
           const message = this.constructMessage(input.value)
 
           this.sendMessage(message)
@@ -595,6 +596,7 @@ header {
 
 }
 header h1 {
+  /* font-family: 'zxx-false'; */
   margin-left: 2vh;
 }
 #userlandContainer {
@@ -624,8 +626,9 @@ header h1 {
   /* font-family: monospace;
   font-size: 9pt; */
   /* font-family: 'zxx-noise'; */
-  font-family: 'zxx-false';
-  font-size: 9pt;
+  /* font-family: 'zxx-false'; */
+  font-family: 'terminal';
+  font-size: 10pt;
   background: rgba(0, 0, 0, 0.05);
 }
 
