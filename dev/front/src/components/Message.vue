@@ -13,6 +13,8 @@
       top: `${ toNearestX(message.y, 0.4) }%`,
       '--blur': `blur(${ (now - message.time) / 100000000 }px)`
     }"
+      @mouseover="hovered=true"
+      @mouseleave="hovered=false"
   >
     <vue-markdown class="message"> {{ message.content }} </vue-markdown>
     <span class="time"> {{ fromNow(message.time) }} </span>
@@ -29,11 +31,12 @@ export default {
   props: [ 
     'isMe',
     'message',
-    'hovered'
+    // 'hovered'
   ], 
   data() {
     return {
-      now: (new Date()).getTime()
+      now: (new Date()).getTime(),
+      hovered: false
     }
   },
   mounted() {
@@ -43,7 +46,7 @@ export default {
       return moment(time).fromNow()
     },
     toNearestX(num, X) {
-      return Math.floor(100 * num / X) * X
+      return Math.floor(100 * (num) / X) * X
     }
   }
 }
@@ -71,10 +74,6 @@ export default {
 .messageContainer .message * {
   text-decoration: none;
   margin: 0px;
-}
-.messageContainer .message *::selection {
-  background: var(--userColor);
-  color: white;
 }
 .messageContainer .message iframe {
   width: 300px !important;

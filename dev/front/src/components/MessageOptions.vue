@@ -79,7 +79,7 @@ export default {
 }
 .messageContainer .goto {
   margin-left: auto;
-  margin-right: 0.5vw;
+  margin-right: 5px;
   width: 2vw;
   cursor: pointer;
 }

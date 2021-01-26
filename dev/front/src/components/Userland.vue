@@ -44,6 +44,7 @@
       id="userlandContainer" 
       ref="userlandContainer"
       :class="{ blur: !registered || editing }"
+      @scroll="updateViewerPosition()"
     >
       <div 
         id="userland" 
@@ -93,6 +94,7 @@ let
   largestUserDB,
   messagesDBs = [],
   largestMessageDB
+
 
 export default {
   name: 'Userland',
@@ -187,11 +189,6 @@ export default {
       
     this.windowLeft = userlandContainer.scrollLeft
     this.windowTop = userlandContainer.scrollTop
-
-    userlandContainer.addEventListener('scroll', () => {
-      this.windowLeft = userlandContainer.scrollLeft
-      this.windowTop = userlandContainer.scrollTop
-    })
 
     window.addEventListener('resize', () => {
       this.windowWidth = window.innerWidth
@@ -458,6 +455,11 @@ export default {
       }, 'smooth')
     },
 
+    updateViewerPosition() {
+      this.windowLeft = this.$refs.userlandContainer.scrollLeft
+      this.windowTop = this.$refs.userlandContainer.scrollTop
+    },
+
     toPixels(coords) {
       return {
         x: coords.x * this.scale * this.windowWidth,
@@ -554,14 +556,14 @@ export default {
 
           this.updateTyping(input.value)
 
-          e.stopPropagation()
-          e.preventDefault()
+          // e.stopPropagation()
+          // e.preventDefault()
         }
       })
 
-      document.addEventListener('click', () => {
+      this.$refs.userlandContainer.addEventListener('click', () => {
         if (this.registered && !this.editing) {
-
+          
           const message = this.constructMessage(input.value)
 
           this.sendMessage(message)
@@ -619,7 +621,10 @@ header h1 {
   justify-content: center;
   align-items: center;
   overflow: scroll;
-  font-family: monospace;
+  /* font-family: monospace;
+  font-size: 9pt; */
+  /* font-family: 'zxx-noise'; */
+  font-family: 'zxx-false';
   font-size: 9pt;
   background: rgba(0, 0, 0, 0.05);
 }
@@ -627,7 +632,7 @@ header h1 {
 /* header.blur, */
 header.blur h1,
 header.blur #minimap,
-header.blur #options .title,
+/* header.blur #options .title, */
 /* header.blur #options div, */
 header.blur #userlist,
 #userlandContainer.blur {

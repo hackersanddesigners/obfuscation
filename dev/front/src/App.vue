@@ -45,9 +45,22 @@ export default {
 </script>
 
 <style>
-:root {
+
+@font-face {
+  font-family: 'zxx-false';
+  src: url('./assets/fonts/zxx_false-webfont.ttf');
+}
+@font-face {
+  font-family: 'zxx-noise';
+  src: url('./assets/fonts/zxx_noise-webfont.ttf');
+}
+@font-face {
+  font-family: 'zxx-noise';
+  src: url('./assets/fonts/zxx_noise-webfont.ttf');
 }
 
+:root {
+}
 html, body {
   margin: 0;
   padding: 0;

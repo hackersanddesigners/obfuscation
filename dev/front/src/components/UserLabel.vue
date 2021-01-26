@@ -35,7 +35,7 @@
         >delete</span>
     </div>
     <span class="goto"> {{ hovered ? '→' : ''  }}</span> 
-    <div v-if="messagesVisible" class="messageListContiner">
+    <div v-if="moderating && messagesVisible" class="messageListContiner">
       <ul v-if="messages.length > 0" class="messageList">
         <MessageOptions
           v-for="message in messages"

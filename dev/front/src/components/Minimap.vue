@@ -5,6 +5,8 @@
       height: `${ height }vh`,
       width: `${ width }vw`
     }"
+      @mouseover.stop="hovered=true"
+      @mouseleave.stop="hovered=false"
     >
     <Cursorr
       :user="me"
@@ -20,6 +22,7 @@
       v-for="message in messages"
       :key="message.uid"
       :message="message"
+      :hovered="hovered"
     />
     <Viewport
       id="viewport"
@@ -63,15 +66,17 @@ export default {
       width: 20,
       zoomIndex: 5 * this.scale,
       mini: true,
+      hovered: false
     }
   },
   mounted() {
   },  
   methods: {
     sendDesiredPosition(e) {
+      console.log(e)
       const newPosition = {
-        x: e.layerX * this.zoomIndex,
-        y: e.layerY * this.zoomIndex,
+        x: (this.windowWidth + (e.layerX * this.zoomIndex)) / 2,
+        y: (this.windowHeight + (e.layerY * this.zoomIndex)) / 2,
       }
       this.$emit('newPosition', newPosition)
     },

@@ -100,9 +100,9 @@ export default {
   cursor: none;
 }
 .cursorContainer .cursor {
-  width: calc(2vh / var(--scale));
-  max-width: calc(2vh / var(--scale));
-  height: calc(2vh / var(--scale));
+  width: calc(1.5vh / var(--scale));
+  max-width: calc(1.5vh / var(--scale));
+  height: calc(1.5vh / var(--scale));
   border-radius: 12px;
   display: flex;
   justify-content: center;

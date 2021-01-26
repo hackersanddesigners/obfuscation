@@ -31,7 +31,6 @@
       :key="message.uid"
       :message="message"
       :isMe="isMe"
-      :hovered="hovered"
 
       @mouseover.native="hovered=true"
       @mouseleave.native="hovered=false"
@@ -65,11 +64,15 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style>
 .user {
   color: var(--userColor);
 }
 .user.disconnected {
   /* filter: grayscale(1) brightness(3); */
+}
+.user *::selection {
+  background: var(--userColor);
+  color: white;
 }
 </style>
