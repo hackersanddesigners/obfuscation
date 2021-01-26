@@ -1,7 +1,7 @@
 <template>
   <div>
     <header :class="{ blur: !registered || editing }" >
-      <h1>platframe</h1>
+      <h1>obfuscation</h1>
       <Minimap 
         :windowWidth="windowWidth"
         :windowHeight="windowHeight"
