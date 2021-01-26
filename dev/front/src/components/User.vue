@@ -18,6 +18,7 @@
       :user="user"
       :isMe="isMe"
       :hovered="hovered"
+      :dragging="dragging"
 
       @mouseover.native="!isMe ? hovered=true : null"
       @mouseleave.native="hovered=false"
@@ -51,7 +52,8 @@ export default {
   props: [ 
     'user',
     'messages',
-    'isMe'
+    'isMe',
+    'dragging',
   ], 
   data() {
     return {

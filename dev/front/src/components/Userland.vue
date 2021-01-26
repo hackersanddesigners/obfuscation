@@ -54,6 +54,9 @@
           height: `${ 100 * scale }%`,
           width: `${ 100 * scale }%`
         }"
+        @mousedown="dragging=true"
+        @mousemove="dragging ? drag($event) : null"
+        @mouseup="dragging=false"
       >
         <Grid 
           :scale="scale"
@@ -64,6 +67,7 @@
           :key="me.uid"
           :user="me"
           :isMe="true"
+          :dragging="dragging"
           :messages="getUserMessages(me)"
 
           @newPosition="updatePosition"
@@ -82,6 +86,7 @@
 
 <script>
 import { uid } from 'uid'
+// import html2canvas from 'html2canvas'
 
 import Grid from './Grid'
 import Minimap from './Minimap'
@@ -187,6 +192,14 @@ export default {
     // UI set-up
 
     const userlandContainer = this.$refs.userlandContainer
+    // const userland = this.$refs.userland
+
+    // html2canvas(userland, {
+    //   scale: this.scale
+    // }).then((canvas) => {
+    //   userlandContainer.appendChild(canvas)
+    //   console.log(canvas)
+    // })
       
     this.windowLeft = userlandContainer.scrollLeft
     this.windowTop = userlandContainer.scrollTop
@@ -476,6 +489,13 @@ export default {
       })
     },
 
+    drag(e) {
+      this.scrollTo({
+        x: this.windowLeft - e.movementX,
+        y: this.windowTop - e.movementY
+      })
+    },
+
     randomColor() {
       const 
         r = Math.floor(Math.random() * 256),
@@ -623,13 +643,13 @@ header h1 {
   justify-content: center;
   align-items: center;
   overflow: scroll;
-  /* font-family: monospace;
-  font-size: 9pt; */
+  font-family: monospace;
+  font-size: 9pt;
   /* font-family: 'zxx-noise'; */
   /* font-family: 'zxx-false'; */
-  font-family: 'terminal';
-  font-size: 10pt;
-  background: rgba(0, 0, 0, 0.05);
+  /* font-family: 'terminal';
+  font-size: 10pt; */
+  /* background: rgba(0, 0, 0, 0.05); */
 }
 
 /* header.blur, */

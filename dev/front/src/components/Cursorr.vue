@@ -5,7 +5,8 @@
       'cursorContainer',
       {
         uid: user.uid,
-        typing: !scale && (user.typing || hovered)
+        typing: !scale && (user.typing || hovered),
+        dragging: dragging
       }
     ]"
     :style="{ 
@@ -55,6 +56,7 @@ export default {
     'isMe',
     'scale',
     'hovered',
+    'dragging'
   ], 
   data() {
     return {
@@ -122,11 +124,6 @@ export default {
   white-space: nowrap;
   /* margin-bottom: -1px; */
 }
-.cursorContainer.typing  .cursor {
-  width: auto;
-  max-width: 450px;
-  padding: 0px 10px;
-}
 .cursorContainer .input {
   width: auto;
   height: 15px;
@@ -140,14 +137,18 @@ export default {
   /* pointer-events: none; */
   /* background: rgba(255, 0, 0, 0.377); */
 }
+
+.cursorContainer.typing .cursor {
+  width: auto;
+  max-width: 450px;
+  padding: 0px 7.5px;
+}
+
 .cursorContainer input::selection,
 .cursorContainer .input::selection {
   background: var(--userColor);
   color: white;
 }
-.cursorContainer textarea,
-.cursorContainer textarea:hover,
-.cursorContainer textarea:active,
 .cursorContainer input,
 .cursorContainer input:hover,
 .cursorContainer input:active {
@@ -159,6 +160,16 @@ export default {
   outline: none;
   background: transparent;
   cursor: none;
+}
+
+.cursorContainer.dragging .cursor,
+.cursorContainer.dragging input,
+.cursorContainer.dragging input:hover,
+.cursorContainer.dragging input:active {
+  width: 0vw;
+  max-width: 0vw;
+  height: 0vh;
+  cursor: grabbing;
 }
 
 </style>
