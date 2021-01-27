@@ -11,7 +11,7 @@
     "draftAndPublish": true
   },
   "attributes": {
-    "AboutTitle": {
+    "Title": {
       "type": "string"
     },
     "Sections": {
@@ -19,6 +19,9 @@
       "components": [
         "sections.section"
       ]
+    },
+    "Subtitle": {
+      "type": "string"
     }
   }
 }
