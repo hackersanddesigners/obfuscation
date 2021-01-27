@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="!user.deleted"
     :class="[
       'user',
       user.uid,

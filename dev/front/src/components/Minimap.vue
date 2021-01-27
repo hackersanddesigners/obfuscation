@@ -83,7 +83,9 @@ export default {
         x: ((e.layerX - this.windowWidth/(2*this.zoomIndex)) * this.zoomIndex),
         y: ((e.layerY - this.windowHeight/(2*this.zoomIndex)) * this.zoomIndex),
       }
+      console.log(e.layerX, this.windowWidth/(2*this.zoomIndex), e.layerX-this.windowWidth/(2*this.zoomIndex))
       this.$emit('newPosition', newPosition)
+      e.stopPropagation()
     },
     dragViewport({ deltaX, deltaY, first, last }) {
       if (first) {

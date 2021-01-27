@@ -117,6 +117,8 @@ export default {
   ],
   data () {
     return {
+      version: 2,
+
       me: {
         uid: uid(),
         connected: false,
@@ -157,6 +159,16 @@ export default {
   },
 
   created() {
+
+    // delete everything if local storage version is older than this version
+    
+
+    console.log('version:', localStorage.version)
+    if (localStorage.version != this.version) {
+      console.log('this version is outdated, clearing your storage.')
+      localStorage.clear()
+    }      
+    localStorage.version = this.version
 
     // check if user is registered and get their datas value
     
@@ -260,6 +272,9 @@ export default {
               largestUserDB[uid] = DB[uid]            
             } else {
               console.log('false alarm, its you.')
+            }
+            if (DB[uid].deleted) {
+              largestUserDB[uid].deleted = true
             }
           }
         }
@@ -370,7 +385,7 @@ export default {
       this.$socket.emit('user', this.me)
       this.$socket.emit('message', {})
       this.doNotSave = true
-      localStorage.clear()
+      // localStorage.clear()
       window.location.reload(true)
     },
 
@@ -490,7 +505,6 @@ export default {
     updateViewerPosition() {
       this.windowLeft = this.$refs.userlandContainer.scrollLeft
       this.windowTop = this.$refs.userlandContainer.scrollTop
-      console.log('scroll')
     },
 
     toPixels(coords) {
