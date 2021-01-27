@@ -12,7 +12,7 @@
     :style="{ 
       left: ( 100 * user.x -  0.2 * 1 ) + '%',
       top: ( 100 * user.y -  0.2 * 0.75 ) + '%',
-      '--scale': scale ? scale : 1,
+      '--scale': scale ? 5 : 15,
       '--userColor': user.connected ? user.color : 'lightgrey',
     }"
   >
@@ -102,9 +102,12 @@ export default {
   cursor: none;
 }
 .cursorContainer .cursor {
-  width: calc(1.5vh / var(--scale));
+  /* width: calc(1.5vh / var(--scale));
   max-width: calc(1.5vh / var(--scale));
-  height: calc(1.5vh / var(--scale));
+  height: calc(1.5vh / var(--scale)); */
+  width: calc(0.1vh * var(--scale));
+  max-width: calc(0.1vh * var(--scale));
+  height: calc(0.1vh * var(--scale));
   border-radius: 12px;
   display: flex;
   justify-content: center;

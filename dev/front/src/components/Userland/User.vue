@@ -70,6 +70,8 @@ export default {
 <style>
 .user {
   color: var(--userColor);
+  /* position: absolute; */
+
 }
 .user.disconnected {
   /* filter: grayscale(1) brightness(3); */

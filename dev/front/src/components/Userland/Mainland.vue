@@ -18,6 +18,9 @@
         @childDragging="dragging=true"
         @childStopDragging="dragging=false"
         @newPosition="scrollTo($event, dragging ? 'auto' : 'smooth')"
+        @zoomin="zoomIn"
+        @zoomout="zoomOut"
+        @zero="centerMe"
       />
       <Options
         :registered="registered"
@@ -55,14 +58,15 @@
         ref="userland"
         :style="{
           height: `${ 100 * scale }%`,
-          width: `${ 100 * scale }%`
+          width: `${ 100 * scale }%`,
+          fontSize: `${1.8 * scale}pt`,
         }"
         @mousedown="dragging=true"
         @mousemove="dragging ? drag($event) : null"
         @mouseup="dragging=false"
       >
         <Grid 
-          :scale="scale"
+          :scale="5"
           :hidden="!grid"
         />
 
@@ -114,10 +118,12 @@ import User from './User'
 import Territory from '../Islands/Territory'
 
 let 
+  // scale = 1,
   userDBs = [], 
   largestUserDB,
   messagesDBs = [],
   largestMessageDB
+  
 
 export default {
   name: 'Userland',
@@ -517,11 +523,38 @@ export default {
       return userMessages
     },
 
+    zoomIn() {
+      this.scale += 0.25
+      const center = {
+        x: (this.scale * this.windowWidth - this.windowLeft) / 2,
+        y: (this.scale * this.windowHeight - this.windowTop) / 2
+      }
+      this.scrollTo(center)
+    },
+
+    zoomOut() {
+      if (this.scale > 1) {
+        this.scale -= 0.25
+        const center = {
+          x: (this.scale * this.windowWidth - this.windowLeft) / 2,
+          y: (this.scale * this.windowHeight - this.windowTop) / 2
+        }
+        this.scrollTo(center)
+      }
+    },
+
     drag(e) {
       this.scrollTo({
         x: this.windowLeft - e.movementX,
         y: this.windowTop - e.movementY
       })
+    },
+
+    centerMe() {
+      this.scale = 5
+      setTimeout(() => {
+        this.scrollTo(this.getPosition({x: 0.5, y: 0.5}), 'smooth')
+      }, 50)
     },
 
     scrollTo(to, behavior) {
@@ -708,6 +741,9 @@ header h1 {
   position: absolute;
   height: 100%;
   width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
   overflow: scroll;
   transition: filter 0.3s ease;
   -ms-overflow-style: none;  /* IE and Edge */
@@ -720,11 +756,13 @@ header h1 {
   /* cursor: none; */
   box-sizing: border-box;
   position: absolute;
+  margin: auto;
+  /* position: relative; */
   top: 0px;
   left: 0px;
   overflow: hidden;
   font-family: jet;
-  font-size: 9pt;
+  /* font-size: 9pt; */
   background: white;
   transform-origin: center;
   /* font-family: 'zxx-noise'; */

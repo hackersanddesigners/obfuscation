@@ -5,6 +5,8 @@
     :style="{
       left: `${ toNearestX(borders.x, 0.4) }%`,
       top: `${ toNearestX(borders.y, 0.4) }%`,
+      width: `${100 / 5}%`,
+      height: `${100 / 5}%`,
     }"
   >
     <Island
@@ -62,8 +64,8 @@ export default {
 <style scoped>
 .territory {
   position: absolute;
-  width: 100vw;
-  height: 100vh;
+  /* width: 100vw;
+  height: 100vh; */
   display: flex;
   cursor: none;
   /* z-index: 1; */

@@ -45,8 +45,21 @@
       :height="windowHeight / zoomIndex"
       :left="windowLeft / zoomIndex"
       :top="windowTop / zoomIndex"
-
     />
+    <div class="zoom">
+      <div class="in" 
+        @mousedown.stop="$emit('zoomin')"
+        @mouseup.stop
+      >+</div>
+      <div class="out" 
+        @mousedown.stop="$emit('zoomout')"
+        @mouseup.stop
+      >-</div>
+      <div class="zero" 
+        @mousedown.stop="$emit('zero')"
+        @mouseup.stop
+      >○</div>
+    </div>
   </div>
 </template>
 
@@ -91,6 +104,9 @@ export default {
     },
     windowHeight() {
       this.height = this.windowHeight / 5
+    },
+    scale() {
+      this.zoomIndex = 5 * this.scale
     }
   },
   mounted() {
@@ -107,7 +123,6 @@ export default {
         y = (clickY - centerY) * this.zoomIndex
 
       this.$emit('newPosition', {x,y})
-      e.stopPropagation()
     },
   }
 }
@@ -121,5 +136,22 @@ export default {
   background: white;
   border: 1px solid grey;
   cursor: pointer;
+}
+#minimap .zoom {
+  box-sizing: border-box;
+  position: absolute;
+  right: 0px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 24px;
+  font-size: 16pt;
+  text-align: center;
+  color: grey;
+}
+#minimap .zoom div {
+  box-sizing: border-box;
+  border-left: 1px solid grey;
+  border-bottom: 1px solid grey;
 }
 </style>

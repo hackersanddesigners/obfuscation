@@ -18,7 +18,9 @@
       @mouseleave="hovered=false"
   >
     <vue-markdown class="message"> {{ message.content }} </vue-markdown>
-    <span class="time"> {{ fromNow(message.time) }} </span>
+    <span 
+      class="time"
+    > {{ fromNow(message.time) }} </span>
   </div>
 </template>
 
@@ -91,7 +93,8 @@ export default {
   margin: 0px 5px;
   opacity: 0;
   width: 0;
-  font-size: 7pt;
+  /* font-size: 7pt; */
+  font-size: 80%;
   color: rgb(161, 161, 161);
   transition: opacity 0.2s ease;
   white-space: nowrap;
