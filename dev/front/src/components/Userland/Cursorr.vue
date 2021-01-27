@@ -133,6 +133,7 @@ export default {
   color: inherit;
   margin-left: 10px;
   margin-bottom: 3px;
+  /* pointer-events: auto; */
   cursor: none;
   /* pointer-events: none; */
   /* background: rgba(255, 0, 0, 0.377); */

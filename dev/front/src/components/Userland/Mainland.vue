@@ -13,6 +13,7 @@
         :me="me"
         :users="users"
         :messages="messages"
+        :islands="islands"
 
         @childDragging="dragging=true"
         @childStopDragging="dragging=false"
@@ -65,13 +66,6 @@
           :hidden="!grid"
         />
 
-        <!-- ISLANDS -->
-
-        <Landing
-          :x="center.x"
-          :y="center.y"
-        />
-
         <User 
           ref="me"
           :key="me.uid"
@@ -89,6 +83,18 @@
           :user="user"
           :messages="getUserMessages(user)"
         />
+
+
+        <!-- ISLANDS -->
+
+        <Territory
+          v-for="island in islands"
+          :key='island.name'
+          :name="island.name"
+          :borders="island.borders"
+        />
+
+
       </div>
     </div>
   </div>
@@ -96,6 +102,7 @@
 
 <script>
 import { uid } from 'uid'
+import { EventBus } from '../../EventBus.js'
 // import html2canvas from 'html2canvas'
 
 import Grid from './Grid'
@@ -104,15 +111,13 @@ import Options from './Options'
 import Userlist from './Userlist'
 import User from './User'
 
-import Landing from '../Islands/Landing'
-
+import Territory from '../Islands/Territory'
 
 let 
   userDBs = [], 
   largestUserDB,
   messagesDBs = [],
   largestMessageDB
-
 
 export default {
   name: 'Userland',
@@ -122,8 +127,7 @@ export default {
     Options,
     Userlist,
     User,
-
-    Landing,
+    Territory,
   },
   props: [
     'wantsToView'
@@ -146,8 +150,14 @@ export default {
       messages: {},
 
       islands: [
+        { 
+          name: 'landing-area',
+          borders: {
+            x: 0.4,
+            y: 0.4,
+          },
+        },
       ],
-      center:{},
 
       registered: localStorage.me,
       visited: localStorage.uid,
@@ -163,17 +173,13 @@ export default {
       windowHeight: window.innerHeight,
       windowLeft: null,
       windowTop: null,
-      scale: 5,
+      scale: EventBus.scale,
       grid: true,
 
     }
   },
 
   computed: {
-    // center: {
-    //   x: null,
-    //   y: null,
-    // }
   },
 
   watch: {
@@ -256,8 +262,6 @@ export default {
 
     this.getViewerPosition()
 
-    this.center = this.getCenter()
-
     // if there is a slug, navigate to it
 
     if (this.wantsToView) {
@@ -266,10 +270,9 @@ export default {
     // else, land in the center
 
     } else {
-      this.scrollTo({
-        x: (this.scale * this.windowWidth - this.windowWidth) / 2,
-        y: (this.scale * this.windowHeight - this.windowHeight) / 2
-      }, 'smooth')
+      setTimeout(() => {   
+        this.scrollTo(this.toPixels(this.islands[0].borders), 'smooth')
+      }, 50)
     }
 
   },
@@ -416,7 +419,7 @@ export default {
       this.$socket.emit('user', this.me)
       this.$socket.emit('message', {})
       this.doNotSave = true
-      // localStorage.clear()
+      localStorage.clear()
       window.location.reload(true)
     },
 
@@ -537,18 +540,23 @@ export default {
       }
     },
 
-    getCenter() {
-      // return {
-      //   x: (this.scale * this.windowWidth - this.windowWidth) / 2,
-      //   y: (this.scale * this.windowHeight - this.windowHeight) / 2,
-      // }
-      return this.toPixels({ x: 0.5, y: 0.5 })
+    getCenter(obj) {
+      obj = this.toPixels(obj)
+      console.log(obj)
+      return {
+        x: obj.x - obj.w / 2,
+        y: obj.y - obj.h / 2,
+        w: obj.w ? obj.w : 0,
+        h: obj.h ? obj.h : 0,
+      }
     },
 
     toPixels(coords) {
       return {
         x: coords.x * this.scale * this.windowWidth,
-        y: coords.y * this.scale * this.windowHeight 
+        y: coords.y * this.scale * this.windowHeight,
+        w: coords.w ? coords.w : 0,
+        h: coords.h ? coords.h : 0,
       }
     },
 
@@ -688,7 +696,6 @@ header {
   align-items: flex-start;
   z-index: 1;
   transition: filter 0.3s ease;
-
 }
 header h1 {
   font-family: 'zxx-noise';

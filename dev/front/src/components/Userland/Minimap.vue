@@ -8,6 +8,8 @@
       height: `${ height }px`,
       width: `${ width }px`
     }"
+      @mouseover="hovered=true"
+      @mouseout="hovered=false"
       @mousedown="sendDesiredPosition($event); $emit('childDragging')"
       @mousemove="dragging ? sendDesiredPosition($event) : null"
       @mouseup="$emit('childStopDragging'); sendDesiredPosition($event)"
@@ -29,6 +31,12 @@
       :hovered="hovered"
       :dragging="dragging"
     />
+    <MiniTerritory
+      v-for="island in islands"
+      :key='island.name'
+      :name="island.name"
+      :borders="island.borders"
+    />
     <Viewport
       id="viewport"
       ref="viewport"
@@ -45,6 +53,7 @@
 <script>
 import Cursorr from './Cursorr.vue'
 import MiniMessage from './MiniMessage.vue'
+import MiniTerritory from './MiniTerritory.vue'
 import Viewport from './Viewport.vue'
 
 export default {
@@ -53,6 +62,7 @@ export default {
     Viewport,
     Cursorr,
     MiniMessage,
+    MiniTerritory,
   },
   props: [ 
     'windowWidth',
@@ -62,6 +72,7 @@ export default {
     'scale',
     'me',
     'users',
+    'islands',
     'messages',
     'dragging'
   ], 
