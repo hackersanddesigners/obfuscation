@@ -8,11 +8,11 @@
         :windowLeft="windowLeft"
         :windowTop="windowTop"
         :scale="scale"
+        :dragging="dragging"
 
         :me="me"
         :users="users"
         :messages="messages"
-        :dragging="dragging"
 
         @childDragging="dragging=true"
         @childStopDragging="dragging=false"
@@ -23,8 +23,8 @@
         :editing="editing"
         :name="me.name"
         :color="me.color"
-        :grid="grid"
         :usernames="getUserNames()"
+        :grid="grid"
 
         @grid="grid = !grid"
         @editMe="editing = true"
@@ -47,7 +47,7 @@
       id="userlandContainer" 
       ref="userlandContainer"
       :class="{ blur: !registered || editing }"
-      @scroll="updateViewerPosition($event)"
+      @scroll="getViewerPosition()"
     >
       <div 
         id="userland" 
@@ -168,8 +168,8 @@ export default {
     if (localStorage.version != this.version) {
       console.log('this version is outdated, clearing your storage.')
       localStorage.clear()
+      localStorage.version = this.version
     }      
-    localStorage.version = this.version
 
     // check if user is registered and get their datas value
     
@@ -210,9 +210,10 @@ export default {
 
     this.track()
 
-    // UI set-up
 
-    const userlandContainer = this.$refs.userlandContainer
+    // minimap image
+
+    // const userlandContainer = this.$refs.userlandContainer
     // const userland = this.$refs.userland
 
     // html2canvas(userland, {
@@ -221,14 +222,16 @@ export default {
     //   userlandContainer.appendChild(canvas)
     //   console.log(canvas)
     // })
-      
-    this.windowLeft = userlandContainer.scrollLeft
-    this.windowTop = userlandContainer.scrollTop
 
+
+
+    // UI set-up
+      
     window.addEventListener('resize', () => {
-      this.windowWidth = window.innerWidth
-      this.windowHeight = window.innerHeight
+      this.getWindowSize()
     })
+
+    this.getViewerPosition()
 
     // if there is a slug, navigate to it
 
@@ -241,7 +244,7 @@ export default {
       this.scrollTo({
         x: (this.scale * this.windowWidth - this.windowWidth) / 2,
         y: (this.scale * this.windowHeight - this.windowHeight) / 2
-      })
+      }, 'smooth')
     }
 
   },
@@ -350,8 +353,10 @@ export default {
     },
 
     clearDBs() {
+      // mark all users as deleted
       this.users = {}
       localStorage.users = JSON.stringify(this.users)
+      // mark all messages as deleted
       this.messages = {}
       localStorage.messages = JSON.stringify(this.messages)
 
@@ -397,13 +402,15 @@ export default {
     updatePosition(newPosition) {
       let x = (this.windowLeft + newPosition.x) / (this.windowWidth * this.scale)
       let y = (this.windowTop + newPosition.y) / (this.windowHeight * this.scale)
-      // this.me.x = x
-      // this.me.y = y
-      this.$set(this.me, 'x', x)
-      this.$set(this.me, 'y', y)
-      // console.log(this.windowLeft, this.me.x)
+      this.me.x = x
+      this.me.y = y
       this.me.connected = true
       this.$socket.emit('position', this.me)
+    },
+
+    updateTyping(text) {
+      this.me.typing = text
+      this.$socket.emit('typing', this.me)
     },
 
     updateColor(newLook) {
@@ -418,11 +425,6 @@ export default {
       this.$socket.emit('appearance', this.me)
       this.editing = false
       localStorage.me = JSON.stringify(this.me)
-    },
-
-    updateTyping(text) {
-      this.me.typing = text
-      this.$socket.emit('typing', this.me)
     },
 
     sendMessage(message) {
@@ -470,14 +472,6 @@ export default {
       }
     },
 
-    getPosition(obj) {
-      obj = this.toPixels(obj)
-      return {
-        x: obj.x - this.windowWidth / 2,
-        y: obj.y - this.windowHeight / 2
-      }
-    },
-
     getUserNames() {
       let usersArray = Object.values(this.users)
       let usernames = usersArray.map(user => user.name);
@@ -495,32 +489,12 @@ export default {
       return userMessages
     },
 
-    miniClick(e) {
-      console.log(e)
-      this.scrollTo({
-        x: e.clientX,
-        y: e.clientY
-      }, 'smooth')
-    },
-
     drag(e) {
       console.log(e.movementX)
       this.scrollTo({
         x: this.windowLeft - e.movementX,
         y: this.windowTop - e.movementY
       })
-    },
-
-    updateViewerPosition() {
-      this.windowLeft = this.$refs.userlandContainer.scrollLeft
-      this.windowTop = this.$refs.userlandContainer.scrollTop
-    },
-
-    toPixels(coords) {
-      return {
-        x: coords.x * this.scale * this.windowWidth,
-        y: coords.y * this.scale * this.windowHeight 
-      }
     },
 
     scrollTo(to, behavior) {
@@ -531,6 +505,21 @@ export default {
       })
     },
 
+    getPosition(obj) {
+      obj = this.toPixels(obj)
+      return {
+        x: obj.x - this.windowWidth / 2,
+        y: obj.y - this.windowHeight / 2
+      }
+    },
+
+    toPixels(coords) {
+      return {
+        x: coords.x * this.scale * this.windowWidth,
+        y: coords.y * this.scale * this.windowHeight 
+      }
+    },
+
     randomColor() {
       const 
         r = Math.floor(Math.random() * 256),
@@ -539,6 +528,16 @@ export default {
         a = 1,
         color = `rgb(${r}, ${g}, ${b}, ${a})`
       return color
+    },
+
+    getViewerPosition() {
+      this.windowLeft = this.$refs.userlandContainer.scrollLeft
+      this.windowTop = this.$refs.userlandContainer.scrollTop
+    },
+
+    getWindowSize() {
+      this.windowWidth = window.innerWidth
+      this.windowHeight = window.innerHeight
     },
 
     track() {
