@@ -5,7 +5,7 @@
       hidden: !loaded
     }"
   >
-    <Userland 
+    <Mainland 
       :wantsToView="wantsToView"
     />
   </div>
@@ -13,14 +13,13 @@
 
 <script>
 import { EventBus } from '../EventBus.js'
-import smoothscroll from 'smoothscroll-polyfill'
 
-import Userland from '../components/Userland'
+import Mainland from '../components/Userland/Mainland'
 
 export default {
   name: 'Home',
   components: {
-    Userland
+    Mainland
   },
   props: [
     'slug'
@@ -34,10 +33,6 @@ export default {
     }
   },
   created() {
-    if (EventBus.$root.isMobile) this.isMobile = true
-    
-    smoothscroll.polyfill()
-
     this.$http.get(this.$apiURL + '/hosts')
       .then((response) => { 
         this.hosts = response.data

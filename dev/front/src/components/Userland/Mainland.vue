@@ -64,6 +64,14 @@
           :scale="scale"
           :hidden="!grid"
         />
+
+        <!-- ISLANDS -->
+
+        <Landing
+          :x="center.x"
+          :y="center.y"
+        />
+
         <User 
           ref="me"
           :key="me.uid"
@@ -96,6 +104,8 @@ import Options from './Options'
 import Userlist from './Userlist'
 import User from './User'
 
+import Landing from '../Islands/Landing'
+
 
 let 
   userDBs = [], 
@@ -111,7 +121,9 @@ export default {
     Minimap,
     Options,
     Userlist,
-    User
+    User,
+
+    Landing,
   },
   props: [
     'wantsToView'
@@ -119,6 +131,7 @@ export default {
   data () {
     return {
       version: 2,
+      doNotSave: false,
 
       me: {
         uid: uid(),
@@ -132,13 +145,15 @@ export default {
       users: {},
       messages: {},
 
+      islands: [
+      ],
+      center:{},
+
       registered: localStorage.me,
       visited: localStorage.uid,
       hasUsers: localStorage.users,
       hasMessages: localStorage.messages,
       moderator: true,
-
-      doNotSave: false,
 
       editing: false,
       scrolling: false,
@@ -150,7 +165,15 @@ export default {
       windowTop: null,
       scale: 5,
       grid: true,
+
     }
+  },
+
+  computed: {
+    // center: {
+    //   x: null,
+    //   y: null,
+    // }
   },
 
   watch: {
@@ -232,6 +255,8 @@ export default {
     })
 
     this.getViewerPosition()
+
+    this.center = this.getCenter()
 
     // if there is a slug, navigate to it
 
@@ -490,7 +515,6 @@ export default {
     },
 
     drag(e) {
-      console.log(e.movementX)
       this.scrollTo({
         x: this.windowLeft - e.movementX,
         y: this.windowTop - e.movementY
@@ -511,6 +535,14 @@ export default {
         x: obj.x - this.windowWidth / 2,
         y: obj.y - this.windowHeight / 2
       }
+    },
+
+    getCenter() {
+      // return {
+      //   x: (this.scale * this.windowWidth - this.windowWidth) / 2,
+      //   y: (this.scale * this.windowHeight - this.windowHeight) / 2,
+      // }
+      return this.toPixels({ x: 0.5, y: 0.5 })
     },
 
     toPixels(coords) {
@@ -684,7 +716,7 @@ header h1 {
   top: 0px;
   left: 0px;
   overflow: hidden;
-  font-family: monospace;
+  font-family: jet;
   font-size: 9pt;
   background: white;
   transform-origin: center;

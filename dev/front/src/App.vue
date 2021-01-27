@@ -28,6 +28,7 @@ export default {
   created() {
     this.CheckForMobile()
     window.addEventListener('resize', this.CheckForMobile)
+    
     smoothscroll.polyfill()
   },
   methods: {
@@ -49,14 +50,33 @@ export default {
 @font-face {
   font-family: 'zxx-false';
   src: url('./assets/fonts/zxx_false-webfont.ttf');
+  font-weight: normal;
 }
 @font-face {
   font-family: 'zxx-noise';
   src: url('./assets/fonts/zxx_noise-webfont.ttf');
+  font-weight: normal;
 }
 @font-face {
   font-family: 'terminal';
   src: url('./assets/fonts/terminal-grotesque.ttf');
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: 'jet';
+  src: url('./assets/fonts/jet/mono.ttf');
+  font-weight: normal;
+}
+@font-face {
+  font-family: 'jet';
+  src: url('./assets/fonts/jet/medium.ttf');
+  font-weight: medium;
+}
+@font-face {
+  font-family: 'jet';
+  src: url('./assets/fonts/jet/bold.ttf');
+  font-weight: bold;
 }
 
 :root {
