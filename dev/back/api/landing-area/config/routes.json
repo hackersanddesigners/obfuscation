@@ -1,0 +1,28 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/landing-area",
+      "handler": "landing-area.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/landing-area",
+      "handler": "landing-area.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/landing-area",
+      "handler": "landing-area.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}
