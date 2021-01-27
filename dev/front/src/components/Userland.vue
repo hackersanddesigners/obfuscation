@@ -57,7 +57,7 @@
           width: `${ 100 * scale }%`
         }"
         @mousedown="dragging=true"
-        @mousemove.stop="dragging ? drag($event) : null"
+        @mousemove="dragging ? drag($event) : null"
         @mouseup="dragging=false"
       >
         <Grid 
@@ -547,7 +547,6 @@ export default {
         current,
         navigation,
         announcement
-
 
       this.$refs.userlandContainer.addEventListener('keyup', (e) => {
         if (this.registered && !this.editing) {
