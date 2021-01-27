@@ -5,12 +5,12 @@
       hovered: hovered || dragging
     }"
     :style="{
-      height: `${ height }vh`,
-      width: `${ width }vw`
+      height: `${ height }px`,
+      width: `${ width }px`
     }"
-      @mouseover.stop="hovered=true"
-      @mouseleave.stop="hovered=false"
-      @mousedown="sendDesiredPosition($event)"
+      @mousedown="sendDesiredPosition($event); $emit('childDragging')"
+      @mousemove="dragging ? sendDesiredPosition($event) : null"
+      @mouseup="$emit('childStopDragging'); sendDesiredPosition($event)"
     >
     <Cursorr
       :user="me"
@@ -38,7 +38,6 @@
       :left="windowLeft / zoomIndex"
       :top="windowTop / zoomIndex"
 
-      v-dragged="dragViewport"
     />
   </div>
 </template>
@@ -68,39 +67,36 @@ export default {
   ], 
   data() {
     return {
-      height: 20,
-      width: 20,
+      width: this.windowWidth / 5,
+      height: this.windowHeight / 5,
       zoomIndex: 5 * this.scale,
       mini: true,
       hovered: false
+    }
+  },
+  watch: {
+    windowWidth() {
+      this.width = this.windowWidth / 5
+    },
+    windowHeight() {
+      this.height = this.windowHeight / 5
     }
   },
   mounted() {
   },  
   methods: {
     sendDesiredPosition(e) {
-      const newPosition = {
-        x: ((e.layerX - this.windowWidth/(2*this.zoomIndex)) * this.zoomIndex),
-        y: ((e.layerY - this.windowHeight/(2*this.zoomIndex)) * this.zoomIndex),
-      }
-      console.log(e.layerX, this.windowWidth/(2*this.zoomIndex), e.layerX-this.windowWidth/(2*this.zoomIndex))
-      this.$emit('newPosition', newPosition)
+      const 
+        clickX = e.pageX - this.$el.offsetLeft,
+        centerX =  this.width / (2 * this.scale),
+        x = (clickX - centerX) * this.zoomIndex,
+        
+        clickY = e.pageY - this.$el.offsetTop,
+        centerY = this.height / (2 * this.scale),
+        y = (clickY - centerY) * this.zoomIndex
+
+      this.$emit('newPosition', {x,y})
       e.stopPropagation()
-    },
-    dragViewport({ deltaX, deltaY, first, last }) {
-      if (first) {
-        // this.dragging = true
-        return
-      }
-      if (last) {
-        // this.dragging = false
-        return
-      }
-      const newPosition = {
-        x: this.windowLeft + deltaX * this.zoomIndex,
-        y: this.windowTop + deltaY * this.zoomIndex,
-      }
-      this.$emit('newDragPosition', newPosition)
     },
   }
 }

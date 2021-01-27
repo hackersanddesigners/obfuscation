@@ -14,8 +14,9 @@
         :messages="messages"
         :dragging="dragging"
 
-        @newPosition="scrollTo($event, 'smooth')"
-        @newDragPosition="scrollTo($event)"
+        @childDragging="dragging=true"
+        @childStopDragging="dragging=false"
+        @newPosition="scrollTo($event, dragging ? 'auto' : 'smooth')"
       />
       <Options
         :registered="registered"
@@ -56,7 +57,7 @@
           width: `${ 100 * scale }%`
         }"
         @mousedown="dragging=true"
-        @mousemove="dragging ? drag($event) : null"
+        @mousemove.stop="dragging ? drag($event) : null"
         @mouseup="dragging=false"
       >
         <Grid 
@@ -162,8 +163,8 @@ export default {
 
     // delete everything if local storage version is older than this version
     
-
     console.log('version:', localStorage.version)
+
     if (localStorage.version != this.version) {
       console.log('this version is outdated, clearing your storage.')
       localStorage.clear()
@@ -502,6 +503,14 @@ export default {
       }, 'smooth')
     },
 
+    drag(e) {
+      console.log(e.movementX)
+      this.scrollTo({
+        x: this.windowLeft - e.movementX,
+        y: this.windowTop - e.movementY
+      })
+    },
+
     updateViewerPosition() {
       this.windowLeft = this.$refs.userlandContainer.scrollLeft
       this.windowTop = this.$refs.userlandContainer.scrollTop
@@ -519,13 +528,6 @@ export default {
         left: to.x,
         top: to.y,
         behavior: behavior || 'auto'
-      })
-    },
-
-    drag(e) {
-      this.scrollTo({
-        x: this.windowLeft - e.movementX,
-        y: this.windowTop - e.movementY
       })
     },
 
