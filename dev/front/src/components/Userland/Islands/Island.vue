@@ -60,7 +60,7 @@ export default {
   /* position: absolute; */
   /* top: 30vh; */
   /* left: 30vw; */
-  margin: auto;
+  /* margin: auto; */
   /* border: 1px dashed black; */
   padding: 1vh;
 }

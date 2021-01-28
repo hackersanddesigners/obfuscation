@@ -20,7 +20,7 @@
 import moment from 'moment'
 
 export default {
-  name: 'MiniMessage',
+  name: 'Message',
   components: {
   },
   props: [ 

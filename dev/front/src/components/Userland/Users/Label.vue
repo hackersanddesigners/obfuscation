@@ -53,7 +53,7 @@
 import MessageOptions from './MessageOptions'
 
 export default {
-  name: 'UserLabel',
+  name: 'Label',
   components: {
     MessageOptions
   },

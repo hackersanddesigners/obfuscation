@@ -18,7 +18,7 @@
 <script>
 import Row from './Row'
 export default {
-  name: 'Grid',
+  name: 'Table',
   components: { Row },
   props: [ 
     'scale',

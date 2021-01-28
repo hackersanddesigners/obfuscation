@@ -29,7 +29,7 @@
         </div>
       </span>
       <ul>
-        <Userlabel
+        <Label
           :isMe="true"
           :user="me"
           :messages="getUserMessages(me)"
@@ -37,7 +37,7 @@
           @goTo="$emit('goTo', $event)"
           @click.native.stop="$emit('goTo', me)"
         />
-        <Userlabel
+        <Label
           v-for="user in connectedUsersFirst()"
           :key="user.uid"
           :user="user"
@@ -52,12 +52,12 @@
 </template>
 
 <script>
-import Userlabel from './Userlabel'
+import Label from './Label'
 
 export default {
-  name: 'Userlist',
+  name: 'List',
   components: {
-    Userlabel
+    Label
   },
   props: [ 
     'me',

@@ -12,7 +12,7 @@
 
 <script>
 export default {
-  name: 'Viewport',
+  name: 'Window',
   components: {
   },
   props: [ 

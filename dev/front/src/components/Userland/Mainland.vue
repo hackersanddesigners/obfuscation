@@ -38,7 +38,7 @@
         @deleteMe="deleteMe()"
         @deleteEverything="deleteEverything()"
       />
-      <Userlist
+      <Userslist
         :me="me"
         :users="users"
         :messages="messages"
@@ -118,15 +118,13 @@ import { uid } from 'uid'
 import { EventBus } from '../../EventBus.js'
 // import html2canvas from 'html2canvas'
 
-import Grid from './Grid'
-import Minimap from './Minimap'
+import Grid from './Grid/Table'
+import Minimap from './Mini/Map'
 import Options from './Options'
-import Userlist from './Userlist'
-import User from './User'
+import Userslist from './Users/List'
+import User from './User/User'
 
-import Territory from '../Islands/Territory'
-
-          // fontSize: `${1.8 * scale}pt`,
+import Territory from './Islands/Territory'
 
 
 let 
@@ -142,7 +140,7 @@ export default {
     Grid,
     Minimap,
     Options,
-    Userlist,
+    Userslist,
     User,
     Territory,
   },
@@ -151,7 +149,7 @@ export default {
   ],
   data () {
     return {
-      version: 2,
+      version: 3,
       doNotSave: false,
 
       me: {
@@ -721,6 +719,7 @@ export default {
 
       this.$refs.userlandContainer.addEventListener('click', () => {
         if (this.registered && !this.editing) {
+          input.focus()
 
           const message = this.constructMessage(input.value)
 

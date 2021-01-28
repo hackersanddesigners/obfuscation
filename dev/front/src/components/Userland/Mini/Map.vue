@@ -24,20 +24,20 @@
       :user="user"
       :scale="scale"
     />
-    <MiniMessage
+    <Message
       v-for="message in messages"
       :key="message.uid"
       :message="message"
       :hovered="hovered"
       :dragging="dragging"
     />
-    <MiniTerritory
+    <Territory
       v-for="island in islands"
       :key='island.name'
       :name="island.name"
       :borders="island.borders"
     />
-    <Viewport
+    <Window
       id="viewport"
       ref="viewport"
 
@@ -64,18 +64,18 @@
 </template>
 
 <script>
-import Cursorr from './Cursorr.vue'
-import MiniMessage from './MiniMessage.vue'
-import MiniTerritory from './MiniTerritory.vue'
-import Viewport from './Viewport.vue'
+import Cursorr from '../User/Cursorr'
+import Message from './Message'
+import Territory from './Territory'
+import Window from './Window'
 
 export default {
-  name: 'Minimap',
+  name: 'Map',
   components: {
-    Viewport,
     Cursorr,
-    MiniMessage,
-    MiniTerritory,
+    Message,
+    Territory,
+    Window,
   },
   props: [ 
     'windowWidth',
@@ -148,6 +148,7 @@ export default {
   font-size: 16pt;
   text-align: center;
   color: grey;
+  background: white;
 }
 #minimap .zoom div {
   box-sizing: border-box;
