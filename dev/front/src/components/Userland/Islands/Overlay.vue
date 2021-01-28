@@ -1,10 +1,11 @@
 <template>
   <div 
-    class="overlay"
+    class="overlayContainer"
     @scroll.stop
     @mousedown.stop
     @mouseup.stop
   >
+    <div class="overlay">
     <span 
       class="close"
       @click.stop="$emit('less')"
@@ -14,6 +15,7 @@
       :key="section.id"
       :section="section"
     />
+    </div>
   </div>
 </template>
 
@@ -48,23 +50,43 @@ export default {
 </script>
 
 <style scoped>
-.overlay {
+.overlayContainer {
   cursor: auto;
   box-sizing: border-box;
   position: absolute;
   top: 5%;
   right: 5%;
-  width: 45%;
+  width: 40%;
   height: 90%;
+  /* top: 0%;
+  right: 0%;
+  width: 50%;
+  height: 100%; */
   background: rgb(255,253,84);
-  box-shadow: 0px 0px calc(10px * var(--scale)) rgba(0, 0, 0, 0.596);
+  /* box-shadow: inset 0px 0px calc(15px * var(--scale)) 0px rgba(0, 0, 0, 0.432); */
+  box-shadow: inset 0px 0px calc(5px * var(--scale)) 0px rgba(0, 0, 0, 0.432);
+  overflow: hidden;
+  /* z-index: 1; */
+  transition: all 0.4s ease;
+  /* border-radius: calc(10px * var(--scale)); */
+}
+.overlayContainer.hidden {
+  top: 50%;
+  /* right: 50%; */
+  height: 0%;
+  /* max-height: 0%; */
+  /* width: 0%; */
+  /* max-width: 0%; */
+}
+.overlay {
+  height: 100%;
+  width: 100%;
   overflow: scroll;
-  z-index: 1;
 }
 .overlay .close {
   position: sticky;
-  left: 2%;
-  top: 1%;
+  left: 3%;
+  top: 2%;
   cursor: pointer;
   font-size: calc(3.5pt * var(--scale));
 }

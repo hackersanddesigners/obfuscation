@@ -66,7 +66,7 @@
         @mouseup="dragging=false"
       >
         <Grid 
-          :scale="5"
+          :scale="10"
           :hidden="!grid"
         />
 

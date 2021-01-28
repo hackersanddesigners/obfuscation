@@ -17,7 +17,7 @@
     />
 
     <Overlay
-      v-if="more"
+      :class="{ hidden: !more }"
       :content="content"
       @less="more=false"
     />
