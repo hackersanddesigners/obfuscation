@@ -39,8 +39,11 @@ export default {
   position: absolute;
   border: 1px solid grey;
   cursor: move;
+  /* box-shadow: 0 0 0px 500px rgba(0, 0, 0, 0.02); */
+  /* transition: box-shadow 0.1s ease; */
 }
-.hovered #viewport {
+ #viewport:hover {
+  /* box-shadow:none; */
   border-color: red;
 }
 </style>

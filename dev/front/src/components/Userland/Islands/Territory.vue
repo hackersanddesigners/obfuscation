@@ -13,7 +13,7 @@
     <Island
       :name="name"
       :content="content"
-      @more="more=true"
+      @more="$router.push(`#${name}`); more=true"
     />
 
     <Overlay

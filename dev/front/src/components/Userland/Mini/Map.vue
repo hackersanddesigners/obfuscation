@@ -136,6 +136,7 @@ export default {
   background: white;
   border: 1px solid grey;
   cursor: pointer;
+  overflow: hidden;
 }
 #minimap .zoom {
   box-sizing: border-box;
