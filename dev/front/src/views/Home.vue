@@ -49,8 +49,8 @@ export default {
     }
   },
   mounted() {
-    this.$router.afterEach((to) => { 
-      const slug = to.path.replace(this.$publicPath, '')
+    this.$router.afterEach((to) => {
+      const slug = to.fullPath.replace(this.$publicPath, '')
       this.handleRouting(slug)
     })
   },
@@ -59,20 +59,21 @@ export default {
       let type, name
       if (slug.startsWith("~")) {
         type = 'user'
-        name = slug.slice(1)
-        if (name) {
-          console.log(name)
-        } else {
-          console.log('no username provided')
-        }
+      } else if (slug.startsWith("#")) {
+        type = 'territory'
       } else {
-        console.log('not a user')
+        console.log('not found')
+      }
+      name = slug.slice(1)
+      if (name) {
+        console.log(name)
+      } else {
+        console.log('no username provided')
       }
       this.wantsToView = {
         type: type,
         name: name
       }
-      // this.$refs.Userland.route(type, name)
     },
   }
 }

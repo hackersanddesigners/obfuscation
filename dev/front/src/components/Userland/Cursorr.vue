@@ -97,8 +97,7 @@ export default {
   /* cursor: none !important; */
 }
 .me .cursorContainer {
-  /* pointer-events: none; */
-  /* pointer-events: none; */
+  pointer-events: none;
   cursor: none;
 }
 .cursorContainer .cursor {

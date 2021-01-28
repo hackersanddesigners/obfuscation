@@ -59,7 +59,7 @@
         :style="{
           height: `${ 100 * scale }%`,
           width: `${ 100 * scale }%`,
-          fontSize: `${1.8 * scale}pt`,
+          '--scale': scale
         }"
         @mousedown="dragging=true"
         @mousemove="dragging ? drag($event) : null"
@@ -69,6 +69,17 @@
           :scale="5"
           :hidden="!grid"
         />
+
+        <!-- ISLANDS -->
+
+        <Territory
+          v-for="island in islands"
+          :key='island.name'
+          :name="island.name"
+          :borders="island.borders"
+        />
+
+        <!-- CURSORS AND MESSAGES -->
 
         <User 
           ref="me"
@@ -88,15 +99,13 @@
           :messages="getUserMessages(user)"
         />
 
-
-        <!-- ISLANDS -->
-
-        <Territory
+        
+        <!-- <Territory
           v-for="island in islands"
           :key='island.name'
           :name="island.name"
           :borders="island.borders"
-        />
+        /> -->
 
 
       </div>
@@ -117,8 +126,10 @@ import User from './User'
 
 import Territory from '../Islands/Territory'
 
+          // fontSize: `${1.8 * scale}pt`,
+
+
 let 
-  // scale = 1,
   userDBs = [], 
   largestUserDB,
   messagesDBs = [],
@@ -277,6 +288,7 @@ export default {
 
     } else {
       setTimeout(() => {   
+        // this.$router.push('#landing-area')
         this.scrollTo(this.toPixels(this.islands[0].borders), 'smooth')
       }, 50)
     }
@@ -490,12 +502,21 @@ export default {
         if (user) {
           position = this.getPosition(user)
         } else {
-          position = this.center
+          console.log('not found')
         }
-      } else if (type == 'page') {
-        position = this.position
+      } else if (type == 'territory') {
+        const territory =  this.findTerritory(name)
+        if (territory) {
+          position = this.toPixels(territory.borders)
+        } else {
+          console.log('not found')
+        }
       }
       this.scrollTo(position, 'smooth')
+    },
+
+    findTerritory(name) {
+      return this.islands.find(u => u.name == name) 
     },
 
     findUser(name) {
@@ -765,6 +786,7 @@ header h1 {
   /* font-size: 9pt; */
   background: white;
   transform-origin: center;
+  font-size: calc(1.8pt * var(--scale));
   /* font-family: 'zxx-noise'; */
   /* font-family: 'zxx-false'; */
   /* font-family: 'terminal';

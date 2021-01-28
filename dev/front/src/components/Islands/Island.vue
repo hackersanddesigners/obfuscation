@@ -1,10 +1,23 @@
 <template>
   <div 
     class="island"
+    :style="{
+      width: `${100 / 2.5}%`,
+      height: `${100 / 2.5}%`,
+    }"
   >
 
-    <div class="title">
-      <h1> {{ content.Title }} </h1>
+    <div class="header">
+      <h1
+        class="title"
+        @click="$router.push(`#${name}`)"
+      > 
+        {{ content.Title }} 
+      </h1>
+      <h1 
+        class="more"
+        @click.stop="$emit('more')"
+      >+</h1>
     </div>
     <div class="body">
       <vue-markdown
@@ -21,6 +34,7 @@ export default {
   components: {
   },
   props: [
+    'name',
     'content'
   ],
   data() {
@@ -41,8 +55,8 @@ export default {
 <style scoped>
 .island {
   box-sizing: border-box;
-  max-width: 500px;
-  max-height: 500px;
+  /* max-width: 500px;
+  max-height: 500px; */
   /* position: absolute; */
   /* top: 30vh; */
   /* left: 30vw; */
@@ -50,7 +64,21 @@ export default {
   /* border: 1px dashed black; */
   padding: 1vh;
 }
-.island .title h1 {
+.island .header {
+  display: flex;
+  align-items: center;
+  font-size: calc(3pt * var(--scale));
+}
+.island .header h1 { 
+  font-size: inherit;
   margin-top: 0px;
+  cursor: pointer;
+}
+.island .header .title:hover {
+  text-decoration: underline;
+}
+.island .header .more {
+  margin-left: auto;
+  cursor: pointer;
 }
 </style>

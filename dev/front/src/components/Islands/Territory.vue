@@ -9,12 +9,17 @@
       height: `${100 / 5}%`,
     }"
   >
+
     <Island
+      :name="name"
       :content="content"
+      @more="more=true"
     />
 
     <Overlay
+      v-if="more"
       :content="content"
+      @less="more=false"
     />
 
   </div>
@@ -37,6 +42,7 @@ export default {
   data() {
     return {
       content: {},
+      more: false
     }
   },
   computed: {
@@ -67,7 +73,8 @@ export default {
   /* width: 100vw;
   height: 100vh; */
   display: flex;
-  cursor: none;
+  /* pointer-events: none; */
+  /* cursor: none; */
   /* z-index: 1; */
 }
 </style>
