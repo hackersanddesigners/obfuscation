@@ -68,6 +68,7 @@ export default {
   cursor: text;
   filter: var(--blur);
   transition: filter 0.2 ease;
+  z-index: 1;
 }
 .messageContainer .message {
   box-sizing: border-box;

@@ -9,15 +9,16 @@
         :windowTop="windowTop"
         :scale="scale"
         :dragging="dragging"
+        :miniDragging="miniDragging"
 
         :me="me"
         :users="users"
         :messages="messages"
         :islands="islands"
 
-        @childDragging="dragging=true"
-        @childStopDragging="dragging=false"
-        @newPosition="scrollTo($event, dragging ? 'auto' : 'smooth')"
+        @miniDragging="miniDragging=true"
+        @miniStopDragging="miniDragging=false"
+        @newPosition="scrollTo($event, miniDragging ? 'auto' : 'smooth')"
         @zoomin="zoomIn"
         @zoomout="zoomOut"
         @zero="centerMe"
@@ -66,7 +67,7 @@
         }"
         @mousedown.stop="dragging=true"
         @mousemove="dragging ? drag($event) : null"
-        @mouseup="dragging=false"
+        @mouseup.stop="dragging=false"
       >
         <Grid 
           :scale="10"
@@ -182,6 +183,7 @@ export default {
       editing: false,
       scrolling: false,
       dragging: false,
+      miniDragging: false,
 
       windowWidth: window.innerWidth,
       windowHeight: window.innerHeight,
@@ -746,7 +748,8 @@ header {
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  z-index: 1;
+  width: 0;
+  z-index: 2;
   transition: filter 0.3s ease;
 }
 header h1 {

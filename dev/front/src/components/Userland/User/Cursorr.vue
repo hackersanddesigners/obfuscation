@@ -144,10 +144,18 @@ export default {
 }
 
 .cursorContainer.hovered .cursor {
-  width: auto;
+   width: auto;
   max-width: 450px;
   /* padding: 0px 7.5px; */
   padding: 0px 5px;
+}
+
+.cursorContainer.hovered .input, 
+.cursorContainer.hovered input,
+.cursorContainer.hovered input:hover,
+.cursorContainer.hovered input:active        {
+  width: 450px;
+  max-width: 450px;
 }
 
 .cursorContainer input::selection,

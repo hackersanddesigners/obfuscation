@@ -10,9 +10,9 @@
     }"
       @mouseover="hovered=true"
       @mouseout="hovered=false"
-      @mousedown="sendDesiredPosition($event); $emit('childDragging')"
-      @mousemove="dragging ? sendDesiredPosition($event) : null"
-      @mouseup="$emit('childStopDragging'); sendDesiredPosition($event)"
+      @mousedown="sendDesiredPosition($event); $emit('miniDragging')"
+      @mousemove="miniDragging ? sendDesiredPosition($event) : null"
+      @mouseup="$emit('miniStopDragging'); sendDesiredPosition($event)"
     >
     <Cursorr
       :user="me"
@@ -87,7 +87,8 @@ export default {
     'users',
     'islands',
     'messages',
-    'dragging'
+    'dragging',
+    'miniDragging'
   ], 
   data() {
     return {

@@ -80,7 +80,7 @@ export default {
 .island .header .more {
   margin-left: auto;
   cursor: pointer;
-  font-size: calc(5pt * var(--scale));
+  font-size: calc(3pt * var(--scale));
   /* width: 35px;
   text-align: center;
   border: 1px solid;
