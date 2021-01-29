@@ -49,7 +49,10 @@ export default {
       return moment(time).fromNow()
     },
     toNearestX(num, X) {
-      return Math.floor(100 * (num) / X) * X
+      // return Math.floor(100 * (num) / X) * X
+      console.log(X)
+      // return Math.floor(100*num)
+      return (100*num).toFixed(1)
     }
   }
 }

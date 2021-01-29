@@ -99,13 +99,7 @@
           :messages="getUserMessages(user)"
         />
 
-        
-        <!-- <Territory
-          v-for="island in islands"
-          :key='island.name'
-          :name="island.name"
-          :borders="island.borders"
-        /> -->
+        <!-- OVERLAYS -->
 
 
       </div>
