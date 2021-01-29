@@ -45,7 +45,7 @@ export default {
   margin: auto;
   height: 40%;
   width: 40%;
-  border: 1px dashed black;
+  border: 1px solid grey;
   /* border-radius: 100%; */
 }
 </style>

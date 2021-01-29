@@ -10,9 +10,9 @@
       }
     ]"
     :style="{ 
-      left: ( 100 * user.x -  0.2 * 1 ) + '%',
-      top: ( 100 * user.y -  0.2 * 0.75 ) + '%',
-      '--scale': scale ? 5 : 15,
+      left: ( 100 * user.x -  0.1) + '%',
+      top: ( 100 * user.y -  0.2) + '%',
+      '--scale': scale ? 3 : 15,
       '--userColor': user.connected ? user.color : 'lightgrey',
     }"
   >
@@ -89,7 +89,6 @@ export default {
   flex-direction: column;
   justify-content: flex-end;
   align-items: flex-start;
-  /* cursor: none; */
   /* transition: all 0.2s ease; */
   color: var(--userColor);
 }
@@ -97,24 +96,26 @@ export default {
   /* cursor: none !important; */
 }
 .me .cursorContainer {
-  pointer-events: none;
+  /* pointer-events: none; */
   cursor: none;
 }
 .cursorContainer .cursor {
   /* width: calc(1.5vh / var(--scale));
   max-width: calc(1.5vh / var(--scale));
   height: calc(1.5vh / var(--scale)); */
-  width: calc(0.1vh * var(--scale));
-  max-width: calc(0.1vh * var(--scale));
+  width: calc(0.07vh * var(--scale));
+  max-width: calc(0.07vh * var(--scale));
   height: calc(0.1vh * var(--scale));
-  border-radius: 12px;
-  display: flex;
+  /* border-radius: 12px; */
+  /* display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: center; */
   background: var(--userColor);
-  box-shadow: var(--userColor) 0px 0px 30px;
+  /* box-shadow: var(--userColor) 0px 0px 30px; */
   transition: all 0.2s ease;
+  /* padding: 0px 5px; */
   /* opacity: 0; */
+  z-index: 1;
 }
 .me .cursorContainer .cursor {
   cursor: none;
@@ -133,7 +134,8 @@ export default {
   font-size: inherit;
   font-family: inherit;
   color: inherit;
-  margin-left: 10px;
+  /* margin-left: 10px; */
+  margin-left: 5px;
   margin-bottom: 3px;
   /* pointer-events: auto; */
   cursor: none;
@@ -144,7 +146,8 @@ export default {
 .cursorContainer.hovered .cursor {
   width: auto;
   max-width: 450px;
-  padding: 0px 7.5px;
+  /* padding: 0px 7.5px; */
+  padding: 0px 5px;
 }
 
 .cursorContainer input::selection,
@@ -174,5 +177,8 @@ export default {
   height: 0vh;
   cursor: grabbing;
 }
+/* .cursorContainer.dragging {
+  cursor: grabbing;
+} */
 
 </style>

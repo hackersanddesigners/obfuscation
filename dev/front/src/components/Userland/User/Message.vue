@@ -51,8 +51,10 @@ export default {
     toNearestX(num, X) {
       // return Math.floor(100 * (num) / X) * X
       console.log(X)
+      // console.log((100*num).toFixed(2))
       // return Math.floor(100*num)
-      return (100*num).toFixed(1)
+      // return (100*num).toFixed(2)
+      return Math.floor(100 * (num) / X) * X
     }
   }
 }

@@ -37,7 +37,7 @@ export default {
 #viewport {
   box-sizing: border-box;
   position: absolute;
-  border: 1px solid grey;
+  border: 1px dashed grey;
   cursor: move;
   /* box-shadow: 0 0 0px 500px rgba(0, 0, 0, 0.02); */
   /* transition: box-shadow 0.1s ease; */

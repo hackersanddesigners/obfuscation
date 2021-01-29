@@ -69,6 +69,7 @@ export default {
 
 <style scoped>
 .territory {
+  box-sizing: border-box;
   position: absolute;
   /* width: 100vw;
   height: 100vh; */
@@ -76,7 +77,8 @@ export default {
   justify-content: center;
   align-items: center;
   /* pointer-events: none; */
-  /* cursor: none; */
+  cursor: inherit;
   /* z-index: 1; */
+
 }
 </style>

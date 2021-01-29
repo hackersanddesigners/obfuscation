@@ -50,7 +50,10 @@
     <div 
       id="userlandContainer" 
       ref="userlandContainer"
-      :class="{ blur: !registered || editing }"
+      :class="{ 
+        blur: !registered || editing,
+        dragging: dragging
+      }"
       @scroll="getViewerPosition()"
     >
       <div 
@@ -61,7 +64,7 @@
           width: `${ 100 * scale }%`,
           '--scale': scale
         }"
-        @mousedown="dragging=true"
+        @mousedown.stop="dragging=true"
         @mousemove="dragging ? drag($event) : null"
         @mouseup="dragging=false"
       >
@@ -70,14 +73,6 @@
           :hidden="!grid"
         />
 
-        <!-- ISLANDS -->
-
-        <Territory
-          v-for="island in islands"
-          :key='island.name'
-          :name="island.name"
-          :borders="island.borders"
-        />
 
         <!-- CURSORS AND MESSAGES -->
 
@@ -99,6 +94,16 @@
           :messages="getUserMessages(user)"
         />
 
+        <!-- ISLANDS -->
+
+        <Territory
+          v-for="island in islands"
+          :key='island.name'
+          :name="island.name"
+          :borders="island.borders"
+        />
+
+
         <!-- OVERLAYS -->
 
 
@@ -114,7 +119,7 @@ import { EventBus } from '../../EventBus.js'
 
 import Grid from './Grid/Table'
 import Minimap from './Mini/Map'
-import Options from './Options'
+import Options from './Options/Options'
 import Userslist from './Users/List'
 import User from './User/User'
 
@@ -160,7 +165,7 @@ export default {
 
       islands: [
         { 
-          name: 'landing-area',
+          name: 'center',
           borders: {
             x: 0.4,
             y: 0.4,
@@ -750,7 +755,8 @@ header h1 {
   opacity: 0.4;
   margin-left: 2vh;
 }
-#userlandContainer {
+#userlandContainer {  
+  cursor: none;
   box-sizing: border-box;
   position: absolute;
   height: 100%;
@@ -765,6 +771,10 @@ header h1 {
 }
 #userlandContainer::-webkit-scrollbar {
   display: none;
+}
+#userlandContainer.dragging {
+  cursor: grabbing;
+  user-select: none;
 }
 #userland {
   /* cursor: none; */
