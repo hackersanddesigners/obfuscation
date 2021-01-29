@@ -1,0 +1,20 @@
+{
+  "kind": "singleType",
+  "collectionName": "centers",
+  "info": {
+    "name": "Center"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "Title": {
+      "type": "string"
+    },
+    "Body": {
+      "type": "richtext"
+    }
+  }
+}

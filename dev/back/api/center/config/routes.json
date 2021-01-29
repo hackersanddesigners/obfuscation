@@ -1,0 +1,28 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/center",
+      "handler": "center.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/center",
+      "handler": "center.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/center",
+      "handler": "center.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}
