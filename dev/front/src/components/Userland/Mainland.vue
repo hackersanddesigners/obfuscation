@@ -141,7 +141,7 @@ export default {
   ],
   data () {
     return {
-      version: 4,
+      version: 3,
       doNotSave: false,
 
       me: {
@@ -166,10 +166,8 @@ export default {
         },
       ],
 
-      registered: localStorage.me,
-      visited: localStorage.uid,
-      hasUsers: localStorage.users,
-      hasMessages: localStorage.messages,
+      registered: false,
+      visited: false,
       moderator: true,
 
       editing: false,
@@ -200,7 +198,7 @@ export default {
 
     // delete everything if local storage version is older than this version
     
-    console.log(`Version: ${localStorage.version}`)
+    console.log(`Version: ${ localStorage.version }`)
 
     if (localStorage.version != this.version) {
       console.log('this version is outdated, clearing your storage.')
@@ -210,15 +208,18 @@ export default {
 
     // check if user is registered and get their datas value
     
-    if (this.registered) {
+    if (localStorage.me) {
+      this.registered = true
       this.me = JSON.parse(localStorage.me)
 
     // if not registered, check if previously visited and get the
     // previously defined UID
 
-    } else if (this.visited) {
+    } else if (localStorage.uid) {
+      this.visited = true
       this.me.uid = localStorage.uid
       this.me.color = localStorage.color
+
 
     // if not visited, store the generated UID and color for 
     // later reference (e.i. when the user comes back to register) 
@@ -230,14 +231,14 @@ export default {
 
     // check if user hsa a DB of users
 
-    if (this.hasUsers) {
+    if (localStorage.users) {
       this.users = JSON.parse(localStorage.users)
     }
     this.users[this.me.uid] = this.me
 
     // check if user hsa a DB of messages
 
-    if (this.hasMessages) {
+    if (localStorage.messages) {
       this.messages = JSON.parse(localStorage.messages)
     }
 
