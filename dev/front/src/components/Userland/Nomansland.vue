@@ -78,7 +78,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 #blocked {
   box-sizing: border-box;
   height: 100%;

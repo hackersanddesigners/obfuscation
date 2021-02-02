@@ -15,10 +15,6 @@
       @mouseup="$emit('miniStopDragging'); sendDesiredPosition($event)"
     >
     <Cursorr
-      :user="me"
-      :scale="scale"
-    />
-    <Cursorr
       v-for="user in users"
       :key="user.uid"
       :user="user"
@@ -83,7 +79,6 @@ export default {
     'windowLeft',
     'windowTop',
     'scale',
-    'me',
     'users',
     'islands',
     'messages',

@@ -29,9 +29,6 @@
         @click.stop="messagesVisible = !messagesVisible"
         >messages</span>
       <span 
-        class="block"
-        >block</span>
-      <span 
         class="delete"
         @click.stop="$emit('deleteUser', user)"
         >delete</span>

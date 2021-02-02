@@ -11,9 +11,8 @@
         :dragging="dragging"
         :miniDragging="miniDragging"
 
-        :me="me"
-        :users="users"
-        :messages="messages"
+        :users="getNotDeletedUsers()"
+        :messages="getNotDeletedMessages()"
         :islands="islands"
 
         @miniDragging="miniDragging=true"
@@ -71,11 +70,11 @@
         @mousemove="dragging ? drag($event) : null"
         @mouseup.stop="dragging=false"
       >
+
         <Grid 
           :scale="10"
           :hidden="!grid"
         />
-
 
         <!-- CURSORS AND MESSAGES -->
 
@@ -98,7 +97,6 @@
           :name="island.name"
           :borders="island.borders"
         />
-
 
         <!-- OVERLAYS -->
 
@@ -216,7 +214,6 @@ export default {
       this.me = JSON.parse(localStorage.me)
 
       if (this.me.deleted) {
-        console.log('this user is deleted')
         this.$emit('blocked')
       }
 
@@ -272,7 +269,6 @@ export default {
 
     } else {
       setTimeout(() => {   
-        // this.$router.push('#landing-area')
         this.scrollTo(this.toPixels(this.islands[0].borders), 'smooth')
       }, 50)
     }
@@ -280,8 +276,8 @@ export default {
     // start tracking cursor
 
       this.track()
-    }
 
+    }
   },
   sockets: {
 
@@ -297,7 +293,6 @@ export default {
       if (user.uid !== this.me.uid) {
         this.$set(this.users, user.uid, user)
       } else if (user.deleted === true) {
-        console.log('youve been blocked')
         this.me.deleted = true
         localStorage.me = JSON.stringify(this.me)
         window.location.reload(true)
@@ -397,9 +392,9 @@ export default {
             this.$set(this.users, uid, user)
           } 
         }
-        localStorage.users = JSON.stringify(this.users)
-        localStorage.messages = JSON.stringify(this.messages)
       }
+      localStorage.users = JSON.stringify(this.users)
+      localStorage.messages = JSON.stringify(this.messages)
     },
 
 
@@ -416,14 +411,11 @@ export default {
     },
 
     deleteMe() {
-      this.me.deleted = true
-      this.getUserMessages(this.me).forEach((m) =>  {
-        this.messages[m.uid].deleted = true
-      })
-      this.$socket.emit('user', this.me)
-      this.$socket.emit('message', {})
+      this.deleteUser(this.me)
       this.doNotSave = true
-      localStorage.clear()
+      localStorage.removeItem('me')
+      localStorage.removeItem('uid')
+      localStorage.removeItem('color')
       window.location.reload(true)
     },
 
@@ -503,6 +495,12 @@ export default {
     getNotDeletedUsers() {
       const userArray = Object.values(this.users)
       const notdeleted = userArray.filter(u => u.deleted !== true)
+      return notdeleted
+    },
+
+    getNotDeletedMessages() {
+      const messagesArray = Object.values(this.messages)
+      const notdeleted = messagesArray.filter(m => m.deleted !== true)
       return notdeleted
     },
 
@@ -619,7 +617,8 @@ export default {
 
     getUserNames() {
       let usersArray = Object.values(this.users)
-      let usernames = usersArray.map(user => user.name)
+      let notdeleted = usersArray.filter(u => u.deleted !== true)
+      let usernames = notdeleted.map(user => user.name)
       return usernames
     },
 
@@ -627,7 +626,7 @@ export default {
       let userMessages = []
       for(let uid in this.messages) {
         const message = this.messages[uid]
-        if (message.author == user.uid) {
+        if (message.author == user.uid && !message.deleted) {
           userMessages.push(message)
         }
       }
