@@ -131,6 +131,7 @@ export default {
 
 <style scoped>
 #minimap {
+  margin-top: 2vh;
   margin-left: 2vh;
   position: relative;
   box-sizing: border-box;

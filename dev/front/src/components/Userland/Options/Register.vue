@@ -38,13 +38,6 @@
             data-jscolor=""
             @input="updateColor"
           > 
-          <!-- <input 
-            v-if="registered"
-            ref="cancel" 
-            type="button" 
-            value="cancel"
-            @click.stop="cancel()" 
-          > -->
           <input 
             ref="submit" 
             type="button" 
@@ -96,8 +89,10 @@ export default {
     this.$refs.color.value = this.color
     jscolor.init()
 
-    this.$refs.name.value = this.name
-    this.$refs.name.select()
+    if (this.registered) { 
+      this.$refs.name.value = this.name
+      this.$refs.name.select()
+    }
 
     this.$nextTick(() => {
       if (this.registered) {
@@ -118,7 +113,7 @@ export default {
       } else if (!this.validateLength(name)) {
         this.tooshort = true
 
-      } else if (!this.existingUser(name)) {
+      } else if (this.existingUser(name)) {
         this.inuse = true
       
       } else if (this.registered) {
@@ -166,7 +161,7 @@ export default {
     },
 
     existingUser(string) {
-      return this.usernames.indexOf(string)
+      return (this.usernames.indexOf(string) > -1 && string !== this.name)
     },
 
     toSlug(str) {

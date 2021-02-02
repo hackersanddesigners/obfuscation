@@ -1,7 +1,7 @@
 <template>
   <div>
     <header :class="{ blur: !registered || editing }" >
-      <h1>obfuscation</h1>
+      <!-- <h1>obfuscation</h1> -->
       <Minimap 
         :windowWidth="windowWidth"
         :windowHeight="windowHeight"
@@ -77,22 +77,14 @@
 
         <!-- CURSORS AND MESSAGES -->
 
-        <User 
-          ref="me"
-          :key="me.uid"
-          :user="me"
-          :isMe="true"
-          :dragging="dragging"
-          :messages="getUserMessages(me)"
-
-          @newPosition="updatePosition"
-        />
         <User
           v-for="user in users"
-          ref="Users"
+          :ref="user.uid === me.uid ? 'me' : 'Users'"
           :key="user.uid"
           :user="user"
+          :isMe="user.uid === me.uid"
           :messages="getUserMessages(user)"
+          @newPosition="updatePosition"
         />
 
         <!-- ISLANDS -->
@@ -129,13 +121,13 @@ import Territory from './Islands/Territory'
 
 let 
   userDBs = [], 
-  largestUserDB,
+  largestUserDB = {},
   messagesDBs = [],
-  largestMessageDB
+  largestMessageDB = {}
   
 
 export default {
-  name: 'Userland',
+  name: 'Mainland',
   components: {
     Grid,
     Minimap,
@@ -149,7 +141,7 @@ export default {
   ],
   data () {
     return {
-      version: 3,
+      version: 4,
       doNotSave: false,
 
       me: {
@@ -208,7 +200,7 @@ export default {
 
     // delete everything if local storage version is older than this version
     
-    console.log('version:', localStorage.version)
+    console.log(`Version: ${localStorage.version}`)
 
     if (localStorage.version != this.version) {
       console.log('this version is outdated, clearing your storage.')
@@ -241,6 +233,7 @@ export default {
     if (this.hasUsers) {
       this.users = JSON.parse(localStorage.users)
     }
+    this.users[this.me.uid] = this.me
 
     // check if user hsa a DB of messages
 
@@ -250,25 +243,6 @@ export default {
 
   },
   mounted() {
-
-    // start tracking cursor
-
-    this.track()
-
-
-    // minimap image
-
-    // const userlandContainer = this.$refs.userlandContainer
-    // const userland = this.$refs.userland
-
-    // html2canvas(userland, {
-    //   scale: this.scale
-    // }).then((canvas) => {
-    //   userlandContainer.appendChild(canvas)
-    //   console.log(canvas)
-    // })
-
-
 
     // UI set-up
       
@@ -292,6 +266,10 @@ export default {
       }, 50)
     }
 
+    // start tracking cursor
+
+    this.track()
+
   },
   sockets: {
 
@@ -304,37 +282,24 @@ export default {
       const user = JSON.parse(data)
       if (user.uid !== this.me.uid) {
         this.$set(this.users, user.uid, user)
-        this.$socket.emit('users', this.users)
-        this.$socket.emit('messages', this.messages)
       }
+      this.$socket.emit('users', this.users)
+      this.$socket.emit('messages', this.messages)
     },
 
     users(data) {
       const receivedDB = JSON.parse(data)
-      userDBs.push(receivedDB)
-      userDBs.sort((a, b) => Object.keys(b).length -  Object.keys(a).length)
-      largestUserDB = userDBs[0]
-      userDBs.forEach(DB => {
-        for (let uid in DB) {
-          if (!largestUserDB[uid]) {
-            if (uid !== this.me.uid) {
-              largestUserDB[uid] = DB[uid]            
-            } else {
-              console.log('false alarm, its you.')
-            }
-            if (DB[uid].deleted) {
-              largestUserDB[uid].deleted = true
-            }
-          }
-        }
-      })
-      for (let uid in largestUserDB) {
-        const user = largestUserDB[uid]
-        if (uid !== this.me.uid) {
-          this.$set(this.users, uid, user)
-        } 
+      const numberOfUsers = (this.getConnectedUsers()).length
+      if (userDBs.length < numberOfUsers) {
+        console.log(userDBs.length, numberOfUsers)
+        userDBs.push(receivedDB)   
+      } else if (userDBs.length == numberOfUsers) {
+        console.log(userDBs.length, numberOfUsers)
+        console.log(`Syncing ${userDBs.length} user DBs.`)
+        this.userDBsync()
+      } else if (userDBs.length > numberOfUsers) {
+        console.log('too many dbs, you did something wrong')
       }
-      localStorage.users = JSON.stringify(this.users)
     },
 
     message(data) {
@@ -348,21 +313,15 @@ export default {
 
     messages(data) {
       const receivedDB = JSON.parse(data)
-      messagesDBs.push(receivedDB)
-      messagesDBs.sort((a, b) => Object.keys(b).length -  Object.keys(a).length)
-      largestMessageDB = messagesDBs[0]
-      messagesDBs.forEach(DB => {
-        for (let uid in DB) {
-          if (!largestMessageDB[uid]) {
-            largestMessageDB[uid] = DB[uid]   
-          }
-        }
-      })
-      for (let uid in largestMessageDB) {
-        const message = largestMessageDB[uid]
-        this.$set(this.messages, uid, message)
+      const numberOfUsers = (this.getConnectedUsers()).length
+      if (messagesDBs.length < numberOfUsers) {
+        messagesDBs.push(receivedDB)      
+      } else if (messagesDBs.length == numberOfUsers) {
+        console.log(`Syncing ${messagesDBs.length} message DBs.`)
+        this.messageDBsync()
+      } else if (messagesDBs.length > numberOfUsers) {
+        console.log('too many dbs, you did something wrong')
       }
-      localStorage.messages = JSON.stringify(this.messages)
     },
 
     position(data) {
@@ -412,6 +371,13 @@ export default {
       this.me.connected = false 
       if (!this.doNotSave) {
         localStorage.me = JSON.stringify(this.me)
+        for (let uid in this.users) {
+          if (uid !== this.me.uid) {
+            const user = this.users[uid]
+            user.connected = false
+            this.$set(this.users, uid, user)
+          } 
+        }
         localStorage.users = JSON.stringify(this.users)
         localStorage.messages = JSON.stringify(this.messages)
       }
@@ -494,6 +460,91 @@ export default {
       return message
     },
 
+    getConnectedUsers() {
+      const userArray = Object.values(this.users)
+      const connected = userArray.filter(u => u.connected === true)
+      return connected    
+    },
+
+    userDBsync() {
+
+      // get the DB with the most users
+      userDBs.sort((a, b) => Object.keys(b).length -  Object.keys(a).length)
+      largestUserDB = userDBs[0]
+
+      // iterate through each db to fully merge
+      userDBs.forEach(DB => {
+
+        // for every user in every DB
+        for (let uid in DB) {
+
+          // if user doesnt exist in your largest db, add them        
+          if (!largestUserDB[uid]) {
+            largestUserDB[uid] = DB[uid] 
+          }
+
+          // if user is marked as deleted, mark them as deleted
+          if (DB[uid].deleted) {
+            largestUserDB[uid].deleted = true
+          }
+
+          // if user has changed their name, inherit it
+          if (!DB[uid].name.startsWith('newUser-')) {
+            largestUserDB[uid].name = DB[uid].name
+          }
+        }
+      })
+
+      // point your own user DB to the newly merged largest DDB
+      for (let uid in largestUserDB) {
+        const user = largestUserDB[uid]
+        if (uid !== this.me.uid) {
+          this.$set(this.users, uid, user)
+        } 
+      }
+      localStorage.users = JSON.stringify(this.users)
+
+      // complete sync by clearing carrier variables
+      userDBs = []
+      largestUserDB = {}
+    },
+
+    messageDBsync() {
+
+      // get the DB with the most messagess
+      messagesDBs.sort((a, b) => Object.keys(b).length -  Object.keys(a).length)
+      largestMessageDB = messagesDBs[0]
+
+      // iterate through each db to fully merge
+      messagesDBs.forEach(DB => {
+
+        // for every message in every DB
+        for (let uid in DB) {
+
+          // if message doesnt exist in largest db, add it        
+          if (!largestMessageDB[uid]) {
+            largestMessageDB[uid] = DB[uid]   
+          }
+
+          // if message is marked as deleted, mark it as deleted
+          if (DB[uid].deleted) {
+            largestMessageDB[uid].deleted = true
+          }
+        }
+      })
+
+      // point your own message DB to the newly merged largest DB
+      for (let uid in largestMessageDB) {
+        const message = largestMessageDB[uid]
+        this.$set(this.messages, uid, message)
+      }
+      localStorage.messages = JSON.stringify(this.messages)
+
+      // complete sync by clearing carrier variables
+      messagesDBs = []
+      largestMessageDB = {}
+    },
+
     route(type, name) {
       let position
       if (type == 'user') {
@@ -528,7 +579,7 @@ export default {
 
     getUserNames() {
       let usersArray = Object.values(this.users)
-      let usernames = usersArray.map(user => user.name);
+      let usernames = usersArray.map(user => user.name)
       return usernames
     },
 
@@ -635,7 +686,7 @@ export default {
 
     track() {
       let 
-        input = this.$refs.me.$refs.Cursor.$refs.input, // :]
+        input = this.$refs.me[0].$refs.Cursor.$refs.input, // :]
         current,
         navigation,
         announcement

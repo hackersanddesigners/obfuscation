@@ -40,7 +40,7 @@ table {
   width: 100%;
   height: 100%;
   border-collapse: collapse;
-  opacity: 0.075;
+  opacity: 1;
   transition: opacity 0.2s ease;
   pointer-events: none;
 }

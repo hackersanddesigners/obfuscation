@@ -30,17 +30,10 @@
       </span>
       <ul>
         <Label
-          :isMe="true"
-          :user="me"
-          :messages="getUserMessages(me)"
-          :moderating="moderating"
-          @goTo="$emit('goTo', $event)"
-          @click.native.stop="$emit('goTo', me)"
-        />
-        <Label
           v-for="user in connectedUsersFirst()"
           :key="user.uid"
           :user="user"
+          :isMe="user.uid === me.uid"
           :moderating="moderating"
           :messages="getUserMessages(user)"
           @goTo="$emit('goTo', $event)"

@@ -55,6 +55,7 @@ export default {
 <style scoped>
 .island {
   box-sizing: border-box;
+  padding: 1vh;
   /* max-width: 500px;
   max-height: 500px; */
   /* position: absolute; */
@@ -62,7 +63,12 @@ export default {
   /* left: 30vw; */
   /* margin: auto; */
   /* border: 1px dashed black; */
-  padding: 1vh;
+  /* --back: rgba(255, 255, 255, 0.774); */
+  /* --back: rgb(0, 0, 0); */
+  background-color: var(--back);
+  box-shadow: 0px 0px 150px 150px  var(--back);
+  /* color: white; */
+  /* border-radius: 100px; */
 }
 .island .header {
   display: flex;

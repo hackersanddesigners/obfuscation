@@ -10,6 +10,6 @@ export default {
 
 <style scoped>
 td {
-  border: 1px solid black;
+  border: 0.5px solid rgb(236, 236, 236);
 }
 </style>
