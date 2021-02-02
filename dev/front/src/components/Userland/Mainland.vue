@@ -41,7 +41,7 @@
       />
       <Userslist
         :me="me"
-        :users="users"
+        :users="getNotDeletedUsers()"
         :messages="messages"
         :moderator="moderator"
 
@@ -80,7 +80,7 @@
         <!-- CURSORS AND MESSAGES -->
 
         <User
-          v-for="user in users"
+          v-for="user in getNotDeletedUsers()"
           :ref="user.uid === me.uid ? 'me' : 'Users'"
           :key="user.uid"
           :user="user"
@@ -111,7 +111,6 @@
 <script>
 import { uid } from 'uid'
 import { EventBus } from '../../EventBus.js'
-// import html2canvas from 'html2canvas'
 
 import Grid from './Grid/Table'
 import Minimap from './Mini/Map'
@@ -144,7 +143,7 @@ export default {
   ],
   data () {
     return {
-      version: 4,
+      version: 5,
       doNotSave: false,
 
       registered: false,
@@ -210,11 +209,16 @@ export default {
       localStorage.version = this.version
     }      
 
-    // check if user is registered and get their datas value
+    // check if user is registered and get their datas 
     
     if (localStorage.me) {
       this.registered = true
       this.me = JSON.parse(localStorage.me)
+
+      if (this.me.deleted) {
+        console.log('this user is deleted')
+        this.$emit('blocked')
+      }
 
     // if not registered, check if previously visited and get the
     // previously defined UID
@@ -249,6 +253,8 @@ export default {
   },
   mounted() {
 
+    if (!this.me.deleted) {
+
     // UI set-up
       
     window.addEventListener('resize', () => {
@@ -273,45 +279,49 @@ export default {
 
     // start tracking cursor
 
-    this.track()
+      this.track()
+    }
 
   },
   sockets: {
 
     connect() { 
-      // if (this.registered) {}
-      this.me.connected = true 
-      this.$socket.emit('user', this.me)
+      if (!this.me.deleted) {
+        this.me.connected = true 
+        this.$socket.emit('user', this.me)
+      }
     },
 
     user(data) {
-      // if (this.registered) {}
       const user = JSON.parse(data)
       if (user.uid !== this.me.uid) {
         this.$set(this.users, user.uid, user)
+      } else if (user.deleted === true) {
+        console.log('youve been blocked')
+        this.me.deleted = true
+        localStorage.me = JSON.stringify(this.me)
+        window.location.reload(true)
       }
       this.$socket.emit('users', this.users)
       this.$socket.emit('messages', this.messages)
     },
 
     users(data) {
-      // if (this.registered) {}
       const receivedDB = JSON.parse(data)
-      const numberOfUsers = (this.getConnectedUsers()).length
-      if (userDBs.length < numberOfUsers) {
-        console.log(userDBs.length, numberOfUsers)
+      // const numberOfUsers = (this.getConnectedUsers()).length
+      // if (userDBs.length < numberOfUsers) {
+        // console.log(userDBs.length, numberOfUsers)
         userDBs.push(receivedDB)   
-      } else if (userDBs.length == numberOfUsers) {
-        console.log(userDBs.length, numberOfUsers)
+      // } else if (userDBs.length == numberOfUsers) {
+        // console.log(userDBs.length, numberOfUsers)
         console.log(`Syncing ${userDBs.length} user DBs.`)
         this.userDBsync()
-      } else if (userDBs.length > numberOfUsers) {
-        console.log('too many dbs, you did something wrong')
-      }
+      // } else if (userDBs.length > numberOfUsers) {
+        // console.log('too many dbs, you did something wrong')
+      // }
     },
 
     message(data) {
-      // if (this.registered) {}
       const message = JSON.parse(data)
       this.$set(this.messages, message.uid, message)
       this.$socket.emit('messages', this.messages)
@@ -321,21 +331,19 @@ export default {
     },
 
     messages(data) {
-      // if (this.registered) {}
       const receivedDB = JSON.parse(data)
-      const numberOfUsers = (this.getConnectedUsers()).length
-      if (messagesDBs.length < numberOfUsers) {
+      // const numberOfUsers = (this.getConnectedUsers()).length
+      // if (messagesDBs.length < numberOfUsers) {
         messagesDBs.push(receivedDB)      
-      } else if (messagesDBs.length == numberOfUsers) {
+      // } else if (messagesDBs.length == numberOfUsers) {
         console.log(`Syncing ${messagesDBs.length} message DBs.`)
         this.messageDBsync()
-      } else if (messagesDBs.length > numberOfUsers) {
-        console.log('too many dbs, you did something wrong')
-      }
+      // } else if (messagesDBs.length > numberOfUsers) {
+        // console.log('too many dbs, you did something wrong')
+      // }
     },
 
     position(data) {
-      // if (this.registered) {}
       const user = JSON.parse(data)
       if (user.uid !== this.me.uid) {
         this.$set(this.users, user.uid, user)
@@ -344,7 +352,6 @@ export default {
     },
 
     appearance(data) {
-      // if (this.registered) {}
       const user = JSON.parse(data)
       if (user.uid !== this.me.uid) {
         this.$set(this.users, user.uid, user)
@@ -353,7 +360,6 @@ export default {
     },
 
     typing(data) {
-      // if (this.registered) {}
       const user = JSON.parse(data)
       if (user.uid !== this.me.uid) {
         this.$set(this.users, user.uid, user)
@@ -362,7 +368,6 @@ export default {
     },
 
     userDisconnect(data) {
-      // if (this.registered) {}
       const user = JSON.parse(data)
       if (user.uid !== this.me.uid) {
         this.$set(this.users, user.uid, user)
@@ -424,11 +429,8 @@ export default {
 
     deleteUser(user) {
       user.deleted = true
-      // this.$set(this.users, user.uid, user)
       this.getUserMessages(user).forEach((m) =>  {
         this.messages[m.uid].deleted = true
-        // m.deleted = true
-        // this.$set(this.messages, m.uid, m)
       })
       this.$socket.emit('user', user)
     },
@@ -498,6 +500,12 @@ export default {
       return connected    
     },
 
+    getNotDeletedUsers() {
+      const userArray = Object.values(this.users)
+      const notdeleted = userArray.filter(u => u.deleted !== true)
+      return notdeleted
+    },
+
     userDBsync() {
 
       // get the DB with the most users
@@ -537,8 +545,8 @@ export default {
       localStorage.users = JSON.stringify(this.users)
 
       // complete sync by clearing carrier variables
-      userDBs = []
-      largestUserDB = {}
+      // userDBs = []
+      // largestUserDB = {}
     },
 
     messageDBsync() {
@@ -573,8 +581,8 @@ export default {
       localStorage.messages = JSON.stringify(this.messages)
 
       // complete sync by clearing carrier variables
-      messagesDBs = []
-      largestMessageDB = {}
+      // messagesDBs = []
+      // largestMessageDB = {}
     },
 
     route(type, name) {

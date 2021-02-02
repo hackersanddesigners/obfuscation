@@ -6,7 +6,12 @@
     }"
   >
     <Mainland 
+      v-if="!blocked"
       :wantsToView="wantsToView"
+      @blocked="blocked=true"
+    />
+    <Nomansland
+      v-else
     />
   </div>
 </template>
@@ -15,11 +20,13 @@
 import { EventBus } from '../EventBus.js'
 
 import Mainland from '../components/Userland/Mainland'
+import Nomansland from '../components/Userland/Nomansland'
 
 export default {
   name: 'Home',
   components: {
-    Mainland
+    Mainland,
+    Nomansland
   },
   props: [
     'slug'
@@ -29,7 +36,8 @@ export default {
       loaded: false,
       status: 'loading...',
       isMobile: EventBus.$root.isMobile ? true : false,
-      wantsToView: null
+      wantsToView: null,
+      blocked: false,
     }
   },
   created() {

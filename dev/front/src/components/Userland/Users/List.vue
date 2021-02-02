@@ -123,8 +123,8 @@ export default {
   box-sizing: border-box;
   margin-top: 2vh;
   margin-left: 2vh;
-  min-width: 13vw;
-  /* max-height: 300px; */
+  min-width: 14vw;
+  max-height: 300px;
   overflow: scroll;
   display: flex;
   flex-direction: column;
@@ -135,6 +135,7 @@ export default {
   position: sticky;
   background: white;
   top: 0;
+  overflow: hidden;
   box-sizing: border-box;
   padding-left: 0.5vw;
   line-height: 1.9vh;
@@ -146,6 +147,7 @@ export default {
 
 #moderate {
   margin-left: auto;
+  flex-shrink: 0;
   cursor: pointer;
 }
 #moderate .moderateButton {
