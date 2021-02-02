@@ -429,6 +429,7 @@ export default {
 
     deleteMessage(message) {
       this.messages[message.uid].deleted = true
+      this.$socket.emit('message', message)
     },
 
     deleteEverything() {
