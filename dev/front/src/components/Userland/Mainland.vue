@@ -493,7 +493,8 @@ export default {
 
     getConnectedUsers() {
       const userArray = Object.values(this.users)
-      const connected = userArray.filter(u => u.connected === true)
+      const notdeleted = userArray.filter(u => u.deleted !== true)
+      const connected = notdeleted.filter(u => u.connected === true)
       return connected    
     },
 
