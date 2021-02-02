@@ -34,6 +34,7 @@
       :message="message"
       :isMe="isMe"
 
+      @deleteMessage="$emit('deleteMessage', $event)"
       @mouseover.native="hovered=true"
       @mouseleave.native="hovered=false"
     />

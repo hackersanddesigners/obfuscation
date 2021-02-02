@@ -1,5 +1,6 @@
 <template>
   <li
+    v-if="!user.deleted"
     :class="[
       'userLabel',
       user.uid,
@@ -32,6 +33,7 @@
         >block</span>
       <span 
         class="delete"
+        @click.stop="$emit('deleteUser', user)"
         >delete</span>
     </div>
     <span class="goto"> {{ hovered ? '→' : ''  }}</span> 
@@ -41,6 +43,7 @@
           v-for="message in messages"
           :key="message.uid"
           :message="message"
+          @deleteMessage="$emit('deleteMessage', message)"
           @click.native.stop="$emit('goTo', message)"
         />
       </ul>

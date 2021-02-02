@@ -21,6 +21,11 @@
     <span 
       class="time"
     > {{ fromNow(message.time) }} </span>
+    <span 
+      v-if="isMe"
+      class="delete"
+      @click.stop="$emit('deleteMessage', message)"
+    >delete</span>
   </div>
 </template>
 
@@ -34,7 +39,6 @@ export default {
   props: [ 
     'isMe',
     'message',
-    // 'hovered'
   ], 
   data() {
     return {
@@ -94,21 +98,22 @@ export default {
   border: none !important;
   border-radius: 15px;
 }
+.messageContainer .delete,
 .messageContainer .time {
   margin: 0px 5px;
   opacity: 0;
   width: 0;
-  /* font-size: 7pt; */
   font-size: 80%;
   color: rgb(161, 161, 161);
   transition: opacity 0.2s ease;
   white-space: nowrap;
-  pointer-events: none;
+  /* pointer-events: none; */
 }
-.messageContainer .author {
-  opacity: 0;
-  /* transition: all 0.2s ease; */
+.messageContainer .delete {
+  text-decoration: underline;
+  cursor: pointer;
 }
+
 
 .messageContainer.hover {
   filter: blur(0px);
@@ -117,8 +122,10 @@ export default {
 .messageContainer.announcement .message {
   border: 1px dashed;
 }
+.messageContainer.hover .delete,
 .messageContainer.hover .time {
   opacity: 1;
+  width: auto;
 }
 
 </style>

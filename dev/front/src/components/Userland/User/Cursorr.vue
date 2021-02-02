@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="user.uid"
+    v-if="!user.deleted"
     :class="[
       'cursorContainer',
       {

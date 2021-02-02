@@ -11,6 +11,7 @@
     <span class="time"> {{ format(message.time) }} </span>
     <span 
       class="delete"
+      @click.stop="$emit('deleteMessage', message)"
       >delete</span>
     <span class="goto"> {{ hovered ? '→' : ''  }}</span> 
   </div>

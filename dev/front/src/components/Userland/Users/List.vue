@@ -36,6 +36,9 @@
           :isMe="user.uid === me.uid"
           :moderating="moderating"
           :messages="getUserMessages(user)"
+
+          @deleteMessage="$emit('deleteMessage', $event)"
+          @deleteUser="$emit('deleteUser', $event)"
           @goTo="$emit('goTo', $event)"
           @click.native.stop="$emit('goTo', user)"
         />
@@ -80,7 +83,7 @@ export default {
       let userMessages = []
       for(let uid in this.messages) {
         const message = this.messages[uid]
-        if (message.author == user.uid) {
+        if (message.author == user.uid && !message.deleted) {
           userMessages.push(message)
         }
       }
@@ -120,8 +123,8 @@ export default {
   box-sizing: border-box;
   margin-top: 2vh;
   margin-left: 2vh;
-  min-width: 14vw;
-  max-height: 300px;
+  min-width: 13vw;
+  /* max-height: 300px; */
   overflow: scroll;
   display: flex;
   flex-direction: column;

@@ -45,6 +45,8 @@
         :messages="messages"
         :moderator="moderator"
 
+        @deleteMessage="deleteMessage($event)"
+        @deleteUser="deleteUser($event)"
         @goTo="scrollTo(getPosition($event), 'smooth')"
       />
     </header>
@@ -84,6 +86,7 @@
           :user="user"
           :isMe="user.uid === me.uid"
           :messages="getUserMessages(user)"
+          @deleteMessage="deleteMessage($event)"
           @newPosition="updatePosition"
         />
 
@@ -144,6 +147,9 @@ export default {
       version: 3,
       doNotSave: false,
 
+      registered: false,
+      visited: false,
+
       me: {
         uid: uid(),
         connected: false,
@@ -166,8 +172,6 @@ export default {
         },
       ],
 
-      registered: false,
-      visited: false,
       moderator: true,
 
       editing: false,
@@ -275,11 +279,13 @@ export default {
   sockets: {
 
     connect() { 
+      // if (this.registered) {}
       this.me.connected = true 
       this.$socket.emit('user', this.me)
     },
 
     user(data) {
+      // if (this.registered) {}
       const user = JSON.parse(data)
       if (user.uid !== this.me.uid) {
         this.$set(this.users, user.uid, user)
@@ -289,6 +295,7 @@ export default {
     },
 
     users(data) {
+      // if (this.registered) {}
       const receivedDB = JSON.parse(data)
       const numberOfUsers = (this.getConnectedUsers()).length
       if (userDBs.length < numberOfUsers) {
@@ -304,6 +311,7 @@ export default {
     },
 
     message(data) {
+      // if (this.registered) {}
       const message = JSON.parse(data)
       this.$set(this.messages, message.uid, message)
       this.$socket.emit('messages', this.messages)
@@ -313,6 +321,7 @@ export default {
     },
 
     messages(data) {
+      // if (this.registered) {}
       const receivedDB = JSON.parse(data)
       const numberOfUsers = (this.getConnectedUsers()).length
       if (messagesDBs.length < numberOfUsers) {
@@ -326,6 +335,7 @@ export default {
     },
 
     position(data) {
+      // if (this.registered) {}
       const user = JSON.parse(data)
       if (user.uid !== this.me.uid) {
         this.$set(this.users, user.uid, user)
@@ -334,6 +344,7 @@ export default {
     },
 
     appearance(data) {
+      // if (this.registered) {}
       const user = JSON.parse(data)
       if (user.uid !== this.me.uid) {
         this.$set(this.users, user.uid, user)
@@ -342,6 +353,7 @@ export default {
     },
 
     typing(data) {
+      // if (this.registered) {}
       const user = JSON.parse(data)
       if (user.uid !== this.me.uid) {
         this.$set(this.users, user.uid, user)
@@ -350,6 +362,7 @@ export default {
     },
 
     userDisconnect(data) {
+      // if (this.registered) {}
       const user = JSON.parse(data)
       if (user.uid !== this.me.uid) {
         this.$set(this.users, user.uid, user)
@@ -399,12 +412,29 @@ export default {
 
     deleteMe() {
       this.me.deleted = true
-      this.getUserMessages(this.me).forEach(m => m.deleted = true)
+      this.getUserMessages(this.me).forEach((m) =>  {
+        this.messages[m.uid].deleted = true
+      })
       this.$socket.emit('user', this.me)
       this.$socket.emit('message', {})
       this.doNotSave = true
       localStorage.clear()
       window.location.reload(true)
+    },
+
+    deleteUser(user) {
+      user.deleted = true
+      // this.$set(this.users, user.uid, user)
+      this.getUserMessages(user).forEach((m) =>  {
+        this.messages[m.uid].deleted = true
+        // m.deleted = true
+        // this.$set(this.messages, m.uid, m)
+      })
+      this.$socket.emit('user', user)
+    },
+
+    deleteMessage(message) {
+      this.messages[message.uid].deleted = true
     },
 
     deleteEverything() {
