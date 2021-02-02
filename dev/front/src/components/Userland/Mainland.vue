@@ -144,7 +144,7 @@ export default {
   ],
   data () {
     return {
-      version: 3,
+      version: 4,
       doNotSave: false,
 
       registered: false,
