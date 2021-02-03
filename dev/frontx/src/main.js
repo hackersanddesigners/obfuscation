@@ -29,6 +29,11 @@ const socketConnection = SocketIO('https://io.karls.computer')
 
 Vue.use(new VueSocketIO({
     connection: socketConnection,
+    vuex: {
+      store,
+      actionPrefix: "SOCKET_",
+      mutationPrefix: "SOCKET_",
+    },    
   })
 )
 

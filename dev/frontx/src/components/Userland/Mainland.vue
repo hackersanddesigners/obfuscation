@@ -1,14 +1,10 @@
 <template>
-  <div :style="getUserColors()">
+  <div :style="userColors">
     <header :class="{ blur: !registered || editing }" >
 
       <Minimap 
         :dragging="dragging"
         :miniDragging="miniDragging"
-
-        :users="getNotDeletedUsers()"
-        :messages="getNotDeletedMessages()"
-        :islands="islands"
 
         @miniDragging="miniDragging=true"
         @miniStopDragging="miniDragging=false"
@@ -20,25 +16,21 @@
         :editing="editing"
         :name="me.name"
         :color="me.color"
-        :usernames="getUserNames()"
+        :usernames="userNames"
 
         @editMe="editing = true"
         @newColor="updateColor"
         @newMe="updateAppearance"
         @register="saveMe"
-        @deleteMe="deleteMe()"
-        @deleteEverything="deleteEverything()"
+        @deleteMe="deleteMe"
+        @deleteEverything="deleteEverything"
       />
 
       <Userslist
-        :me="me"
-        :users="getNotDeletedUsers()"
-        :messages="messages"
-
         @censorMessage="censorMessage($event)"
         @deleteMessage="deleteMessage($event)"
         @deleteUser="deleteUser($event)"
-        @goTo="scrollTo(getPosition($event), 'smooth')"
+        @goTo="scrollTo(positionOf($event), 'smooth')"
       />
       
     </header>
@@ -68,15 +60,33 @@
 
         <!-- CURSORS AND MESSAGES -->
 
-        <User
-          v-for="user in getNotDeletedUsers()"
-          :ref="user.uid === me.uid ? 'me' : 'Users'"
+        <Cursorr
+          v-for="user in notDeletedUsers"
           :key="user.uid"
+          :ref="isMe(user) ? 'me' : 'Users'"
+
           :user="user"
-          :isMe="user.uid === me.uid"
-          :messages="getUserMessages(user)"
-          @deleteMessage="deleteMessage($event)"
+          :isMe="isMe(user)"
+          :hovered="hovered"
+          :dragging="isMe(user) ? dragging : null"
+
+          @mouseover.native="!isMe(user) ? hovered=true : null"
+          @mouseleave.native="hovered=false"
+
           @newPosition="updatePosition"
+        />
+
+        <Message
+          v-for="message in notDeletedMessages"
+          ref="Messages"
+
+          :key="message.uid"
+          :message="message"
+          :isMe="message.author === me.uid"
+
+          @deleteMessage="deleteMessage($event)"
+          @mouseover.native="hovered=true"
+          @mouseleave.native="hovered=false"
         />
 
         <!-- ISLANDS -->
@@ -99,14 +109,16 @@
 <script>
 import { uid } from 'uid'
 import { mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 
 import Grid from './Grid'
 import Minimap from './Mini/Map'
 import Options from './Options'
 import Userslist from './Users'
-import User from './User'
-
+import Cursorr from './User/Cursorr'
+import Message from './User/Message'
 import Territory from './Territory'
+
 
 
 let 
@@ -114,70 +126,79 @@ let
   largestUserDB = {},
   messagesDBs = [],
   largestMessageDB = {}
-  
-      // const center = {
-      //   x: (this.scale * this.windowWidth - this.windowLeft) / 2,
-      //   y: (this.scale * this.windowHeight - this.windowTop) / 2
-      // }
+
 
 
 export default {
   name: 'Mainland',
+
   components: {
     Grid,
     Minimap,
     Options,
     Userslist,
-    User,
+    Cursorr,
+    Message,
     Territory,
   },
+
   props: {
-    wantsToView: String
+    wantsToView: Object
   },
+
   data () {
     return {
-      me: {
-        uid: uid(),
-        connected: false,
-        name: 'newUser-' + uid(),
-        color: this.randomColor(),
-        x: 0,
-        y: 0,
-        typing: null,
-      },
-      users: {},
-      messages: {},
 
-      islands: [
-        { 
-          name: 'center',
-          borders: {
-            x: 0.4,
-            y: 0.4,
-          },
-        },
-      ],
+      doNotSave: false,
+      
+      me: Object,
 
       editing: false,
       scrolling: false,
       dragging: false,
       miniDragging: false,
+      hovered: false,
+
     }
   },
 
-  computed: mapState([
-    'version',
-    'doNotSave',
+  computed: {
+    ...mapState([
 
-    'registered',
-    'visited',
+      'version',
 
-    'scale',
-    'windowWidth',
-    'windowHeight',
-    'windowLeft',
-    'windowTop',
-  ]),
+      'registered',
+      'visited',
+
+      'users',
+      'messages',
+      'islands',
+
+      'scale',
+      'windowWidth',
+      'windowHeight',
+      'windowLeft',
+      'windowTop',
+
+    ]),
+    ...mapGetters([
+
+      'islandByName',
+      'messagesByUser',
+      'userByName',
+
+      'userColors',
+      'userNames',
+      'connectedUsers',
+      'notDeletedUsers',
+      'notDeletedMessages',
+
+      'centerOf',
+      'positionOf',
+      'pixelsFrom'
+
+    ])
+  },
 
   watch: {
     wantsToView(thing) {
@@ -221,49 +242,62 @@ export default {
     // later reference (e.i. when the user comes back to register) 
 
     } else {
+
+      this.me = {
+        uid: uid(),
+        connected: false,
+        name: 'newUser-' + uid(),
+        color: this.randomColor(),
+        x: 0,
+        y: 0,
+        typing: null,
+      },
+
       localStorage.uid = this.me.uid
       localStorage.color = this.me.color
     }
 
+    this.$store.commit('setUser', { ...this.me })
+    this.$store.commit('setUID', this.me.uid)
+
     // check if user hsa a DB of users
 
     if (localStorage.users) {
-      this.users = JSON.parse(localStorage.users)
+      this.$store.commit('setUsers', JSON.parse(localStorage.users))
     }
-    this.users[this.me.uid] = this.me
 
     // check if user hsa a DB of messages
 
     if (localStorage.messages) {
-      this.messages = JSON.parse(localStorage.messages)
+      this.$store.commit('setMessages', JSON.parse(localStorage.messages))
     }
 
   },
   mounted() {
     if (!this.me.deleted) {
 
-    // UI set-up
-      
-    window.addEventListener('resize', () => {
-      this.$store.commit('resize')
-    })
+      // UI set-up
+        
+      window.addEventListener('resize', () => {
+        this.$store.commit('resize')
+      })
 
-    this.setViewerPosition()
+      this.setViewerPosition()
 
-    // if there is a slug, navigate to it
+      // if there is a slug, navigate to it
 
-    if (this.wantsToView) {
-      this.route(this.wantsToView.type, this.wantsToView.name)
+      if (this.wantsToView) {
+        this.route(this.wantsToView.type, this.wantsToView.name)
 
-    // else, land in the center
+      // else, land in the center
 
-    } else {
-      setTimeout(() => {   
-        this.scrollTo(this.toPixels(this.islands[0].borders), 'smooth')
-      }, 50)
-    }
+      } else {
+        setTimeout(() => {   
+          this.scrollTo(this.pixelsFrom(this.islands[0].borders), 'smooth')
+        }, 50)
+      }
 
-    // start tracking cursor
+      // start tracking cursor
 
       this.track()
 
@@ -273,7 +307,8 @@ export default {
 
     connect() { 
       if (!this.me.deleted) {
-        this.me.connected = true 
+        this.me.connected = true   
+        this.$store.commit('setUser', { ...this.me })
         this.$socket.emit('user', this.me)
       }
     },
@@ -281,9 +316,11 @@ export default {
     user(data) {
       const user = JSON.parse(data)
       if (user.uid !== this.me.uid) {
-        this.$set(this.users, user.uid, user)
+        // this.$set(this.users, user.uid, user)
+        this.$store.commit('setUser', user)
       } else if (user.deleted === true) {
         this.me.deleted = true
+        this.$store.commit('setUser', { ...this.me })
         localStorage.me = JSON.stringify(this.me)
         window.location.reload(true)
       }
@@ -308,10 +345,11 @@ export default {
 
     message(data) {
       const message = JSON.parse(data)
-      this.$set(this.messages, message.uid, message)
+      // this.$set(this.messages, message.uid, message)
+      this.$store.commit('setMessage', message)
       this.$socket.emit('messages', this.messages)
       if (message.announcement && (message.author !== this.me.uid)) {
-        this.scrollTo(this.getPosition(message), 'smooth')
+        this.scrollTo(this.positionOf(message), 'smooth')
       }
     },
 
@@ -328,34 +366,10 @@ export default {
       // }
     },
 
-    position(data) {
-      const user = JSON.parse(data)
-      if (user.uid !== this.me.uid) {
-        this.$set(this.users, user.uid, user)
-        localStorage.users = JSON.stringify(this.users)
-      }
-    },
-
     appearance(data) {
       const user = JSON.parse(data)
       if (user.uid !== this.me.uid) {
-        this.$set(this.users, user.uid, user)
-        localStorage.users = JSON.stringify(this.users)
-      }
-    },
-
-    typing(data) {
-      const user = JSON.parse(data)
-      if (user.uid !== this.me.uid) {
-        this.$set(this.users, user.uid, user)
-        localStorage.users = JSON.stringify(this.users)
-      }
-    },
-
-    userDisconnect(data) {
-      const user = JSON.parse(data)
-      if (user.uid !== this.me.uid) {
-        this.$set(this.users, user.uid, user)
+        this.$store.commit('setUser', user)
         localStorage.users = JSON.stringify(this.users)
       }
     },
@@ -373,13 +387,14 @@ export default {
 
     disconnect() { 
       this.me.connected = false 
+      this.$store.commit('setUser', { ...this.me })
       if (!this.doNotSave) {
         localStorage.me = JSON.stringify(this.me)
         for (let uid in this.users) {
           if (uid !== this.me.uid) {
-            const user = this.users[uid]
+            const user = { ...this.users[uid] }
             user.connected = false
-            this.$set(this.users, uid, user)
+            this.$store.commit('setUser', user)
           } 
         }
       }
@@ -390,6 +405,10 @@ export default {
 
   },
   methods: {
+
+    isMe(user) {
+      return user.uid === this.me.uid
+    },
 
     saveMe(newLook) {
       this.me.name = newLook.name
@@ -410,20 +429,20 @@ export default {
     },
 
     deleteUser(user) {
-      user.deleted = true
-      this.getUserMessages(user).forEach((m) =>  {
-        this.messages[m.uid].deleted = true
+      this.messagesByUser(user).forEach((m) =>  {
+        this.deleteMessage(this.messages[m.uid])
       })
+      this.$store.commit('deleteUser', user)
       this.$socket.emit('user', user)
     },
 
     deleteMessage(message) {
-      this.messages[message.uid].deleted = true
+      this.$store.commit('deleteMessage', message)
       this.$socket.emit('message', message)
     },
 
     censorMessage(message) {
-      this.messages[message.uid].censored = !this.messages[message.uid].censored
+      this.$store.commit('censorMessage', message)
       this.$socket.emit('message', message)
     },
 
@@ -437,23 +456,26 @@ export default {
       this.me.x = x
       this.me.y = y
       this.me.connected = true
-      this.$socket.emit('position', this.me)
+      this.$store.commit('setUser', { ...this.me })
+      this.$socket.emit('appearance', this.me)
     },
 
     updateTyping(text) {
       this.me.typing = text
-      this.$socket.emit('typing', this.me)
+      this.$store.commit('setUser', { ...this.me })
+      this.$socket.emit('appearance', this.me)
     },
 
     updateColor(newLook) {
       this.me.color = newLook.color
+      this.$store.commit('setUser', { ...this.me })
       this.$socket.emit('appearance', this.me)
-      localStorage.me = JSON.stringify(this.me)
     },
 
     updateAppearance(newLook) {
       this.me.name = newLook.name
       this.me.color = newLook.color
+      this.$store.commit('setUser', { ...this.me })
       this.$socket.emit('appearance', this.me)
       this.editing = false
       localStorage.me = JSON.stringify(this.me)
@@ -515,7 +537,8 @@ export default {
       for (let uid in largestUserDB) {
         const user = largestUserDB[uid]
         if (uid !== this.me.uid) {
-          this.$set(this.users, uid, user)
+          // this.$set(this.users, uid, user)
+          this.$store.commit('setUser', user)
         } 
       }
       localStorage.users = JSON.stringify(this.users)
@@ -555,7 +578,8 @@ export default {
       // point your own message DB to the newly merged largest DB
       for (let uid in largestMessageDB) {
         const message = largestMessageDB[uid]
-        this.$set(this.messages, uid, message)
+        // this.$set(this.messages, uid, message)
+        this.$store.commit('setMessage', message)
       }
       localStorage.messages = JSON.stringify(this.messages)
 
@@ -567,77 +591,21 @@ export default {
     route(type, name) {
       let position
       if (type == 'user') {
-        const user = this.findUser(name)
+        const user = this.userByName(name)
         if (user) {
-          position = this.getPosition(user)
+          position = this.positionOf(user)
         } else {
           console.log('not found')
         }
       } else if (type == 'territory') {
-        const territory =  this.findTerritory(name)
+        const territory =  this.islandByName(name)
         if (territory) {
-          position = this.toPixels(territory.borders)
+          position = this.pixelsFrom(territory.borders)
         } else {
           console.log('not found')
         }
       }
       this.scrollTo(position, 'smooth')
-    },
-
-    findTerritory(name) {
-      return this.islands.find(u => u.name == name) 
-    },
-
-    findUser(name) {
-      let usersArray = Object.values(this.users)
-      let found = usersArray.find(u => u.name == name) 
-      if (found) {
-        return this.users[found.uid] 
-      }
-    },
-
-    getUserColors() {
-      let usercolors = {}
-      for (let uid in this.users) {
-        const user = this.users[uid]
-        usercolors[`--${uid}`] = user.connected ? user.color : 'lightgrey'
-      }
-      return usercolors
-    },
-
-    getConnectedUsers() {
-      const notdeleted = this.getNotDeletedUsers()
-      const connected = notdeleted.filter(u => u.connected === true)
-      return connected    
-    },
-
-    getUserNames() {
-      const notdeleted = this.getNotDeletedUsers()
-      const usernames = notdeleted.map(user => user.name)
-      return usernames
-    },
-
-    getNotDeletedUsers() {
-      const userArray = Object.values(this.users)
-      const notdeleted = userArray.filter(u => u.deleted !== true)
-      return notdeleted
-    },
-
-    getNotDeletedMessages() {
-      const messagesArray = Object.values(this.messages)
-      const notdeleted = messagesArray.filter(m => m.deleted !== true)
-      return notdeleted
-    },
-
-    getUserMessages(user) {
-      let userMessages = []
-      for(let uid in this.messages) {
-        const message = this.messages[uid]
-        if (message.author == user.uid && !message.deleted) {
-          userMessages.push(message)
-        }
-      }
-      return userMessages
     },
 
     drag(e) {
@@ -650,7 +618,7 @@ export default {
     centerMe() {
       this.$store.commit('zero')
       setTimeout(() => {
-        this.scrollTo(this.getPosition({x: 0.5, y: 0.5}), 'smooth')
+        this.scrollTo(this.positionOf({x: 0.5, y: 0.5}), 'smooth')
       }, 50)
     },
 
@@ -662,32 +630,11 @@ export default {
       })
     },
 
-    getPosition(obj) {
-      obj = this.toPixels(obj)
-      return {
-        x: obj.x - this.windowWidth / 2,
-        y: obj.y - this.windowHeight / 2
-      }
-    },
-
-    getCenter(obj) {
-      obj = this.toPixels(obj)
-      console.log(obj)
-      return {
-        x: obj.x - obj.w / 2,
-        y: obj.y - obj.h / 2,
-        w: obj.w ? obj.w : 0,
-        h: obj.h ? obj.h : 0,
-      }
-    },
-
-    toPixels(coords) {
-      return {
-        x: coords.x * this.scale * this.windowWidth,
-        y: coords.y * this.scale * this.windowHeight,
-        w: coords.w ? coords.w : 0,
-        h: coords.h ? coords.h : 0,
-      }
+    setViewerPosition() {
+      this.$store.commit('viewerPosition', {
+        x: this.$refs.userlandContainer.scrollLeft, 
+        y: this.$refs.userlandContainer.scrollTop
+      })
     },
 
     randomColor() {
@@ -700,16 +647,9 @@ export default {
       return color
     },
 
-    setViewerPosition() {
-      this.$store.commit('viewerPosition', {
-        x: this.$refs.userlandContainer.scrollLeft, 
-        y: this.$refs.userlandContainer.scrollTop
-      })
-    },
-
     track() {
       let 
-        input = this.$refs.me[0].$refs.Cursor.$refs.input, // :]
+        input = this.$refs.me[0].$refs.input, // :]
         current,
         navigation,
         announcement
@@ -733,7 +673,7 @@ export default {
             announcement = true
           }
 
-          const msgs = this.getUserMessages(this.me)
+          const msgs = this.messagesByUser(this.me)
 
           const 
             first = msgs[0],
@@ -809,38 +749,27 @@ export default {
 
     },
 
-
   },
   
 }
 </script>
 
 <style>
+
 header {
   position: absolute;
+  width: 0;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
   align-items: flex-start;
-  width: 0;
   z-index: 2;
   transition: filter 0.3s ease;
 }
-header h1 {
-  font-family: 'zxx-noise';
-  font-size: 30px;
-  opacity: 0.4;
-  margin-left: 2vh;
-}
 #userlandContainer {  
   cursor: none;
-  box-sizing: border-box;
   position: absolute;
   height: 100%;
   width: 100%;
-  display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
   overflow: scroll;
   transition: filter 0.3s ease;
   -ms-overflow-style: none;  /* IE and Edge */
@@ -854,36 +783,18 @@ header h1 {
   user-select: none;
 }
 #userland {
-  /* cursor: none; */
-  box-sizing: border-box;
   position: absolute;
-  margin: auto;
-  /* position: relative; */
   top: 0px;
   left: 0px;
-  overflow: hidden;
   font-family: jet;
-  /* font-size: 9pt; */
-  background: white;
-  transform-origin: center;
-  font-size: calc(1.8pt * var(--scale));
-  /* font-family: 'zxx-noise'; */
-  /* font-family: 'zxx-false'; */
-  /* font-family: 'terminal';
-  font-size: 10pt; */
-  /* background: rgba(0, 0, 0, 0.05); */
+  font-size: calc(1.7pt * var(--scale));
 }
 
-/* header.blur, */
 header.blur h1,
 header.blur #minimap,
-/* header.blur #options .title, */
-/* header.blur #options div, */
 header.blur #userlist,
 #userlandContainer.blur {
   filter: blur(10px);
 }
-
-
 
 </style>

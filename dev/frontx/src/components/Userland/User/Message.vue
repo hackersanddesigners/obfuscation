@@ -90,6 +90,10 @@ export default {
   z-index: 1;
   color: var(--userColor);
 }
+.messageContainer *::selection {
+  background: var(--userColor);
+  color: white;
+}
 .messageContainer .message {
   box-sizing: border-box;
   border: 1px solid;

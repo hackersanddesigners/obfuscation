@@ -61,6 +61,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 
 import Cursorr from '../User/Cursorr'
 import Message from './Message'
@@ -76,9 +77,6 @@ export default {
     Window,
   },
   props: [ 
-    'users',
-    'islands',
-    'messages',
     'dragging',
     'miniDragging'
   ], 
@@ -87,14 +85,26 @@ export default {
       hovered: false
     }
   },
-  computed: mapState({
-    left: state => state.windowLeft / 5,
-    top: state => state.windowTop / 5,
-    width: state => state.windowWidth / 5,
-    height: state => state.windowHeight / 5,
-    scale: state => state.scale,
-    zoomIndex: state => state.scale * 5
-  }),
+  computed: {
+    ...mapState({
+
+      islands: state => state.islands,
+
+      left: state => state.windowLeft / 5,
+      top: state => state.windowTop / 5,
+      width: state => state.windowWidth / 5,
+      height: state => state.windowHeight / 5,
+      scale: state => state.scale,
+      zoomIndex: state => state.scale * 5
+    
+    }),
+    ...mapGetters({
+
+      users: 'notDeletedUsers',
+      messages: 'notDeletedMessages',
+
+    })
+  },
   watch: {
   },
   mounted() {

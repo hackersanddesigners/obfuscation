@@ -32,12 +32,12 @@
       </span>
       <ul>
         <Label
-          v-for="user in connectedUsersFirst()"
+          v-for="user in connectedUsersFirst"
           :key="user.uid"
           :user="user"
           :isMe="user.uid === me.uid"
           :moderating="moderating"
-          :messages="getUserMessages(user)"
+          :messages="messagesByUser(user)"
 
           @censorMessage="$emit('censorMessage', $event)"
           @deleteMessage="$emit('deleteMessage', $event)"
@@ -51,6 +51,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 import Label from './Label'
 
 export default {
@@ -59,9 +61,6 @@ export default {
     Label
   },
   props: [ 
-    'me',
-    'users',
-    'messages'
   ], 
   data() {
     return {
@@ -69,6 +68,15 @@ export default {
       authenticating: false,
       moderating: false,
     }
+  },
+  computed: {
+    ...mapGetters({
+      me: 'me',
+      users: 'notDeletedUsers',
+      messages: 'notDeletedMessages',
+      messagesByUser: 'messagesByUser',
+      connectedUsersFirst: 'connectedUsersFirst'
+    })
   },
   mounted() {
   },
@@ -81,33 +89,10 @@ export default {
         this.moderating = true
       }
     },
-
-    getUserMessages(user) {
-      let userMessages = []
-      for(let uid in this.messages) {
-        const message = this.messages[uid]
-        if (message.author == user.uid && !message.deleted) {
-          userMessages.push(message)
-        }
-      }
-      return userMessages.reverse()
-    },
-
-    connectedUsersFirst() {
-      const userArray = Object.values(this.users)
-      userArray.sort((a, b) => {
-        return a.connected === b.connected ? 0 : a.connected ? -1 : 1
-      })
-      let obj = {}
-      for (let u = 0 ; u < userArray.length; u++) {
-        const user = userArray[u]
-        obj[user.uid] = user
-      }
-      return obj
-    },
   }
 }
 </script>
+
 <style scoped>
 #userlistContainer.moderating {
   /* position: absolute;
