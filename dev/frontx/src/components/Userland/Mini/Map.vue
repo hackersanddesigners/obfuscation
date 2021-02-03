@@ -37,18 +37,18 @@
       id="viewport"
       ref="viewport"
 
-      :width="windowWidth / zoomIndex"
-      :height="windowHeight / zoomIndex"
-      :left="windowLeft / zoomIndex"
-      :top="windowTop / zoomIndex"
+      :width="width / scale"
+      :height="height / scale"
+      :left="left / scale"
+      :top="top / scale"
     />
     <div class="zoom">
       <div class="in" 
-        @mousedown.stop="$emit('zoomin')"
+        @mousedown.stop="$store.commit('zoomIn')"
         @mouseup.stop
       >+</div>
       <div class="out" 
-        @mousedown.stop="$emit('zoomout')"
+        @mousedown.stop="$store.commit('zoomOut')"
         @mouseup.stop
       >-</div>
       <div class="zero" 
@@ -60,6 +60,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 import Cursorr from '../User/Cursorr'
 import Message from './Message'
 import Territory from './Territory'
@@ -74,11 +76,6 @@ export default {
     Window,
   },
   props: [ 
-    'windowWidth',
-    'windowHeight',
-    'windowLeft',
-    'windowTop',
-    'scale',
     'users',
     'islands',
     'messages',
@@ -87,23 +84,18 @@ export default {
   ], 
   data() {
     return {
-      width: this.windowWidth / 5,
-      height: this.windowHeight / 5,
-      zoomIndex: 5 * this.scale,
-      mini: true,
       hovered: false
     }
   },
+  computed: mapState({
+    left: state => state.windowLeft / 5,
+    top: state => state.windowTop / 5,
+    width: state => state.windowWidth / 5,
+    height: state => state.windowHeight / 5,
+    scale: state => state.scale,
+    zoomIndex: state => state.scale * 5
+  }),
   watch: {
-    windowWidth() {
-      this.width = this.windowWidth / 5
-    },
-    windowHeight() {
-      this.height = this.windowHeight / 5
-    },
-    scale() {
-      this.zoomIndex = 5 * this.scale
-    }
   },
   mounted() {
   },  

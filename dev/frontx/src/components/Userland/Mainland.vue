@@ -1,13 +1,8 @@
 <template>
   <div :style="getUserColors()">
     <header :class="{ blur: !registered || editing }" >
-      <!-- <h1>obfuscation</h1> -->
+
       <Minimap 
-        :windowWidth="windowWidth"
-        :windowHeight="windowHeight"
-        :windowLeft="windowLeft"
-        :windowTop="windowTop"
-        :scale="scale"
         :dragging="dragging"
         :miniDragging="miniDragging"
 
@@ -18,19 +13,15 @@
         @miniDragging="miniDragging=true"
         @miniStopDragging="miniDragging=false"
         @newPosition="scrollTo($event, miniDragging ? 'auto' : 'smooth')"
-        @zoomin="zoomIn"
-        @zoomout="zoomOut"
         @zero="centerMe"
       />
+
       <Options
-        :registered="registered"
         :editing="editing"
         :name="me.name"
         :color="me.color"
         :usernames="getUserNames()"
-        :grid="grid"
 
-        @grid="grid = !grid"
         @editMe="editing = true"
         @newColor="updateColor"
         @newMe="updateAppearance"
@@ -38,17 +29,18 @@
         @deleteMe="deleteMe()"
         @deleteEverything="deleteEverything()"
       />
+
       <Userslist
         :me="me"
         :users="getNotDeletedUsers()"
         :messages="messages"
-        :moderator="moderator"
 
         @censorMessage="censorMessage($event)"
         @deleteMessage="deleteMessage($event)"
         @deleteUser="deleteUser($event)"
         @goTo="scrollTo(getPosition($event), 'smooth')"
       />
+      
     </header>
     <div 
       id="userlandContainer" 
@@ -57,7 +49,7 @@
         blur: !registered || editing,
         dragging: dragging
       }"
-      @scroll="getViewerPosition()"
+      @scroll="setViewerPosition()"
     >
       <div 
         id="userland" 
@@ -72,10 +64,7 @@
         @mouseup.stop="dragging=false"
       >
 
-        <Grid 
-          :scale="10"
-          :hidden="!grid"
-        />
+        <Grid />
 
         <!-- CURSORS AND MESSAGES -->
 
@@ -109,7 +98,7 @@
 
 <script>
 import { uid } from 'uid'
-import { EventBus } from '../../EventBus.js'
+import { mapState } from 'vuex'
 
 import Grid from './Grid'
 import Minimap from './Mini/Map'
@@ -126,6 +115,11 @@ let
   messagesDBs = [],
   largestMessageDB = {}
   
+      // const center = {
+      //   x: (this.scale * this.windowWidth - this.windowLeft) / 2,
+      //   y: (this.scale * this.windowHeight - this.windowTop) / 2
+      // }
+
 
 export default {
   name: 'Mainland',
@@ -137,17 +131,11 @@ export default {
     User,
     Territory,
   },
-  props: [
-    'wantsToView'
-  ],
+  props: {
+    wantsToView: String
+  },
   data () {
     return {
-      version: 5,
-      doNotSave: false,
-
-      registered: false,
-      visited: false,
-
       me: {
         uid: uid(),
         connected: false,
@@ -170,25 +158,26 @@ export default {
         },
       ],
 
-      moderator: true,
-
       editing: false,
       scrolling: false,
       dragging: false,
       miniDragging: false,
-
-      windowWidth: window.innerWidth,
-      windowHeight: window.innerHeight,
-      windowLeft: null,
-      windowTop: null,
-      scale: EventBus.scale,
-      grid: true,
-
     }
   },
 
-  computed: {
-  },
+  computed: mapState([
+    'version',
+    'doNotSave',
+
+    'registered',
+    'visited',
+
+    'scale',
+    'windowWidth',
+    'windowHeight',
+    'windowLeft',
+    'windowTop',
+  ]),
 
   watch: {
     wantsToView(thing) {
@@ -204,6 +193,7 @@ export default {
 
     if (localStorage.version != this.version) {
       console.log('this version is outdated, clearing your storage.')
+
       localStorage.clear()
       localStorage.version = this.version
     }      
@@ -211,18 +201,18 @@ export default {
     // check if user is registered and get their datas 
     
     if (localStorage.me) {
-      this.registered = true
+      this.$store.commit('register')
       this.me = JSON.parse(localStorage.me)
 
       if (this.me.deleted) {
-        this.$emit('blocked')
+        this.$store.commit('block')
       }
 
     // if not registered, check if previously visited and get the
     // previously defined UID
 
     } else if (localStorage.uid) {
-      this.visited = true
+      this.$store.commit('visit')
       this.me.uid = localStorage.uid
       this.me.color = localStorage.color
 
@@ -250,16 +240,15 @@ export default {
 
   },
   mounted() {
-
     if (!this.me.deleted) {
 
     // UI set-up
       
     window.addEventListener('resize', () => {
-      this.getWindowSize()
+      this.$store.commit('resize')
     })
 
-    this.getViewerPosition()
+    this.setViewerPosition()
 
     // if there is a slug, navigate to it
 
@@ -405,8 +394,8 @@ export default {
     saveMe(newLook) {
       this.me.name = newLook.name
       this.me.color = newLook.color
-      this.$socket.emit('user', this.me)
-      this.registered = true
+      this.$socket.emit('user', this.me)      
+      this.$store.commit('register')
       this.editing = false
       localStorage.me = JSON.stringify(this.me)
     },
@@ -651,26 +640,6 @@ export default {
       return userMessages
     },
 
-    zoomIn() {
-      this.scale += 0.25
-      const center = {
-        x: (this.scale * this.windowWidth - this.windowLeft) / 2,
-        y: (this.scale * this.windowHeight - this.windowTop) / 2
-      }
-      this.scrollTo(center)
-    },
-
-    zoomOut() {
-      if (this.scale > 1) {
-        this.scale -= 0.25
-        const center = {
-          x: (this.scale * this.windowWidth - this.windowLeft) / 2,
-          y: (this.scale * this.windowHeight - this.windowTop) / 2
-        }
-        this.scrollTo(center)
-      }
-    },
-
     drag(e) {
       this.scrollTo({
         x: this.windowLeft - e.movementX,
@@ -679,7 +648,7 @@ export default {
     },
 
     centerMe() {
-      this.scale = 5
+      this.$store.commit('zero')
       setTimeout(() => {
         this.scrollTo(this.getPosition({x: 0.5, y: 0.5}), 'smooth')
       }, 50)
@@ -731,14 +700,11 @@ export default {
       return color
     },
 
-    getViewerPosition() {
-      this.windowLeft = this.$refs.userlandContainer.scrollLeft
-      this.windowTop = this.$refs.userlandContainer.scrollTop
-    },
-
-    getWindowSize() {
-      this.windowWidth = window.innerWidth
-      this.windowHeight = window.innerHeight
+    setViewerPosition() {
+      this.$store.commit('viewerPosition', {
+        x: this.$refs.userlandContainer.scrollLeft, 
+        y: this.$refs.userlandContainer.scrollTop
+      })
     },
 
     track() {

@@ -1,23 +1,17 @@
 <template>
-  <div 
-    id="home" 
-    :class="{ 
-      hidden: !loaded
-    }"
-  >
-    <Mainland 
-      v-if="!blocked"
-      :wantsToView="wantsToView"
-      @blocked="blocked=true"
-    />
+  <div id="home">
     <Nomansland
+      v-if="blocked"
+    />
+    <Mainland 
       v-else
+      :wantsToView="wantsToView"
     />
   </div>
 </template>
 
 <script>
-import { EventBus } from '../EventBus.js'
+import { mapState } from 'vuex'
 
 import Mainland from '../components/Userland/Mainland'
 import Nomansland from '../components/Userland/Nomansland'
@@ -28,30 +22,18 @@ export default {
     Mainland,
     Nomansland
   },
-  props: [
-    'slug'
-  ],
+  props: {
+    slug: String,
+  },
   data() {
     return {
-      loaded: false,
-      status: 'loading...',
-      isMobile: EventBus.$root.isMobile ? true : false,
       wantsToView: null,
-      blocked: false,
     }
   },
+  computed: mapState([
+    'blocked',
+  ]),
   created() {
-    this.$http.get(this.$apiURL + '/hosts')
-      .then((response) => { 
-        this.hosts = response.data
-        this.loaded = true
-        this.msg = 'ready.'
-      })
-      .catch((error) => { 
-        console.log(error)
-        this.msg = 'there is an error :( contact karl <bonjour@moubarak.eu>'
-      }) 
-
     if (this.slug) {
       this.handleRouting(this.slug)
     }
@@ -64,6 +46,7 @@ export default {
   },
   methods: {
     handleRouting(slug) {
+
       let type, name
       if (slug.startsWith("~")) {
         type = 'user'
@@ -72,12 +55,14 @@ export default {
       } else {
         console.log('not found')
       }
+
       name = slug.slice(1)
       if (name) {
         console.log(name)
       } else {
         console.log('no username provided')
       }
+
       this.wantsToView = {
         type: type,
         name: name
@@ -87,11 +72,10 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 #home {
   box-sizing: border-box;
   height: 100%;
   width: 100%;
-  background: lightgray;
 }
 </style>

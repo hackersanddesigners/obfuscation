@@ -18,7 +18,7 @@
         name="grid" 
         :value="grid ? 'hide grid' : 'show grid'" 
 
-        @click.stop="$emit('grid')"
+        @click.stop="$store.commit('toggleGrid')"
       />
     </div>
     <div class="edituser">
@@ -60,16 +60,18 @@ export default {
     Register
   },
   props: [ 
-    'registered',
     'editing',
     'name',
     'color',
-    'grid',
     'usernames'
   ], 
   data() {
     return {
     }
+  },
+  computed: {
+    registered() { return this.$store.state.registered },
+    grid() { return this.$store.state.grid },
   },
   mounted() {
   },

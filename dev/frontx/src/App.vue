@@ -1,17 +1,12 @@
 <template>
   <div id="app">
     <Home 
-      :class="{ 
-        mobile: isMobile,
-      }" 
       :slug="slug"
     />
   </div>
 </template>
 
 <script>
-import { EventBus } from './EventBus.js'
-import smoothscroll from 'smoothscroll-polyfill'
 import Home from './views/Home.vue'
 
 export default {
@@ -21,26 +16,12 @@ export default {
   },
   data() {
     return {
-      isMobile: Boolean,
       slug: window.location.pathname.replace(this.$publicPath, ''),
     }
   },
   created() {
-    this.CheckForMobile()
-    window.addEventListener('resize', this.CheckForMobile)
-    
-    smoothscroll.polyfill()
   },
   methods: {
-    CheckForMobile() {
-      if (window.innerWidth <= 760) {
-        EventBus.$root.isMobile = true;
-        this.isMobile = true
-      } else { 
-        EventBus.$root.isMobile = false;
-        this.isMobile = false
-      }
-    },
   }
 }
 </script>
@@ -80,18 +61,22 @@ export default {
 }
 
 :root {
+
 }
+
 html, body {
   margin: 0;
   padding: 0;
   height: 100%;
+  width: 100%;
   overflow: hidden;
 }
 #app {
   height: 100%;
-  width: 100vw;
+  width: 100%;
   font-size: 10pt;
 }
 a, a:hover, a:active, a:visited {
+  color: blue;
 }
 </style>

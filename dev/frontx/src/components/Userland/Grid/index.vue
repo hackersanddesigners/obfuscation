@@ -17,18 +17,21 @@
 
 <script>
 import Row from './Row'
+
 export default {
   name: 'Table',
   components: { Row },
   props: [ 
-    'scale',
-    'hidden'  
   ],
   data() {
     return {
+      scale: 10,
       definition: 10
     }
   },
+  computed: {
+    hidden() { return !this.$store.state.grid }
+  }
 }
 </script>
 
