@@ -1,16 +1,10 @@
 <template>
   <div
-    v-if="!user.deleted"
     :class="[
       'user',
       user.uid,
-      {
-        me: isMe,
-        disconnected: !user.connected
-      }
     ]"
     :style="{ 
-      '--userColor': user.connected ? user.color : 'lightgrey',
     }"
   >
     <Cursorr
@@ -44,6 +38,10 @@
 <script>
 import Cursorr from './Cursorr'
 import Message from './Message'
+
+      // '--userColor': user.connected ? user.color : 'lightgrey',
+      // '--userColor': user.connected ? `var(--${user.uid})` : 'lightgrey',
+      // '--userColor': `var(--${ user.uid })`,
 
 export default {
   name: 'User',

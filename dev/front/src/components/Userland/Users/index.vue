@@ -9,10 +9,12 @@
         <div id="moderate">
           <span 
             class="moderateButton"
-            @click="moderating ? moderating = false :
-            moderator ? moderating = true :
-            authenticating ? authenticating = false :
-            authenticating = true"
+            @click="
+              moderating ? moderating = false :
+              moderator ? moderating = true :
+              authenticating ? authenticating = false :
+              authenticating = true
+            "
           >
             <span v-if="moderating">—</span>
             <span v-else>M</span>
@@ -37,6 +39,7 @@
           :moderating="moderating"
           :messages="getUserMessages(user)"
 
+          @censorMessage="$emit('censorMessage', $event)"
           @deleteMessage="$emit('deleteMessage', $event)"
           @deleteUser="$emit('deleteUser', $event)"
           @goTo="$emit('goTo', $event)"
