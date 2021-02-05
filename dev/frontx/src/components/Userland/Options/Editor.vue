@@ -1,9 +1,7 @@
 <template>
-  <div id="registerContainer" 
-    :class="{
-    }"
-  >
+  <div id="registerContainer">
     <div id="register">
+
       <div 
         class="introText" 
         v-if="!registered"
@@ -11,39 +9,41 @@
         <h3>Welcome.</h3>
         <p>To join the conversation, please pick a display name and color. You can change these later.</p>
       </div>
+
       <div class="form">
+
           <input 
             ref="name" 
             type="text" 
             placeholder="pick a display name"
           >
-          <p  
-            class="error" 
-            v-if="invalid"
-          >Your display name cannot contain any spaces or special characters.
-          </p>
+
           <p 
             class="error"
-            v-else-if="tooshort"
-          >Your display name must contain at least 3 characters.
+            v-if="invalid || tooshort || inuse"
+          >
+            {{
+                invalid ? 'Your display name cannot contain any spaces or special characters.'
+              : tooshort ? 'Your display name must contain at least 3 characters.'
+              : inuse ? 'This name has already been taken by someone else.'
+              : null
+            }}
           </p>
-          <p 
-            class="error"
-            v-else-if="inuse"
-          >This name has already been taken by someone else.
-          </p>
+
           <input 
             ref="color" 
             type="text" 
             data-jscolor=""
             @input="updateColor"
           > 
+
           <input 
             ref="submit" 
             type="button" 
             value="save"
             @click.stop="save()" 
           >
+
       </div>
       <div 
         class="introText" 
@@ -57,17 +57,19 @@
 
 <script>
 import jscolor from '@eastdesire/jscolor'
+import { mapGetters, mapState } from 'vuex'
 
 export default {
-  name: 'Register',
-  props: [
-    'name',
-    'color',
-    'registered',
-    'usernames'
-  ],
+
+  name: 'Editor',
+
   data() {
     return {
+    
+      invalid: false,
+      tooshort: false,
+      inuse: false,
+
       colorPickerOpts: {
         format: 'rgba', 
         previewPosition: 'right', 
@@ -78,19 +80,28 @@ export default {
         sliderSize: 13, 
         shadow: false
       },
-      invalid: false,
-      tooshort: false,
-      inuse: false,
+
     }
   },
+
+  computed: {
+    ...mapState([
+      'registered'
+    ]),
+    ...mapGetters([
+      'me',
+      'userNames',
+    ])
+  },
+
   mounted() {
 
     jscolor.presets.default = this.colorPickerOpts
-    this.$refs.color.value = this.color
+    this.$refs.color.value = this.me.color
     jscolor.init()
 
     if (this.registered) { 
-      this.$refs.name.value = this.name
+      this.$refs.name.value = this.me.name
       this.$refs.name.select()
     }
 
@@ -115,9 +126,6 @@ export default {
 
       } else if (this.existingUser(name)) {
         this.inuse = true
-      
-      } else if (this.registered) {
-        this.updateAppearance(name, color)
 
       } else {
         this.register(name, color)
@@ -126,29 +134,20 @@ export default {
     },
 
     cancel() {
-      this.$emit('newMe', {
-        name: this.name,
-        color: this.color
-      })
-    },
-
-    updateAppearance(name, color) {
-      this.$emit('newMe', {
-        name: name, 
-        color: color 
-      })
-    },
-
-    updateColor() {
-      this.$emit('newColor', {
-        color: this.$refs.color.value 
-      })
+      this.$emit('stopEdit')
     },
 
     register(name, color) {
-      this.$emit('register', {
+      this.$store.dispatch('updateSelf', {
         name: name,
         color: color,
+      })
+      this.$emit('stopEdit')
+    },
+
+    updateColor() {
+      this.$store.dispatch('updateSelfAppearance', {
+        color: this.$refs.color.value
       })
     },
 
@@ -157,11 +156,11 @@ export default {
     },
 
     validateLength(string) {
-      return string.length > 1
+      return string.length > 2
     },
 
     existingUser(string) {
-      return (this.usernames.indexOf(string) > -1 && string !== this.name)
+      return (this.userNames.indexOf(string) > -1 && string !== this.me.name)
     },
 
     toSlug(str) {
@@ -194,9 +193,8 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  /* background: rgba(255, 255, 255, 0.603); */
-  /* z-index: 1000; */
   line-height: 1.2;
+  z-index: 1;
 }
 #register {
   width: 260px;
@@ -216,5 +214,11 @@ input {
 }
 input[type="button"] {
   cursor: pointer;
+}
+.error  {
+  margin: 5px;
+  margin-bottom: 0px;
+  font-size: 9pt;
+  color: red;
 }
 </style>

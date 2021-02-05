@@ -3,84 +3,285 @@
     :class="[
       'cursorContainer',
       {
-        uid: user.uid,
-        hovered: !scale && (user.typing || hovered),
+        hovered: user.typing || hovered,
         dragging: dragging
       }
     ]"
+
     :style="{ 
       left: ( 100 * user.x -  0.1) + '%',
       top: ( 100 * user.y -  0.2) + '%',
-      '--scale': scale ? 3 : 15,
+      '--scale': 15,
       '--userColor': `var(--${ user.uid })`,
     }"
+
+    @mouseover="hovered=true"
+    @mouseout="hovered=false"
   >
     <input 
-      v-if="!scale && isMe" 
+      v-if="isMe(user)" 
       ref="input"
       class="input"
       type="text" 
       placeholder="type message & press enter"
       autofocus
     />
+
     <span 
-      v-else-if="!scale"
+      v-else
       class="input"
     >
       {{ user.typing }}
     </span>
+
     <div class="cursor">
       <span 
-        v-if="!scale && (user.typing || hovered)" 
+        v-if="user.typing || hovered" 
         class="name"
       >
         {{ 
-          isMe ? "me" : 
+          isMe(user) ? "me" : 
           user.connected ? user.name : 
           user.name + ' (offline)' 
         }}
       </span>
-      <span v-else-if="!scale" class="name"></span>
     </div>
+
   </div>
 </template>
 
 <script>
+import { mapGetters, mapState } from 'vuex'
+
+
+
 export default {
+
   name: 'Cursorr',
-  components: {
-  },
-  props: [ 
-    'user',
-    'isMe',
-    'scale',
-    'hovered',
-    'dragging'
-  ], 
+
+  props: {
+    user: Object,
+    dragging: Boolean,
+  }, 
+
   data() {
     return {
+      hovered: false,
+      current: String,
+      navigation: false,
+      announcement: false,
     }
   },
+
+
+  computed: {
+    ...mapState([
+
+      'scale',
+      'windowSize',
+      'windowPos'
+    
+    ]),
+    ...mapGetters([
+
+      'me',
+      'isMe',
+      'messagesByUser',
+
+    ])
+  },
+
   mounted() {
-    if (this.isMe && !this.scale) {
+
+    if (this.isMe) {
       this.trackCursor()
     }
+
   },
+  
   methods: {
+
+
+    // send input live through $store.
+
+    updateTyping(text) {
+      this.$store.dispatch('updateSelfAppearance', {
+        typing: text,
+      })
+    },
+
+    
+    // construct, sanitize and send the message through
+    // the $socket.
+
+    sendMessage() {
+      const input = this.$refs.input
+      const message = this.constructMessage(input.value)
+
+      input.focus()
+
+
+      // configure message type:
+
+      if (this.announcement) {
+        message.announcement = true
+        this.announcement = false
+
+      } else if (this.navigation) {
+        message.navigation = true
+        this.$router.push(input.value)
+        this.navigation = false
+      }
+
+
+      // sanitize and send through $socket:
+
+      if (message.content && message.content != ' ') {
+        this.$socket.client.emit('message', message)
+      }
+      
+
+      // clear variables for next event.
+
+      this.current = null
+      input.value = ''
+      input.placeholder = ''
+    
+    },
+
+
+    // construct message from self and input.
+
+    constructMessage(text) {
+      const time = ((new Date()).getTime())
+      const message = {
+        uid: this.me.uid + time,
+        author: this.me.name,
+        authorUID: this.me.uid,
+        content: text,
+        time: time,
+        color: this.me.color,
+        x: this.me.x,
+        y: this.me.y,
+        deleted: false,
+        censored: false,
+        announcement: false
+      }
+      return message
+    },
+
+
+    // send cursor position live through $store.
+
     trackCursor() {
       document.addEventListener('mousemove', (e) => {
 
-        this.$emit('newPosition', { 
-          x: e.clientX,
-          y: e.clientY
+        this.$store.dispatch('updateSelfAppearance', {
+          x: (this.windowPos.x + e.clientX) / (this.windowSize.w * this.scale),
+          y: (this.windowPos.y + e.clientY) / (this.windowSize.h * this.scale),
+          connected: true,
         })
-        e.preventDefault()
 
+        e.preventDefault()
       })
-    }  
+    },
+
+
+    // handle user input, triggered from parent.
+
+    trackInput(e) {
+      let 
+        input = this.$refs.input,
+        key = e.which || e.keyCode
+
+
+      // focus input element on any key press.
+
+      if (input !== document.activeElement) {
+        input.focus()
+        if (key >= 48 && key <= 90) {
+          const char = String.fromCharCode(key)
+          input.value = char              
+        }
+      }
+
+
+      // starting a messge with '~' will navigate 
+      // to a user instead of sending the message.
+
+      if (input.value == "~") {
+        this.navigation = true
+
+
+      // starting a message with ! will force all
+      // users to navigate to it.
+
+      } else if (input.value == '!') {
+        this.announcement = true
+      }
+
+
+      // get user's message history and produces
+      // a terminal-like 'command history'.
+
+      const
+        msgs = this.messagesByUser(this.me),
+
+        first = msgs[0],
+        last = msgs[msgs.length-1],
+        previous = msgs[msgs.indexOf(this.current) - 1],
+        next = msgs[msgs.indexOf(this.current) + 1]
+
+
+      // UP and DOWN keys are used to scroll up 
+      // and down the user's message history.
+
+      if (key == 38) {
+
+        if (!this.current) {
+          this.current = last
+        } else if (previous) {
+          this.current = previous
+        } else {
+          this.current = first
+        } 
+
+        input.value = this.current.content
+        input.select()
+
+      } else if (key == 40) {
+
+        if (this.current && next) {
+          this.current = next
+        }
+        input.value = this.current.content
+        input.select()
+
+
+      // ENTER KEY: construct message and handle
+      // the "send" action.
+
+      } else if (key == 13) {
+        this.sendMessage()
+
+
+      //  ESAAPE KEY: clear and exit input.
+
+      } else if (key == 27) {
+        input.value = ''
+        input.blur()
+      }
+
+
+      // announce every key press to your peers.
+
+      this.updateTyping(input.value)
+
+    }, 
   }
 }
 </script>
+
 <style scoped>
 .cursorContainer {
   position: absolute;
@@ -153,7 +354,7 @@ export default {
 .cursorContainer.hovered .input, 
 .cursorContainer.hovered input,
 .cursorContainer.hovered input:hover,
-.cursorContainer.hovered input:active        {
+.cursorContainer.hovered input:active {
   width: 450px;
   max-width: 450px;
   /* height: 15px; */

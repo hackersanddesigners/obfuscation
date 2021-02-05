@@ -39,9 +39,6 @@
           :moderating="moderating"
           :messages="messagesByUser(user)"
 
-          @censorMessage="$emit('censorMessage', $event)"
-          @deleteMessage="$emit('deleteMessage', $event)"
-          @deleteUser="$emit('deleteUser', $event)"
           @goTo="$emit('goTo', $event)"
           @click.native.stop="$emit('goTo', user)"
         />
@@ -80,7 +77,11 @@ export default {
   },
   mounted() {
   },
+
+  sockets:  {
+  },
   methods: {
+
     authenticate() {
       const password = this.$refs.password.value
       if (password === '0000') {

@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import Axios from 'axios'
-import VueSocketIO from 'vue-socket.io'
-import SocketIO from 'socket.io-client'
 import VueMarkdown from 'vue-markdown'
+import VueSocketIOExt from 'vue-socket.io-extended'
+import { io } from 'socket.io-client'
 // import smoothscroll from 'smoothscroll-polyfill'
 
 import App from './App'
@@ -25,17 +25,9 @@ Vue.component('vue-markdown', VueMarkdown)
 // smoothscroll.polyfill()
 
 
-const socketConnection = SocketIO('https://io.karls.computer')
+const socket = io('https://io.karls.computer')
 
-Vue.use(new VueSocketIO({
-    connection: socketConnection,
-    vuex: {
-      store,
-      actionPrefix: "SOCKET_",
-      mutationPrefix: "SOCKET_",
-    },    
-  })
-)
+Vue.use(VueSocketIOExt, socket, { store })
 
 
 new Vue({

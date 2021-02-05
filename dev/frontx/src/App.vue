@@ -10,19 +10,36 @@
 import Home from './views/Home.vue'
 
 export default {
+
   name: 'App',
+
   components: {
     Home
   },
+
   data() {
     return {
       slug: window.location.pathname.replace(this.$publicPath, ''),
     }
   },
+
   created() {
+
+
+    // window dimension are important for positioning of everything.
+    
+    window.addEventListener('resize', () => {
+      this.$store.commit('resize', {
+        w: window.innerWidth,
+        h: window.innerHeight,
+      })
+    })
+
   },
+
   methods: {
   }
+
 }
 </script>
 

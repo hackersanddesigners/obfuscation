@@ -63,8 +63,8 @@ export default {
   width: 50%;
   height: 100%; */
   background: rgb(255,253,84);
-  box-shadow: 0px 0px calc(15px * var(--scale)) 0px rgba(0, 0, 0, 0.432);
-  /* box-shadow: inset 0px 0px calc(5px * var(--scale)) 0px rgba(0, 0, 0, 0.432); */
+  /* box-shadow: 0px 0px calc(15px * var(--scale)) 0px rgba(0, 0, 0, 0.432); */
+  box-shadow: inset 0px 0px calc(5px * var(--scale)) 0px rgba(0, 0, 0, 0.432);
   overflow: hidden;
   /* z-index: 1; */
   transition: all 0.4s ease;

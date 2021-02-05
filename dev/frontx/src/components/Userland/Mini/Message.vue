@@ -8,7 +8,6 @@
       left: `${ toNearestX(message.x, 0.4) }%`,
       top: `${ toNearestX(message.y, 0.4) }%`,
       width: `${ message.content.length / 2 }px`,
-      '--blur': `blur(${ (now - message.time) / 100000000 }px)`,
       '--userColor': `var(--${ message.author })`,
     }"
   >
@@ -16,28 +15,14 @@
 </template>
 
 <script>
-import moment from 'moment'
-
 export default {
   name: 'Message',
-  components: {
-  },
   props: [ 
     'message',
     'hovered',
     'dragging'
   ], 
-  data() {
-    return {
-      now: (new Date()).getTime()
-    }
-  },
-  mounted() {
-  },
   methods: {
-    fromNow(time) {
-      return moment(time).fromNow()
-    },
     toNearestX(num, X) {
       return Math.floor(100 * num / X) * X
     }

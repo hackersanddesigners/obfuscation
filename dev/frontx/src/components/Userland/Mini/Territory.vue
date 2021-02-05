@@ -16,18 +16,10 @@
 <script>
 export default {
   name: 'Territory',
-  components: {
-  },
   props: [ 
     'name',
     'borders'
   ], 
-  data() {
-    return {
-    }
-  },
-  mounted() {
-  },
   methods: {
     toNearestX(num, X) {
       return Math.floor(100 * num / X) * X

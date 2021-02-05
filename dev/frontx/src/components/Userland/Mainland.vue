@@ -1,48 +1,47 @@
 <template>
-  <div :style="userColors">
-    <header :class="{ blur: !registered || editing }" >
+  <div 
+    :style="userColors"
+    :class="{ 
+      blur: !registered || editing 
+    }"
+  >
+
+    <Editor
+      v-if="!registered || editing" 
+      @stopEdit="editing = false"
+    />
+
+    <header>
 
       <Minimap 
         :dragging="dragging"
         :miniDragging="miniDragging"
-
-        @miniDragging="miniDragging=true"
-        @miniStopDragging="miniDragging=false"
-        @newPosition="scrollTo($event, miniDragging ? 'auto' : 'smooth')"
+        @startedDrag="miniDragging = true"
+        @stoppedDrag="miniDragging = false"
+        @newPosition="handleMini($event)"
         @zero="centerMe"
       />
 
       <Options
-        :editing="editing"
-        :name="me.name"
-        :color="me.color"
-        :usernames="userNames"
-
-        @editMe="editing = true"
-        @newColor="updateColor"
-        @newMe="updateAppearance"
-        @register="saveMe"
-        @deleteMe="deleteMe"
-        @deleteEverything="deleteEverything"
+        @startEdit="editing = true"
       />
 
       <Userslist
-        @censorMessage="censorMessage($event)"
-        @deleteMessage="deleteMessage($event)"
-        @deleteUser="deleteUser($event)"
-        @goTo="scrollTo(positionOf($event), 'smooth')"
+        @goTo="goTo($event)"
       />
-      
+
     </header>
+
     <div 
       id="userlandContainer" 
       ref="userlandContainer"
-      :class="{ 
-        blur: !registered || editing,
-        dragging: dragging
-      }"
+      :class="{ dragging: dragging }"
+
       @scroll="setViewerPosition()"
+      @keyup="handleInput($event)"
+      @click="handleClick($event)"
     >
+
       <div 
         id="userland" 
         ref="userland"
@@ -51,67 +50,48 @@
           width: `${ 100 * scale }%`,
           '--scale': scale
         }"
-        @mousedown.stop="dragging=true"
+        @mousedown.stop="dragging = true"
         @mousemove="dragging ? drag($event) : null"
-        @mouseup.stop="dragging=false"
+        @mouseup.stop="dragging=false; dragRelease()"
       >
 
         <Grid />
-
-        <!-- CURSORS AND MESSAGES -->
 
         <Cursorr
           v-for="user in notDeletedUsers"
           :key="user.uid"
           :ref="isMe(user) ? 'me' : 'Users'"
-
           :user="user"
-          :isMe="isMe(user)"
-          :hovered="hovered"
           :dragging="isMe(user) ? dragging : null"
-
-          @mouseover.native="!isMe(user) ? hovered=true : null"
-          @mouseleave.native="hovered=false"
-
-          @newPosition="updatePosition"
         />
-
+        
         <Message
           v-for="message in notDeletedMessages"
-          ref="Messages"
-
           :key="message.uid"
           :message="message"
-          :isMe="message.author === me.uid"
-
-          @deleteMessage="deleteMessage($event)"
-          @mouseover.native="hovered=true"
-          @mouseleave.native="hovered=false"
+          :isMe="message.authorUID === me.uid"
+          @goTo="goTo(userByName($event))"
         />
-
-        <!-- ISLANDS -->
 
         <Territory
-          v-for="island in islands"
-          :key='island.name'
-          :name="island.name"
-          :borders="island.borders"
+          v-for="territory in territories"
+          :key='territory.name'
+          :name="territory.name"
+          :borders="territory.borders"
         />
-
-        <!-- OVERLAYS -->
-
-
+        
       </div>
     </div>
   </div>
 </template>
 
 <script>
+
 import { uid } from 'uid'
-import { mapState } from 'vuex'
-import { mapGetters } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 import Grid from './Grid'
+import Editor from './Options/Editor'
 import Minimap from './Mini/Map'
 import Options from './Options'
 import Userslist from './Users'
@@ -120,16 +100,9 @@ import Message from './User/Message'
 import Territory from './Territory'
 
 
-
-let 
-  userDBs = [], 
-  largestUserDB = {},
-  messagesDBs = [],
-  largestMessageDB = {}
-
-
-
 export default {
+
+
   name: 'Mainland',
 
   components: {
@@ -140,6 +113,7 @@ export default {
     Cursorr,
     Message,
     Territory,
+    Editor,
   },
 
   props: {
@@ -147,17 +121,14 @@ export default {
   },
 
   data () {
-    return {
-
-      doNotSave: false,
-      
-      me: Object,
+    return {      
 
       editing: false,
       scrolling: false,
       dragging: false,
       miniDragging: false,
-      hovered: false,
+
+      movement: {},
 
     }
   },
@@ -165,85 +136,82 @@ export default {
   computed: {
     ...mapState([
 
-      'version',
-
       'registered',
       'visited',
+      'blocked',
 
       'users',
       'messages',
-      'islands',
+      'territories',
 
       'scale',
-      'windowWidth',
-      'windowHeight',
-      'windowLeft',
-      'windowTop',
+      'windowPos',
 
     ]),
     ...mapGetters([
 
-      'islandByName',
-      'messagesByUser',
+      'me',
+      'isMe',
+
+      'territoryByName',
       'userByName',
 
       'userColors',
-      'userNames',
-      'connectedUsers',
       'notDeletedUsers',
       'notDeletedMessages',
 
-      'centerOf',
       'positionOf',
       'pixelsFrom'
 
-    ])
+    ]),
   },
 
   watch: {
-    wantsToView(thing) {
-      this.route(thing.type, thing.name)
+    wantsToView(zone) {
+      this.route(zone)
     }
   },
 
-  created() {
+  created() {   
 
-    // delete everything if local storage version is older than this version
-    
-    console.log(`Version: ${ localStorage.version }`)
+    let 
+      self,
+      users,
+      messages
 
-    if (localStorage.version != this.version) {
-      console.log('this version is outdated, clearing your storage.')
 
-      localStorage.clear()
-      localStorage.version = this.version
-    }      
-
-    // check if user is registered and get their datas 
+    // check if user is registered and get their datas.
     
     if (localStorage.me) {
       this.$store.commit('register')
-      this.me = JSON.parse(localStorage.me)
+      self = JSON.parse(localStorage.me)
 
-      if (this.me.deleted) {
+
+      // if the user is marked as deleted, they have 
+      // been blocked. The component is unmounted here.
+
+      if (self.deleted) {
         this.$store.commit('block')
       }
 
-    // if not registered, check if previously visited and get the
-    // previously defined UID
+
+    // if not registered, check if previously visited
+    // and get the previously defined UID and color.
 
     } else if (localStorage.uid) {
       this.$store.commit('visit')
-      this.me.uid = localStorage.uid
-      this.me.color = localStorage.color
+      self = {
+        uid: localStorage.uid,
+        color: localStorage.color
+      }
 
 
-    // if not visited, store the generated UID and color for 
-    // later reference (e.i. when the user comes back to register) 
+    // if not visited, store the generated UID and 
+    // color for later reference (i.e. when the user 
+    // comes back to register).
 
     } else {
-
-      this.me = {
+      self = {
         uid: uid(),
         connected: false,
         name: 'newUser-' + uid(),
@@ -252,344 +220,97 @@ export default {
         y: 0,
         typing: null,
       },
-
-      localStorage.uid = this.me.uid
-      localStorage.color = this.me.color
+      localStorage.uid = self.uid
+      localStorage.color = self.color
     }
 
-    this.$store.commit('setUser', { ...this.me })
-    this.$store.commit('setUID', this.me.uid)
 
-    // check if user hsa a DB of users
+    // update the app store with the UID and user.
+
+    this.$store.commit('setUID', self.uid)
+    this.$store.commit('setUser', self)
+
+
+    // check if user hsa a DB of users.
 
     if (localStorage.users) {
-      this.$store.commit('setUsers', JSON.parse(localStorage.users))
+      users = JSON.parse(localStorage.users)
+      this.$store.commit('setUsers', users)
     }
 
-    // check if user hsa a DB of messages
+
+    // check if user hsa a DB of messages.
 
     if (localStorage.messages) {
-      this.$store.commit('setMessages', JSON.parse(localStorage.messages))
+      messages = JSON.parse(localStorage.messages)
+      this.$store.commit('setMessages', messages)
     }
 
   },
   mounted() {
-    if (!this.me.deleted) {
 
-      // UI set-up
-        
-      window.addEventListener('resize', () => {
-        this.$store.commit('resize')
-      })
 
-      this.setViewerPosition()
+    // only do this if the user was not blocked.
 
-      // if there is a slug, navigate to it
+    if (!this.blocked) {
+
+
+      // if there is a slug, navigate to it.
 
       if (this.wantsToView) {
-        this.route(this.wantsToView.type, this.wantsToView.name)
+        this.route(this.wantsToView)
 
-      // else, land in the center
+
+      // else, land in the center.
 
       } else {
         setTimeout(() => {   
-          this.scrollTo(this.pixelsFrom(this.islands[0].borders), 'smooth')
+          this.scrollTo(
+            this.pixelsFrom(
+              this.territories[0].borders
+            ), 
+          'smooth')
         }, 50)
       }
 
-      // start tracking cursor
 
-      this.track()
+      // start tracking input.
+
+      // this.handleInput()
 
     }
   },
   sockets: {
 
-    connect() { 
-      if (!this.me.deleted) {
-        this.me.connected = true   
-        this.$store.commit('setUser', { ...this.me })
-        this.$socket.emit('user', this.me)
-      }
-    },
 
-    user(data) {
-      const user = JSON.parse(data)
-      if (user.uid !== this.me.uid) {
-        // this.$set(this.users, user.uid, user)
-        this.$store.commit('setUser', user)
-      } else if (user.deleted === true) {
-        this.me.deleted = true
-        this.$store.commit('setUser', { ...this.me })
-        localStorage.me = JSON.stringify(this.me)
-        window.location.reload(true)
-      }
-      this.$socket.emit('users', this.users)
-      this.$socket.emit('messages', this.messages)
-    },
-
-    users(data) {
-      const receivedDB = JSON.parse(data)
-      // const numberOfUsers = (this.getConnectedUsers()).length
-      // if (userDBs.length < numberOfUsers) {
-        // console.log(userDBs.length, numberOfUsers)
-        userDBs.push(receivedDB)   
-      // } else if (userDBs.length == numberOfUsers) {
-        // console.log(userDBs.length, numberOfUsers)
-        console.log(`Syncing ${userDBs.length} user DBs.`)
-        this.userDBsync()
-      // } else if (userDBs.length > numberOfUsers) {
-        // console.log('too many dbs, you did something wrong')
-      // }
-    },
+    // navigate to a recieved message if it's 
+    // an announcement.
 
     message(data) {
       const message = JSON.parse(data)
-      // this.$set(this.messages, message.uid, message)
-      this.$store.commit('setMessage', message)
-      this.$socket.emit('messages', this.messages)
-      if (message.announcement && (message.author !== this.me.uid)) {
-        this.scrollTo(this.positionOf(message), 'smooth')
+      if (message.announcement) {
+        this.scrollTo(
+          this.positionOf(message), 
+        'smooth')
       }
     },
-
-    messages(data) {
-      const receivedDB = JSON.parse(data)
-      // const numberOfUsers = (this.getConnectedUsers()).length
-      // if (messagesDBs.length < numberOfUsers) {
-        messagesDBs.push(receivedDB)      
-      // } else if (messagesDBs.length == numberOfUsers) {
-        console.log(`Syncing ${messagesDBs.length} message DBs.`)
-        this.messageDBsync()
-      // } else if (messagesDBs.length > numberOfUsers) {
-        // console.log('too many dbs, you did something wrong')
-      // }
-    },
-
-    appearance(data) {
-      const user = JSON.parse(data)
-      if (user.uid !== this.me.uid) {
-        this.$store.commit('setUser', user)
-        localStorage.users = JSON.stringify(this.users)
-      }
-    },
-
-    clearDBs() {
-      // mark all users as deleted
-      this.users = {}
-      localStorage.users = JSON.stringify(this.users)
-      // mark all messages as deleted
-      this.messages = {}
-      localStorage.messages = JSON.stringify(this.messages)
-
-      window.location.reload(true)
-    },
-
-    disconnect() { 
-      this.me.connected = false 
-      this.$store.commit('setUser', { ...this.me })
-      if (!this.doNotSave) {
-        localStorage.me = JSON.stringify(this.me)
-        for (let uid in this.users) {
-          if (uid !== this.me.uid) {
-            const user = { ...this.users[uid] }
-            user.connected = false
-            this.$store.commit('setUser', user)
-          } 
-        }
-      }
-      localStorage.users = JSON.stringify(this.users)
-      localStorage.messages = JSON.stringify(this.messages)
-    },
-
 
   },
+
   methods: {
 
-    isMe(user) {
-      return user.uid === this.me.uid
-    },
 
-    saveMe(newLook) {
-      this.me.name = newLook.name
-      this.me.color = newLook.color
-      this.$socket.emit('user', this.me)      
-      this.$store.commit('register')
-      this.editing = false
-      localStorage.me = JSON.stringify(this.me)
-    },
+    // custom router.
 
-    deleteMe() {
-      this.deleteUser(this.me)
-      this.doNotSave = true
-      localStorage.removeItem('me')
-      localStorage.removeItem('uid')
-      localStorage.removeItem('color')
-      window.location.reload(true)
-    },
+    route(zone) {
+      let 
+        type = zone.type,
+        name = zone.name,
+        position
 
-    deleteUser(user) {
-      this.messagesByUser(user).forEach((m) =>  {
-        this.deleteMessage(this.messages[m.uid])
-      })
-      this.$store.commit('deleteUser', user)
-      this.$socket.emit('user', user)
-    },
 
-    deleteMessage(message) {
-      this.$store.commit('deleteMessage', message)
-      this.$socket.emit('message', message)
-    },
+      // user slugs are preceded with "~".
 
-    censorMessage(message) {
-      this.$store.commit('censorMessage', message)
-      this.$socket.emit('message', message)
-    },
-
-    deleteEverything() {
-      this.$socket.emit('clearDBs')
-    },
-
-    updatePosition(newPosition) {
-      let x = (this.windowLeft + newPosition.x) / (this.windowWidth * this.scale)
-      let y = (this.windowTop + newPosition.y) / (this.windowHeight * this.scale)
-      this.me.x = x
-      this.me.y = y
-      this.me.connected = true
-      this.$store.commit('setUser', { ...this.me })
-      this.$socket.emit('appearance', this.me)
-    },
-
-    updateTyping(text) {
-      this.me.typing = text
-      this.$store.commit('setUser', { ...this.me })
-      this.$socket.emit('appearance', this.me)
-    },
-
-    updateColor(newLook) {
-      this.me.color = newLook.color
-      this.$store.commit('setUser', { ...this.me })
-      this.$socket.emit('appearance', this.me)
-    },
-
-    updateAppearance(newLook) {
-      this.me.name = newLook.name
-      this.me.color = newLook.color
-      this.$store.commit('setUser', { ...this.me })
-      this.$socket.emit('appearance', this.me)
-      this.editing = false
-      localStorage.me = JSON.stringify(this.me)
-    },
-
-    sendMessage(message) {
-      if (message.content && message.content != ' ') {
-        this.$socket.emit('message', message)
-      }
-    },
-
-    constructMessage(text) {
-      const time = ((new Date()).getTime())
-      const message = {
-        uid: this.me.uid + time,
-        author: this.me.uid,
-        content: text,
-        time: time,
-        color: this.me.color,
-        x: this.me.x,
-        y: this.me.y,
-        deleted: false,
-        censored: false,
-        announcement: false
-      }
-      return message
-    },
-
-    userDBsync() {
-
-      // get the DB with the most users
-      userDBs.sort((a, b) => Object.keys(b).length -  Object.keys(a).length)
-      largestUserDB = userDBs[0]
-
-      // iterate through each db to fully merge
-      userDBs.forEach(DB => {
-
-        // for every user in every DB
-        for (let uid in DB) {
-
-          // if user doesnt exist in your largest db, add them        
-          if (!largestUserDB[uid]) {
-            largestUserDB[uid] = DB[uid] 
-          }
-
-          // if user is marked as deleted, mark them as deleted
-          if (DB[uid].deleted) {
-            largestUserDB[uid].deleted = true
-          }
-
-          // if user has changed their name, inherit it
-          if (!DB[uid].name.startsWith('newUser-')) {
-            largestUserDB[uid].name = DB[uid].name
-          }
-        }
-      })
-
-      // point your own user DB to the newly merged largest DDB
-      for (let uid in largestUserDB) {
-        const user = largestUserDB[uid]
-        if (uid !== this.me.uid) {
-          // this.$set(this.users, uid, user)
-          this.$store.commit('setUser', user)
-        } 
-      }
-      localStorage.users = JSON.stringify(this.users)
-
-      // complete sync by clearing carrier variables
-      // userDBs = []
-      // largestUserDB = {}
-    },
-
-    messageDBsync() {
-
-      // get the DB with the most messagess
-      messagesDBs.sort((a, b) => Object.keys(b).length -  Object.keys(a).length)
-      largestMessageDB = messagesDBs[0]
-
-      // iterate through each db to fully merge
-      messagesDBs.forEach(DB => {
-
-        // for every message in every DB
-        for (let uid in DB) {
-
-          // if message doesnt exist in largest db, add it        
-          if (!largestMessageDB[uid]) {
-            largestMessageDB[uid] = DB[uid]   
-          }
-
-          // if message is marked as deleted, mark it as deleted
-          if (DB[uid].deleted) {
-            largestMessageDB[uid].deleted = true
-          }
-          if (DB[uid].censored) {
-            largestMessageDB[uid].censored = true
-          }
-        }
-      })
-
-      // point your own message DB to the newly merged largest DB
-      for (let uid in largestMessageDB) {
-        const message = largestMessageDB[uid]
-        // this.$set(this.messages, uid, message)
-        this.$store.commit('setMessage', message)
-      }
-      localStorage.messages = JSON.stringify(this.messages)
-
-      // complete sync by clearing carrier variables
-      // messagesDBs = []
-      // largestMessageDB = {}
-    },
-
-    route(type, name) {
-      let position
       if (type == 'user') {
         const user = this.userByName(name)
         if (user) {
@@ -597,30 +318,111 @@ export default {
         } else {
           console.log('not found')
         }
+
+      
+      // territory slugs are preceded with "#".
+      
       } else if (type == 'territory') {
-        const territory =  this.islandByName(name)
+        const territory = this.territoryByName(name)
         if (territory) {
           position = this.pixelsFrom(territory.borders)
         } else {
           console.log('not found')
         }
       }
+
+
+      // slugs map to locations on mainland.
+
       this.scrollTo(position, 'smooth')
     },
 
-    drag(e) {
-      this.scrollTo({
-        x: this.windowLeft - e.movementX,
-        y: this.windowTop - e.movementY
-      })
+
+    // tells the cursor component to handle input.
+
+    handleInput(e) {
+      if (!this.editing) {
+        this.$refs.me[0].trackInput(e)
+      }
     },
+
+
+    // tells the cursor component to handle click.
+
+    handleClick() {
+      if (!this.editing && !this.dragging) {
+        this.$refs.me[0].sendMessage()
+      }
+    },
+
+
+    // scroll to mini position.
+
+    handleMini(position) {
+      this.scrollTo(
+        position, 
+        this.miniDragging ? 'auto' : 'smooth')
+    },
+
+
+    // zoom to default scale and scroll to center.
 
     centerMe() {
       this.$store.commit('zero')
       setTimeout(() => {
-        this.scrollTo(this.positionOf({x: 0.5, y: 0.5}), 'smooth')
+        this.goTo({
+          x: 0.5,
+          y: 0.5
+        })
       }, 50)
     },
+
+
+    // go to zone (user, message, or territory).
+
+    goTo(zone) {
+      this.scrollTo(
+        this.positionOf(zone), 
+      'smooth')
+    },
+
+
+    // drag the userland div to scroll it.
+
+    drag(e) {
+      const position = {
+        x: this.windowPos.x - e.movementX,
+        y: this.windowPos.y - e.movementY
+      }
+      this.scrollTo(position)
+
+
+      // store the position for 'intertial throwing'.
+
+      this.movement = {
+        x: position.x,
+        y: position.y,
+        extraX: 10 * e.movementX,
+        extraY: 10 * e.movementY,
+      }
+    },
+
+
+    // 'intertial throwing' function.
+ 
+    dragRelease() {
+      if (Math.abs(this.movement.extraX) > 0) {
+        this.scrollTo({
+          x: this.movement.x - this.movement.extraX,
+          y: this.movement.y - this.movement.extraY
+        }, 'smooth')
+        this.movement.extraX -= 0.1
+        this.movement.extraY -= 0.1
+      }
+    },
+
+
+    // core of app navigation is this following:
 
     scrollTo(to, behavior) {
       this.$refs.userlandContainer.scroll({
@@ -630,6 +432,11 @@ export default {
       })
     },
 
+
+    // the 'viewerPosition' is the distance of the
+    // top-left corner of the window from the top-
+    // left corner of the (larger) userland div. 
+
     setViewerPosition() {
       this.$store.commit('viewerPosition', {
         x: this.$refs.userlandContainer.scrollLeft, 
@@ -637,119 +444,20 @@ export default {
       })
     },
 
+
+    // generate a random color.
+
     randomColor() {
       const 
         r = Math.floor(Math.random() * 256),
         g = Math.floor(Math.random() * 256),
         b = Math.floor(Math.random() * 256),
-        a = 1,
-        color = `rgb(${r}, ${g}, ${b}, ${a})`
-      return color
-    },
-
-    track() {
-      let 
-        input = this.$refs.me[0].$refs.input, // :]
-        current,
-        navigation,
-        announcement
-
-      this.$refs.userlandContainer.addEventListener('keyup', (e) => {
-        if (this.registered && !this.editing) {
-
-          const key = e.which || e.keyCode
-
-          if (input !== document.activeElement) {
-            input.focus()
-            if (key >= 48 && key <= 90) {
-              const char = String.fromCharCode(key)
-              input.value = char              
-            }
-          }
-
-          if (input.value == "~") {
-            navigation = true
-          } else if (input.value == '!') {
-            announcement = true
-          }
-
-          const msgs = this.messagesByUser(this.me)
-
-          const 
-            first = msgs[0],
-            last = msgs[msgs.length-1],
-            previous = msgs[msgs.indexOf(current) - 1],
-            next = msgs[msgs.indexOf(current) + 1]
-
-          if (key == 38) {
-            if (!current) {
-              current = last
-            } else if (previous) {
-              current = previous
-            } else {
-              current = first
-            } 
-            input.value = current.content
-            input.select()
-
-          } else if (key == 40) {
-            if (current && next) {
-              current = next
-              input.value = current.content
-              input.select()
-            }
-
-          } else if (key == 13) {
-
-            const message = this.constructMessage(input.value)
-
-            if (announcement) {
-              message.announcement = true
-              announcement = false
-
-            } else if (navigation) {
-              message.navigation = true
-              this.$router.push(input.value)
-              navigation = false
-      
-            }
-
-            this.sendMessage(message)
-            current = undefined
-
-            input.value = ''
-            input.placeholder = ''
-
-          } else if (key == 27) {
-            input.value = ''
-            input.blur()
-          }
-
-          this.updateTyping(input.value)
-
-          e.stopPropagation()
-          e.preventDefault()
-        }
-      })
-
-      this.$refs.userlandContainer.addEventListener('click', () => {
-        if (this.registered && !this.editing && !this.dragging) {
-          input.focus()
-
-          const message = this.constructMessage(input.value)
-
-          this.sendMessage(message)
-
-          current = undefined
-          input.value = ''
-          input.placeholder = ''
-
-        }
-      })
-
+        a = 1
+      return `rgb(${r}, ${g}, ${b}, ${a})`
     },
 
   },
+  
   
 }
 </script>
@@ -790,10 +498,8 @@ header {
   font-size: calc(1.7pt * var(--scale));
 }
 
-header.blur h1,
-header.blur #minimap,
-header.blur #userlist,
-#userlandContainer.blur {
+.blur header,
+.blur #userlandContainer {
   filter: blur(10px);
 }
 

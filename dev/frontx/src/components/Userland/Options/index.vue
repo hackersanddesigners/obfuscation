@@ -1,81 +1,66 @@
 <template>
   <div id="options">
-    <Register
-      v-if="!registered || editing" 
-      :registered="registered"
-      :name="name"
-      :color="color"
-      :usernames="usernames"
-
-      @newMe="$emit('newMe', $event)"
-      @newColor="$emit('newColor', $event)"
-      @register="$emit('register', $event)"
-    />
     <span class="title"> options </span>
+
     <div class="grid">
       <input 
         type="button" 
-        name="grid" 
         :value="grid ? 'hide grid' : 'show grid'" 
-
-        @click.stop="$store.commit('toggleGrid')"
+        @click.stop="toggleGrid"
       />
     </div>
+
     <div class="edituser">
       <input
         type="button"
-        name="edituser" 
         value="edit appearance"
-
-        @click.stop="$emit('editMe')"
+        @click.stop="$emit('startEdit')"
       />
     </div>
+
     <div class="storage">
       <input
         type="button"
-        name="storage" 
         value="delete me"
-
-        @click.stop="$emit('deleteMe')"
+        @click.stop="deleteSelf"
       />
     </div>
+
     <div class="db">
       <input
         type="button"
-        name="db" 
         value="delete everything"
-
-        @click.stop="$emit('deleteEverything')"
+        @click.stop="$socket.client.emit('clearDBs')"
       />
     </div>
+    
   </div>
 </template>
 
 <script>
-import Register from './Register'
+import { mapActions, mapMutations, mapState } from 'vuex'
 
 export default {
+
   name: 'Options',
-  components: {
-    Register
-  },
-  props: [ 
-    'editing',
-    'name',
-    'color',
-    'usernames'
-  ], 
-  data() {
-    return {
-    }
-  },
+
   computed: {
-    registered() { return this.$store.state.registered },
-    grid() { return this.$store.state.grid },
+    ...mapState([
+      'grid'
+    ])
   },
-  mounted() {
-  },
+
   methods: {
+    ...mapMutations([
+
+      'toggleGrid'
+
+    ]),
+    ...mapActions([
+
+      'deleteSelf'
+
+    ])
   }
 }
 </script>
@@ -86,7 +71,6 @@ export default {
   margin-top: 2vh;
   margin-left: 2vh;
   min-width: 10vw;
-  /* height: 10vh; */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -108,7 +92,6 @@ export default {
   align-items: center;
 }
 #options .db input {
-  /* background: red; */
   color: red;
 }
 input {

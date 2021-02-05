@@ -1,10 +1,10 @@
 <template>
   <div
     :style="{
-      width: width + unit,
-      height: height + unit,
-      left: left + unit,
-      top: top + unit,
+      width: width + 'px',
+      height: height + 'px',
+      left: left + 'px',
+      top: top + 'px',
     }"
   >
   </div>
@@ -13,23 +13,12 @@
 <script>
 export default {
   name: 'Window',
-  components: {
-  },
   props: [ 
     'width',
     'height',
     'left',
     'top'
   ], 
-  data() {
-    return {
-      unit: 'px'
-    }
-  },
-  mounted() {
-  },
-  methods: {
-  }
 }
 </script>
 
@@ -39,11 +28,8 @@ export default {
   position: absolute;
   border: 1px dashed grey;
   cursor: move;
-  /* box-shadow: 0 0 0px 500px rgba(0, 0, 0, 0.02); */
-  /* transition: box-shadow 0.1s ease; */
 }
  #viewport:hover {
-  /* box-shadow:none; */
   border-color: red;
 }
 </style>

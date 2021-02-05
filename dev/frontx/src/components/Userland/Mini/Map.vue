@@ -1,25 +1,26 @@
 <template>
   <div 
     id="minimap"
-    :class="{
-      hovered: hovered || dragging
-    }"
+    :class="{ hovered: hovered || dragging }"
     :style="{
       height: `${ height }px`,
       width: `${ width }px`
     }"
-      @mouseover="hovered=true"
-      @mouseout="hovered=false"
-      @mousedown="sendDesiredPosition($event); $emit('miniDragging')"
-      @mousemove="miniDragging ? sendDesiredPosition($event) : null"
-      @mouseup="$emit('miniStopDragging'); sendDesiredPosition($event)"
-    >
+
+    @mouseover="hovered=true"
+    @mouseout="hovered=false"
+
+    @mousedown="mouseDown($event)"
+    @mousemove="mouseMove($event)"
+    @mouseup="mouseUp($event)"
+  >
+
     <Cursorr
       v-for="user in users"
       :key="user.uid"
       :user="user"
-      :scale="scale"
     />
+
     <Message
       v-for="message in messages"
       :key="message.uid"
@@ -27,35 +28,41 @@
       :hovered="hovered"
       :dragging="dragging"
     />
+
     <Territory
-      v-for="island in islands"
-      :key='island.name'
-      :name="island.name"
-      :borders="island.borders"
+      v-for="territory in territories"
+      :key='territory.name'
+      :name="territory.name"
+      :borders="territory.borders"
     />
+
     <Window
       id="viewport"
-      ref="viewport"
-
       :width="width / scale"
       :height="height / scale"
       :left="left / scale"
       :top="top / scale"
     />
+
     <div class="zoom">
+
       <div class="in" 
         @mousedown.stop="$store.commit('zoomIn')"
         @mouseup.stop
       >+</div>
+
       <div class="out" 
         @mousedown.stop="$store.commit('zoomOut')"
         @mouseup.stop
       >-</div>
+
       <div class="zero" 
         @mousedown.stop="$emit('zero')"
         @mouseup.stop
       >○</div>
+
     </div>
+
   </div>
 </template>
 
@@ -63,37 +70,43 @@
 import { mapState } from 'vuex'
 import { mapGetters } from 'vuex'
 
-import Cursorr from '../User/Cursorr'
+import Cursorr from './Cursorr'
 import Message from './Message'
 import Territory from './Territory'
 import Window from './Window'
 
 export default {
+
+
   name: 'Map',
+
   components: {
     Cursorr,
     Message,
     Territory,
     Window,
   },
+
   props: [ 
     'dragging',
     'miniDragging'
   ], 
+
   data() {
     return {
       hovered: false
     }
   },
+
   computed: {
     ...mapState({
 
-      islands: state => state.islands,
+      territories: state => state.territories,
 
-      left: state => state.windowLeft / 5,
-      top: state => state.windowTop / 5,
-      width: state => state.windowWidth / 5,
-      height: state => state.windowHeight / 5,
+      left: state => state.windowPos.x / 5,
+      top: state => state.windowPos.y / 5,
+      width: state => state.windowSize.w / 5,
+      height: state => state.windowSize.h / 5,
       scale: state => state.scale,
       zoomIndex: state => state.scale * 5
     
@@ -105,11 +118,25 @@ export default {
 
     })
   },
-  watch: {
-  },
-  mounted() {
-  },  
+
   methods: {
+    
+    mouseDown(e) {
+      this.sendDesiredPosition(e)
+      this.$emit('startedDrag')
+    },
+
+    mouseMove(e) {
+      if (this.miniDragging) {
+       this.sendDesiredPosition(e)
+      }
+    },
+
+    mouseUp(e) {
+      this.$emit('stoppedDrag')
+      this.sendDesiredPosition(e)
+    },
+    
     sendDesiredPosition(e) {
       const 
         clickX = e.pageX - this.$el.offsetLeft,
@@ -122,7 +149,10 @@ export default {
 
       this.$emit('newPosition', {x,y})
     },
+
   }
+
+
 }
 </script>
 

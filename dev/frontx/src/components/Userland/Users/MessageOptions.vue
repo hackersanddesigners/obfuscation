@@ -11,17 +11,17 @@
     <span class="time"> {{ format(message.time) }} </span>
     <span 
       class="delete"
-      @click.stop="$emit('deleteMessage', message)"
+      @click.stop="deleteMessage(message)"
       >delete</span>
     <span 
       v-if="message.censored"
       class="delete"
-      @click.stop="$emit('censorMessage', message)"
+      @click.stop="censorMessage(message)"
       >uncensor</span>
     <span 
       v-else
       class="delete"
-      @click.stop="$emit('censorMessage', message)"
+      @click.stop="censorMessage(message)"
       >censor</span>
     <span class="goto"> {{ hovered ? '→' : ''  }}</span> 
   </div>
@@ -29,6 +29,7 @@
 
 <script>
 import moment from 'moment'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'MessageOptions',
@@ -46,6 +47,13 @@ export default {
   mounted() {
   },
   methods: {
+    ...mapActions([
+
+      'deleteMessage',
+      'censorMessage'
+      
+    ]),
+
     format(time) {
       return moment(time).format('MMM Do @ HH:mm:ss ')
     },
