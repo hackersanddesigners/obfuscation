@@ -2,6 +2,8 @@
 
 This is the development space for the Obfuscation workshop platform.  
 
+![](minimap.png)
+
 - → Current live website: https://obfuscationworkshop.org/.
 - → Latest development version: https://obfuscation.karls.computer/.
 - → CMS: https://api.obfuscation.karls.computer/.
