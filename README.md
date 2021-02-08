@@ -2,8 +2,14 @@
 
 This is the development space for the Obfuscation Workshop Platform. 
 
-- → Internal communication document: https://etherpad.hackersanddesigners.nl/p/platform-obfuscation.
-- → External communication document: https://pad.constantvzw.org/p/obfuscation_platframe_inventory.
+- → Current live website: https://obfuscationworkshop.org/.
+- → Latest development version: https://obfuscation.karls.computer/.
+- → CMS: https://api.obfuscation.karls.computer/.
+- → Socket Server: https://io.karls.computer/.
+
+
+- → Brianstorm, notes, references: https://etherpad.hackersanddesigners.nl/p/platform-obfuscation.
+- → Communication: https://pad.constantvzw.org/p/obfuscation_platframe_inventory.
 
 
 ### To-Do 

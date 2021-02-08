@@ -51,8 +51,8 @@
           '--scale': scale
         }"
         @mousedown.stop="dragging = true"
-        @mousemove="dragging ? drag($event) : null"
-        @mouseup.stop="dragging=false; dragRelease()"
+        @mousemove="drag($event)"
+        @mouseup.stop="dragRelease()"
       >
 
         <Grid />
@@ -250,32 +250,24 @@ export default {
   mounted() {
 
 
-    // only do this if the user was not blocked.
+    // if there is a slug, navigate to it.
 
-    if (!this.blocked) {
-
-
-      // if there is a slug, navigate to it.
-
-      if (this.wantsToView) {
-        this.route(this.wantsToView)
+    if (this.wantsToView) {
+      this.route(this.wantsToView)
 
 
-      // else, land in the center.
+    // else, land in the center.
 
-      } else {
-        setTimeout(() => {   
-          this.scrollTo(
-            this.pixelsFrom(
-              this.territories[0].borders
-            ), 
-          'smooth')
-        }, 50)
-      }
-    
+    } else {
+      setTimeout(() => {   
+        this.scrollTo(
+          this.pixelsFrom(
+            this.territories[0].borders
+          ), 
+        'smooth')
+      }, 50)
     }
-
-
+  
 
   },
   sockets: {
@@ -388,20 +380,22 @@ export default {
     // drag the userland div to scroll it.
 
     drag(e) {
-      const position = {
-        x: this.windowPos.x - e.movementX,
-        y: this.windowPos.y - e.movementY
-      }
-      this.scrollTo(position)
+      if (this.dragging) {
+        const position = {
+          x: this.windowPos.x - e.movementX,
+          y: this.windowPos.y - e.movementY
+        }
+        this.scrollTo(position)
 
 
-      // store the position for 'intertial throwing'.
+        // store the position for 'intertial throwing'.
 
-      this.movement = {
-        x: position.x,
-        y: position.y,
-        extraX: 10 * e.movementX,
-        extraY: 10 * e.movementY,
+        this.movement = {
+          x: position.x,
+          y: position.y,
+          extraX: 10 * e.movementX,
+          extraY: 10 * e.movementY,
+        }
       }
     },
 
@@ -409,6 +403,7 @@ export default {
     // 'intertial throwing' function.
  
     dragRelease() {
+      this.dragging = false
       if (Math.abs(this.movement.extraX) > 0) {
         this.scrollTo({
           x: this.movement.x - this.movement.extraX,
