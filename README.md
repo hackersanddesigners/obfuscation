@@ -1,6 +1,6 @@
 # Obfuscation
 
-This is the development space for the Obfuscation workshop platform. 
+This is the development space for the Obfuscation workshop platform.  
 
 - → Current live website: https://obfuscationworkshop.org/.
 - → Latest development version: https://obfuscation.karls.computer/.
