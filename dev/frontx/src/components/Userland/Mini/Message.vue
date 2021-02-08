@@ -8,7 +8,7 @@
       left: `${ toNearestX(message.x, 0.4) }%`,
       top: `${ toNearestX(message.y, 0.4) }%`,
       width: `${ message.content.length / 2 }px`,
-      '--userColor': `var(--${ message.author })`,
+      '--userColor': `var(--${ message.authorUID })`,
     }"
   >
   </div>

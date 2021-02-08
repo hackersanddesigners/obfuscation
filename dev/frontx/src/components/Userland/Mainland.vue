@@ -272,13 +272,11 @@ export default {
           'smooth')
         }, 50)
       }
-
-
-      // start tracking input.
-
-      // this.handleInput()
-
+    
     }
+
+
+
   },
   sockets: {
 

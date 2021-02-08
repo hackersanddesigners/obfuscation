@@ -4,6 +4,11 @@ import _ from 'lodash'
 
 Vue.use(Vuex)
 
+
+// we will use the following variables to temporarily
+// hold the dictionaries we will regularly use to merge
+// and sync databases.
+
 let 
   userDBs = [], 
   largestUserDB = {},
@@ -13,10 +18,14 @@ let
 const store = new Vuex.Store({
 
 
+  // strict mode is only enabled for dev environment.
+
   strict: process.env.NODE_ENV !== 'production',
 
-
   state: {
+
+
+    // initial values for application state.
 
     version: 6,
     save: true,
@@ -27,9 +36,17 @@ const store = new Vuex.Store({
     visited: false,
     blocked: false,
 
+
+    // users and messages are populated by a combi-
+    // nation of local storage and conflict-free data
+    // replication with other peers over the socket.
+
     users: {},
 
     messages: {},
+
+
+    // territories are pre-defined here.
 
     territories: [
       { 
@@ -40,6 +57,10 @@ const store = new Vuex.Store({
         },
       },
     ],
+
+
+    // default vlaues for map position, dimensions, 
+    // grid, and scale (zoom).
 
     scale: 5,
     grid: true,
@@ -57,6 +78,9 @@ const store = new Vuex.Store({
 
   mutations: {
 
+
+    // app state mutations.
+
     doNotSave: state => state.save = false,
     setUID: (state, uid) => state.uid = uid,
 
@@ -64,11 +88,21 @@ const store = new Vuex.Store({
     visit: state => state.visited = true,
     block: state => state.blocked = true,
 
+
+    // app database mutations.
+
     setUsers: (state, users) => state.users = users,
-    setUser: (state, user) => Vue.set(state.users, user.uid, user),
+    setUser: (state, user) => { 
+      Vue.set(state.users, user.uid, user)
+    },
 
     setMessages: (state, messages) => state.messages = messages,
-    setMessage: (state, message) => Vue.set(state.messages, message.uid, message),
+    setMessage: (state, message) => {
+      Vue.set(state.messages, message.uid, message)
+    },
+
+
+    // app interface mutations.
 
     zero: state => state.scale = 5,
     zoomIn: state => state.scale += 0.25,
@@ -83,18 +117,46 @@ const store = new Vuex.Store({
 
   actions: {
 
+
+    // SOCKET actions: all actions preceded with a 
+    // 'socket_' describe the client behaviour when
+    // recieving a message from other sockets.
+
+    // '$socket.client.emit(...) sends messages of
+    // different kinds to ALL other connected peers.
+
     socket_connect({ state, commit }) {
+
+
+      // when you connect, if you are not blocked,
+      // announce your presence to everyone.
+
       if (!state.users[state.uid].deleted) {
         commit('setUser', state.users[state.uid])
-        this._vm.$socket.client.emit('user', state.users[state.uid])
+        this._vm.$socket.client.emit(
+          'user', state.users[state.uid]
+        )
       }
     },
+
+
+    // then, the following action will be run by
+    // every peer that recieves your announcement,
+    // including you.
 
     socket_user({ state, commit, dispatch }, data) {
       const user = JSON.parse(data)
 
+
+      // first, if the reccieved user is not you, 
+      // they are committed to your local database.
+
       if (user.uid !== state.uid) {
         commit('setUser', user)
+
+
+      // else, if they are you and you are 'blocked',
+      // you are deleted again as a double-check.
 
       } else if (user.deleted === true) {
         dispatch('deleteUser', user)
@@ -103,9 +165,22 @@ const store = new Vuex.Store({
         window.location.reload(true)
       }
 
-      this._vm.$socket.client.emit('users', state.users)
-      this._vm.$socket.client.emit('messages', state.messages)
+
+      // then, you send everyone your databases of  
+      // users and messages for a sync round. All of
+      // the connected peers do this.
+
+      this._vm.$socket.client.emit(
+        'users', state.users
+      )
+      this._vm.$socket.client.emit(
+        'messages', state.messages
+      )
     },
+
+
+    // you will recieve many databases of users; 
+    // add them to an array and start syncing.
 
     socket_users({ dispatch }, data) {
       const receivedDB = JSON.parse(data)
@@ -122,11 +197,26 @@ const store = new Vuex.Store({
       // }
     },
 
+
+    // commit every recieved message to your
+    // database of messages.
+
     socket_message({ state, commit }, data) {
       const message = JSON.parse(data)
       commit('setMessage', message)
-      this._vm.$socket.client.emit('messages', state.messages)
+
+
+      // then request a messages database sync.
+
+      this._vm.$socket.client.emit(
+        'messages', state.messages
+      )
     },
+
+
+    // same as receiving a database of users:
+    // when you recieve a databases of messages, 
+    // add it to an array and start syncing.
 
     socket_messages({ dispatch }, data) {
       const receivedDB = JSON.parse(data)
@@ -141,6 +231,11 @@ const store = new Vuex.Store({
       // }
     },
 
+
+    // when a user changes their position, live
+    // input or color, you commit them to your
+    // database without requiring a sync.
+
     socket_appearance({ state, commit }, data) {
       const user = JSON.parse(data)
       if (user.uid !== state.uid) {
@@ -149,6 +244,31 @@ const store = new Vuex.Store({
       }
     },
 
+
+    // when you are disconnected (reloaded page
+    // or connection timed-out), mark everyone as 
+    // disconnected and save databases locally.
+
+    socket_disconnect({ state, commit }) { 
+      if (state.save) {
+        localStorage.me = JSON.stringify(state.users[state.uid])
+        for (let uid in state.users) {
+          // if (uid !== state.uid) {
+            const user = { ...state.users[uid] }
+            user.connected = false
+            commit('setUser', user)
+          // } 
+        }
+      }
+      localStorage.users = JSON.stringify(state.users)
+      localStorage.messages = JSON.stringify(state.messages)
+    },
+
+
+    // exceptional action, triggered for everyone
+    // if anyone clicks the 'delete everything'
+    // button. Development purposes only.
+
     socket_clearDBs({ commit }) {
       commit('setUsers', {})
       commit('setMessages', {})
@@ -156,36 +276,70 @@ const store = new Vuex.Store({
       window.location.reload(true)
     },
 
-    socket_disconnect({ state, commit }) { 
-      if (state.save) {
-        localStorage.me = JSON.stringify(state.users[state.uid])
-        for (let uid in state.users) {
-          if (uid !== state.uid) {
-            const user = { ...state.users[uid] }
-            user.connected = false
-            commit('setUser', user)
-          } 
-        }
-      }
-      localStorage.users = JSON.stringify(state.users)
-      localStorage.messages = JSON.stringify(state.messages)
-    },
+
+    // the following actions can only be triggered
+    // by the user themselves and not the swarm.
+
+    // the following is for when you change your name.
 
     updateSelf({ state, commit }, newSelf) {
       const oldSelf = state.users[state.uid]
       const mergedSelf = { ...oldSelf, ...newSelf }
       commit('setUser', mergedSelf)
       commit('register')
-      this._vm.$socket.client.emit('user', mergedSelf)      
+
+
+      // announce your new self to the swarm and save.
+
+      this._vm.$socket.client.emit(
+        'user', mergedSelf
+      )      
       localStorage.me = JSON.stringify(mergedSelf)
     },
+
+
+    // triggered on every position, input, or color
+    // change; basically always running.
 
     updateSelfAppearance({ state, commit }, newSelf) {
       const oldSelf = state.users[state.uid]
       const mergedSelf = { ...oldSelf, ...newSelf }
       commit('setUser', mergedSelf)
-      this._vm.$socket.client.emit('appearance', mergedSelf)
+      this._vm.$socket.client.emit(
+        'appearance', mergedSelf
+      )
     },
+
+
+    // DELETING: nothing is ever actually 'deleted'
+    // from any database, only markd as deleted. This
+    // is because the database sync/merge logic will
+    // always favour the largest database.
+
+    deleteUser({ state, commit, dispatch }, user ) {
+      const cloned = { ...state.users[user.uid] }
+      cloned.deleted = true
+      commit('setUser', cloned)
+      this._vm.$socket.client.emit(
+        'user', cloned
+      )
+
+      // deleting a user == blocking them and then
+      // deleting all their messages.
+
+      for(let uid in state.messages) {
+        const message = state.messages[uid]
+        if (message.authorUID == user.uid) {
+          dispatch('deleteMessage', message)
+        }
+      }
+    },
+
+
+    // special treatment for deleting yourself:
+    // your local storage is cleared so that you can
+    // re-join as a new user that is not marked as
+    // deleted / blocked.
 
     deleteSelf({ state, commit, dispatch }) {
       commit('doNotSave')
@@ -194,32 +348,31 @@ const store = new Vuex.Store({
       window.location.reload(true)
     },
 
-    deleteUser({ state, commit, dispatch }, user ) {
-      for(let uid in state.messages) {
-        const message = state.messages[uid]
-        if (message.authorUID == user.uid) {
-          dispatch('deleteMessage', message)
-        }
-      }
-      const cloned = { ...state.users[user.uid] }
-      cloned.deleted = true
-      commit('setUser', cloned)
-      this._vm.$socket.client.emit('user', cloned)
-    },
+
+    // deleting a message marks it as deleted.
 
     deleteMessage({ state, commit }, message ) {
       const cloned = { ...state.messages[message.uid] }
       cloned.deleted = true
       commit('setMessage', cloned)
-      this._vm.$socket.client.emit('message', cloned)
+      this._vm.$socket.client.emit(
+        'message', cloned
+      )
     },
+
+    // censoring a message marks it as censored.
 
     censorMessage({ state, commit }, message ) {
       const cloned = { ...state.messages[message.uid] }
       cloned.censored = !state.messages[message.uid].censored
       commit('setMessage', cloned)
-      this._vm.$socket.client.emit('message', cloned)
+      this._vm.$socket.client.emit(
+        'message', cloned
+      )
     },
+
+
+    // The database sync and merge logic for users.
 
     userDBsync({ state, commit }) {
 
@@ -263,6 +416,9 @@ const store = new Vuex.Store({
       // userDBs = []
       // largestUserDB = {}
     },
+
+
+    // The database sync and merge logic for messages.
 
     messageDBsync({ state, commit }) {
 
@@ -311,12 +467,15 @@ const store = new Vuex.Store({
 
   getters: {
 
-    me: state => {
-      return state.users[state.uid]
-    },
+    me: state => state.users[state.uid],
 
-    isMe: state => user => {
-      return user.uid === state.uid
+    isMe: state => user => user.uid === state.uid,
+
+    userByName: (state, getters) => (name) => {
+      const found = getters.usersArray.find(u => u.name == name) 
+      if (found) {
+        return state.users[found.uid] 
+      }
     },
 
     territoryByName: state => name => {
@@ -332,13 +491,6 @@ const store = new Vuex.Store({
         }
       }
       return userMessages
-    },
-
-    userByName: (state, getters) => (name) => {
-      const found = getters.usersArray.find(u => u.name == name) 
-      if (found) {
-        return state.users[found.uid] 
-      }
     },
 
     userColors: state => {
