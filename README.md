@@ -25,8 +25,3 @@ This is the development space for the Obfuscation workshop platform.
 
 [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported](https://creativecommons.org/licenses/by-nc-sa/3.0/)
 
-
-
-
-
-
