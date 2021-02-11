@@ -194,7 +194,7 @@ export default {
   justify-content: center;
   align-items: center;
   line-height: 1.2;
-  z-index: 1;
+  z-index: 3;
 }
 #register {
   width: 260px;

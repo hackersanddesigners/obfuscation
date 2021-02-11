@@ -103,6 +103,7 @@
     </div>
 
     <Overlay
+      id="overlay"
       :territory="territoryBySlug(location.slug)"
     />
 
@@ -580,6 +581,8 @@ header > div {
 }
 
 .blur header,
+.blur #location,
+.blur #overlay,
 .blur #userlandContainer {
   filter: blur(10px);
 }
