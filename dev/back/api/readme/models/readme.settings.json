@@ -1,0 +1,23 @@
+{
+  "kind": "singleType",
+  "collectionName": "readmes",
+  "info": {
+    "name": "Readme"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "Title": {
+      "type": "string"
+    },
+    "Body": {
+      "type": "richtext"
+    },
+    "UID": {
+      "type": "uid"
+    }
+  }
+}

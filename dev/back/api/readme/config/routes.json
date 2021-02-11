@@ -1,0 +1,28 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/readme",
+      "handler": "readme.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/readme",
+      "handler": "readme.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/readme",
+      "handler": "readme.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}
