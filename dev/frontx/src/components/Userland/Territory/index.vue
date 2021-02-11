@@ -1,7 +1,7 @@
 <template>
   <div 
     class="territory"
-    :id="id"
+    :id="slug"
     :style="{
       left: `${ toNearestX(borders.x, 0.4) }%`,
       top: `${ toNearestX(borders.y, 0.4) }%`,
@@ -12,9 +12,9 @@
 
     <Island
       :name="name"
-      :id="id"
+      :slug="slug"
       :content="content"
-      @more="$router.push(`#${name}`); more=true"
+      @more="$router.push(`#${slug}`); more=true"
     />
 
     <Overlay
@@ -38,7 +38,7 @@ export default {
   },
   props: [
     'name',
-    'id',
+    'slug',
     'borders',
   ],
   data() {
@@ -51,7 +51,7 @@ export default {
   },
 
   created() {
-    this.$http.get(`${ this.$apiURL }/${ this.id }`)
+    this.$http.get(`${ this.$apiURL }/${ this.slug }`)
       .then((response) => { 
         this.content = response.data
       })

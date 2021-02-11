@@ -10,7 +10,7 @@
     <div class="header">
       <h1
         class="title"
-        @click="$router.push(`#${id}`)"
+        @click="$router.push(`#${slug}`)"
       > 
         {{ content.Title }} 
       </h1>
@@ -35,7 +35,7 @@ export default {
   },
   props: [
     'name',
-    'id',
+    'slug',
     'content'
   ],
   data() {

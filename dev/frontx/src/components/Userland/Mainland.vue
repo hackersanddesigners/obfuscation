@@ -11,6 +11,10 @@
       @stopEdit="editing = false"
     />
 
+    <div id="location">
+      <span> #{{location.slug}} </span>
+    </div>
+
     <header>
 
       <div id="navTitle">
@@ -91,9 +95,9 @@
 
         <Territory
           v-for="territory in territories"
-          :key='territory.id'
+          :key='territory.slug'
           :name="territory.name"
-          :id="territory.id"
+          :slug="territory.slug"
           :borders="territory.borders"
         />
         
@@ -165,6 +169,7 @@ export default {
       'messages',
       'territories',
 
+      'location',
       'scale',
       'windowPos',
 
@@ -174,7 +179,8 @@ export default {
       'me',
       'isMe',
 
-      'territoryByName',
+      'territoryBySlug',
+      'territoryByBorders',
       'userByName',
 
       'userColors',
@@ -334,7 +340,7 @@ export default {
       // territory slugs are preceded with "#".
       
       } else if (type == 'territory') {
-        const territory = this.territoryByName(name)
+        const territory = this.territoryBySlug(name)
         if (territory) {
           position = this.pixelsFrom(territory.borders)
         } else {
@@ -452,10 +458,14 @@ export default {
     // left corner of the (larger) userland div. 
 
     setViewerPosition() {
-      this.$store.commit('viewerPosition', {
-        x: this.$refs.userlandContainer.scrollLeft, 
+      let pos = {
+        x: this.$refs.userlandContainer.scrollLeft,
         y: this.$refs.userlandContainer.scrollTop
-      })
+      }
+      this.$store.commit('viewerPosition', pos)
+      this.$store.commit('setLocation', 
+        this.territoryByBorders(pos)
+      )
     },
 
 
@@ -478,6 +488,24 @@ export default {
 
 <style>
 
+#location {
+  position: absolute;
+  width: 100%;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+}
+
+#location span {
+  margin: 2vh;
+  padding: 0.5vh;
+  border-radius: 5px;
+  color: white;
+  background: black;
+  font-family: 'jet';
+}
+
+
 header {
   position: absolute;
   width: 0;
@@ -487,7 +515,6 @@ header {
   z-index: 2;
   transition: filter 0.3s ease;
 }
-
 #navTitle {
   box-sizing: border-box;
   position: relative;
@@ -495,7 +522,7 @@ header {
   margin-left: 2vh;
   font-size: 14pt;
   display: flex;
-  background: white;
+  background: inherit;
 }
 #navTitle span {
   margin-right: 5px;
@@ -528,6 +555,7 @@ header {
   left: 0px;
   font-family: jet;
   font-size: calc(1.7pt * var(--scale));
+  background: rgb(240, 240, 240);
 }
 
 .blur header,

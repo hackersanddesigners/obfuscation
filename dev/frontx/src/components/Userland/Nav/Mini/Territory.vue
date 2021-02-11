@@ -33,12 +33,13 @@ export default {
 .mini-territory {
   position: absolute;
   display: flex;
+  border: 1px solid grey;
 }
 .mini-territory .box {
   margin: auto;
   height: 40%;
   width: 40%;
-  border: 1px solid grey;
+  /* border: 1px solid grey; */
   /* border-radius: 100%; */
 }
 </style>

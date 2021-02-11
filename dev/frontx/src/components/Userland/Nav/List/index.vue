@@ -9,10 +9,11 @@
 
     <Territory
       v-for="territory in territories"
-      :key='territory.id'
+      :key='territory.slug'
       :name="territory.name"
-      :id="territory.id"
+      :slug="territory.slug"
       :borders="territory.borders"
+      @click.native.stop="$router.push(`#${territory.slug}`)"
     />
 
   </div>

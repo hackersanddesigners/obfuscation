@@ -51,7 +51,7 @@ const store = new Vuex.Store({
     territories: [
       { 
         name: 'The Reception',
-        id: 'readme',
+        slug: 'reception',
         borders: {
           x: 0.4,
           y: 0.4,
@@ -59,7 +59,7 @@ const store = new Vuex.Store({
       },
       { 
         name: 'The Exhibition Space',
-        id: 'exhibition',
+        slug: 'exhibition',
         borders: {
           x: 0,
           y: 0,
@@ -67,7 +67,7 @@ const store = new Vuex.Store({
       },
       { 
         name: 'The Workshop Space and Time Table',
-        id: 'timetable',
+        slug: 'timetable',
         borders: {
           x: 0.5,
           y: 0,
@@ -79,8 +79,9 @@ const store = new Vuex.Store({
     // default vlaues for map position, dimensions, 
     // grid, and scale (zoom).
 
+    location: {},
     scale: 5,
-    grid: true,
+    grid: false,
     windowSize: {
       w: window.innerWidth,
       h: window.innerHeight,
@@ -121,6 +122,10 @@ const store = new Vuex.Store({
 
     // app interface mutations.
 
+    setLocation: (state, newLocation) => {
+      // Vue.set(state, state.location, newLocation)
+      state.location = newLocation
+    },
     zero: state => state.scale = 5,
     zoomIn: state => state.scale += 0.25,
     zoomOut: state  => state.scale > 1 ? state.scale -= 0.25 : null, 
@@ -496,7 +501,30 @@ const store = new Vuex.Store({
     },
 
     territoryByName: state => name => {
-      return state.territories.find(u => u.name == name) 
+      return state.territories.find(t => t.name == name) 
+    },
+
+
+    territoryBySlug: state => slug => {
+      return state.territories.find(t => t.slug == slug) 
+    },
+
+    territoryByBorders: (state, getters) => pos => {
+      let general = {
+        name: 'general',
+        slug: 'general'
+      }
+      let coords = getters.coordsFrom(pos)
+      let found = state.territories.find((territory) => {
+        if (coords.x >= territory.borders.x - 1 / state.scale
+            && coords.x < territory.borders.x + 1 / state.scale
+            && coords.y >= territory.borders.y - 1 / state.scale
+            && coords.y < territory.borders.y + 1 / state.scale
+        ) {
+            return territory
+          }
+        }) 
+      return found || general
     },
 
     messagesByUser: state => user => {
@@ -573,6 +601,15 @@ const store = new Vuex.Store({
         y: coords.y * state.scale * state.windowSize.h,
         w: coords.w || 0,
         h: coords.h || 0,
+      }
+    },
+
+    coordsFrom: state => pixels => {
+      return {
+        x: pixels.x / (state.scale * state.windowSize.w),
+        y: pixels.y / (state.scale * state.windowSize.h),
+        w: pixels.w || 0,
+        h: pixels.h || 0,
       }
     },
   

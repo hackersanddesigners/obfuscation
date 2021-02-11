@@ -11,15 +11,15 @@
     "draftAndPublish": true
   },
   "attributes": {
-    "Title": {
+    "name": {
       "type": "string"
     },
-    "Body": {
+    "body": {
       "type": "richtext"
     },
     "slug": {
       "type": "uid",
-      "targetField": "Title"
+      "targetField": "name"
     },
     "borders": {
       "type": "json"

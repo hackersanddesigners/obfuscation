@@ -38,7 +38,7 @@ table {
   width: 100%;
   height: 100%;
   border-collapse: collapse;
-  opacity: 1;
+  opacity: 0.15;
   transition: opacity 0.2s ease;
   pointer-events: none;
 }
