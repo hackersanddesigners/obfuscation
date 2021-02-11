@@ -1,10 +1,10 @@
 <template>
   <div
     class="mini-territory"
-    :id=" 'mini-' + id"
+    :id=" 'mini-' + territory.slug"
     :style="{ 
-      left: `${ toNearestX(borders.x, 0.4) }%`,
-      top: `${ toNearestX(borders.y, 0.4) }%`,
+      left: `${ toNearestX(territory.borders.x, 0.4) }%`,
+      top: `${ toNearestX(territory.borders.y, 0.4) }%`,
       width: `${ 20 }%`,
       height: `${ 20 }%`,
     }"
@@ -17,9 +17,7 @@
 export default {
   name: 'Territory',
   props: [ 
-    'name',
-    'id',
-    'borders'
+    'territory'
   ], 
   methods: {
     toNearestX(num, X) {
@@ -31,6 +29,7 @@ export default {
 
 <style>
 .mini-territory {
+  box-sizing: border-box;
   position: absolute;
   display: flex;
   border: 1px solid grey;

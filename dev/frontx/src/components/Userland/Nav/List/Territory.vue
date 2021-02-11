@@ -1,10 +1,10 @@
 <template>
   <li
     class="list-territory"
-    :id=" 'list-' + id"
+    :id=" 'list-' + territory.slug"
   >
     <span class="bullet"> ... </span>
-    <span class="name"> {{ name }} </span>
+    <span class="name"> {{ territory.name }} </span>
     <span class="goto"> → </span>
   </li>
 </template>
@@ -13,9 +13,7 @@
 export default {
   name: 'Territory',
   props: [ 
-    'name',
-    'id',
-    'borders'
+    'territory'
   ], 
   methods: {
     toNearestX(num, X) {
@@ -28,7 +26,8 @@ export default {
 <style>
 .list-territory {
   list-style: none;
-  margin: 0.5vh 0.5vw;
+  margin: 0.5vh;
+  margin-bottom: 1vh;
   /* display: flex; */
   /* align-items: center; */
 }

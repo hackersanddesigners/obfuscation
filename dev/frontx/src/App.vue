@@ -75,7 +75,11 @@ export default {
 }
 
 :root {
-
+  --disconnected: rgb(156, 156, 156);
+  --ui-border-radius: 7.5px;
+  --ui-box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.199);
+  --island-curve: 100px;
+  --island-shadow: 0 0 30px 0 rgba(0, 0, 0, 0.267);
 }
 
 html, body {

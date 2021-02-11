@@ -1,25 +1,32 @@
 <template>
   <div 
     class="territory"
-    :id="slug"
+    :id="territory.slug"
     :style="{
-      left: `${ toNearestX(borders.x, 0.4) }%`,
-      top: `${ toNearestX(borders.y, 0.4) }%`,
+      left: `${ toNearestX(territory.borders.x, 0.4) }%`,
+      top: `${ toNearestX(territory.borders.y, 0.4) }%`,
       width: `${100 / 5}%`,
       height: `${100 / 5}%`,
     }"
   >
+  
+    <div class="background">
+      <vue-markdown>
+        {{ territory.body || territory.name }}
+      </vue-markdown>
+    </div>
 
     <Island
-      :name="name"
-      :slug="slug"
+      v-if="content"
+      :name="territory.name"
+      :slug="territory.slug"
       :content="content"
-      @more="$router.push(`#${slug}`); more=true"
+      @more="$router.push(`#${territory.slug}`); more=true"
     />
 
     <Overlay
       :class="{ hidden: !more }"
-      :content="content"
+      :sections="content"
       @less="more=false"
     />
 
@@ -37,13 +44,11 @@ export default {
     Overlay,
   },
   props: [
-    'name',
-    'slug',
-    'borders',
+    'territory',
   ],
   data() {
     return {
-      content: {},
+      content: [],
       more: false
     }
   },
@@ -51,13 +56,16 @@ export default {
   },
 
   created() {
-    this.$http.get(`${ this.$apiURL }/${ this.slug }`)
-      .then((response) => { 
-        this.content = response.data
-      })
-      .catch((error) => { 
-        console.log(error)
-      })
+    if (this.slug === 'reception') {
+      this.$http.get(`${ this.$apiURL }/about`)
+        .then((response) => { 
+          this.content = response.data.Sections
+        })
+        .catch((error) => { 
+          console.log(error)
+        })
+    }
+
   },
   methods: {
     toNearestX(num, X) {
@@ -82,5 +90,23 @@ export default {
   cursor: inherit;
   /* z-index: 1; */
 
+}
+
+.territory .background {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-family: 'zxx-noise';
+  font-size: calc(18pt * var(--scale));
+  line-height: calc(18pt * var(--scale));
+  filter: blur(10px);
+  opacity: 0.7;
+}
+.territory .background div {
+  max-width: 80%;
 }
 </style>

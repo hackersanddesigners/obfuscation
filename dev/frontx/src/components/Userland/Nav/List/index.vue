@@ -10,9 +10,7 @@
     <Territory
       v-for="territory in territories"
       :key='territory.slug'
-      :name="territory.name"
-      :slug="territory.slug"
-      :borders="territory.borders"
+      :territory='territory'
       @click.native.stop="$router.push(`#${territory.slug}`)"
     />
 
@@ -66,12 +64,13 @@ export default {
 #list {
   box-sizing: border-box;
   position: relative;
-  margin-top: 2vh;
-  margin-left: 2vh;
-  padding: 0.5vh 0.5vw;
-  min-width: 20vw;
+  margin-top: 1vh;
+  margin-left: 1vh;
+  padding: 0.5vh;
+  width: 14vw;
   font-size: 14pt;
   background: white;
   border: 1px solid grey;
+  border-radius: var(--ui-border-radius);
 }
 </style>

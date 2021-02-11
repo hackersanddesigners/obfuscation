@@ -46,40 +46,18 @@ const store = new Vuex.Store({
     messages: {},
 
 
-    // territories are pre-defined here.
+    // territories are defined in Strapi.
 
-    territories: [
-      { 
-        name: 'The Reception',
-        slug: 'reception',
-        borders: {
-          x: 0.4,
-          y: 0.4,
-        },
-      },
-      { 
-        name: 'The Exhibition Space',
-        slug: 'exhibition',
-        borders: {
-          x: 0,
-          y: 0,
-        },
-      },
-      { 
-        name: 'The Workshop Space and Time Table',
-        slug: 'timetable',
-        borders: {
-          x: 0.5,
-          y: 0,
-        },
-      },
-    ],
+    territories: [],
 
 
     // default vlaues for map position, dimensions, 
     // grid, and scale (zoom).
 
-    location: {},
+    location: {
+      name: 'general',
+      slug: 'general',
+    },
     scale: 5,
     grid: false,
     windowSize: {
@@ -118,6 +96,8 @@ const store = new Vuex.Store({
     setMessage: (state, message) => {
       Vue.set(state.messages, message.uid, message)
     },
+
+     setTerritories: (state, regions) => state.territories = regions,
 
 
     // app interface mutations.
@@ -516,10 +496,10 @@ const store = new Vuex.Store({
       }
       let coords = getters.coordsFrom(pos)
       let found = state.territories.find((territory) => {
-        if (coords.x >= territory.borders.x - 1 / state.scale
-            && coords.x < territory.borders.x + 1 / state.scale
-            && coords.y >= territory.borders.y - 1 / state.scale
-            && coords.y < territory.borders.y + 1 / state.scale
+        if (coords.x >= territory.borders.x - 0.5 / state.scale
+            && coords.x < territory.borders.x + 0.5 / state.scale
+            && coords.y >= territory.borders.y - 0.5 / state.scale
+            && coords.y < territory.borders.y + 0.5 / state.scale
         ) {
             return territory
           }
@@ -542,7 +522,7 @@ const store = new Vuex.Store({
       let userColors = {}
       for (let uid in state.users) {
         const user = state.users[uid]
-        userColors[`--${uid}`] = user.connected ? user.color : 'lightgrey'
+        userColors[`--${uid}`] = user.connected ? user.color : 'var(--disconnected)'
       }
       return userColors
     },

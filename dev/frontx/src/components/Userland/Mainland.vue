@@ -96,13 +96,16 @@
         <Territory
           v-for="territory in territories"
           :key='territory.slug'
-          :name="territory.name"
-          :slug="territory.slug"
-          :borders="territory.borders"
+          :territory='territory'
         />
         
       </div>
     </div>
+
+    <Overlay
+      :territory="territoryBySlug(location.slug)"
+    />
+
   </div>
 </template>
 
@@ -120,6 +123,7 @@ import Cursorr from './User/Cursorr'
 import Message from './User/Message'
 import Territory from './Territory'
 import Minilist from './Nav/List/'
+import Overlay from './Overlay/'
 
 
 export default {
@@ -137,6 +141,7 @@ export default {
     Cursorr,
     Message,
     Territory,
+    Overlay,
   },
 
   props: {
@@ -277,24 +282,27 @@ export default {
   mounted() {
 
 
-    // if there is a slug, navigate to it.
-
-    if (this.wantsToView) {
-      this.route(this.wantsToView)
+    setTimeout(() => {   
 
 
-    // else, land in the center.
+      // if there is a slug, navigate to it.
 
-    } else {
-      setTimeout(() => {   
-        this.scrollTo(
-          this.pixelsFrom(
-            this.territories[0].borders
-          ), 
-        'smooth')
-      }, 50)
-    }
+      if (this.wantsToView) {
+        this.route(this.wantsToView)
+
+
+      // else, land in the center.
+
+      } else {
+        // this.scrollTo(
+        //   this.pixelsFrom(
+        //     this.territories[0].borders
+        //   ), 
+        // 'smooth')
+        this.$router.push(`#reception`)
+      }
   
+    }, 50)
 
   },
   sockets: {
@@ -491,18 +499,20 @@ export default {
 #location {
   position: absolute;
   width: 100%;
-  z-index: 1;
+  z-index: 2;
   display: flex;
   justify-content: center;
 }
 
 #location span {
-  margin: 2vh;
+  margin: 1vh;
   padding: 0.5vh;
-  border-radius: 5px;
+  border: none;
   color: white;
   background: black;
   font-family: 'jet';
+  border-radius: var(--ui-border-radius);
+  box-shadow: var(--ui-box-shadow);
 }
 
 
@@ -515,19 +525,30 @@ header {
   z-index: 2;
   transition: filter 0.3s ease;
 }
+
+header > div {
+  background: white;
+  border: 1px solid grey;
+  border-radius: var(--ui-border-radius);
+  box-shadow: var(--ui-box-shadow);
+}
+
 #navTitle {
   box-sizing: border-box;
   position: relative;
-  margin-top: 2vh;
-  margin-left: 2vh;
-  font-size: 14pt;
+  margin-top: 1vh;
+  margin-left: 1vh;
+  padding: 0vh 0.5vh;
+  font-size: 10pt;
   display: flex;
-  background: inherit;
 }
 #navTitle span {
-  margin-right: 5px;
   cursor: pointer;
   text-decoration: none;
+  padding: 0.5vh;
+}
+#navTitle span:first-of-type {
+  border-right: 1px solid grey;
 }
 #navTitle span.selected {
   text-decoration: line-through;
@@ -555,7 +576,7 @@ header {
   left: 0px;
   font-family: jet;
   font-size: calc(1.7pt * var(--scale));
-  background: rgb(240, 240, 240);
+  background: rgba(0, 0, 0, 0.048);
 }
 
 .blur header,

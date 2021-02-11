@@ -6,7 +6,7 @@
     />
 
     <Mainland 
-      v-else
+      v-else-if="!loading"
       :wantsToView="wantsToView"
     />
     
@@ -35,6 +35,7 @@ export default {
   data() {
     return {
       wantsToView: null,
+      loading: true,
     }
   },
 
@@ -60,6 +61,17 @@ export default {
       localStorage.clear()
       localStorage.version = this.version
     }  
+
+    // get regions from CMS
+
+    this.$http.get(`${ this.$apiURL }/regions`)
+      .then((response) => { 
+        this.$store.commit('setTerritories', response.data)
+        this.loading = false
+      })
+      .catch((error) => { 
+        console.log(error)
+    })
 
 
     // handle routing.

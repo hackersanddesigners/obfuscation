@@ -32,9 +32,7 @@
     <Territory
       v-for="territory in territories"
       :key='territory.slug'
-      :name="territory.name"
-      :slug="territory.slug"
-      :borders="territory.borders"
+      :territory="territory"
     />
 
     <Window
@@ -159,8 +157,8 @@ export default {
 
 <style scoped>
 #minimap {
-  margin-top: 2vh;
-  margin-left: 2vh;
+  margin-top: 1vh;
+  margin-left: 1vh;
   position: relative;
   box-sizing: border-box;
   background: white;

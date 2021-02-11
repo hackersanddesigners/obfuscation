@@ -1,6 +1,6 @@
 <template>
   <div id="options">
-    <span class="title"> options </span>
+    <!-- <span class="title"> options </span> -->
 
     <div class="grid">
       <input 
@@ -26,13 +26,13 @@
       />
     </div>
 
-    <div class="db">
+    <!-- <div class="db">
       <input
         type="button"
         value="delete everything"
         @click.stop="$socket.client.emit('clearDBs')"
       />
-    </div>
+    </div> -->
     
   </div>
 </template>
@@ -68,16 +68,19 @@ export default {
 <style scoped>
 #options {
   box-sizing: border-box;
-  margin-top: 2vh;
-  margin-left: 2vh;
-  min-width: 10vw;
+  margin-top: 1vh;
+  margin-left: 1vh;
+  max-width: 14vw;
   display: flex;
-  flex-direction: column;
+  /* flex-direction: column; */
+  flex-wrap: wrap;
   align-items: center;
+  justify-content: center;
   border: 1px solid grey;
   background: white;
   line-height: 1.9vh;
-
+  border-radius: var(--ui-border-radius);
+  padding: 0.5vh;
 }
 #options .title {
   box-sizing: border-box;
@@ -87,7 +90,7 @@ export default {
   border-bottom: 1px solid grey;
 }
 #options div {
-  margin: 2.5px 0.5vw;
+  margin: 2.5px;
   display: flex;
   align-items: center;
 }

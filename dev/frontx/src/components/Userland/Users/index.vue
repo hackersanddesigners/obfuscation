@@ -1,49 +1,47 @@
 <template>
-  <div 
-    id="userlistContainer"
+  <div
+    id="userlist"
     :class="{ moderating: moderating }"
   >
-    <div id="userlist">
-      <div class="title"> 
-        <span>participants</span>
-        <div id="moderate">
-          <span 
-            class="moderateButton"
-            @click="
-              moderating ? moderating = false :
-              moderator ? moderating = true :
-              authenticating ? authenticating = false :
-              authenticating = true
-            "
-          >
-            <span v-if="moderating">—</span>
-            <span v-else>M</span>
-          </span>
-          <input 
-            v-if="authenticating"
-            ref="password"
-            type="password" 
-            name="moderator"
-            placeholder="moderator password"
-            @keyup.enter=authenticate()
-            autofocus
-          />
-        </div>
-      </div>
-      <ul>
-        <Label
-          v-for="user in connectedUsersFirst"
-          :key="user.uid"
-          :user="user"
-          :isMe="user.uid === me.uid"
-          :moderating="moderating"
-          :messages="messagesByUser(user)"
-
-          @goTo="$emit('goTo', $event)"
-          @click.native.stop="$emit('goTo', user)"
+    <div class="title"> 
+      <span>participants</span>
+      <div id="moderate">
+        <span 
+          class="moderateButton"
+          @click="
+            moderating ? moderating = false :
+            moderator ? moderating = true :
+            authenticating ? authenticating = false :
+            authenticating = true
+          "
+        >
+          <span v-if="moderating">—</span>
+          <span v-else>M</span>
+        </span>
+        <input 
+          v-if="authenticating"
+          ref="password"
+          type="password" 
+          name="moderator"
+          placeholder="moderator password"
+          @keyup.enter=authenticate()
+          autofocus
         />
-      </ul>
+      </div>
     </div>
+    <ul>
+      <Label
+        v-for="user in connectedUsersFirst"
+        :key="user.uid"
+        :user="user"
+        :isMe="user.uid === me.uid"
+        :moderating="moderating"
+        :messages="messagesByUser(user)"
+
+        @goTo="$emit('goTo', $event)"
+        @click.native.stop="$emit('goTo', user)"
+      />
+    </ul>
   </div>
 </template>
 
@@ -95,30 +93,19 @@ export default {
 </script>
 
 <style scoped>
-#userlistContainer.moderating {
-  /* position: absolute;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center; */
-}
-/* #userlistContainer.moderating #userlist { */
 
-/* } */
 #userlist {
   box-sizing: border-box;
-  margin-top: 2vh;
-  margin-left: 2vh;
-  min-width: 14vw;
+  margin-top: 1vh;
+  margin-left: 1vh;
+  max-width: 14vw;
   max-height: 300px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  background: white;
-  border: 1px solid grey;
+}
+#userlist.moderating {
+  max-width: unset;
 }
 #userlist .title {
   background: white;

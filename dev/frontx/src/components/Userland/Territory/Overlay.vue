@@ -28,23 +28,13 @@ export default {
     Section
   },
   props: [
-    'content'
+    'sections'
   ],
   data() {
     return {
-      sections: []
     }
   },
   created() {
-    if (!this.content.sections) {
-      this.$http.get(`${ this.$apiURL }/about`)
-        .then((response) => { 
-          this.sections = response.data.Sections
-        })
-        .catch((error) => { 
-          console.log(error)
-        })
-    }
   }
 }
 </script>

@@ -3,7 +3,7 @@
     class="island"
     :style="{
       width: `${100 / 5}%`,
-      height: `${100 / 2.5}%`,
+      height: `${100 / 5}%`,
     }"
   >
 
@@ -14,10 +14,10 @@
       > 
         {{ content.Title }} 
       </h1>
-      <h1 
+      <!-- <h1
         class="more"
         @click.stop="$emit('more')"
-      >+</h1>
+      >+</h1> -->
     </div>
     <div class="body">
       <vue-markdown
@@ -64,12 +64,15 @@ export default {
   /* left: 30vw; */
   /* margin: auto; */
   /* border: 1px dashed black; */
-  /* --back: rgba(255, 255, 255, 0.774); */
-  /* --back: rgb(0, 0, 0); */
   background-color: var(--back);
-  box-shadow: 0px 0px 150px 150px  var(--back);
+  box-shadow: var(--island-shadow);
+  border-top-left-radius: var(--island-curve);
+  border-bottom-right-radius: var(--island-curve);
   /* color: white; */
   /* border-radius: 100px; */
+}
+.island:hover {
+  border-top-left-radius: 0px;
 }
 .island .header {
   display: flex;
