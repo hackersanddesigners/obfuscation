@@ -4,7 +4,7 @@
     :class="{ moderating: moderating }"
   >
     <div id="userlist">
-      <span class="title"> 
+      <div class="title"> 
         <span>participants</span>
         <div id="moderate">
           <span 
@@ -29,7 +29,7 @@
             autofocus
           />
         </div>
-      </span>
+      </div>
       <ul>
         <Label
           v-for="user in connectedUsersFirst"
@@ -114,21 +114,20 @@ export default {
   margin-left: 2vh;
   min-width: 14vw;
   max-height: 300px;
-  overflow: scroll;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   background: white;
   border: 1px solid grey;
 }
 #userlist .title {
-  position: sticky;
   background: white;
-  top: 0;
   overflow: hidden;
   box-sizing: border-box;
   padding-left: 0.5vw;
   line-height: 1.9vh;
   width: 100%;
+  height: 2vh;
   display: flex;
   border-bottom: 1px solid grey;
 }
@@ -155,5 +154,6 @@ export default {
 #userlist ul { 
   margin: 0;
   padding: 0;
+  overflow: scroll;
 }
 </style>

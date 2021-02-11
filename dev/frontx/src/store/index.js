@@ -50,10 +50,27 @@ const store = new Vuex.Store({
 
     territories: [
       { 
-        name: 'center',
+        name: 'The Reception',
+        id: 'readme',
         borders: {
           x: 0.4,
           y: 0.4,
+        },
+      },
+      { 
+        name: 'The Exhibition Space',
+        id: 'exhibition',
+        borders: {
+          x: 0,
+          y: 0,
+        },
+      },
+      { 
+        name: 'The Workshop Space and Time Table',
+        id: 'timetable',
+        borders: {
+          x: 0.5,
+          y: 0,
         },
       },
     ],

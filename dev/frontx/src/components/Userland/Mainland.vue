@@ -13,7 +13,23 @@
 
     <header>
 
+      <div id="navTitle">
+        <span 
+          :class="{ selected: !desiresList }"
+          @click.stop="desiresList = false"
+        > map </span>
+        <span 
+          :class="{ selected: desiresList }"
+          @click.stop="desiresList = true"
+        > list </span>
+      </div>
+
+      <Minilist 
+        v-if="desiresList"
+      />
+
       <Minimap 
+        v-else
         :dragging="dragging"
         :miniDragging="miniDragging"
         @startedDrag="miniDragging = true"
@@ -75,8 +91,9 @@
 
         <Territory
           v-for="territory in territories"
-          :key='territory.name'
+          :key='territory.id'
           :name="territory.name"
+          :id="territory.id"
           :borders="territory.borders"
         />
         
@@ -92,12 +109,13 @@ import { mapState, mapGetters } from 'vuex'
 
 import Grid from './Grid'
 import Editor from './Options/Editor'
-import Minimap from './Mini/Map'
+import Minimap from './Nav/Mini/Map'
 import Options from './Options'
 import Userslist from './Users'
 import Cursorr from './User/Cursorr'
 import Message from './User/Message'
 import Territory from './Territory'
+import Minilist from './Nav/List/'
 
 
 export default {
@@ -106,14 +124,15 @@ export default {
   name: 'Mainland',
 
   components: {
-    Grid,
+    Editor,
     Minimap,
+    Minilist,
     Options,
     Userslist,
+    Grid,
     Cursorr,
     Message,
     Territory,
-    Editor,
   },
 
   props: {
@@ -121,7 +140,9 @@ export default {
   },
 
   data () {
-    return {      
+    return { 
+    
+      desiresList: false,     
 
       editing: false,
       scrolling: false,
@@ -465,6 +486,24 @@ header {
   align-items: flex-start;
   z-index: 2;
   transition: filter 0.3s ease;
+}
+
+#navTitle {
+  box-sizing: border-box;
+  position: relative;
+  margin-top: 2vh;
+  margin-left: 2vh;
+  font-size: 14pt;
+  display: flex;
+  background: white;
+}
+#navTitle span {
+  margin-right: 5px;
+  cursor: pointer;
+  text-decoration: none;
+}
+#navTitle span.selected {
+  text-decoration: line-through;
 }
 #userlandContainer {  
   cursor: none;

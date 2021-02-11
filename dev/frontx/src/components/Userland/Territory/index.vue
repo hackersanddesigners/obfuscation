@@ -1,7 +1,7 @@
 <template>
   <div 
     class="territory"
-    :id="name"
+    :id="id"
     :style="{
       left: `${ toNearestX(borders.x, 0.4) }%`,
       top: `${ toNearestX(borders.y, 0.4) }%`,
@@ -12,6 +12,7 @@
 
     <Island
       :name="name"
+      :id="id"
       :content="content"
       @more="$router.push(`#${name}`); more=true"
     />
@@ -37,6 +38,7 @@ export default {
   },
   props: [
     'name',
+    'id',
     'borders',
   ],
   data() {
@@ -49,7 +51,7 @@ export default {
   },
 
   created() {
-    this.$http.get(`${ this.$apiURL }/${ this.name }`)
+    this.$http.get(`${ this.$apiURL }/${ this.id }`)
       .then((response) => { 
         this.content = response.data
       })
