@@ -16,8 +16,9 @@
     "Body": {
       "type": "richtext"
     },
-    "UID": {
-      "type": "uid"
+    "slug": {
+      "type": "uid",
+      "targetField": "Title"
     }
   }
 }

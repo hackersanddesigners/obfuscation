@@ -1,8 +1,9 @@
 {
-  "kind": "singleType",
-  "collectionName": "centers",
+  "kind": "collectionType",
+  "collectionName": "regions",
   "info": {
-    "name": "Center"
+    "name": "Regions",
+    "description": ""
   },
   "options": {
     "increments": true,
@@ -15,6 +16,13 @@
     },
     "Body": {
       "type": "richtext"
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "Title"
+    },
+    "borders": {
+      "type": "json"
     }
   }
 }
