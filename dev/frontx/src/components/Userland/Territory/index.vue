@@ -104,7 +104,7 @@ export default {
   font-size: calc(18pt * var(--scale));
   line-height: calc(18pt * var(--scale));
   filter: blur(10px);
-  opacity: 0.7;
+  opacity: 0.5;
 }
 .territory .background div {
   max-width: 80%;

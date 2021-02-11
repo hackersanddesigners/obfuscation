@@ -282,7 +282,6 @@ export default {
   },
   mounted() {
 
-
     setTimeout(() => {   
 
 
@@ -295,11 +294,6 @@ export default {
       // else, land in the center.
 
       } else {
-        // this.scrollTo(
-        //   this.pixelsFrom(
-        //     this.territories[0].borders
-        //   ), 
-        // 'smooth')
         this.$router.push(`#reception`)
       }
   
@@ -467,14 +461,16 @@ export default {
     // left corner of the (larger) userland div. 
 
     setViewerPosition() {
-      let pos = {
-        x: this.$refs.userlandContainer.scrollLeft,
-        y: this.$refs.userlandContainer.scrollTop
-      }
+      const
+        pos = {
+          x: this.$refs.userlandContainer.scrollLeft,
+          y: this.$refs.userlandContainer.scrollTop
+        },
+        territory = this.territoryByBorders(pos)
+
       this.$store.commit('viewerPosition', pos)
-      this.$store.commit('setLocation', 
-        this.territoryByBorders(pos)
-      )
+      this.$store.commit('setLocation', territory)
+      // window.location.hash = territory.slug
     },
 
 

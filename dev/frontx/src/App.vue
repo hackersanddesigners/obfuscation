@@ -19,15 +19,22 @@ export default {
 
   data() {
     return {
-      slug: window.location.pathname.replace(this.$publicPath, ''),
+      slug: null,
     }
   },
 
   created() {
 
+    // get "slug", prefer a path over a hash
 
-    // window dimension are important for positioning of everything.
-    
+    const 
+      path = window.location.pathname.replace(this.$publicPath, ''),
+      hash = window.location.hash
+
+    this.slug = path || hash
+
+    // window dimensions: important for positioning!
+
     window.addEventListener('resize', () => {
       this.$store.commit('resize', {
         w: window.innerWidth,

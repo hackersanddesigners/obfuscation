@@ -29,18 +29,22 @@
       :dragging="dragging"
     />
 
-    <Territory
-      v-for="territory in territories"
-      :key='territory.slug'
-      :territory="territory"
-    />
-
     <Window
       id="viewport"
       :width="width / scale"
       :height="height / scale"
       :left="left / scale"
       :top="top / scale"
+    />
+
+    <Territory
+      v-for="territory in territories"
+      :key='territory.slug'
+      :territory="territory"
+
+      @mousedown.native="handleTerrMouseDown($event)"
+      @mousemove.native="handleTerrMouseMove($event)"
+      @mouseup.native="handleTerrMouseUp($event,territory)"
     />
 
     <div class="zoom">
@@ -134,6 +138,30 @@ export default {
     mouseUp(e) {
       this.$emit('stoppedDrag')
       this.sendDesiredPosition(e)
+    },
+
+    handleTerrMouseDown() {
+      // if (!this.miniDragging) {
+        // this.territoryDown = true
+        // e.stopPropagation()
+      // }
+    },
+
+    handleTerrMouseMove() {
+      // if (this.territoryDown) {
+      //   this.sendDesiredPosition(e)
+      //   this.$emit('startedDrag')
+      //   // e.stopPropagation()
+      // }
+    },
+
+    handleTerrMouseUp() {
+      // console.log(e)
+      // // if (!this.miniDragging) {
+      //   this.territoryDown = false
+      //   this.$router.push(`#${territory.slug}`)
+      //   e.stopPropagation()
+      // // }
     },
     
     sendDesiredPosition(e) {

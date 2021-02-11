@@ -28,9 +28,9 @@ export default {
     Nomansland
   },
 
-  props: {
-    slug: String,
-  },
+  props: [
+    'slug'
+  ],
 
   data() {
     return {

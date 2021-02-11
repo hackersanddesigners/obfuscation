@@ -59,7 +59,7 @@ const store = new Vuex.Store({
       slug: 'general',
     },
     scale: 5,
-    grid: false,
+    grid: true,
     windowSize: {
       w: window.innerWidth,
       h: window.innerHeight,
