@@ -40,6 +40,7 @@
     <Territory
       v-for="territory in territories"
       :key='territory.slug'
+      :hovered="hovered"
       :territory="territory"
 
       @mousedown.native="handleTerrMouseDown($event)"

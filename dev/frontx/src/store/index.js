@@ -27,7 +27,7 @@ const store = new Vuex.Store({
 
     // initial values for application state.
 
-    version: 6,
+    version: 5,
     save: true,
 
     uid: null,

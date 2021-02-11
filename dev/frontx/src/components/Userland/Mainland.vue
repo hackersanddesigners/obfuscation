@@ -1,19 +1,19 @@
 <template>
   <div 
-    :style="userColors"
-    :class="{ 
-      blur: !registered || editing 
-    }"
+    :style="[
+      userColors,
+      { '--scale': scale }
+    ]"
+    :class="[
+    { blur: !registered || editing },
+    location.slug
+    ]"
   >
 
     <Editor
       v-if="!registered || editing" 
       @stopEdit="editing = false"
     />
-
-    <div id="location">
-      <span> #{{location.slug}} </span>
-    </div>
 
     <header>
 
@@ -55,12 +55,18 @@
     <div 
       id="userlandContainer" 
       ref="userlandContainer"
-      :class="{ dragging: dragging }"
+      :class="[
+        { dragging: dragging },
+      ]"
 
-      @scroll="setViewerPosition()"
+      @scroll.stop="setViewerPosition()"
       @keyup="handleInput($event)"
       @click="handleClick($event)"
     >
+      
+      <div id="location">
+        <span> #{{location.slug}} </span>
+      </div>
 
       <div 
         id="userland" 
@@ -68,7 +74,6 @@
         :style="{
           height: `${ 100 * scale }%`,
           width: `${ 100 * scale }%`,
-          '--scale': scale
         }"
         @mousedown.stop="dragging = true"
         @mousemove="drag($event)"
@@ -494,7 +499,9 @@ export default {
 <style>
 
 #location {
-  position: absolute;
+  position: sticky;
+  top: 0;
+  left: 0;
   width: 100%;
   z-index: 2;
   display: flex;
@@ -567,13 +574,18 @@ header > div {
   cursor: grabbing;
   user-select: none;
 }
+.exhibition header,
+.exhibition #userlandContainer {
+  /* mix-blend-mode: exclusion; */
+  filter: invert(100%);
+}
 #userland {
   position: absolute;
   top: 0px;
   left: 0px;
   font-family: jet;
   font-size: calc(1.7pt * var(--scale));
-  background: rgba(0, 0, 0, 0.048);
+  background: rgb(241, 241, 241);
 }
 
 .blur header,
