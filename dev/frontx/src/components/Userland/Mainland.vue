@@ -5,8 +5,8 @@
       { '--scale': scale }
     ]"
     :class="[
-    { blur: !registered || editing },
-    location.slug
+      { blur: !registered || editing },
+      location.slug
     ]"
   >
 
@@ -157,7 +157,7 @@ export default {
   data () {
     return { 
     
-      desiresList: false,     
+      desiresList: true,     
 
       editing: false,
       scrolling: false,
@@ -502,15 +502,19 @@ export default {
   position: sticky;
   top: 0;
   left: 0;
+  height: 0;
+  overflow: visible;
   width: 100%;
   z-index: 2;
   display: flex;
   justify-content: center;
+  align-items: flex-start;
 }
 
 #location span {
   margin: 1vh;
   padding: 0.5vh;
+  height: auto;
   border: none;
   color: white;
   background: black;
