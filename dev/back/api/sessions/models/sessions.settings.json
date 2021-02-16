@@ -15,7 +15,7 @@
       "type": "string",
       "required": true
     },
-    "Date": {
+    "Sart": {
       "type": "datetime",
       "required": true
     },
@@ -44,6 +44,9 @@
     "slug": {
       "type": "uid",
       "targetField": "Title"
+    },
+    "End": {
+      "type": "datetime"
     }
   }
 }
