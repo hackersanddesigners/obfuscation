@@ -15,7 +15,7 @@
       "type": "string",
       "required": true
     },
-    "Sart": {
+    "Start": {
       "type": "datetime",
       "required": true
     },
