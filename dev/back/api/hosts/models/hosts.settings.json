@@ -18,12 +18,15 @@
       "type": "email"
     },
     "sessions": {
-      "via": "hosts",
-      "collection": "sessions"
+      "collection": "sessions",
+      "via": "hosts"
     },
     "slug": {
       "type": "uid",
       "targetField": "Name"
+    },
+    "Institution": {
+      "type": "string"
     }
   }
 }

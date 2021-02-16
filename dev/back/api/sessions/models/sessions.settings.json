@@ -37,8 +37,8 @@
       "dominant": true
     },
     "hosts": {
-      "collection": "hosts",
       "via": "sessions",
+      "collection": "hosts",
       "dominant": true
     },
     "slug": {
