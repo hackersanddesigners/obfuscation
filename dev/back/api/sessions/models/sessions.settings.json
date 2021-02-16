@@ -47,6 +47,11 @@
     },
     "End": {
       "type": "datetime"
+    },
+    "moderators": {
+      "collection": "hosts",
+      "via": "moderating",
+      "dominant": true
     }
   }
 }
