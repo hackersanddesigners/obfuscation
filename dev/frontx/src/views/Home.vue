@@ -87,6 +87,11 @@ export default {
 
     // set up custom router.
 
+    // this.$router.beforeEach((to, from, next) => {
+    //   console.log(from, to)
+    //   next()
+    // })
+
     this.$router.afterEach((to) => {
       const slug = to.fullPath.replace(this.$publicPath, '')
       this.handleRouting(slug)

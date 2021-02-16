@@ -1,6 +1,9 @@
 <template>
   <li
-    class="list-territory"
+    :class="[
+      'list-territory',
+      { active: isActive }
+    ]"
     :id=" 'list-' + territory.slug"
   >
     <span class="bullet"> ... </span>
@@ -15,6 +18,15 @@ export default {
   props: [ 
     'territory'
   ], 
+  computed: {
+
+    location() { return this.$store.state.location },
+
+    isActive() { 
+      return this.territory.slug === this.location.slug 
+    },
+  
+  },
   methods: {
     toNearestX(num, X) {
       return Math.floor(100 * num / X) * X
@@ -35,7 +47,15 @@ export default {
   margin-right: 0px;
 }
 .list-territory .name {
-  text-decoration: underline;
+  /* text-decoration: underline; */
   cursor: pointer;
+  border-bottom: 1px solid;
+}
+
+.list-territory.active {
+  color: blue;
+}
+.list-territory.active .name {
+  border-bottom: 3px solid;
 }
 </style>

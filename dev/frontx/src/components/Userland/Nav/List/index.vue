@@ -11,7 +11,7 @@
       v-for="territory in territories"
       :key='territory.slug'
       :territory='territory'
-      @click.native.stop="$router.push(`#${territory.slug}`)"
+      @click.native.stop="handleTerritoryClick(territory)"
     />
 
   </div>
@@ -49,10 +49,22 @@ export default {
     ...mapGetters({
 
 
-    })
+    }),
+
   },
 
   methods: {
+
+    handleTerritoryClick(territory) {
+      const current = this.$router.history.current.hash
+      const next = `#${territory.slug}`
+      
+      if (current === next) {
+        this.$emit('goTo', territory.borders)
+      } else {
+        this.$router.push(next)
+      }
+    }
 
   }
 

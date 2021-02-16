@@ -30,6 +30,7 @@
 
       <Minilist 
         v-if="desiresList"
+        @goTo="scrollTo(pixelsFrom($event),'smooth')"
       />
 
       <Minimap 
