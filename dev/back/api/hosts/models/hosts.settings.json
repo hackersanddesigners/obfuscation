@@ -18,8 +18,8 @@
       "type": "email"
     },
     "sessions": {
-      "collection": "sessions",
-      "via": "hosts"
+      "via": "hosts",
+      "collection": "sessions"
     },
     "slug": {
       "type": "uid",

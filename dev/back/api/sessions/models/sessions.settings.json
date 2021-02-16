@@ -24,7 +24,7 @@
     },
     "Description": {
       "type": "richtext",
-      "required": true
+      "required": false
     },
     "videos": {
       "collection": "videos",
@@ -37,8 +37,8 @@
       "dominant": true
     },
     "hosts": {
-      "via": "sessions",
       "collection": "hosts",
+      "via": "sessions",
       "dominant": true
     },
     "slug": {
