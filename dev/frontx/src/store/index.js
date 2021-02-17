@@ -496,13 +496,20 @@ const store = new Vuex.Store({
       }
       let coords = getters.coordsFrom(pos)
       let found = state.territories.find((territory) => {
-        if (coords.x >= territory.borders.x - 0.5 / state.scale
-            && coords.x < territory.borders.x + 0.5 / state.scale
-            && coords.y >= territory.borders.y - 0.5 / state.scale
-            && coords.y < territory.borders.y + 0.5 / state.scale
-        ) {
+
+      const 
+        // territoryEl = document.querySelector(`#${territory.slug}`),
+        minX = territory.borders.x - 0.5 / state.scale,
+        minY = territory.borders.y - 0.5 / state.scale,
+        maxX = territory.borders.y + 0.5 / state.scale,
+        maxY = territory.borders.y + 0.5 / state.scale
+
+        if (coords.x >= minX && coords.x < maxX
+         && coords.y >= minY && coords.y < maxY
+         ) {
             return territory
           }
+
         }) 
       return found || general
     },
@@ -588,8 +595,8 @@ const store = new Vuex.Store({
       return {
         x: pixels.x / (state.scale * state.windowSize.w),
         y: pixels.y / (state.scale * state.windowSize.h),
-        w: pixels.w || 0,
-        h: pixels.h || 0,
+        w: pixels.w / (state.scale * state.windowSize.w) || 0,
+        h: pixels.h / (state.scale * state.windowSize.h) || 0,
       }
     },
   

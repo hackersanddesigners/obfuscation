@@ -110,7 +110,7 @@
 
     <Overlay
       id="overlay"
-      :territory="territoryBySlug(location.slug)"
+      :wantsToView="moreInformation"
     />
 
   </div>
@@ -157,6 +157,8 @@ export default {
 
   data () {
     return { 
+
+      moreInformation: null,
     
       desiresList: true,     
 
@@ -328,39 +330,75 @@ export default {
 
     // custom router.
 
-    route(zone) {
+    route(slug) {
       let 
-        type = zone.type,
-        name = zone.name,
+        type = slug.type,
+        name = slug.name,
         position
+
+
+      // if the slug is preceeded with ~ or #, it
+      // maps to a position on the map.
+
+      if (type) {
 
 
       // user slugs are preceded with "~".
 
-      if (type == 'user') {
-        const user = this.userByName(name)
-        if (user) {
-          position = this.positionOf(user)
-        } else {
-          console.log('not found')
+        if (type == 'user') {
+          const user = this.userByName(name)
+          if (user) {
+            position = this.positionOf(user)
+          } else {
+            console.log('not found')
+          }
+
+        
+        // territory slugs are preceded with "#".
+        
+        } else if (type == 'territory') {
+          const territory = this.territoryBySlug(name)
+          if (territory) {
+            position = this.pixelsFrom(territory.borders)
+          } else {
+            console.log('not found')
+          }
         }
 
+
+        // slugs map to locations on mainland.
+
+        this.scrollTo(position, 'smooth')
+
+
+        // otherwise it is a "page", so it maps to
+        // second level information.
+
+      } else {
       
-      // territory slugs are preceded with "#".
+        const 
+          collection = name.split('/')[0],
+          page = name.split('/')[1],
+          territoryName = 
+            collection === 'sessions' ? 'timetable' :
+            collection === 'videos' ? 'exhibtion' :
+            collection === 'glossary' ? 'glossary' :
+            null,
+          territory = this.territoryBySlug(territoryName)
       
-      } else if (type == 'territory') {
-        const territory = this.territoryBySlug(name)
-        if (territory) {
-          position = this.pixelsFrom(territory.borders)
-        } else {
-          console.log('not found')
+        position = this.pixelsFrom(territory.borders)
+
+        if (this.location.slug !== territory.slug) {
+          this.scrollTo(position, 'smooth')
         }
+
+        this.moreInformation = { 
+          collection: collection,
+          page: page
+        }
+
       }
 
-
-      // slugs map to locations on mainland.
-
-      this.scrollTo(position, 'smooth')
     },
 
 
@@ -470,13 +508,12 @@ export default {
       const
         pos = {
           x: this.$refs.userlandContainer.scrollLeft,
-          y: this.$refs.userlandContainer.scrollTop
+          y: this.$refs.userlandContainer.scrollTop,
         },
         territory = this.territoryByBorders(pos)
 
       this.$store.commit('viewerPosition', pos)
       this.$store.commit('setLocation', territory)
-      // window.location.hash = territory.slug
     },
 
 
@@ -599,6 +636,7 @@ header > div {
 .blur #overlay,
 .blur #userlandContainer {
   filter: blur(10px);
+  opacity: 0.5;
 }
 
 </style>

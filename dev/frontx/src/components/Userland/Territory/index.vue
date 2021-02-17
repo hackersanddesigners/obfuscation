@@ -35,6 +35,7 @@
 </template>
 
 <script>
+
 import Island from './Island'
 import Timetable from './Timetable'
 

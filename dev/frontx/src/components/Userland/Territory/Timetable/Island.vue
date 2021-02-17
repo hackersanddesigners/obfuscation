@@ -15,7 +15,7 @@
     <div class="header">
       <h1
         class="title"
-        @click="$router.push(`#${ session.slug }`)"
+        @click="$router.push(`/sessions/${ session.slug }`)"
       > 
         {{ session.Title }} 
       </h1>
@@ -25,6 +25,7 @@
       class="body"
       v-if="hosts.length > 0"
     >
+
       <span class="hosts">
         <span> with </span>
         <span
@@ -36,18 +37,21 @@
           <span>, </span>
         </span>
       </span>
+
       <span class="modertors">
         <span
           class="moderator"
           v-for="moderator in moderators"
           :key="moderator.Name"
         >
+          <span v-if="isLast(moderator, moderators)">and </span>
           <span class="name">{{ moderator.Name }}</span>
           <span> (moderator)</span>
           <span v-if="!isLast(moderator, moderators)">, </span>
           <span v-else>. </span>
         </span>
       </span>
+
     </div>
 
   </div>
@@ -171,6 +175,8 @@ export default {
   margin-top: unset;
   max-width: 30vw;
   text-align: center;
+  font-family: sans-serif;
+  line-height: 1.2;
   font-size: calc(3pt * var(--scale));
 }
 .island .body .host .name,

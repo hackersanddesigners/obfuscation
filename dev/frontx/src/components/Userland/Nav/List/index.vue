@@ -62,7 +62,7 @@ export default {
       if (current === next) {
         this.$emit('goTo', territory.borders)
       } else {
-        this.$router.push(next)
+        this.$router.push(`/${next}`)
       }
     }
 

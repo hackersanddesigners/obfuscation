@@ -101,21 +101,14 @@ export default {
   methods: {
     handleRouting(slug) {
 
-      let type, name
-      if (slug.startsWith("~")) {
-        type = 'user'
-      } else if (slug.startsWith("#")) {
-        type = 'territory'
-      } else {
-        console.log('not found')
-      }
+      let
+        type =
+          slug.startsWith('~') ? 'user' :
+          slug.startsWith('#') ? 'territory' :
+          null ,
 
-      name = slug.slice(1)
-      if (name) {
-        console.log(name)
-      } else {
-        console.log('no username provided')
-      }
+        name = 
+          type ? slug.slice(1) : slug
 
       this.wantsToView = {
         type: type,

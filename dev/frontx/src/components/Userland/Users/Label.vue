@@ -83,7 +83,6 @@ li {
   list-style: none;
   padding: 0;
   margin: 0.5vh 0.5vw;
-  font-weight: bold;
   display: flex;
   align-items: center;
   color: var(--userColor);

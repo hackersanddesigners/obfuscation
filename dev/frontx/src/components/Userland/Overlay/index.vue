@@ -2,22 +2,22 @@
   <div 
     class="overlayContainer"
     :class="{
-      hidden: hidden,
-      peak: peak
+      peak: peak,
+      hover: hover,
+      visible: visible,
     }"
 
-    @mouseover.stop="hidden ? peak = true: null"
-    @mouseout.stop="hidden ? peak = false: null"
-    @mouseup.stop="hidden = peak = false"
+    @mouseover.stop="peak ? hover = true : null"
+    @mouseout.stop="peak ? hover = false : null"
+    @mouseup.stop="visible = true"
   >
     <div class="overlay">
     <span 
-      v-if="!hidden"
       class="close"
-      @click.stop="hidden=true"
+      @click.stop="visible = hover = false"
     >✕</span>
     <Section
-      v-for="section in sections"
+      v-for="section in content"
       :key="section.id"
       :section="section"
     />
@@ -34,41 +34,104 @@ export default {
     Section
   },
   props: [
-    'territory'
+    'wantsToView'
   ],
   data() {
     return {
       sections: null,
-      hidden: true,
+      content: null,
+      type: null,
+
       peak: false,
+      hover: false,
+      visible: false
     }
   },
   computed: {
-    location () {
-      return this.$store.state.location
-    }
+    location () { return this.$store.state.location },
   },
   watch: {
     location (newLocation, oldLocation) {
       if (newLocation.slug !== oldLocation.slug) {
-        this.updateContent()
+
+        let 
+          query,
+          isCollection
+
+        switch(this.location.slug) {
+
+          case 'reception':
+            query = 'about'
+            isCollection = false
+            break
+
+          case 'timetable':
+            query = 'sessions'
+            isCollection = true
+            break
+
+          case 'exhibition':
+            query = 'videos'
+            isCollection = true
+            break
+
+          default: 
+            query = undefined
+            isCollection = true
+        
+        }
+
+        if (query) {
+          this.updateContent(query, isCollection)
+        }
+
+        if (!isCollection) {
+          this.peak = true
+        } else {
+          this.visible = this.hover = this.peak =  false
+        }
+        this.type = query
+
       }
+    },
+
+    wantsToView(newSlug) {
+      // if (newSlug.page !== oldSlug.page) {
+
+        const 
+          query = newSlug.collection + '?slug=' + newSlug.page,
+          isCollection = false
+
+          console.log(query)
+        
+        this.updateContent(query, isCollection)
+        this.visible = this.peak = true
+
+      // }
     }
+
   },
   mounted() {
   },
   methods: {
-    updateContent() {
-      if (this.territory && this.territory.slug === 'reception') {
-        this.$http.get(`${ this.$apiURL }/about`)
-          .then((response) => { 
-            this.sections = response.data.Sections
-          })
-          .catch((error) => { 
-            console.log(error)
+
+    updateContent(query, isCollection) {
+      this.$http.get(`${ this.$apiURL }/${ query }`)
+
+        .then((response) => { 
+          this.content = 
+            isCollection ? 
+            response.data : 
+            response.data.Sections || 
+            response.data
+          console.log(this.content)
         })
-      }
-    }
+
+        .catch((error) => { 
+          console.log(error)
+        })
+    },
+    
   }
 }
 </script>
@@ -79,7 +142,7 @@ export default {
   box-sizing: border-box;
   position: absolute;
   top: 0;
-  right: 0px;
+  right: -43%;
   width: 40%;
   height: 100%;
   background: rgb(255,253,84);
@@ -90,15 +153,18 @@ export default {
   border-top-left-radius: 20px;
   border-bottom-left-radius: 20px;
 }
-.overlayContainer.hidden {
+.overlayContainer.peak {
   cursor: pointer;
   right: calc(20px - 40%);
   box-shadow: 0 0 50px 0 rgba(0, 0, 0, 0.534);
 }
-.overlayContainer.peak {
+.overlayContainer.hover {
   cursor: pointer;
   right: calc(100px - 40%);
   box-shadow: 0 0 30px 0 rgba(0, 0, 0, 0.534);
+}
+.overlayContainer.visible {
+  right: 0px;
 }
 .overlay {
   height: 100%;

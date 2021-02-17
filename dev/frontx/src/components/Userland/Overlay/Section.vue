@@ -2,7 +2,7 @@
  <section>
     <div class="header">
       <h3 class="subtitle"> 
-        {{ section.Subtitle }} 
+        {{ section.Subtitle || section.Start}} 
       </h3>
       <h1 class="title"> 
         {{ section.Title }} 
@@ -10,7 +10,8 @@
     </div>
     <div class="body">
       <vue-markdown
-        :source="section.Body"
+        v-if="section.Body || section.Description"
+        :source="section.Body || section.Description"
       />
     </div>
  </section>
