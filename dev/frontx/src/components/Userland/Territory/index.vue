@@ -14,7 +14,7 @@
       class="background"
     >
       <vue-markdown>
-        {{ territory.body || territory.name }}
+        {{ territory.name || territory.body }}
       </vue-markdown>
     </div>
 
