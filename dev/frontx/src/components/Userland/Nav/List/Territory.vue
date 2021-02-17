@@ -45,11 +45,17 @@ export default {
 }
 .list-territory span {
   margin-right: 0px;
+  line-height: 1.5;
 }
 .list-territory .name {
   /* text-decoration: underline; */
   cursor: pointer;
   border-bottom: 1px solid;
+  transition: border 0.2s ease;
+}
+
+.list-territory:hover .name {
+  border-bottom: 3px solid;
 }
 
 .list-territory.active {

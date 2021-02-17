@@ -85,8 +85,10 @@ export default {
   --disconnected: rgb(156, 156, 156);
   --ui-border-radius: 7.5px;
   --ui-box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.199);
-  --island-curve: 100px;
-  --island-shadow: 0 0 30px 0 rgba(0, 0, 0, 0.267);
+  --island-curve: 10vh;
+  --island-shadow: 0 0 3vh 0 rgba(0, 0, 0, 0.267);
+  --small-island-curve: 5vh;
+  --white-glass: rgba(255, 255, 255, 0.041);
 }
 
 html, body {

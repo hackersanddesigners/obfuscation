@@ -80,7 +80,7 @@ export default {
   position: absolute;
   top: 0;
   right: 0px;
-  width: 50%;
+  width: 40%;
   height: 100%;
   background: rgb(255,253,84);
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.534);
@@ -92,12 +92,12 @@ export default {
 }
 .overlayContainer.hidden {
   cursor: pointer;
-  right: calc(20px - 50%);
+  right: calc(20px - 40%);
   box-shadow: 0 0 50px 0 rgba(0, 0, 0, 0.534);
 }
 .overlayContainer.peak {
   cursor: pointer;
-  right: calc(30px - 50%);
+  right: calc(100px - 40%);
   box-shadow: 0 0 30px 0 rgba(0, 0, 0, 0.534);
 }
 .overlay {

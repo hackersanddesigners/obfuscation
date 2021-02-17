@@ -8,16 +8,16 @@
     :style="{ 
       left: `${ toNearestX(territory.borders.x, 0.4) }%`,
       top: `${ toNearestX(territory.borders.y, 0.4) }%`,
-      width: `${ 20 }%`,
-      height: `${ 20 }%`,
+      height: `${ miniSize.h }px`,
+      width: `${ miniSize.w }px`,
     }"
   >
     <div class="box">
-      <div class="background">
+      <!-- <div class="background">
         <vue-markdown>
           {{ territory.body || territory.name }}
         </vue-markdown>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -29,10 +29,30 @@ export default {
     'territory',
     'hovered'
   ], 
+  computed: {
+    miniSize() {
+      const 
+        territoryEl = document.querySelector(`#${this.territory.slug}`),
+        realHeight = territoryEl.scrollHeight,
+        realWidth = territoryEl.scrollWidth,
+        miniHeight = 0.04 * realHeight,
+        miniWidth = 0.04 * realWidth
+      return  {
+        h: miniHeight,
+        w: miniWidth
+      }
+    }
+  },
+
+  mounted() {
+  },
+
   methods: {
+
     toNearestX(num, X) {
       return Math.floor(100 * num / X) * X
-    }
+    },
+
   }
 }
 </script>
@@ -42,6 +62,7 @@ export default {
   box-sizing: border-box;
   position: absolute;
   display: flex;
+  padding: 5px;
 }
 .mini-territory .background {
   position: absolute;
@@ -59,16 +80,15 @@ export default {
   transition: all 0.1s ease;
 }
 .mini-territory .background div {
-  max-width: 80%;
+  max-width: 100%;
 }
 .mini-territory.hovered .background {
   filter: blur(0px);
   opacity: 0.8;
 }
 .mini-territory .box {
-  margin: auto;
-  height: 80%;
-  width: 80%;
+  height: 100%;
+  width: 100%;
   border: 1px solid grey;
   border-radius: 5px;
   /* border: 1px solid grey; */

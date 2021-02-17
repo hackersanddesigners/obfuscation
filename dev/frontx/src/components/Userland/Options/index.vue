@@ -70,12 +70,12 @@ export default {
   box-sizing: border-box;
   margin-top: 1vh;
   margin-left: 1vh;
-  max-width: 14vw;
+  max-width: 16vw;
   display: flex;
   /* flex-direction: column; */
   flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
+  /* align-items: center; */
+  justify-content: space-around;
   border: 1px solid grey;
   background: white;
   line-height: 1.9vh;

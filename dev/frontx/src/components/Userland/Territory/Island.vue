@@ -14,10 +14,6 @@
       > 
         {{ content.Title }} 
       </h1>
-      <!-- <h1
-        class="more"
-        @click.stop="$emit('more')"
-      >+</h1> -->
     </div>
     <div class="body">
       <vue-markdown
@@ -57,6 +53,7 @@ export default {
 .island {
   box-sizing: border-box;
   padding: 1vh;
+  margin: auto;
   /* max-width: 500px;
   max-height: 500px; */
   /* position: absolute; */

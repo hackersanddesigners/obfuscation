@@ -591,6 +591,7 @@ header > div {
   font-family: jet;
   font-size: calc(1.7pt * var(--scale));
   background: rgb(241, 241, 241);
+  overflow: hidden;
 }
 
 .blur header,

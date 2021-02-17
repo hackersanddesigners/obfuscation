@@ -10,24 +10,25 @@
     }"
   >
   
-    <div class="background">
+    <div 
+      v-if="type === 'about' || type === 'videos'"
+      class="background"
+    >
       <vue-markdown>
         {{ territory.body || territory.name }}
       </vue-markdown>
     </div>
 
+    <Timetable
+      v-if="content && type === 'sessions'"
+      :content="content"
+    />
+
     <Island
-      v-if="content"
+      v-else-if="content"
       :name="territory.name"
       :slug="territory.slug"
       :content="content"
-      @more="$router.push(`#${territory.slug}`); more=true"
-    />
-
-    <Overlay
-      :class="{ hidden: !more }"
-      :sections="content"
-      @less="more=false"
     />
 
   </div>
@@ -35,13 +36,13 @@
 
 <script>
 import Island from './Island'
-import Overlay from './Overlay'
+import Timetable from './Timetable'
 
 export default {
   name: 'Territory',
   components: {
     Island,
-    Overlay,
+    Timetable
   },
   props: [
     'territory',
@@ -49,25 +50,63 @@ export default {
   data() {
     return {
       content: [],
-      more: false
+      type: null,
     }
   },
   computed: {
   },
 
   created() {
-    if (this.slug === 'reception') {
-      this.$http.get(`${ this.$apiURL }/about`)
-        .then((response) => { 
-          this.content = response.data.Sections
-        })
-        .catch((error) => { 
-          console.log(error)
-        })
+
+    let 
+      query,
+      isCollection
+
+    switch(this.territory.slug) {
+
+      case 'reception':
+        query = 'about'
+        isCollection = false
+        break
+
+      case 'timetable':
+        query = 'sessions'
+        isCollection = true
+        break
+
+      case 'exhibition':
+        query = 'videos'
+        isCollection = true
+        break
+
+      default: 
+        query = 'about'
+        isCollection = false
+    
     }
+
+    this.getContent(query, isCollection)
+    this.type = query
+
 
   },
   methods: {
+
+    getContent(query, isCollection) {
+      this.$http.get(`${ this.$apiURL }/${ query }`)
+
+        .then((response) => { 
+          this.content = 
+            isCollection ? 
+            response.data : 
+            response.data.Sections
+        })
+
+        .catch((error) => { 
+          console.log(error)
+        })
+    },
+
     toNearestX(num, X) {
       return Math.floor(100 * (num) / X) * X
     },
@@ -81,10 +120,8 @@ export default {
 .territory {
   box-sizing: border-box;
   position: absolute;
-  /* width: 100vw;
-  height: 100vh; */
   display: flex;
-  justify-content: center;
+  /* justify-content: center; */
   align-items: center;
   /* pointer-events: none; */
   cursor: inherit;
