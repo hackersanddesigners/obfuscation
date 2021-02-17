@@ -1,7 +1,7 @@
 <template>
   <div 
     class="territory"
-    :id="territory.slug"
+    :id="slug"
     :style="{
       left: `${ toNearestX(territory.borders.x, 0.4) }%`,
       top: `${ toNearestX(territory.borders.y, 0.4) }%`,
@@ -10,26 +10,24 @@
     }"
   >
   
-    <div 
-      class="background"
-    >
+    <div class="background">
       <vue-markdown>
         {{ territory.name || territory.body }}
       </vue-markdown>
     </div>
 
     <Reception
-      v-if="content && territory.slug === 'reception'"
+      v-if="content && slug === 'reception'"
       :content="content"
     />
 
     <Timetable
-      v-else-if="content && territory.slug === 'timetable'"
+      v-else-if="content && slug === 'timetable'"
       :content="content"
     />
 
     <Hangout
-      v-else-if="content && territory.slug === 'hangout'"
+      v-else-if="content && slug === 'hangout'"
       :content="content"
     />
 
@@ -64,59 +62,36 @@ export default {
   data() {
     return {
       content: [],
-      type: null,
     }
   },
   computed: {
+    slug() { return this.territory.slug }
   },
 
   created() {
 
     let 
-      query,
-      isCollection
-
-    switch(this.territory.slug) {
-
-      case 'reception':
-        query = 'statics'
-        isCollection = true
-        break
-
-      case 'timetable':
-        query = 'sessions'
-        isCollection = true
-        break
-
-      case 'exhibition':
-        query = 'videos'
-        isCollection = true
-        break
-
-      default: 
-        query = null
-        isCollection = false
-    
-    }
+      slug = this.slug,
+      query = 
+        slug === 'reception' ? 'statics' :
+        slug === 'exhibition' ? 'videos' :
+        slug === 'timetable' ? 'sessions' :
+        slug === 'glossary' ? 'glossaries' :
+        slug === 'library' ? 'libraries' :
+        null
 
     if (query) {
-      this.getContent(query, isCollection)    
-      this.type = query
+      this.getContent(query)    
     }
-
-
 
   },
   methods: {
 
-    getContent(query, isCollection) {
+    getContent(query) {
       this.$http.get(`${ this.$apiURL }/${ query }`)
 
         .then((response) => { 
-          this.content = 
-            isCollection ? 
-            response.data : 
-            response.data.Sections
+          this.content = response.data 
         })
 
         .catch((error) => { 
@@ -161,6 +136,6 @@ export default {
   opacity: 0.5;
 }
 .territory .background div {
-  max-width: 80%;
+  /* max-width: 80%; */
 }
 </style>

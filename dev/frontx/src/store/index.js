@@ -501,20 +501,27 @@ const store = new Vuex.Store({
       let found = state.territories.find((territory) => {
 
       const 
-        // territoryEl = document.querySelector(`#${territory.slug}`),
         minX = territory.borders.x - 0.5 / state.scale,
         minY = territory.borders.y - 0.5 / state.scale,
-        maxX = territory.borders.y + 0.5 / state.scale,
+        maxX = territory.borders.x + 0.5 / state.scale,
         maxY = territory.borders.y + 0.5 / state.scale
+
+        // if (territory.slug === 'glossary') {
+        //   console.log('*******************************')
+        //   console.log('* minX:    ', minX)
+        //   console.log('* borderX: ', territory.borders.x)
+        //   console.log('* maxX:    ', maxX)
+        //   console.log('* coordsX: ', coords.x)
+        //   console.log('*******************************')
+        // }
 
         if (coords.x > minX && coords.x < maxX
          && coords.y > minY && coords.y < maxY
          ) {
-            // console.log(territory)
             return territory
           }
 
-        }) 
+      }) 
       return found || general
     },
 

@@ -40,28 +40,32 @@ export default {
   list-style: none;
   margin: 0.5vh;
   margin-bottom: 1vh;
-  /* display: flex; */
-  /* align-items: center; */
+  /* display: flex;
+  align-items: baseline;
+  justify-content: flex-start; */
 }
 .list-territory span {
-  margin-right: 0px;
-  line-height: 1.5;
+  margin-right: 10px;
+  line-height: 1.2;
+  /* display: inline; */
 }
 .list-territory .name {
-  /* text-decoration: underline; */
+  text-decoration: underline;
   cursor: pointer;
-  border-bottom: 1px solid;
-  transition: border 0.2s ease;
+  /* border-bottom: 1px solid; */
+  /* transition: border 0.2s ease; */
 }
 
 .list-territory:hover .name {
-  border-bottom: 3px solid;
+  /* border-bottom: 3px solid; */
+  text-decoration: underline;
 }
 
 .list-territory.active {
   color: blue;
 }
 .list-territory.active .name {
-  border-bottom: 3px solid;
+  /* border-bottom: 3px solid; */
+  text-decoration: underline;
 }
 </style>

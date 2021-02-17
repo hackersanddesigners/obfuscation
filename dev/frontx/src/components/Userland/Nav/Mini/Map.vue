@@ -45,7 +45,7 @@
 
       @mousedown.native="handleTerrMouseDown($event)"
       @mousemove.native="handleTerrMouseMove($event)"
-      @mouseup.native="handleTerrMouseUp($event,territory)"
+      @mouseup.native="handleTerrMouseUp($event, territory)"
     />
 
     <div class="zoom">

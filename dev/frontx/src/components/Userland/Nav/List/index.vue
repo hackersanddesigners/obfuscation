@@ -79,7 +79,7 @@ export default {
   margin-top: 1vh;
   margin-left: 1vh;
   padding: 0.5vh;
-  width: 14vw;
+  min-width: 16vw;
   font-size: 14pt;
   background: white;
   border: 1px solid grey;
