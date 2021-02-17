@@ -27,7 +27,7 @@ const store = new Vuex.Store({
 
     // initial values for application state.
 
-    version: 5,
+    version: 6,
     save: true,
 
     uid: null,
@@ -510,7 +510,7 @@ const store = new Vuex.Store({
         if (coords.x > minX && coords.x < maxX
          && coords.y > minY && coords.y < maxY
          ) {
-            console.log(territory)
+            // console.log(territory)
             return territory
           }
 

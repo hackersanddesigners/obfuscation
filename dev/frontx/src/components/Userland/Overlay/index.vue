@@ -12,15 +12,19 @@
     @mouseup.stop="visible = true"
   >
     <div class="overlay">
-    <span 
-      class="close"
-      @click.stop="visible = hover = false"
-    >✕</span>
-    <Section
-      v-for="section in content"
-      :key="section.id"
-      :section="section"
-    />
+      <span 
+        class="close"
+        @click.stop="visible = hover = false"
+      >✕</span>
+
+      <!-- <div class="content"> -->
+        <Section
+          v-for="section in content"
+          :key="section.id"
+          :section="section"
+        />
+      <!-- </div> -->
+
     </div>
   </div>
 </template>
@@ -38,7 +42,6 @@ export default {
   ],
   data() {
     return {
-      sections: null,
       content: null,
       type: null,
 
@@ -48,49 +51,62 @@ export default {
     }
   },
   computed: {
-    location () { return this.$store.state.location },
+    location() { return this.$store.state.location },
+    territoryBySlug() { return this.$store.getters.territoryBySlug },
   },
   watch: {
     location (newLocation, oldLocation) {
       if (newLocation.slug !== oldLocation.slug) {
 
-        let 
-          query,
-          isCollection
+        // let 
+        //   query,
+        //   isCollection
 
-        switch(this.location.slug) {
+        // switch(this.location.slug) {
 
-          case 'reception':
-            query = 'about'
-            isCollection = false
-            break
+        //   case 'reception':
+        //     query = 'about'
+        //     isCollection = false
+        //     break
 
-          case 'timetable':
-            query = 'sessions'
-            isCollection = true
-            break
+        //   case 'timetable':
+        //     query = 'sessions'
+        //     isCollection = true
+        //     break
 
-          case 'exhibition':
-            query = 'videos'
-            isCollection = true
-            break
+        //   case 'exhibition':
+        //     query = 'videos'
+        //     isCollection = true
+        //     break
 
-          default: 
-            query = undefined
-            isCollection = true
+        //   default: 
+        //     query = undefined
+        //     isCollection = false
         
-        }
+        // }
 
-        if (query) {
-          this.updateContent(query, isCollection)
-        }
+        // if (query) {
+        //   // this.updateContent(query, isCollection)
+        // }
 
-        if (!isCollection) {
+        // if (!isCollection) {
+        //   this.peak = true
+        // } else {
+        //   this.visible = this.hover = this.peak =  false
+        // }
+        // this.type = query
+
+        if (this.location.slug !== 'general') {
+          // this.updateContent(query, isCollection)
+          this.content = []
+          this.content[0] = this.territoryBySlug(this.location.slug)
           this.peak = true
         } else {
           this.visible = this.hover = this.peak =  false
+        
         }
-        this.type = query
+
+
 
       }
     },

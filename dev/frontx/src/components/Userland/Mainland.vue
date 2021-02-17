@@ -380,6 +380,7 @@ export default {
           collection = name.split('/')[0],
           page = name.split('/')[1],
           territoryName = 
+            collection === 'statics' ? 'reception' :
             collection === 'sessions' ? 'timetable' :
             collection === 'videos' ? 'exhibtion' :
             collection === 'glossary' ? 'glossary' :

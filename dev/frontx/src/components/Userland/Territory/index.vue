@@ -11,7 +11,6 @@
   >
   
     <div 
-      v-if="type === 'about' || type === 'videos'"
       class="background"
     >
       <vue-markdown>
@@ -21,6 +20,11 @@
 
     <Timetable
       v-if="content && type === 'sessions'"
+      :content="content"
+    />
+
+    <Reception
+      v-else-if="content && type === 'statics'"
       :content="content"
     />
 
@@ -37,12 +41,14 @@
 <script>
 
 import Island from './Island'
+import Reception from './Reception'
 import Timetable from './Timetable'
 
 export default {
   name: 'Territory',
   components: {
     Island,
+    Reception,
     Timetable
   },
   props: [
@@ -66,8 +72,8 @@ export default {
     switch(this.territory.slug) {
 
       case 'reception':
-        query = 'about'
-        isCollection = false
+        query = 'statics'
+        isCollection = true
         break
 
       case 'timetable':
@@ -81,13 +87,16 @@ export default {
         break
 
       default: 
-        query = 'about'
+        query = null
         isCollection = false
     
     }
 
-    this.getContent(query, isCollection)
-    this.type = query
+    if (query) {
+      this.getContent(query, isCollection)    
+      this.type = query
+    }
+
 
 
   },

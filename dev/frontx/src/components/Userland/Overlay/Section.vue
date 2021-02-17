@@ -5,13 +5,22 @@
         {{ section.Subtitle || section.Start}} 
       </h3>
       <h1 class="title"> 
-        {{ section.Title }} 
+        {{ 
+          section.Title || 
+          section.title ||
+          section.Name ||
+          section.name 
+        }} 
       </h1>
     </div>
     <div class="body">
       <vue-markdown
-        v-if="section.Body || section.Description"
-        :source="section.Body || section.Description"
+        :source="
+          section.Body || 
+          section.body || 
+          section.Description ||
+          section.description
+        "
       />
     </div>
  </section>
@@ -28,6 +37,7 @@ export default {
     }
   },
   created() {
+    console.log(this.section)
   }
 }
 </script>
