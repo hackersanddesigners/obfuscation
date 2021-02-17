@@ -496,24 +496,40 @@ const store = new Vuex.Store({
         name: 'general',
         slug: 'general'
       }
+
       let coords = getters.coordsFrom(pos)
 
       let found = state.territories.find((territory) => {
 
-      const 
-        minX = territory.borders.x - 0.5 / state.scale,
-        minY = territory.borders.y - 0.5 / state.scale,
-        maxX = territory.borders.x + 0.5 / state.scale,
-        maxY = territory.borders.y + 0.5 / state.scale
+        const 
+          territoryEl = document.querySelector(`#${territory.slug}`),
+          realWidth = territoryEl.scrollWidth,
+          realHeight = territoryEl.scrollHeight,
+          width = realWidth / (state.scale * state.windowSize.w),
+          height = realHeight / (state.scale * state.windowSize.h),
 
-        // if (territory.slug === 'glossary') {
-        //   console.log('*******************************')
-        //   console.log('* minX:    ', minX)
-        //   console.log('* borderX: ', territory.borders.x)
-        //   console.log('* maxX:    ', maxX)
-        //   console.log('* coordsX: ', coords.x)
-        //   console.log('*******************************')
-        // }
+          minX = territory.borders.x - 0.5 / state.scale,
+          minY = territory.borders.y - 0.5 / state.scale,
+          maxX = width + territory.borders.x - 0.5 / state.scale,
+          maxY = height + territory.borders.y - 0.5 / state.scale
+
+          // if (territory.slug === 'glossary') {
+          //   console.log('* territory:  ', territory.slug)
+          //   console.log('**********************************')
+          //   console.log('* realWidth:  ', realWidth)
+          //   console.log('* width:      ', width)
+          //   console.log('* minX:       ', minX)
+          //   console.log('* borderX:    ', territory.borders.x)
+          //   console.log('* maxX:       ', maxX)
+          //   console.log('* coordsX:    ', coords.x)
+          //   console.log('* realHeight: ', realHeight)
+          //   console.log('* height:     ', height)
+          //   console.log('* minY:       ', minY)
+          //   console.log('* borderY:    ', territory.borders.y)
+          //   console.log('* maxY:       ', maxY)
+          //   console.log('* coordsY:    ', coords.y)
+          //   console.log('**********************************')
+          // }
 
         if (coords.x > minX && coords.x < maxX
          && coords.y > minY && coords.y < maxY

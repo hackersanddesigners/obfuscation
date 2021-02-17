@@ -9,7 +9,8 @@
           section.Title || 
           section.title ||
           section.Name ||
-          section.name 
+          section.name ||
+          section.Term 
         }} 
       </h1>
     </div>
@@ -19,7 +20,16 @@
           section.Body || 
           section.body || 
           section.Description ||
-          section.description
+          section.description ||
+          section.Definition
+        "
+      />
+    </div>
+    <div class="footer">
+      <vue-markdown
+        :source="
+          section.Source || 
+          ''
         "
       />
     </div>
@@ -59,5 +69,9 @@ section .header h1 {
 }
 section .body {
   font-size: 12.5pt;
+}
+section .footer {
+  /* position: absolute;
+  bottom: 10px; */
 }
 </style>

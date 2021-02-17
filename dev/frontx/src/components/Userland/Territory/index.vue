@@ -26,6 +26,16 @@
       :content="content"
     />
 
+    <Glossary
+      v-else-if="content && slug === 'glossary'"
+      :content="content"
+    />
+
+    <Library
+      v-else-if="content && slug === 'library'"
+      :content="content"
+    />
+
     <Hangout
       v-else-if="content && slug === 'hangout'"
       :content="content"
@@ -43,18 +53,22 @@
 
 <script>
 
-import Island from './Island'
 import Reception from './Reception'
 import Timetable from './Timetable'
+import Glossary from './Glossary'
+import Library from './Library'
 import Hangout from './Hangout'
+import Island from './Island'
 
 export default {
   name: 'Territory',
   components: {
-    Island,
     Reception,
     Timetable,
-    Hangout
+    Glossary,
+    Library,
+    Hangout,
+    Island,
   },
   props: [
     'territory',

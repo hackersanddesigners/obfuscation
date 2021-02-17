@@ -93,7 +93,7 @@ export default {
   margin-left: 20vw;
   margin-top: 20vh;
   /* padding: 0vh 5vw; */
-  /* width: 200%;  */
+  /* width: 100%;  */
   height: 100%;
   display: flex;
   flex-direction: column;
