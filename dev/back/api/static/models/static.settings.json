@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "statics",
+  "info": {
+    "name": "Static",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "Title": {
+      "type": "string"
+    },
+    "Subtitle": {
+      "type": "string"
+    },
+    "Sections": {
+      "type": "dynamiczone",
+      "components": [
+        "sections.section"
+      ]
+    }
+  }
+}
