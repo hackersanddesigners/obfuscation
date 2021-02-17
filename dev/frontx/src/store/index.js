@@ -97,7 +97,9 @@ const store = new Vuex.Store({
       Vue.set(state.messages, message.uid, message)
     },
 
-     setTerritories: (state, regions) => state.territories = regions,
+    setTerritories: (state, regions) => {
+      state.territories = regions
+    },
 
 
     // app interface mutations.
@@ -495,6 +497,7 @@ const store = new Vuex.Store({
         slug: 'general'
       }
       let coords = getters.coordsFrom(pos)
+
       let found = state.territories.find((territory) => {
 
       const 
@@ -504,9 +507,10 @@ const store = new Vuex.Store({
         maxX = territory.borders.y + 0.5 / state.scale,
         maxY = territory.borders.y + 0.5 / state.scale
 
-        if (coords.x >= minX && coords.x < maxX
-         && coords.y >= minY && coords.y < maxY
+        if (coords.x > minX && coords.x < maxX
+         && coords.y > minY && coords.y < maxY
          ) {
+            console.log(territory)
             return territory
           }
 

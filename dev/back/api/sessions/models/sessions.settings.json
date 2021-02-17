@@ -52,6 +52,10 @@
       "collection": "hosts",
       "via": "moderating",
       "dominant": true
+    },
+    "glossaries": {
+      "via": "sessions",
+      "collection": "glossary"
     }
   }
 }

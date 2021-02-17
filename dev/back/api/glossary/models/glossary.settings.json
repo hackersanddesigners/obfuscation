@@ -1,0 +1,29 @@
+{
+  "kind": "collectionType",
+  "collectionName": "glossaries",
+  "info": {
+    "name": "Glossary"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "Term": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "Term"
+    },
+    "Definition": {
+      "type": "richtext"
+    },
+    "sessions": {
+      "collection": "sessions",
+      "via": "glossaries",
+      "dominant": true
+    }
+  }
+}
