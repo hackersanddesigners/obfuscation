@@ -37,7 +37,7 @@ export default {
     }
   },
   created() {
-    console.log(this.section)
+    // console.log(this.section)
   }
 }
 </script>

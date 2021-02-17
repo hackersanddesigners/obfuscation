@@ -1,23 +1,15 @@
 <template>
-  <div class="reception">
-    <Island
-      v-for="section in content"
-      :key="section.slug"
-      :section="section"
-    />
+  <div class="hangout">
   </div>
 </template>
 
 <script>
-import Island from './Island'
 
 export default {
   name: 'Reception',
   components: {
-    Island
   },
   props: [
-    'content',
   ],
   data() {
     return {
@@ -39,20 +31,24 @@ export default {
 </script>
 
 <style scoped>
-.reception {
+.hangout {
   box-sizing: border-box;
   /* margin-left: 20vw; */
   /* margin-top: 20vh; */
   /* padding: 0vh 5vw; */
   margin: auto;
   padding: 0px 20%;
-  height: 100%;
-  width: 100%;
+  height: 80%;
+  width: 80%;
+  border: 0.5px solid;
+  opacity: 0.15;
+  border-radius: 100%;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
+
 }
 
 </style>

@@ -2,8 +2,8 @@
   <div 
     class="island"
     :style="{
-      width: `${ 100 / 5 }vw`,
-      height: `${100 / 5 }vh`,
+      width: `${ 100 / 6 }vh`,
+      height: `${ 100 / 6 }vh`,
     }"
   >
     
@@ -47,8 +47,8 @@ export default {
 .island {
   box-sizing: border-box;
   position: relative;
-  flex-shrink: 0;
-  min-width: 10%;
+  flex: 0 0;
+  min-width: 15vw;
   margin: 1.25vh 1.25vw;
   padding: 2vh;
 

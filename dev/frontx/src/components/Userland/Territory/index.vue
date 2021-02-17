@@ -18,13 +18,18 @@
       </vue-markdown>
     </div>
 
-    <Timetable
-      v-if="content && type === 'sessions'"
+    <Reception
+      v-if="content && territory.slug === 'reception'"
       :content="content"
     />
 
-    <Reception
-      v-else-if="content && type === 'statics'"
+    <Timetable
+      v-else-if="content && territory.slug === 'timetable'"
+      :content="content"
+    />
+
+    <Hangout
+      v-else-if="content && territory.slug === 'hangout'"
       :content="content"
     />
 
@@ -43,13 +48,15 @@
 import Island from './Island'
 import Reception from './Reception'
 import Timetable from './Timetable'
+import Hangout from './Hangout'
 
 export default {
   name: 'Territory',
   components: {
     Island,
     Reception,
-    Timetable
+    Timetable,
+    Hangout
   },
   props: [
     'territory',

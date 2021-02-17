@@ -2,7 +2,10 @@
   <div
     :class="[
       'mini-territory',
-      { hovered: hovered }  
+      { 
+        hovered: hovered ,
+        circle: isCircle
+      }  
     ]"
     :id=" 'mini-' + territory.slug"
     :style="{ 
@@ -13,11 +16,11 @@
     }"
   >
     <div class="box">
-      <!-- <div class="background">
+      <div class="background">
         <vue-markdown>
-          {{ territory.body || territory.name }}
+          {{ territory.name }}
         </vue-markdown>
-      </div> -->
+      </div>
     </div>
   </div>
 </template>
@@ -30,6 +33,7 @@ export default {
     'hovered'
   ], 
   computed: {
+
     miniSize() {
       const 
         territoryEl = document.querySelector(`#${this.territory.slug}`),
@@ -41,7 +45,15 @@ export default {
         h: miniHeight,
         w: miniWidth
       }
-    }
+    },
+
+    isCircle() {
+      return (
+        this.territory.slug === 'reception' ||
+        this.territory.slug === 'hangout'
+      )
+    },
+
   },
 
   mounted() {
@@ -93,5 +105,8 @@ export default {
   border-radius: 5px;
   /* border: 1px solid grey; */
   /* border-radius: 100%; */
+}
+.mini-territory.circle .box {
+  border-radius: 100%;
 }
 </style>

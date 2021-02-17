@@ -194,6 +194,7 @@ export default {
   border: 1px solid grey;
   cursor: pointer;
   overflow: hidden;
+  user-select: none;
 }
 #minimap .zoom {
   box-sizing: border-box;

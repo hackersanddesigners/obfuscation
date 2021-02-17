@@ -17,13 +17,13 @@
         @click.stop="visible = hover = false"
       >✕</span>
 
-      <!-- <div class="content"> -->
+      <div class="content">
         <Section
           v-for="section in content"
           :key="section.id"
           :section="section"
         />
-      <!-- </div> -->
+      </div>
 
     </div>
   </div>
@@ -58,46 +58,7 @@ export default {
     location (newLocation, oldLocation) {
       if (newLocation.slug !== oldLocation.slug) {
 
-        // let 
-        //   query,
-        //   isCollection
-
-        // switch(this.location.slug) {
-
-        //   case 'reception':
-        //     query = 'about'
-        //     isCollection = false
-        //     break
-
-        //   case 'timetable':
-        //     query = 'sessions'
-        //     isCollection = true
-        //     break
-
-        //   case 'exhibition':
-        //     query = 'videos'
-        //     isCollection = true
-        //     break
-
-        //   default: 
-        //     query = undefined
-        //     isCollection = false
-        
-        // }
-
-        // if (query) {
-        //   // this.updateContent(query, isCollection)
-        // }
-
-        // if (!isCollection) {
-        //   this.peak = true
-        // } else {
-        //   this.visible = this.hover = this.peak =  false
-        // }
-        // this.type = query
-
         if (this.location.slug !== 'general') {
-          // this.updateContent(query, isCollection)
           this.content = []
           this.content[0] = this.territoryBySlug(this.location.slug)
           this.peak = true
@@ -106,24 +67,14 @@ export default {
         
         }
 
-
-
       }
     },
 
     wantsToView(newSlug) {
-      // if (newSlug.page !== oldSlug.page) {
-
-        const 
-          query = newSlug.collection + '?slug=' + newSlug.page,
-          isCollection = false
-
-          console.log(query)
-        
-        this.updateContent(query, isCollection)
-        this.visible = this.peak = true
-
-      // }
+      const query = newSlug.collection + '?slug=' + newSlug.page
+      
+      this.updateContent(query)
+      this.visible = this.peak = true
     }
 
   },
@@ -131,14 +82,12 @@ export default {
   },
   methods: {
 
-    updateContent(query, isCollection) {
+    updateContent(query) {
       this.$http.get(`${ this.$apiURL }/${ query }`)
 
         .then((response) => { 
           this.content = 
-            isCollection ? 
-            response.data : 
-            response.data.Sections || 
+            response.data[0].Sections ||
             response.data
           console.log(this.content)
         })
@@ -147,7 +96,7 @@ export default {
           console.log(error)
         })
     },
-    
+
   }
 }
 </script>
