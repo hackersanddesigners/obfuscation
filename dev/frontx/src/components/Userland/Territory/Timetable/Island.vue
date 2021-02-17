@@ -15,7 +15,7 @@
     <div class="header">
       <h1
         class="title"
-        @click="$router.push(`/sessions/${ session.slug }`)"
+        @mousedown.stop="$router.push(`/sessions/${ session.slug }`)"
       > 
         {{ session.Title }} 
       </h1>

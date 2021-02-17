@@ -2,15 +2,15 @@
   <div 
     class="island"
     :style="{
-      width: `${ 100 / 6 }vh`,
-      height: `${ 100 / 6 }vh`,
+      width: `${ 100 / 5 }vh`,
+      height: `${ 100 / 5 }vh`,
     }"
   >
     
     <div class="header">
       <h1
         class="title"
-        @click="$router.push(`/statics/${ section.slug }`)"
+        @mousedown.stop="$router.push(`/statics/${ section.slug }`)"
       > 
         {{ section.Title }} 
       </h1>
@@ -48,8 +48,8 @@ export default {
   box-sizing: border-box;
   position: relative;
   flex: 0 0;
-  min-width: 15vw;
-  margin: 1.25vh 1.25vw;
+  min-width: 20vw;
+  /* margin: 1.25vh 1.25vw; */
   padding: 2vh;
 
   display: flex;
@@ -58,13 +58,13 @@ export default {
 
   background-color: var(--white-glass);
   box-shadow: var(--island-shadow);
-  border-top-left-radius: var(--small-island-curve);
-  border-bottom-right-radius: var(--small-island-curve);
-  /* border-radius: var(--small-island-curve); */
+  /* border-top-left-radius: var(--small-island-curve);
+  border-bottom-right-radius: var(--small-island-curve); */
+  border-radius: var(--small-island-curve);
   transition: border-radius 0.2s ease;
 }
 .island:hover {
-  border-top-left-radius: 0px;
+  /* border-top-left-radius: 0px; */
 }
 
 .island .header {
@@ -81,6 +81,7 @@ export default {
   font-size: calc(5pt * var(--scale));
   font-family: 'zxx-noise';
   text-align: center;
+  word-break: break-all;
   cursor: pointer;
 }
 .island .header .title:hover {

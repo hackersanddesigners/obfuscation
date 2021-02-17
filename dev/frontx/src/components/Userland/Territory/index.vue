@@ -155,8 +155,8 @@ export default {
   align-items: center;
   text-align: center;
   font-family: 'zxx-noise';
-  font-size: calc(18pt * var(--scale));
-  line-height: calc(18pt * var(--scale));
+  font-size: calc(25pt * var(--scale));
+  line-height: calc(21pt * var(--scale));
   filter: blur(10px);
   opacity: 0.5;
 }

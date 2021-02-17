@@ -45,8 +45,8 @@ export default {
   /* margin-top: 20vh; */
   /* padding: 0vh 5vw; */
   margin: auto;
-  padding: 0px 20%;
-  height: 100%;
+  padding: 0px 30%;
+  max-height: 100%;
   width: 100%;
   display: flex;
   flex-direction: row;
