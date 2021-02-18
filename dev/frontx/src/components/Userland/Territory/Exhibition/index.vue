@@ -60,18 +60,19 @@ export default {
 .exhibition {
   box-sizing: border-box;
   margin-top: 20vh;
-  margin-left: 20vw;
+  margin-left: 15vw;
 
   /* padding: 20vh 20vw; */
   min-height: 200%;
-  min-width: 200%;
+  min-width: 250%;
   height: 200%;
-  width: 200%;
+  width: 250%;
   display: flex;
   /* flex-direction: column; */
   flex-wrap: wrap;
-  justify-content: space-around;
+  justify-content: flex-start;
   align-items: flex-start;
 }
+
 
 </style>

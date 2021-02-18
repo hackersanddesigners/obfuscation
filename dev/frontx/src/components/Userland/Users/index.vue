@@ -114,8 +114,9 @@ export default {
   padding-left: 0.5vw;
   line-height: 1.9vh;
   width: 100%;
-  height: 2vh;
+  height: 4vh;
   display: flex;
+  align-items: center;
   border-bottom: 1px solid grey;
 }
 

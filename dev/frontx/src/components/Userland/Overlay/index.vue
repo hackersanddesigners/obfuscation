@@ -9,7 +9,7 @@
 
     @mouseover.stop="peak ? hover = true : null"
     @mouseout.stop="peak ? hover = false : null"
-    @mouseup.stop="visible = true"
+    @mouseup.stop="peak && hover ? visible = true : null"
   >
     <div class="overlay">
       <span 
