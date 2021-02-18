@@ -163,6 +163,7 @@ export default {
 .island .header h1 { 
   font-size: calc(5pt * var(--scale));
   font-family: 'zxx-noise';
+  font-weight: normal;
   margin-top: 0px;
   text-align: center;
   cursor: pointer;

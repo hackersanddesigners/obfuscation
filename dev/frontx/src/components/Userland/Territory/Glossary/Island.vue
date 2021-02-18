@@ -80,6 +80,7 @@ export default {
   font-size: calc(5pt * var(--scale));
   font-family: 'zxx-noise';
   text-align: center;
+  font-weight: normal;
   word-break: break-all;
   cursor: pointer;
 }
