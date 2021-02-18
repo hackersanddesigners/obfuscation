@@ -21,6 +21,11 @@
       :content="content"
     />
 
+    <Exhibition
+      v-else-if="content && slug === 'exhibition'"
+      :content="content"
+    />
+
     <Timetable
       v-else-if="content && slug === 'timetable'"
       :content="content"
@@ -54,6 +59,7 @@
 <script>
 
 import Reception from './Reception'
+import Exhibition from './Exhibition'
 import Timetable from './Timetable'
 import Glossary from './Glossary'
 import Library from './Library'
@@ -64,6 +70,7 @@ export default {
   name: 'Territory',
   components: {
     Reception,
+    Exhibition,
     Timetable,
     Glossary,
     Library,
@@ -129,7 +136,7 @@ export default {
   position: absolute;
   display: flex;
   /* justify-content: center; */
-  align-items: center;
+  /* align-items: center; */
   /* pointer-events: none; */
   cursor: inherit;
   /* z-index: 1; */

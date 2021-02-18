@@ -382,7 +382,7 @@ export default {
           territoryName = 
             collection === 'statics' ? 'reception' :
             collection === 'sessions' ? 'timetable' :
-            collection === 'videos' ? 'exhibtion' :
+            collection === 'videos' ? 'exhibition' :
             collection === 'glossaries' ? 'glossary' :
             null,
           territory = this.territoryBySlug(territoryName)
