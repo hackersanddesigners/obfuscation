@@ -86,7 +86,10 @@ export default {
     }
   },
   computed: {
-    slug() { return this.territory.slug }
+    slug() { return this.territory.slug },
+    scale() { return this.$store.state.scale },
+    windowWidth() { return this.$store.state.windowSize.w },
+    windowHeight() { return this.$store.state.windowSize.h }
   },
 
   created() {
@@ -106,6 +109,17 @@ export default {
     }
 
   },
+  mounted() {
+
+    // setTimeout(() => {
+
+    //   const size = this.getTerritorySize()
+    //   this.$store.commit('setTerritorySize', this.territory, size)
+
+    // }, 500)
+
+  
+  },
   methods: {
 
     getContent(query) {
@@ -124,6 +138,23 @@ export default {
     toNearestX(num, X) {
       return Math.floor(100 * (num) / X) * X
     },
+
+    getTerritorySize() {
+      const 
+        territoryEl = this.$el,
+        realWidth = territoryEl.scrollWidth,
+        realHeight = territoryEl.scrollHeight,
+        width = realWidth / (this.scale * this.windowWidth),
+        height = realHeight / (this.scale * this.windowHeight)
+
+      return { 
+        w: width,
+        h: height
+      }
+      
+    }
+
+
 
   }
 

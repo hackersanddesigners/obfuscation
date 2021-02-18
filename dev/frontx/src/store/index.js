@@ -100,6 +100,11 @@ const store = new Vuex.Store({
     setTerritories: (state, regions) => {
       state.territories = regions
     },
+    setTerritorySize: (state, territory, size) => {
+      state.territories[state.territories.indexOf(territory)].w = size.w
+      state.territories[state.territories.indexOf(territory)].h = size.h
+      console.log(state.territories[state.territories.indexOf(territory)])
+    },
 
 
     // app interface mutations.
@@ -464,6 +469,11 @@ const store = new Vuex.Store({
       // messagesDBs = []
       // largestMessageDB = {}
     },
+
+    // setTerritorySize: (getters, slug, size) => {
+    //   const territory = getters.territoryBySlug(slug)
+    //   commit(seet)
+    // }
   
 
   },

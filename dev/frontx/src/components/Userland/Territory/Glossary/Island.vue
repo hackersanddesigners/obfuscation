@@ -2,7 +2,6 @@
   <div 
     class="island"
     :style="{
-      height: `${ 5 }vh`,
     }"
   >
     
@@ -47,9 +46,12 @@ export default {
   box-sizing: border-box;
   position: relative;
   flex: 0 0;
+  /* flex-grow: 1; */
   width: auto;
+  /* height: auto; */
+  max-width: 60%;
   margin-bottom: 2.5vh;
-  padding: 2vh 3vw;
+  padding: 1vh 3vw;
 
   display: flex;
   flex-direction: column;
@@ -77,7 +79,9 @@ export default {
   font-size: calc(3pt * var(--scale));
 }
 .island .header h1 { 
+  margin: 0;
   font-size: calc(5pt * var(--scale));
+  line-height: calc(5pt * var(--scale));
   font-family: 'zxx-noise';
   text-align: center;
   font-weight: normal;

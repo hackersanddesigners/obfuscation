@@ -2,14 +2,13 @@
   <div 
     class="island"
     :style="{
-      height: `${ 5 }vh`,
     }"
   >
     
     <div class="header">
       <h1
         class="title"
-        @mousedown.stop="$router.push(`/references/${ section.slug }`)"
+        @mousedown.stop="handleClick()"
       > 
         {{ section.Name }} 
       </h1>
@@ -29,13 +28,24 @@ export default {
   ],
   data() {
     return {
+      
     }
   },
   computed: {
+    src() {
+      return (
+        this.section.File ? this.$apiURL + this.section.File.url :
+        this.section.URL 
+      )
+    }
   },
   created() {
+    console.log(this.section)
   },
   methods: {
+    handleClick() {
+      window.location.href = this.src
+    }
 
   }
 
@@ -47,9 +57,13 @@ export default {
   box-sizing: border-box;
   position: relative;
   /* flex: 0 0; */
+  flex: 0 0;
+  /* flex-grow: 1; */
   width: auto;
+  /* height: auto; */
+  max-width: 70%;
   margin-bottom: 2.5vh;
-  padding: 2vh 3vw;
+  padding: 1vh 3vw;
 
   display: flex;
   flex-direction: column;
@@ -77,7 +91,10 @@ export default {
   font-size: calc(3pt * var(--scale));
 }
 .island .header h1 { 
+  color: black;
+  margin: 0;
   font-size: calc(5pt * var(--scale));
+  line-height: calc(5pt * var(--scale));
   font-family: 'zxx-noise';
   font-weight: normal;
   text-align: center;
