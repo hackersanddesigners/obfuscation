@@ -1,7 +1,7 @@
 <template>
   <div class="glossary">
     <Island
-      v-for="section in extraContent"
+      v-for="section in content"
       :key="section.slug"
       :section="section"
     />
@@ -25,15 +25,6 @@ export default {
     }
   },
   computed: {
-    extraContent() {
-      return (
-        this.content.length <= 1 ? 
-        this.getMoreTerms() :
-        this.content
-      )
-      
-    
-    }
 
 
   },
@@ -43,13 +34,6 @@ export default {
   },
   methods: {
 
-      getMoreTerms() {
-        const more = []
-        for (let i = 0; i < 25; i++) {
-          more.push(this.content[0])
-        }
-        return more
-      }
 
   }
 

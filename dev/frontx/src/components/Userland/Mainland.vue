@@ -193,7 +193,6 @@ export default {
       'me',
       'isMe',
 
-      'territoryBySlug',
       'territoryByBorders',
       'userByName',
 
@@ -357,7 +356,7 @@ export default {
         // territory slugs are preceded with "#".
         
         } else if (type == 'territory') {
-          const territory = this.territoryBySlug(name)
+          const territory = this.territories[name]
           if (territory) {
             position = this.pixelsFrom(territory.borders)
           } else {
@@ -385,7 +384,7 @@ export default {
             collection === 'videos' ? 'exhibition' :
             collection === 'glossaries' ? 'glossary' :
             null,
-          territory = this.territoryBySlug(territoryName)
+          territory = this.territories[territoryName]
       
         position = this.pixelsFrom(territory.borders)
 
@@ -628,7 +627,14 @@ header > div {
   left: 0px;
   font-family: jet;
   font-size: calc(1.7pt * var(--scale));
-  background: rgb(241, 241, 241);
+  background: 
+    url("../../assets/textures/1.png") repeat
+  , url("../../assets/textures/2.png") repeat 400px
+  /* , url("../../assets/textures/favicon.png") repeat scroll */
+  ;
+  /* background-position: center center; */
+  /* background-size: 400px; */
+  background-color: rgb(241, 241, 241);
   overflow: hidden;
 }
 

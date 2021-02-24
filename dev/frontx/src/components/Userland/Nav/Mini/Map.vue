@@ -21,13 +21,14 @@
       :user="user"
     />
 
-    <Message
-      v-for="message in messages"
-      :key="message.uid"
-      :message="message"
-      :hovered="hovered"
-      :dragging="dragging"
-    />
+    <div class="messageContainer">
+      <Message
+        v-for="message in messages"
+        :key="message.uid"
+        :message="message"
+      />
+    </div>
+
 
     <Window
       id="viewport"
@@ -196,7 +197,21 @@ export default {
   overflow: hidden;
   user-select: none;
 }
+#minimap .messageContainer {
+  width: 100%;
+  height: 100%;
+  cursor: inherit;
+  filter: blur(2px);
+  opacity: 0.9;
+  transition: all 0.2s ease;
+}
+#minimap.hovered .messageContainer {
+  transition: all 0.2s ease;
+  opacity: 1;
+  filter: blur(0px);
+}
 #minimap .zoom {
+  z-index: 1;
   box-sizing: border-box;
   position: absolute;
   right: 0px;

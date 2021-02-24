@@ -81,7 +81,7 @@ export default {
   font-size: calc(5pt * var(--scale));
   font-family: 'zxx-noise';
   text-align: center;
-  word-break: break-all;
+  /* word-break: break-all; */
   cursor: pointer;
 }
 .island .header .title:hover {

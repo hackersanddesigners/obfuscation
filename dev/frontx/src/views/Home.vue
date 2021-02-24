@@ -15,7 +15,6 @@
 
 <script>
 import { mapState } from 'vuex'
-
 import Mainland from '../components/Userland/Mainland'
 import Nomansland from '../components/Userland/Nomansland'
 
@@ -66,7 +65,12 @@ export default {
 
     this.$http.get(`${ this.$apiURL }/regions`)
       .then((response) => { 
-        this.$store.commit('setTerritories', response.data)
+        const regions = {}
+        for (let r = 0; r < response.data.length; r++) {
+          const region = response.data[r]
+          regions[region.slug] = region
+        }
+        this.$store.commit('setTerritories', regions)
         this.loading = false
       })
       .catch((error) => { 

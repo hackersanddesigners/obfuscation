@@ -23,7 +23,7 @@
           ref="password"
           type="password" 
           name="moderator"
-          placeholder="moderator password"
+          placeholder="password"
           @keyup.enter=authenticate()
           autofocus
         />
@@ -109,12 +109,12 @@ export default {
 }
 #userlist .title {
   background: white;
-  overflow: hidden;
+  flex: 0 0;
   box-sizing: border-box;
   padding-left: 0.5vw;
   line-height: 1.9vh;
   width: 100%;
-  height: 4vh;
+  height: 2vh;
   display: flex;
   align-items: center;
   border-bottom: 1px solid grey;

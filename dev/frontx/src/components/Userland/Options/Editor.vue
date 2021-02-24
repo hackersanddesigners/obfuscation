@@ -33,7 +33,7 @@
           <input 
             ref="color" 
             type="text" 
-            data-jscolor=""
+            data-jscolor
             @input="updateColor"
           > 
 
@@ -98,6 +98,7 @@ export default {
 
     jscolor.presets.default = this.colorPickerOpts
     this.$refs.color.value = this.me.color
+    new jscolor(this.$refs.color)  
     jscolor.init()
 
     if (this.registered) { 
@@ -107,7 +108,7 @@ export default {
 
     this.$nextTick(() => {
       if (this.registered) {
-        new jscolor(this.$refs.color)      
+        new jscolor(this.$refs.color)   
       }
     })
     

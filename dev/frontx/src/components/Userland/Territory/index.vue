@@ -111,12 +111,15 @@ export default {
   },
   mounted() {
 
-    // setTimeout(() => {
+    setTimeout(() => {
 
-    //   const size = this.getTerritorySize()
-    //   this.$store.commit('setTerritorySize', this.territory, size)
+      const size = this.getTerritorySize()
+      this.$store.commit('setTerritorySize', {
+        slug: this.territory.slug,
+        size: size
+      })
 
-    // }, 500)
+    }, 500)
 
   
   },

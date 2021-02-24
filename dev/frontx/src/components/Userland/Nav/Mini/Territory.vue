@@ -11,8 +11,8 @@
     :style="{ 
       left: `${ toNearestX(territory.borders.x, 0.4) }%`,
       top: `${ toNearestX(territory.borders.y, 0.4) }%`,
-      height: `${ miniSize.h }px`,
-      width: `${ miniSize.w }px`,
+      width: `${ toNearestX(territory.borders.w, 0.4) }%`,
+      height: `${ toNearestX(territory.borders.h, 0.4) }%`,
     }"
   >
     <div class="box">
@@ -33,19 +33,6 @@ export default {
     'hovered'
   ], 
   computed: {
-
-    miniSize() {
-      const 
-        territoryEl = document.querySelector(`#${this.territory.slug}`),
-        realHeight = territoryEl.scrollHeight,
-        realWidth = territoryEl.scrollWidth,
-        miniHeight = 0.04 * realHeight,
-        miniWidth = 0.04 * realWidth
-      return  {
-        h: miniHeight,
-        w: miniWidth
-      }
-    },
 
     isCircle() {
       return (

@@ -27,7 +27,7 @@ const store = new Vuex.Store({
 
     // initial values for application state.
 
-    version: 6,
+    version: 8,
     save: true,
 
     uid: null,
@@ -48,18 +48,15 @@ const store = new Vuex.Store({
 
     // territories are defined in Strapi.
 
-    territories: [],
+    territories: {},
+    location: {},
 
 
     // default vlaues for map position, dimensions, 
     // grid, and scale (zoom).
 
-    location: {
-      name: 'general',
-      slug: 'general',
-    },
     scale: 5,
-    grid: true,
+    grid: false,
     windowSize: {
       w: window.innerWidth,
       h: window.innerHeight,
@@ -100,10 +97,10 @@ const store = new Vuex.Store({
     setTerritories: (state, regions) => {
       state.territories = regions
     },
-    setTerritorySize: (state, territory, size) => {
-      state.territories[state.territories.indexOf(territory)].w = size.w
-      state.territories[state.territories.indexOf(territory)].h = size.h
-      console.log(state.territories[state.territories.indexOf(territory)])
+    setTerritorySize: (state, territory) => {
+      Vue.set(state.territories[territory.slug].borders, 'w', territory.size.w)
+      Vue.set(state.territories[territory.slug].borders, 'h', territory.size.h)
+      console.log('got borders')
     },
 
 
@@ -492,13 +489,13 @@ const store = new Vuex.Store({
       }
     },
 
-    territoryByName: state => name => {
-      return state.territories.find(t => t.name == name) 
+    territoryByName: getters => name => {
+      return getters.territoriesArray.find(t => t.name == name) 
     },
 
 
     territoryBySlug: state => slug => {
-      return state.territories.find(t => t.slug == slug) 
+      return state.territories[slug] 
     },
 
     territoryByBorders: (state, getters) => pos => {
@@ -506,22 +503,15 @@ const store = new Vuex.Store({
         name: 'general',
         slug: 'general'
       }
-
       let coords = getters.coordsFrom(pos)
 
-      let found = state.territories.find((territory) => {
+      let found = getters.territoriesArray.find((territory) => {
 
         const 
-          territoryEl = document.querySelector(`#${territory.slug}`),
-          realWidth = territoryEl.scrollWidth,
-          realHeight = territoryEl.scrollHeight,
-          width = realWidth / (state.scale * state.windowSize.w),
-          height = realHeight / (state.scale * state.windowSize.h),
-
           minX = territory.borders.x - 0.5 / state.scale,
           minY = territory.borders.y - 0.5 / state.scale,
-          maxX = width + territory.borders.x - 0.5 / state.scale,
-          maxY = height + territory.borders.y - 0.5 / state.scale
+          maxX = territory.borders.w + territory.borders.x - 0.5 / state.scale,
+          maxY = territory.borders.h + territory.borders.y - 0.5 / state.scale
 
           // if (territory.slug === 'glossary') {
           //   console.log('* territory:  ', territory.slug)
@@ -599,6 +589,10 @@ const store = new Vuex.Store({
 
     messagesArray: state => {
       return Object.values(state.messages)
+    },
+
+    territoriesArray: state => {
+      return Object.values(state.territories)
     },
 
     centerOf: (state, getters) => obj => {

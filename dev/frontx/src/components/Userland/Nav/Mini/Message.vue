@@ -2,7 +2,6 @@
   <div
     :class="[
       'minimessage',
-      { clear: hovered || dragging }
     ]"
     :style="{ 
       left: `${ toNearestX(message.x, 0.4) }%`,
@@ -34,16 +33,6 @@ export default {
 .minimessage {
   position: absolute;
   height: 1px;
-  filter: blur(3px);
-  opacity: 0.9;
-  /* filter: var(--blur); */
-  transition: all 0.2s ease;
   background: var(--userColor);
-}
-
-.minimessage.clear {
-  transition: all 0.2s ease;
-  opacity: 1;
-  filter: blur(0px);
 }
 </style>

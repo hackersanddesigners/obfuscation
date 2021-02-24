@@ -40,7 +40,6 @@ export default {
     }
   },
   created() {
-    console.log(this.section)
   },
   methods: {
     handleClick() {
