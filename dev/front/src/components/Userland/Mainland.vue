@@ -6,6 +6,7 @@
     ]"
     :class="[
       { blur: !registered || editing },
+      { navHidden: !nav },
       location.slug
     ]"
   >
@@ -21,13 +22,42 @@
 
       <div id="navTitle">
         <span 
-          :class="{ selected: !desiresList }"
-          @click.stop="desiresList = false"
-        > map </span>
+          :class="[
+            'navToggle',
+            'hide',
+            { hidden: !nav }
+          ]"
+          @click.stop="nav = false"
+        > &lt; </span>
+
+        <div class="navType">
+          <span 
+            :class="[
+              'map',
+              { selected: !desiresList }
+            ]"
+            @click.stop="desiresList = false"
+          > map </span>
+          <span 
+            :class="[
+              'list',
+              { selected: desiresList }
+            ]"
+            @click.stop="desiresList = true"
+          > list </span>
+        </div>
         <span 
-          :class="{ selected: desiresList }"
-          @click.stop="desiresList = true"
-        > list </span>
+          :class="[
+            'navToggle',
+            'show',
+            { hidden: nav }
+          ]"
+          @click.stop="nav = true"
+        > 
+          <!-- &gt; -->
+           &gt; nav
+           <!-- ⓘ -->
+        </span>
       </div>
 
       <Minilist 
@@ -164,7 +194,8 @@ export default {
       ready: true,
 
       moreInformation: null,
-    
+
+      nav: true,
       desiresList: true,     
 
       editing: false,
@@ -596,12 +627,14 @@ export default {
 
 header {
   position: absolute;
+  left: 0;
   width: 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   z-index: 2;
-  transition: filter 0.3s ease;
+  /* transition: filter 0.3s ease; */
+  transition: all 0.2s ease;
 }
 
 header > div {
@@ -611,24 +644,64 @@ header > div {
   box-shadow: var(--ui-box-shadow);
 }
 
+.navHidden header {
+  left: -22vw;
+
+}
+
 #navTitle {
   box-sizing: border-box;
   position: relative;
   margin-top: 1vh;
   margin-left: 1vh;
-  padding: 0vh 0.5vh;
+  /* padding: 0vh 0.5vh; */
   font-size: 10pt;
   display: flex;
+  align-items: stretch;
+  background: none;
+  border: none;
+  box-shadow: none;
 }
+
+#navTitle .navToggle,
+#navTitle .navType {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  padding: 0vh 0.5vh;
+  background: white;
+  border: 1px solid grey;
+  border-radius: var(--ui-border-radius);
+  box-shadow: var(--ui-box-shadow);
+  z-index: 1;
+}
+#navTitle .navToggle {
+  margin-right: 1vh;
+  padding: 0vh 1vh;
+  transition: all 0.2s ease;
+}
+#navTitle .navToggle.hide {
+  /* z-index: 1; */
+}
+#navTitle .navToggle.show {
+  position: fixed;
+  padding: 0.5vh 1vh;
+  left: 1vh;
+  z-index: 0;
+}
+#navTitle .navToggle.hidden {
+  opacity: 0;
+}
+
 #navTitle span {
   cursor: pointer;
   text-decoration: none;
   padding: 0.5vh;
 }
-#navTitle span:first-of-type {
+#navTitle .navType span.map {
   border-right: 1px solid grey;
 }
-#navTitle span.selected {
+#navTitle .navType span.selected {
   text-decoration: line-through;
 }
 #userlandContainer {  
