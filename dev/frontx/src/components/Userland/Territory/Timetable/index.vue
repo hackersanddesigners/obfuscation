@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import moment from 'moment'
+import moment from 'moment-timezone'
 import Island from './Island'
 
 export default {
@@ -65,7 +65,13 @@ export default {
 
   },
 
-  created() {
+  mounted() {
+    // let d = new Date()
+    // let m = moment(d)
+    // let t = m.tz("Asia/Taipei").format()
+    // let userTZ = moment.tz.guess()
+    // let firstEvent = moment(this.content[0].Start).format()
+    // console.log(firstEvent)
 
   },
   methods: {
