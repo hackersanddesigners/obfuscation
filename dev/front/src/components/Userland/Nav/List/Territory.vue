@@ -6,7 +6,7 @@
     ]"
     :id=" 'list-' + territory.slug"
   >
-    <span class="bullet"> ... </span>
+    <!-- <span class="bullet"> ... </span> -->
     <span class="name"> {{ territory.name }} </span>
     <span class="goto"> → </span>
   </li>
@@ -43,6 +43,9 @@ export default {
   /* display: flex;
   align-items: baseline;
   justify-content: flex-start; */
+}
+.list-territory:last-of-type {
+  margin-bottom: 0.5vh;
 }
 .list-territory span {
   margin-right: 10px;

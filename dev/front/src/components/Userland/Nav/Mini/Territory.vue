@@ -37,6 +37,7 @@ export default {
     isCircle() {
       return (
         this.territory.slug === 'reception' ||
+        this.territory.slug === 'toolbar' ||
         this.territory.slug === 'hangout'
       )
     },

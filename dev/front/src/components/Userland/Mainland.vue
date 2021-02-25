@@ -657,15 +657,32 @@ header > div {
   left: 0px;
   font-family: jet;
   font-size: calc(1.7pt * var(--scale));
-  background: 
-    url("../../assets/textures/1.png") repeat
-  , url("../../assets/textures/2.png") repeat 400px
+  /* background:  */
+    /* url("../../assets/textures/1.png") repeat 1000px */
+  /* , url("../../assets/textures/2.png") repeat 2000px */
   /* , url("../../assets/textures/favicon.png") repeat scroll */
-  ;
+  /* ; */
   /* background-position: center center; */
   /* background-size: 400px; */
   background-color: rgb(241, 241, 241);
   overflow: hidden;
+}
+#userland::before {
+  content: '';
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  background: 
+    url("../../assets/textures/1.png") repeat 1000px
+  , url("../../assets/textures/2.png") repeat 2000px
+  /* , url("../../assets/textures/favicon.png") repeat scroll */
+  ;
+  /* background-position: center center; */
+  /* background-size: 400px; */
+  overflow: hidden;
+  opacity: 0.6;
 }
 
 .blur header,

@@ -50,7 +50,7 @@
     />
 
     <div class="zoom">
-
+<!-- 
       <div class="in" 
         @mousedown.stop="$store.commit('zoomIn')"
         @mouseup.stop
@@ -59,7 +59,7 @@
       <div class="out" 
         @mousedown.stop="$store.commit('zoomOut')"
         @mouseup.stop
-      >-</div>
+      >-</div> -->
 
       <div class="zero" 
         @mousedown.stop="$emit('zero')"

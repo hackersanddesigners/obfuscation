@@ -112,6 +112,7 @@ export default {
   height: 100%;
   background: rgb(255,253,84);
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.534);
+  /* box-shadow: inset 0 0 20px 0 rgba(0, 0, 0, 0.534); */
   overflow: hidden;
   z-index: 2;
   transition: all 0.4s ease;
@@ -122,11 +123,13 @@ export default {
   cursor: pointer;
   right: calc(20px - 40%);
   box-shadow: 0 0 50px 0 rgba(0, 0, 0, 0.534);
+  /* box-shadow: inset 0 0 50px 0 rgba(0, 0, 0, 0.534); */
 }
 .overlayContainer.hover {
   cursor: pointer;
   right: calc(100px - 40%);
-  box-shadow: 0 0 30px 0 rgba(0, 0, 0, 0.534);
+  box-shadow:  0 0 30px 0 rgba(0, 0, 0, 0.534);
+  /* box-shadow: inset 0 0 30px 0 rgba(0, 0, 0, 0.534); */
 }
 .overlayContainer.visible {
   right: 0px;

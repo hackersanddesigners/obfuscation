@@ -121,9 +121,12 @@ export default {
   justify-content: center;
 
   background-color: var(--white-glass);
+  background-image: var(--island-back);
   box-shadow: var(--island-shadow);
   border-top-left-radius: var(--small-island-curve);
   border-bottom-right-radius: var(--small-island-curve);
+  border-top-right-radius: var(--ui-border-radius);
+  border-bottom-left-radius: var(--ui-border-radius);
   /* border-radius: var(--small-island-curve); */
   transition: border-radius 0.2s ease;
 }

@@ -85,15 +85,19 @@ const store = new Vuex.Store({
     setUserPosition: (state, position) => {
       state.users[position.uid].x = position.x
       state.users[position.uid].y = position.y
+      state.users[position.uid].connected = true
     },
     setUserTyping: (state, text) => {
       state.users[text.uid].typing = text.typing
+      state.users[text.uid].connected = true
     },
     setUserColor: (state, color) => {
       state.users[color.uid].color = color.color
+      state.users[color.uid].connected = true
     },
     setUserName: (state, name) => {
       state.users[name.uid].name = name.name
+      state.users[name.uid].connected = true
     },
 
     setMessages: (state, messages) => {

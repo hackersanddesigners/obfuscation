@@ -26,10 +26,11 @@ export default {
 #viewport {
   box-sizing: border-box;
   position: absolute;
-  border: 1px solid grey;
+  border: 1px solid;
   cursor: move;
+  z-index: 1;
 }
  #viewport:hover {
-  border-color: yellow;
+  border-color: rgb(187, 187, 7);
 }
 </style>

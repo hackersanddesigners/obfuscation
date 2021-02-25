@@ -11,13 +11,36 @@
     },
     "83e8336ec71": {
       "uid": "83e8336ec71",
-      "connected": false,
-      "name": "newUser-3e8336ec71e",
+      "connected": true,
+      "name": "karl",
       "color": "rgb(156, 140, 23, 1)",
-      "x": 0,
-      "y": 0,
+      "x": 0.7521875,
+      "y": 0.5662125340599455,
+      "typing": "s"
+    },
+    "ca88c4f601e": {
+      "uid": "ca88c4f601e",
+      "connected": true,
+      "name": "karl3",
+      "color": "rgb(30, 127, 253, 1)",
+      "x": 0.8016666666666666,
+      "y": 0.11698455949137149,
       "typing": null
     }
   },
-  "messages": {}
+  "messages": {
+    "83e8336ec711614290988394": {
+      "uid": "83e8336ec711614290988394",
+      "author": "karl",
+      "authorUID": "83e8336ec71",
+      "content": "s",
+      "time": 1614290988394,
+      "color": "rgb(156, 140, 23, 1)",
+      "x": 0.22385416666666666,
+      "y": 0.716802906448683,
+      "deleted": false,
+      "censored": false,
+      "announcement": false
+    }
+  }
 }
