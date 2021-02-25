@@ -57,7 +57,6 @@ low(adapter).then(db => {
 
   app.get('/messages', async (req, res) => {
     const messages = db.get('messages')
-    console.log('asked for messages: ', messages)
     res.send(messages)
   })
 

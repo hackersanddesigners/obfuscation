@@ -15,7 +15,9 @@
       @stopEdit="editing = false"
     />
 
-    <header>
+    <header
+      v-if="ready"
+    >
 
       <div id="navTitle">
         <span 
@@ -70,6 +72,7 @@
       </div>
 
       <div 
+        v-if="ready"
         id="userland" 
         ref="userland"
         :style="{
@@ -157,6 +160,8 @@ export default {
 
   data () {
     return { 
+      
+      ready: true,
 
       moreInformation: null,
     
@@ -209,22 +214,28 @@ export default {
   watch: {
     wantsToView(zone) {
       this.route(zone)
+    },
+
+    me(newMe) {
+      console.log('you: ', newMe)
+    
     }
   },
 
   created() {   
 
     let 
-      self,
+      self
       // users,
-      messages
+      // messages
 
 
     // check if user is registered and get their datas.
     
-    if (localStorage.me) {
-      this.$store.commit('register')
+    if (localStorage.me && localStorage.me !== "undefined") {
+      console.log('youre a local')
       self = JSON.parse(localStorage.me)
+      this.$store.commit('register')
 
 
       // if the user is marked as deleted, they have 
@@ -239,11 +250,12 @@ export default {
     // and get the previously defined UID and color.
 
     } else if (localStorage.uid) {
-      this.$store.commit('visit')
+      console.log('youve visited')
       self = {
         uid: localStorage.uid,
         color: localStorage.color
       }
+      this.$store.commit('visit')
 
 
     // if not visited, store the generated UID and 
@@ -251,6 +263,7 @@ export default {
     // comes back to register).
 
     } else {
+      console.log('youre new')
       self = {
         uid: uid(),
         connected: false,
@@ -260,7 +273,7 @@ export default {
         y: 0,
         typing: null,
       },
-      // localStorage.uid = self.uid
+      localStorage.uid = self.uid
       localStorage.color = self.color
     }
 
@@ -270,31 +283,36 @@ export default {
     this.$store.commit('setUID', self.uid)
     this.$store.commit('setUser', self)
 
+    // this.$socket.client.emit('user', self)
+
+
 
     // check if user hsa a DB of users.
 
-    this.$http.get('/messages',)
-      .then((response) => { 
-        messages = response.data
-        console.log(messages)
-        this.$store.commit('setUsers', messages)
-      })
-      .catch((error) => { 
-        console.log(error)
-      })
-
-    // if (localStorage.users) {
-    //   users = JSON.parse(localStorage.users)
-    //   this.$store.commit('setUsers', users)
-    // }
-
+    // this.$http
+    //   .get('http://localhost:3090/users',)
+    //   .then((response) => { 
+    //     users = response.data
+    //     console.log(users)
+    //     this.$store.commit('setUsers', users)
+    //   })
+    //   .catch((error) => { 
+    //     console.log(error)
+    //   })
 
     // check if user hsa a DB of messages.
 
-    // if (localStorage.messages) {
-    //   messages = JSON.parse(localStorage.messages)
-    //   this.$store.commit('setMessages', messages)
-    // }
+    // this.$http
+    //   .get('http://localhost:3090/messages',)
+    //   .then((response) => { 
+    //     messages = response.data
+    //     console.log(messages)
+    //     this.$store.commit('setMessages', messages)
+    //   })
+    //   .catch((error) => { 
+    //     console.log(error)
+    //   })
+
 
   },
   mounted() {

@@ -137,12 +137,18 @@ const store = new Vuex.Store({
       // when you connect, if you are not blocked,
       // announce your presence to everyone.
 
-      // if (!state.users[state.uid].deleted) {
+      // if (state.users[state.uid] && !state.users[state.uid].deleted) {
       //   commit('setUser', state.users[state.uid])
       //   this._vm.$socket.client.emit(
       //     'user', state.users[state.uid]
       //   )
       // }
+
+      // if (!state.blocked) {
+        
+
+      // }
+
     // },
 
 
@@ -151,7 +157,7 @@ const store = new Vuex.Store({
     // including you.
 
     socket_user({ state, commit, dispatch }, data) {
-      const user = JSON.parse(data)
+      const user = data
 
 
       // first, if the reccieved user is not you, 
@@ -257,19 +263,23 @@ const store = new Vuex.Store({
     // or connection timed-out), mark everyone as 
     // disconnected and save databases locally.
 
-    socket_disconnect({ state, commit }) { 
+    socket_disconnect({ state }) { 
       if (state.save) {
-        localStorage.me = JSON.stringify(state.users[state.uid])
-        for (let uid in state.users) {
-          // if (uid !== state.uid) {
-            const user = { ...state.users[uid] }
-            user.connected = false
-            commit('setUser', user)
-          // } 
+        if (state.registered) {
+          localStorage.me = JSON.stringify(state.users[state.uid])
+        } else {
+          localStorage.uid = state.uid      
         }
+        // for (let uid in state.users) {
+          // if (uid !== state.uid) {
+            // const user = { ...state.users[uid] }
+            // user.connected = false
+            // commit('setUser', user)
+          // } 
+        // }
       }
-      localStorage.users = JSON.stringify(state.users)
-      localStorage.messages = JSON.stringify(state.messages)
+      // localStorage.users = JSON.stringify(state.users)
+      // localStorage.messages = JSON.stringify(state.messages)
     },
 
 
