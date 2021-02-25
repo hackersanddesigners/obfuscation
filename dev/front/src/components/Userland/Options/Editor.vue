@@ -117,7 +117,7 @@ export default {
 
     save() {
       const name = this.$refs.name.value
-      const color = this.$refs.color.value
+      // const color = this.$refs.color.value
 
       if (!this.validateChars(name)) {
         this.invalid = true
@@ -129,7 +129,7 @@ export default {
         this.inuse = true
 
       } else {
-        this.register(name, color)
+        this.register(name)
 
       }
     },
@@ -138,16 +138,15 @@ export default {
       this.$emit('stopEdit')
     },
 
-    register(name, color) {
-      this.$store.dispatch('updateSelf', {
+    register(name) {
+      this.$store.dispatch('updateName', {
         name: name,
-        color: color,
       })
       this.$emit('stopEdit')
     },
 
     updateColor() {
-      this.$store.dispatch('updateSelfAppearance', {
+      this.$store.dispatch('updateColor', {
         color: this.$refs.color.value
       })
     },

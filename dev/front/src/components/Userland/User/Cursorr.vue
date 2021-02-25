@@ -176,10 +176,10 @@ export default {
     trackCursor() {
       document.addEventListener('mousemove', (e) => {
 
-        this.$store.dispatch('updateSelfAppearance', {
+        this.$store.dispatch('updatePosition', {
           x: (this.windowPos.x + e.clientX) / (this.windowSize.w * this.scale),
           y: (this.windowPos.y + e.clientY) / (this.windowSize.h * this.scale),
-          connected: true,
+          // connected: true,
         })
 
         e.preventDefault()
@@ -275,7 +275,10 @@ export default {
 
       // announce every key press to your peers.
 
-      this.updateTyping(input.value)
+      // this.updateTyping(input.value)
+      this.$store.dispatch('updateTyping', {
+        typing: input.value
+      })
 
     }, 
   }

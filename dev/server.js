@@ -69,21 +69,40 @@ low(adapter).then(db => {
 
   io.on('connection', (socket) => {
     
-    console.log('connection: ', socket.id)
-
     socket.on('user', (user) => {
-      console.log(user)
+      console.log(`${user.uid} (${user.name})`)
       io.sockets.emit('user', user)      
       db.set(`users[${user.uid}]`, user)
         .write()
     })
 
     socket.on('message', (message) => {
-      console.log(message)
       io.sockets.emit('message', message)
       db.set(`messages[${message.uid}]`, message)
         .write()
     })
+
+    socket.on('position', (position) => {
+      io.sockets.emit('position', position)
+      // db.set(`users[${position.uid}].x`, position.x)
+      //   .set(`users[${position.uid}].y`, position.y)
+      //   .write()
+    })
+
+    socket.on('typing', (text) => {
+      io.sockets.emit('typing', text)
+      // db.set(`users[${user.uid}]`, user)
+      //   .write()
+    })
+
+    socket.on('color', (color) => {
+      io.sockets.emit('color', color)
+    })
+
+    socket.on('name', (name) => {
+      io.sockets.emit('name', name)
+    })
+
 
   })
 

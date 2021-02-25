@@ -216,18 +216,48 @@ export default {
       this.route(zone)
     },
 
-    me(newMe) {
-      console.log('you: ', newMe)
-    
+    me(newMe, oldMe) {
+      if (oldMe && newMe.uid !== oldMe.uid) {
+        console.log('you: ', newMe.uid)
+      }
     }
   },
 
   created() {   
 
     let 
-      self
-      // users,
-      // messages
+      self,
+      users,
+      messages
+
+
+    // check if user hsa a DB of users.
+
+    this.$http
+      .get('http://localhost:3090/users',)
+      .then((response) => { 
+        users = response.data
+        console.log('users: ', users)
+        this.$store.commit('setUsers', users)
+      })
+      .catch((error) => { 
+        console.log(error)
+      })
+
+
+    // check if user hsa a DB of messages.
+
+    this.$http
+      .get('http://localhost:3090/messages',)
+      .then((response) => { 
+        messages = response.data
+        console.log('messages: ', messages)
+        this.$store.commit('setMessages', messages)
+      })
+      .catch((error) => { 
+        console.log(error)
+      })
+
 
 
     // check if user is registered and get their datas.
@@ -283,35 +313,7 @@ export default {
     this.$store.commit('setUID', self.uid)
     this.$store.commit('setUser', self)
 
-    // this.$socket.client.emit('user', self)
-
-
-
-    // check if user hsa a DB of users.
-
-    // this.$http
-    //   .get('http://localhost:3090/users',)
-    //   .then((response) => { 
-    //     users = response.data
-    //     console.log(users)
-    //     this.$store.commit('setUsers', users)
-    //   })
-    //   .catch((error) => { 
-    //     console.log(error)
-    //   })
-
-    // check if user hsa a DB of messages.
-
-    // this.$http
-    //   .get('http://localhost:3090/messages',)
-    //   .then((response) => { 
-    //     messages = response.data
-    //     console.log(messages)
-    //     this.$store.commit('setMessages', messages)
-    //   })
-    //   .catch((error) => { 
-    //     console.log(error)
-    //   })
+    this.$socket.client.emit('user', self)
 
 
   },
