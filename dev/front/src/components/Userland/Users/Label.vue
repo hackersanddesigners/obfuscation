@@ -3,12 +3,9 @@
     :class="[
       'userLabel',
       user.uid,
-      { 
-        me: isMe 
-      }
     ]"
     :style="{ 
-      '--userColor': user.connected ? user.color : 'lightgrey' 
+      '--userColor': `var(--${ user.uid })`
     }"
 
     @mouseover.stop="hovered=true"
@@ -16,9 +13,11 @@
   >
 
     <span class="bullet"> ● </span>
+
     <span class="name">
       {{ isMe ? "me" : user.name }} 
     </span>
+
     <div
       v-if="moderating"
       class="moderatorOptions"
@@ -27,24 +26,28 @@
         class="messages"
         @click.stop="messagesVisible = !messagesVisible"
         >messages</span>
+
       <span 
         class="delete"
-        @click.stop="$emit('deleteUser', user)"
+        @click.stop="$store.dispatch('deleteUser', user)"
         >delete</span>
+
     </div>
+
     <span class="goto"> {{ hovered ? '→' : ''  }}</span> 
+
     <div v-if="moderating && messagesVisible" class="messageListContiner">
+
       <ul v-if="messages.length > 0" class="messageList">
         <MessageOptions
           v-for="message in messages"
           :key="message.uid"
           :message="message"
-          @censorMessage="$emit('censorMessage', message)"
-          @deleteMessage="$emit('deleteMessage', message)"
           @click.native.stop="$emit('goTo', message)"
         />
       </ul>
       <p v-else>This user has no messaages.</p>
+      
     </div>
   </li>
 </template>
@@ -80,7 +83,6 @@ li {
   list-style: none;
   padding: 0;
   margin: 0.5vh 0.5vw;
-  font-weight: bold;
   display: flex;
   align-items: center;
   color: var(--userColor);

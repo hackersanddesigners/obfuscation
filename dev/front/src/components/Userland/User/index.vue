@@ -1,12 +1,5 @@
 <template>
-  <div
-    :class="[
-      'user',
-      user.uid,
-    ]"
-    :style="{ 
-    }"
-  >
+  <div>
     <Cursorr
       ref="Cursor"
 
@@ -39,10 +32,6 @@
 import Cursorr from './Cursorr'
 import Message from './Message'
 
-      // '--userColor': user.connected ? user.color : 'lightgrey',
-      // '--userColor': user.connected ? `var(--${user.uid})` : 'lightgrey',
-      // '--userColor': `var(--${ user.uid })`,
-
 export default {
   name: 'User',
   components: {
@@ -60,22 +49,7 @@ export default {
       hovered: false
     }
   },
-  mounted() {
-  },
-  methods: {
-  }
 }
 </script>
 <style>
-.user {
-  color: var(--userColor);
-  /* position: absolute; */
-}
-.user.disconnected {
-  /* filter: grayscale(1) brightness(3); */
-}
-.user *::selection {
-  background: var(--userColor);
-  color: white;
-}
 </style>

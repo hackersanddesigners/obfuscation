@@ -1,79 +1,66 @@
 <template>
   <div id="options">
-    <Register
-      v-if="!registered || editing" 
-      :registered="registered"
-      :name="name"
-      :color="color"
-      :usernames="usernames"
+    <!-- <span class="title"> options </span> -->
 
-      @newMe="$emit('newMe', $event)"
-      @newColor="$emit('newColor', $event)"
-      @register="$emit('register', $event)"
-    />
-    <span class="title"> options </span>
     <div class="grid">
       <input 
         type="button" 
-        name="grid" 
         :value="grid ? 'hide grid' : 'show grid'" 
-
-        @click.stop="$emit('grid')"
+        @click.stop="toggleGrid"
       />
     </div>
+
     <div class="edituser">
       <input
         type="button"
-        name="edituser" 
         value="edit appearance"
-
-        @click.stop="$emit('editMe')"
+        @click.stop="$emit('startEdit')"
       />
     </div>
+
     <div class="storage">
       <input
         type="button"
-        name="storage" 
         value="delete me"
-
-        @click.stop="$emit('deleteMe')"
+        @click.stop="deleteSelf"
       />
     </div>
-    <div class="db">
+
+    <!-- <div class="db">
       <input
         type="button"
-        name="db" 
         value="delete everything"
-
-        @click.stop="$emit('deleteEverything')"
+        @click.stop="$socket.client.emit('clearDBs')"
       />
-    </div>
+    </div> -->
+    
   </div>
 </template>
 
 <script>
-import Register from './Register'
+import { mapActions, mapMutations, mapState } from 'vuex'
 
 export default {
+
   name: 'Options',
-  components: {
-    Register
+
+  computed: {
+    ...mapState([
+      'grid'
+    ])
   },
-  props: [ 
-    'registered',
-    'editing',
-    'name',
-    'color',
-    'grid',
-    'usernames'
-  ], 
-  data() {
-    return {
-    }
-  },
-  mounted() {
-  },
+
   methods: {
+    ...mapMutations([
+
+      'toggleGrid'
+
+    ]),
+    ...mapActions([
+
+      'deleteSelf'
+
+    ])
   }
 }
 </script>
@@ -81,17 +68,19 @@ export default {
 <style scoped>
 #options {
   box-sizing: border-box;
-  margin-top: 2vh;
-  margin-left: 2vh;
-  min-width: 10vw;
-  /* height: 10vh; */
+  margin-top: 1vh;
+  margin-left: 1vh;
+  max-width: 16vw;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  /* flex-direction: column; */
+  flex-wrap: wrap;
+  /* align-items: center; */
+  justify-content: space-around;
   border: 1px solid grey;
   background: white;
   line-height: 1.9vh;
-
+  border-radius: var(--ui-border-radius);
+  padding: 0.5vh;
 }
 #options .title {
   box-sizing: border-box;
@@ -101,12 +90,11 @@ export default {
   border-bottom: 1px solid grey;
 }
 #options div {
-  margin: 2.5px 0.5vw;
+  margin: 2.5px;
   display: flex;
   align-items: center;
 }
 #options .db input {
-  /* background: red; */
   color: red;
 }
 input {

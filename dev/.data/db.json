@@ -1,0 +1,67 @@
+{
+  "users": {
+    "751d119efcb": {
+      "uid": "751d119efcb",
+      "connected": true,
+      "name": "test",
+      "color": "rgba(51,114,167,1)",
+      "x": 0.49117442668519806,
+      "y": 0.5071752951861944,
+      "typing": null
+    }
+  },
+  "messages": {
+    "764f02e24f81614244019107": {
+      "uid": "764f02e24f81614244019107",
+      "author": "test2",
+      "authorUID": "764f02e24f8",
+      "content": "m",
+      "time": 1614244019107,
+      "color": "rgba(219,46,81,1)",
+      "x": 0.561501042390549,
+      "y": 0.4695731153496821,
+      "deleted": false,
+      "censored": false,
+      "announcement": false
+    },
+    "764f02e24f81614244019910": {
+      "uid": "764f02e24f81614244019910",
+      "author": "test2",
+      "authorUID": "764f02e24f8",
+      "content": "m",
+      "time": 1614244019910,
+      "color": "rgba(219,46,81,1)",
+      "x": 0.561501042390549,
+      "y": 0.4695731153496821,
+      "deleted": false,
+      "censored": false,
+      "announcement": false
+    },
+    "764f02e24f81614244020699": {
+      "uid": "764f02e24f81614244020699",
+      "author": "test2",
+      "authorUID": "764f02e24f8",
+      "content": "m",
+      "time": 1614244020699,
+      "color": "rgba(219,46,81,1)",
+      "x": 0.561501042390549,
+      "y": 0.4695731153496821,
+      "deleted": false,
+      "censored": false,
+      "announcement": false
+    },
+    "764f02e24f81614244021450": {
+      "uid": "764f02e24f81614244021450",
+      "author": "test2",
+      "authorUID": "764f02e24f8",
+      "content": "m",
+      "time": 1614244021450,
+      "color": "rgba(219,46,81,1)",
+      "x": 0.561501042390549,
+      "y": 0.4695731153496821,
+      "deleted": false,
+      "censored": false,
+      "announcement": false
+    }
+  }
+}

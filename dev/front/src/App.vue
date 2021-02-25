@@ -1,47 +1,49 @@
 <template>
   <div id="app">
     <Home 
-      :class="{ 
-        mobile: isMobile,
-      }" 
       :slug="slug"
     />
   </div>
 </template>
 
 <script>
-import { EventBus } from './EventBus.js'
-import smoothscroll from 'smoothscroll-polyfill'
 import Home from './views/Home.vue'
 
 export default {
+
   name: 'App',
+
   components: {
     Home
   },
+
   data() {
     return {
-      isMobile: Boolean,
-      slug: window.location.pathname.replace(this.$publicPath, ''),
+      slug: null,
     }
   },
+
   created() {
-    this.CheckForMobile()
-    window.addEventListener('resize', this.CheckForMobile)
-    
-    smoothscroll.polyfill()
+
+    // get "slug", prefer a path over a hash
+
+    const 
+      path = window.location.pathname.replace(this.$publicPath, ''),
+      hash = window.location.hash
+
+    this.slug = path || hash
+
+    // window dimensions: important for positioning!
+
+    window.addEventListener('resize', () => {
+      this.$store.commit('resize', {
+        w: window.innerWidth,
+        h: window.innerHeight,
+      })
+    })
+
   },
-  methods: {
-    CheckForMobile() {
-      if (window.innerWidth <= 760) {
-        EventBus.$root.isMobile = true;
-        this.isMobile = true
-      } else { 
-        EventBus.$root.isMobile = false;
-        this.isMobile = false
-      }
-    },
-  }
+
 }
 </script>
 
@@ -80,18 +82,30 @@ export default {
 }
 
 :root {
+  --disconnected: rgb(156, 156, 156);
+  --ui-border-radius: 7.5px;
+  --ui-box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.199);
+  --island-curve: 10vh;
+  --island-shadow: 0 0 3vh 0 rgba(0, 0, 0, 0.267);
+  --small-island-curve: 5vh;
+  --white-glass: rgba(255, 255, 255, 0.041);
 }
+
 html, body {
   margin: 0;
   padding: 0;
   height: 100%;
+  width: 100%;
   overflow: hidden;
 }
 #app {
   height: 100%;
-  width: 100vw;
-  font-size: 10pt;
+  width: 100%;
+  /* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; */
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 9pt;
 }
 a, a:hover, a:active, a:visited {
+  color: blue;
 }
 </style>

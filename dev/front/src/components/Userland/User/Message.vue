@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="!message.navigation"
+    v-if="!message.navigation && message.uid"
     :id="message.uid"
     :class="[
       'messageContainer',
@@ -13,40 +13,50 @@
       left: `${ toNearestX(message.x, 0.4) }%`,
       top: `${ toNearestX(message.y, 0.4) }%`,
       '--blur': `blur(${ (now - message.time) / 100000000 }px)`,
-      '--userColor': `var(--${ message.author })`,
+      '--userColor': `var(--${ message.authorUID })`,
     }"
       @mouseover="hovered=true"
       @mouseleave="hovered=false"
   >
+
     <vue-markdown 
       v-if="!message.censored" 
       class="message"
     > 
       {{ message.content }} 
     </vue-markdown>
+
     <div 
       v-else
       class="message censored"
     > 
       This message has been censored by a moderator.
     </div>
-    <span 
-      class="time"
-    > 
-      {{ fromNow(message.time) }} 
-    </span>
-    <span 
-      v-if="isMe"
-      class="delete"
-      @click.stop="$emit('deleteMessage', message)"
-    >
-      delete
-    </span>
+
+    <div class="details">
+      <span> — </span>
+      <span 
+        class="author"
+        @click.stop="$emit('goTo', message.author)"
+        >{{ message.author }}</span>
+
+      <span 
+        class="time"
+        >, {{ fromNow(message.time) }}</span>
+      <span v-if="isMe"> ● </span>
+      <span 
+        v-if="isMe"
+        class="delete"
+        @click.stop="deleteMessage(message)"
+      >delete</span>
+    </div>
+
   </div>
 </template>
 
 <script>
 import moment from 'moment'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'Message',
@@ -65,6 +75,9 @@ export default {
   mounted() {
   },
   methods: {
+    ...mapActions([
+      'deleteMessage'
+    ]),
     fromNow(time) {
       return moment(time).fromNow()
     },
@@ -82,19 +95,23 @@ export default {
 <style>
 .messageContainer {
   position: absolute;
-  display: flex;
-  align-items: center;
+  /* display: flex; */
+  /* align-items: center; */
   cursor: text;
   filter: var(--blur);
   transition: filter 0.2 ease;
   z-index: 1;
   color: var(--userColor);
+  padding: 0px 5px;
+}
+.messageContainer *::selection {
+  background: var(--userColor);
+  color: white;
 }
 .messageContainer .message {
   box-sizing: border-box;
   border: 1px solid;
   border-color: transparent;
-  padding: 0px 5px;
   border-radius: 12px;
   transition: all 0.2s ease;
   /* line-height: 1.65; */
@@ -115,18 +132,22 @@ export default {
   border: none !important;
   border-radius: 15px;
 }
-.messageContainer .delete,
-.messageContainer .time {
-  margin: 0px 5px;
-  opacity: 0;
-  width: 0;
+
+.messageContainer .details {
+  margin-top: -4px;
   font-size: 80%;
   color: rgb(161, 161, 161);
   transition: opacity 0.2s ease;
-  white-space: nowrap;
-  /* pointer-events: none; */
+  opacity: 0;
+  height: 0;
 }
-.messageContainer .delete {
+.messageContainer .details .delete,
+.messageContainer .details .author,
+.messageContainer .details .time {
+  white-space: nowrap;
+}
+.messageContainer .details .author,
+.messageContainer .details .delete {
   text-decoration: underline;
   cursor: pointer;
 }
@@ -143,10 +164,9 @@ export default {
 .messageContainer.announcement .message {
   border: 1px dashed;
 }
-.messageContainer.hover .delete,
-.messageContainer.hover .time {
+.messageContainer.hover .details {
   opacity: 1;
-  width: auto;
+  height: auto;
 }
 
 </style>

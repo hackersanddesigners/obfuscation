@@ -1,18 +1,19 @@
 import Vue from 'vue'
-import App from './App.vue'
-import router from './router'
 import Axios from 'axios'
-
-import VueSocketIO from 'vue-socket.io'
-import SocketIO from 'socket.io-client'
-
 import VueMarkdown from 'vue-markdown'
+import VueSocketIOExt from 'vue-socket.io-extended'
+import { io } from 'socket.io-client'
+// import smoothscroll from 'smoothscroll-polyfill'
+
+import App from './App'
+import router from './router'
+import store from './store'
+
+Vue.config.productionTip = false
 
 Vue.prototype.$http = Axios
 Vue.prototype.$apiURL = process.env.VUE_APP_API_URL
 Vue.prototype.$publicPath = '/'
-
-Vue.config.productionTip = false
 
 VueMarkdown.props.anchorAttributes.default = () => ({
   target: '_blank',
@@ -21,16 +22,33 @@ VueMarkdown.props.anchorAttributes.default = () => ({
 
 Vue.component('vue-markdown', VueMarkdown)
 
+// smoothscroll.polyfill()
 
-const socketConnection = SocketIO('https://io.karls.computer')
-// const socketConnection = SocketIO('http://localhost:3090')
 
-Vue.use(new VueSocketIO({
-    connection: socketConnection,
-  })
+// const socket = io('https://io.karls.computer')
+
+// Vue.use(VueSocketIOExt, socket, { store })
+
+
+// const url = 'https://io.karls.computer'
+// const url = 'localhost:3090'
+
+const url = 
+  window.location.hostname == 'localhost' ?
+  'http://localhost:3090/' : 'https://obfuscation.karls.computer'
+
+console.log(url)
+
+Vue.use(
+  VueSocketIOExt, 
+  io(url),
+  { store }
 )
+
+
 
 new Vue({
   router,
+  store,
   render: h => h(App),
 }).$mount('#app')

@@ -16,9 +16,10 @@
     "interactjs": "^1.10.2",
     "leaflet": "^1.7.1",
     "moment": "^2.29.1",
+    "moment-timezone": "^0.5.33",
     "panzoom": "^9.4.1",
     "smoothscroll-polyfill": "^0.4.4",
-    "socket.io-client": "^3.0.5",
+    "socket.io-client": "^3.1.1",
     "uid": "^2.0.0",
     "v-dragged": "0.0.5",
     "vue": "^2.6.11",
@@ -26,7 +27,9 @@
     "vue-markdown": "^2.2.4",
     "vue-router": "^3.4.9",
     "vue-socket.io": "^3.0.10",
-    "vue2-leaflet": "^2.6.0"
+    "vue-socket.io-extended": "^4.0.6",
+    "vue2-leaflet": "^2.6.0",
+    "vuex": "^3.6.2"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",

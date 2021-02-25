@@ -2,7 +2,7 @@
   <table
     id="grid"
     :class="{
-      hidden: hidden
+      hidden: !$store.state.grid
     }"
   >
   <tbody>
@@ -17,15 +17,13 @@
 
 <script>
 import Row from './Row'
+
 export default {
   name: 'Table',
   components: { Row },
-  props: [ 
-    'scale',
-    'hidden'  
-  ],
   data() {
     return {
+      scale: 10,
       definition: 10
     }
   },
@@ -40,7 +38,7 @@ table {
   width: 100%;
   height: 100%;
   border-collapse: collapse;
-  opacity: 1;
+  opacity: 0.15;
   transition: opacity 0.2s ease;
   pointer-events: none;
 }
