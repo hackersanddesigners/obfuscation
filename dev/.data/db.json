@@ -1,0 +1,23 @@
+{
+  "users": {
+    "b4acdeffcd8": {
+      "uid": "b4acdeffcd8",
+      "connected": true,
+      "name": "newtest",
+      "color": "rgba(197,185,231,1)",
+      "x": 0.6558995815899582,
+      "y": 0.11807447774750227,
+      "typing": ""
+    },
+    "83e8336ec71": {
+      "uid": "83e8336ec71",
+      "connected": false,
+      "name": "newUser-3e8336ec71e",
+      "color": "rgb(156, 140, 23, 1)",
+      "x": 0,
+      "y": 0,
+      "typing": null
+    }
+  },
+  "messages": {}
+}

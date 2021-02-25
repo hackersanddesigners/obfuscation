@@ -143,6 +143,7 @@ export default {
         name: name,
       })
       this.$emit('stopEdit')
+      this.$store.commit('register')
     },
 
     updateColor() {
