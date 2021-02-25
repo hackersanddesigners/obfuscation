@@ -234,7 +234,8 @@ export default {
     // check if user hsa a DB of users.
 
     this.$http
-      .get('http://localhost:3090/users',)
+      // .get('http://localhost:3090/users',)
+      .get('https://obfuscation.karls.computer/users',)
       .then((response) => { 
         users = response.data
         console.log('users: ', users)
@@ -248,7 +249,8 @@ export default {
     // check if user hsa a DB of messages.
 
     this.$http
-      .get('http://localhost:3090/messages',)
+      // .get('http://localhost:3090/messages',)
+      .get('https://obfuscation.karls.computer/messages',)
       .then((response) => { 
         messages = response.data
         console.log('messages: ', messages)

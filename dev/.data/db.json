@@ -14,9 +14,9 @@
       "connected": true,
       "name": "karl",
       "color": "rgb(156, 140, 23, 1)",
-      "x": 0.7521875,
-      "y": 0.5662125340599455,
-      "typing": "s"
+      "x": 0.8040316774658027,
+      "y": 0.11698455949137149,
+      "typing": ""
     },
     "ca88c4f601e": {
       "uid": "ca88c4f601e",
@@ -38,6 +38,19 @@
       "color": "rgb(156, 140, 23, 1)",
       "x": 0.22385416666666666,
       "y": 0.716802906448683,
+      "deleted": false,
+      "censored": false,
+      "announcement": false
+    },
+    "83e8336ec711614293497218": {
+      "uid": "83e8336ec711614293497218",
+      "author": "karl",
+      "authorUID": "83e8336ec71",
+      "content": "f",
+      "time": 1614293497218,
+      "color": "rgb(156, 140, 23, 1)",
+      "x": 0.8077753779697624,
+      "y": 0.1776566757493188,
       "deleted": false,
       "censored": false,
       "announcement": false
