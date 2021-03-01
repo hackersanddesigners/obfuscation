@@ -101,7 +101,7 @@ low(adapter).then(db => {
 
     socket.on('name', (name) => {
       io.sockets.emit('name', name)
-      db.set(`users[${user.uid}]`, user)
+      db.set(`users[${user.uid}].name`, name.name)
         .write()
     })
 
