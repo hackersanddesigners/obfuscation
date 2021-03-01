@@ -70,6 +70,7 @@ export default {
       current: String,
       navigation: false,
       announcement: false,
+      locationTimer: 0,
     }
   },
 
@@ -87,6 +88,7 @@ export default {
       'me',
       'isMe',
       'messagesByUser',
+      'territoryByBorders',
 
     ])
   },
@@ -153,21 +155,23 @@ export default {
     // construct message from self and input.
 
     constructMessage(text) {
-      const time = ((new Date()).getTime())
-      const message = {
-        uid: this.me.uid + time,
-        author: this.me.name,
-        authorUID: this.me.uid,
-        content: text,
-        time: time,
-        color: this.me.color,
-        x: this.me.x,
-        y: this.me.y,
-        deleted: false,
-        censored: false,
-        announcement: false
-      }
-      return message
+      const 
+        time = ((new Date()).getTime()),
+        message = {
+          uid: this.me.uid + time,
+          author: this.me.name,
+          authorUID: this.me.uid,
+          content: text,
+          time: time,
+          color: this.me.color,
+          x: this.me.x,
+          y: this.me.y,
+          deleted: false,
+          censored: false,
+          announcement: false,
+          location: this.$store.state.location.slug,
+        }
+        return message
     },
 
 
@@ -176,11 +180,20 @@ export default {
     trackCursor() {
       document.addEventListener('mousemove', (e) => {
 
-        this.$store.dispatch('updatePosition', {
-          x: (this.windowPos.x + e.clientX) / (this.windowSize.w * this.scale),
-          y: (this.windowPos.y + e.clientY) / (this.windowSize.h * this.scale),
-          // connected: true,
-        })
+        const pos = {
+            x: (this.windowPos.x + e.clientX) / (this.windowSize.w * this.scale),
+            y: (this.windowPos.y + e.clientY) / (this.windowSize.h * this.scale),
+          }
+        this.$store.dispatch('updatePosition', pos)
+
+        // if (this.locationTimer < 20) {
+        //   this.locationTimer++
+        // } else {
+        //   console.log('location timer end')
+        //   const territory = this.territoryByBorders(pos)
+        //   this.$store.commit('setLocation', territory)
+        //   this.locationTimer = 0
+        // }
 
         e.preventDefault()
       })

@@ -12,7 +12,7 @@
   >
 
     <Editor
-      v-if="!registered || editing" 
+      v-if="ready && (!registered || editing)" 
       @stopEdit="editing = false"
     />
 
@@ -136,10 +136,15 @@
           v-for="territory in territories"
           :key='territory.slug'
           :territory='territory'
+          @moreInfo="route($event)"
         />
         
       </div>
     </div>
+
+    <Ticker
+
+    />
 
     <Overlay
       id="overlay"
@@ -163,6 +168,7 @@ import Cursorr from './User/Cursorr'
 import Message from './User/Message'
 import Territory from './Territory'
 import Minilist from './Nav/List/'
+import Ticker from './Ticker/'
 import Overlay from './Overlay/'
 
 
@@ -181,6 +187,7 @@ export default {
     Cursorr,
     Message,
     Territory,
+    Ticker,
     Overlay,
   },
 
@@ -191,7 +198,7 @@ export default {
   data () {
     return { 
       
-      ready: true,
+      ready: false,
 
       moreInformation: null,
 
@@ -262,91 +269,138 @@ export default {
       messages
 
 
-    // check if user hsa a DB of users.
+    // get user db from server.
 
     this.$http
-      // .get('http://localhost:3090/users',)
       .get('https://obfuscation.karls.computer/users',)
       .then((response) => { 
+
         users = response.data
-        console.log('users: ', users)
+        // this.$store.commit('setUsers', users)
+
+
+
+
+        if (localStorage.uid) {
+          console.log('youve visited')
+          self = {
+            uid: localStorage.uid,
+            color: localStorage.color
+          }
+          this.$store.commit('visit')
+
+
+
+          if (users[self.uid] && 
+              !users[self.uid].name.includes(self.uid)) {
+            console.log('youre a local')
+            self = users[self.uid]
+            this.$store.commit('register')
+          }
+  
+
+
+        } else {
+          console.log('youre new')
+          const id = uid()
+          self = {
+            uid: id,
+            connected: false,
+            name: 'newUser-' + id,
+            color: this.randomColor(),
+            x: 0,
+            y: 0,
+            typing: null,
+          },
+          localStorage.uid = self.uid
+          localStorage.color = self.color
+        
+        }
+
+        this.$store.commit('setUID', self.uid)
         this.$store.commit('setUsers', users)
+
+        this.$store.commit('setUser', self)
+
+        this.$socket.client.emit('user', self)
+
+        this.ready = true
+
+
       })
       .catch((error) => { 
         console.log(error)
       })
 
 
-    // check if user hsa a DB of messages.
+    // // check if user is registered and get their datas.
+    
+    // if (localStorage.me && localStorage.me !== "undefined") {
+    //   console.log('youre a local')
+    //   self = JSON.parse(localStorage.me)
+    //   this.$store.commit('register')
+
+
+    //   // if the user is marked as blocked, they have 
+    //   // been blocked. The component is unmounted here.
+
+    //   if (self.blocked) {
+    //     this.$store.commit('block')
+    //   }
+
+
+    // // if not registered, check if previously visited
+    // // and get the previously defined UID and color.
+
+    // } else if (localStorage.uid) {
+    //   console.log('youve visited')
+    //   self = {
+    //     uid: localStorage.uid,
+    //     color: localStorage.color
+    //   }
+    //   this.$store.commit('visit')
+
+
+    // // if not visited, store the generated UID and 
+    // // color for later reference (i.e. when the user 
+    // // comes back to register).
+
+    // } else {
+    //   console.log('youre new')
+    //   self = {
+    //     uid: uid(),
+    //     connected: false,
+    //     name: 'newUser-' + uid(),
+    //     color: this.randomColor(),
+    //     x: 0,
+    //     y: 0,
+    //     typing: null,
+    //   },
+    //   localStorage.uid = self.uid
+    //   localStorage.color = self.color
+    // }
+
+
+    // // update the app store with the UID and user.
+
+    // this.$store.commit('setUID', self.uid)
+    // this.$store.commit('setUser', self)
+
+    // this.$socket.client.emit('user', self)
+
+
+    // get message db from server.
 
     this.$http
-      // .get('http://localhost:3090/messages',)
       .get('https://obfuscation.karls.computer/messages',)
       .then((response) => { 
         messages = response.data
-        console.log('messages: ', messages)
         this.$store.commit('setMessages', messages)
       })
       .catch((error) => { 
         console.log(error)
       })
 
-
-
-    // check if user is registered and get their datas.
-    
-    if (localStorage.me && localStorage.me !== "undefined") {
-      console.log('youre a local')
-      self = JSON.parse(localStorage.me)
-      this.$store.commit('register')
-
-
-      // if the user is marked as deleted, they have 
-      // been blocked. The component is unmounted here.
-
-      if (self.deleted) {
-        this.$store.commit('block')
-      }
-
-
-    // if not registered, check if previously visited
-    // and get the previously defined UID and color.
-
-    } else if (localStorage.uid) {
-      console.log('youve visited')
-      self = {
-        uid: localStorage.uid,
-        color: localStorage.color
-      }
-      this.$store.commit('visit')
-
-
-    // if not visited, store the generated UID and 
-    // color for later reference (i.e. when the user 
-    // comes back to register).
-
-    } else {
-      console.log('youre new')
-      self = {
-        uid: uid(),
-        connected: false,
-        name: 'newUser-' + uid(),
-        color: this.randomColor(),
-        x: 0,
-        y: 0,
-        typing: null,
-      },
-      localStorage.uid = self.uid
-      localStorage.color = self.color
-    }
-
-
-    // update the app store with the UID and user.
-
-    this.$store.commit('setUID', self.uid)
-    this.$store.commit('setUser', self)
-
-    this.$socket.client.emit('user', self)
 
 
   },
@@ -377,7 +431,7 @@ export default {
     // an announcement.
 
     message(message) {
-      // const message = message
+      console.log(message.location)
       if (message.announcement) {
         this.scrollTo(
           this.positionOf(message), 
@@ -437,6 +491,10 @@ export default {
         // second level information.
 
       } else {
+
+        if (name.startsWith('/')) {
+          name = name.substring(1)
+        }
       
         const 
           collection = name.split('/')[0],
@@ -757,7 +815,7 @@ header > div {
   /* background-position: center center; */
   /* background-size: 400px; */
   overflow: hidden;
-  opacity: 0.6;
+  opacity: 0.4;
 }
 
 .blur header,

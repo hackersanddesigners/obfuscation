@@ -99,6 +99,9 @@ const store = new Vuex.Store({
       state.users[name.uid].name = name.name
       state.users[name.uid].connected = true
     },
+    setUserDeleted: (state, user) => {
+      state.users[user.uid].deleted = true
+    },
 
     setMessages: (state, messages) => {
       for (let uid in messages) {
@@ -199,20 +202,28 @@ const store = new Vuex.Store({
       commit('setMessage', message)
     },
 
-    socket_position({ commit }, position) {
-      commit('setUserPosition', position)
+    socket_position({ state, commit }, position) {
+      if (position.uid !== state.uid) {
+        commit('setUserPosition', position)
+      }
     },
 
-    socket_typing({ commit }, text) {
-      commit('setUserTyping', text)
+    socket_typing({ state, commit }, text) {
+      if (text.uid !== state.uid) {
+        commit('setUserTyping', text)
+      }
     },
 
-    socket_color({ commit }, color) {
-      commit('setUserColor', color)
+    socket_color({ state, commit }, color) {
+      if (color.uid !== state.uid) {
+        commit('setUserColor', color)
+      }
     },
 
-    socket_name({ commit }, name) {
-      commit('setUserName', name)
+    socket_name({ state, commit }, name) {
+      if (name.uid !== state.uid) {
+        commit('setUserName', name)
+      }
     },
 
 
@@ -239,29 +250,33 @@ const store = new Vuex.Store({
       // localStorage.messages = JSON.stringify(state.messages)
     },
 
-    updatePosition({ state }, position) {
+    updatePosition({ state, commit }, position) {
       position.uid = state.uid
+      commit('setUserPosition', position)
       this._vm.$socket.client.emit(
         'position', position
       )
     },
 
-    updateTyping({ state }, text) {
+    updateTyping({ state, commit }, text) {
       text.uid = state.uid
+      commit('setUserTyping', text)
       this._vm.$socket.client.emit(
         'typing', text
       )
     },
 
-    updateColor({ state }, color) {
+    updateColor({ state, commit }, color) {
       color.uid = state.uid
+      commit('setUserColor', color)
       this._vm.$socket.client.emit(
         'color', color
       )
     },
 
-    updateName({ state }, name) {
+    updateName({ state, commit }, name) {
       name.uid = state.uid
+      commit('setUserName', name)
       this._vm.$socket.client.emit(
         'name', name
       )
@@ -370,15 +385,18 @@ const store = new Vuex.Store({
         name: 'general',
         slug: 'general'
       }
-      let coords = getters.coordsFrom(pos)
-
-      let found = getters.territoriesArray.find((territory) => {
+      let 
+        coords = getters.coordsFrom(pos),
+        diff = 0.5,
+        // coords = pos,
+        // diff = 0,
+        found = getters.territoriesArray.find((territory) => {
 
         const 
-          minX = territory.borders.x - 0.5 / state.scale,
-          minY = territory.borders.y - 0.5 / state.scale,
-          maxX = territory.borders.w + territory.borders.x - 0.5 / state.scale,
-          maxY = territory.borders.h + territory.borders.y - 0.5 / state.scale
+          minX = territory.borders.x - diff / state.scale,
+          minY = territory.borders.y - diff / state.scale,
+          maxX = territory.borders.w + territory.borders.x - diff / state.scale,
+          maxY = territory.borders.h + territory.borders.y - diff / state.scale
 
           // if (territory.slug === 'glossary') {
           //   console.log('* territory:  ', territory.slug)

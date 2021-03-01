@@ -49,7 +49,7 @@
         class="introText" 
         v-if="!registered"
       >
-        <p>This site does not use cookies. The information you are entering is stored in your browser and sent to all the other users.</p>  
+        <p>The information you are entering is stored on our server and sent to all the other users.</p>  
       </div>
     </div>
   </div>

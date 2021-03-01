@@ -109,7 +109,7 @@ export default {
         type =
           slug.startsWith('~') ? 'user' :
           slug.startsWith('#') ? 'territory' :
-          null ,
+          null,
 
         name = 
           type ? slug.slice(1) : slug

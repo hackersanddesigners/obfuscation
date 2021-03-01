@@ -86,16 +86,18 @@ export default {
   --ui-border-radius: 7.5px;
   --ui-box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.199);
   --island-curve: 10vh;
-  --island-shadow: inset 0 0 2vh 0.5vh rgba(0, 0, 0, 0.267);
+  --island-shadow: inset 0 0 1vh 0.5vh rgba(0, 0, 0, 0.267);
   --small-island-curve: 5vh;
   /* --white-glass: rgba(255, 255, 255, 0.041); */
   /* --white-glass: white; */
-  /* --white-glass: rgba(0, 0, 0, 0.055); */
+  --white-glass: rgba(0, 0, 0, 0.055);
+  --yellow-glass: rgba(238, 255, 0, 0.733);
   --island-back:
-    url("assets/textures/1.png") repeat 400px
-  , url("assets/textures/2.png") repeat 400px
+    url("assets/textures/1.png") repeat 100px
+  , url("assets/textures/2.png") repeat 100px
   /* , url("../../assets/textures/favicon.png") repeat scroll */
   ;
+
 }
 
 html, body {

@@ -123,15 +123,27 @@ export default {
   background-color: var(--white-glass);
   background-image: var(--island-back);
   box-shadow: var(--island-shadow);
-  border-top-left-radius: var(--small-island-curve);
-  border-bottom-right-radius: var(--small-island-curve);
-  border-top-right-radius: var(--ui-border-radius);
-  border-bottom-left-radius: var(--ui-border-radius);
+  border-top-left-radius: var(--island-curve);
+  border-bottom-right-radius: var(--island-curve);
+  border-top-right-radius: var(--small-island-curve);
+  border-bottom-left-radius: var(--small-island-curve);
   /* border-radius: var(--small-island-curve); */
   transition: border-radius 0.2s ease;
 }
 .island:hover {
   border-top-left-radius: 0px;
+}
+.island::before {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  content: '';
+  background: var(--island-back);
+  border-top-left-radius: inherit;
+  border-bottom-right-radius: inherit;
+  border-top-right-radius:inherit;
+  border-bottom-left-radius: inherit;
+  overflow: hidden;
 }
 
 .island .time  {

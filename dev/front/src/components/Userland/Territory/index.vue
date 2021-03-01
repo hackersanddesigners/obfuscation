@@ -19,6 +19,7 @@
     <Reception
       v-if="content && slug === 'reception'"
       :content="content"
+      @moreInfo="$emit('moreInfo', $event)"
     />
 
     <Exhibition
@@ -169,6 +170,7 @@ export default {
   box-sizing: border-box;
   position: absolute;
   display: flex;
+  /* align-items: center; */
   /* justify-content: center; */
   /* align-items: center; */
   /* pointer-events: none; */

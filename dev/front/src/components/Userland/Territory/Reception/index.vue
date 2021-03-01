@@ -4,6 +4,7 @@
       v-for="section in content"
       :key="section.slug"
       :section="section"
+      @mousedown.native.stop="handleIslandClick(section)"
     />
   </div>
 </template>
@@ -33,6 +34,19 @@ export default {
   },
   methods: {
 
+    handleIslandClick(section) {
+      const current = this.$router.history.current.path
+      const next = `/statics/${section.slug}`
+      
+      if (current === next) {
+        this.$emit('moreInfo', {
+          name: next
+        })
+      } else {
+        this.$router.push(`${next}`)
+      }
+    }
+
   }
 
 }
@@ -45,11 +59,10 @@ export default {
   /* margin-top: 20vh; */
   /* padding: 0vh 5vw; */
   margin: auto;
-  padding: 0px 30%;
-  max-height: 100%;
-  width: 100%;
+  padding: 0 30%;
+  /* max-height: 100%; */
+  width: 100%; 
   display: flex;
-  flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;

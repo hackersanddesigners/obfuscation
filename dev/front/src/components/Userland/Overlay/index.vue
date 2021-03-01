@@ -132,6 +132,7 @@ export default {
   /* box-shadow: inset 0 0 30px 0 rgba(0, 0, 0, 0.534); */
 }
 .overlayContainer.visible {
+  cursor: default;
   right: 0px;
 }
 .overlay {

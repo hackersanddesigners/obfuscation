@@ -33,9 +33,11 @@ Vue.component('vue-markdown', VueMarkdown)
 // const url = 'https://io.karls.computer'
 // const url = 'localhost:3090'
 
-const url = 
-  window.location.hostname == 'localhost' ?
-  'http://localhost:3090/' : 'https://obfuscation.karls.computer'
+// const url = 
+//   window.location.hostname == 'localhost' ?
+//   'http://localhost:3090/' : 'https://obfuscation.karls.computer'
+
+const url = 'https://obfuscation.karls.computer'
 
 console.log(url)
 
