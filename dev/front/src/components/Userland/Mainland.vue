@@ -283,16 +283,16 @@ export default {
 
         if (localStorage.uid) {
           console.log('youve visited')
-          self = {
-            uid: localStorage.uid,
-            color: localStorage.color
-          }
+          // self = {
+          //   uid: localStorage.uid,
+          //   color: localStorage.color
+          // }
+          self = users[localStorage.uid]
           this.$store.commit('visit')
 
 
 
-          if (users[self.uid] && 
-              !users[self.uid].name.includes(self.uid)) {
+          if (!users[self.uid].name.includes(self.uid)) {
             console.log('youre a local')
             self = users[self.uid]
             this.$store.commit('register')
@@ -326,6 +326,7 @@ export default {
 
         this.ready = true
 
+        console.log(this.me)
 
       })
       .catch((error) => { 
