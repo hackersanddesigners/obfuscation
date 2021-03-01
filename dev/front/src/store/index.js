@@ -99,8 +99,8 @@ const store = new Vuex.Store({
       state.users[name.uid].name = name.name
       state.users[name.uid].connected = true
     },
-    setUserDeleted: (state, user) => {
-      state.users[user.uid].deleted = true
+    setUserBlocked: (state, user) => {
+      state.users[user.uid].blocked = true
     },
 
     setMessages: (state, messages) => {
@@ -147,32 +147,7 @@ const store = new Vuex.Store({
     // '$socket.client.emit(...) sends messages of
     // different kinds to ALL other connected peers.
 
-    // socket_connect({ state, commit }) {
-
-
-      // when you connect, if you are not blocked,
-      // announce your presence to everyone.
-
-      // if (state.users[state.uid] && !state.users[state.uid].deleted) {
-      //   commit('setUser', state.users[state.uid])
-      //   this._vm.$socket.client.emit(
-      //     'user', state.users[state.uid]
-      //   )
-      // }
-
-      // if (!state.blocked) {
-        
-
-      // }
-
-    // },
-
-
-    // then, the following action will be run by
-    // every peer that recieves your announcement,
-    // including you.
-
-    socket_user({ state, commit, dispatch }, user) {
+    socket_user({ state, commit }, user) {
 
       // first, if the reccieved user is not you, 
       // they are committed to your local database.
@@ -183,17 +158,17 @@ const store = new Vuex.Store({
 
 
       // else, if they are you and you are 'blocked',
-      // you are deleted again as a double-check.
+      // you are blocked again as a double-check.
 
       } else if (user.uid === state.uid) {
         console.log('its you: ', user.uid)
-        commit('setUser', user)
-        if (user.deleted === true) {
-          dispatch('deleteUser', user)
+        // commit('setUser', user)
+        // if (user.blocked) {
+          // dispatch('blockUser', user)
           
-          localStorage.me = JSON.stringify(state.users[state.uid])      
-          window.location.reload(true)
-        }
+          // localStorage.me = JSON.stringify(state.users[state.uid])      
+          // window.location.reload(true)
+        // }
       }
     },
 
@@ -238,16 +213,7 @@ const store = new Vuex.Store({
         } else {
           localStorage.uid = state.uid      
         }
-        // for (let uid in state.users) {
-          // if (uid !== state.uid) {
-            // const user = { ...state.users[uid] }
-            // user.connected = false
-            // commit('setUser', user)
-          // } 
-        // }
       }
-      // localStorage.users = JSON.stringify(state.users)
-      // localStorage.messages = JSON.stringify(state.messages)
     },
 
     updatePosition({ state, commit }, position) {
@@ -283,17 +249,15 @@ const store = new Vuex.Store({
     },
 
 
-    // DELETING: nothing is ever actually 'deleted'
-    // from any database, only markd as deleted. This
+    // DELETING: nothing is ever actually 'blocked'
+    // from any database, only markd as blocked. This
     // is because the database sync/merge logic will
     // always favour the largest database.
 
-    deleteUser({ state, commit, dispatch }, user ) {
-      const cloned = { ...state.users[user.uid] }
-      cloned.deleted = true
-      commit('setUser', cloned)
+    blockUser({ state, commit, dispatch }, user ) {
+      commit('setUserBlocked', user)
       this._vm.$socket.client.emit(
-        'user', cloned
+        'block', user
       )
 
       // deleting a user == blocking them and then
@@ -311,17 +275,17 @@ const store = new Vuex.Store({
     // special treatment for deleting yourself:
     // your local storage is cleared so that you can
     // re-join as a new user that is not marked as
-    // deleted / blocked.
+    // blocked / blocked.
 
     deleteSelf({ state, commit, dispatch }) {
       commit('doNotSave')
-      dispatch('deleteUser', state.users[state.uid])
+      dispatch('blockUser', state.users[state.uid])
       localStorage.clear()
       window.location.reload(true)
     },
 
 
-    // deleting a message marks it as deleted.
+    // deleting a message marks it as blocked.
 
     deleteMessage({ state, commit }, message ) {
       const cloned = { ...state.messages[message.uid] }
@@ -458,6 +422,10 @@ const store = new Vuex.Store({
       return getters.notDeletedUsers.sort((a, b) => {
         return a.connected === b.connected ? 0 : a.connected ? -1 : 1
       })
+    },
+
+    notBlockedUsers: (state, getters) => {
+      return getters.notDeletedUsers.filter(u => u.blocked !== true)
     },
 
     notDeletedUsers: (state, getters) => {

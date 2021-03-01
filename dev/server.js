@@ -105,6 +105,12 @@ low(adapter).then(db => {
         .write()
     })
 
+    socket.on('block', (user) => {
+      io.sockets.emit('block', user)
+      db.set(`users[${user.uid}].blocked`, true)
+        .write()
+    })
+
 
   })
 

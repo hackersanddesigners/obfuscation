@@ -28,9 +28,9 @@
         >messages</span>
 
       <span 
-        class="delete"
-        @click.stop="$store.dispatch('deleteUser', user)"
-        >delete</span>
+        class="block"
+        @click.stop="$store.dispatch('blockUser', user)"
+        >block</span>
 
     </div>
 

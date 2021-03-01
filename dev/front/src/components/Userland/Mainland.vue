@@ -117,7 +117,7 @@
         <Grid />
 
         <Cursorr
-          v-for="user in notDeletedUsers"
+          v-for="user in notBlockedUsers"
           :key="user.uid"
           :ref="isMe(user) ? 'me' : 'Users'"
           :user="user"
@@ -240,7 +240,7 @@ export default {
       'userByName',
 
       'userColors',
-      'notDeletedUsers',
+      'notBlockedUsers',
       'notDeletedMessages',
 
       'positionOf',

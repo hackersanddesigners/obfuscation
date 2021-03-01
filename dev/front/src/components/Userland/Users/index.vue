@@ -67,7 +67,7 @@ export default {
   computed: {
     ...mapGetters({
       me: 'me',
-      users: 'notDeletedUsers',
+      users: 'notBlockedUsers',
       messages: 'notDeletedMessages',
       messagesByUser: 'messagesByUser',
       connectedUsersFirst: 'connectedUsersFirst'
