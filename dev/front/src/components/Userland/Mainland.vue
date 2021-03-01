@@ -321,6 +321,7 @@ export default {
             x: 0,
             y: 0,
             typing: null,
+            blocked: false,
           },
           localStorage.uid = self.uid
           localStorage.color = self.color

@@ -17,7 +17,7 @@ const store = new Vuex.Store({
 
     // initial values for application state.
 
-    version: 2,
+    version: 3,
     save: true,
 
     uid: null,
@@ -111,6 +111,9 @@ const store = new Vuex.Store({
     setMessage: (state, message) => {
       Vue.set(state.messages, message.uid, message)
     },
+    setMessageDeleted: (state, message) => {
+      state.messages[message.uid].deleted = true
+    },
 
     setTerritories: (state, regions) => {
       state.territories = regions
@@ -148,30 +151,11 @@ const store = new Vuex.Store({
     // different kinds to ALL other connected peers.
 
     socket_user({ state, commit }, user) {
-
-      // first, if the reccieved user is not you, 
-      // they are committed to your local database.
-
-      if (user.uid !== state.uid) {
-        console.log('its not you, its ', user.uid)
-        commit('setUser', user)
-
-
-      // else, if they are you and you are 'blocked',
-      // you are blocked again as a double-check.
-
-      } else if (user.uid === state.uid) {
-        console.log('its you: ', user.uid)
-        // commit('setUser', user)
-        // if (user.blocked) {
-          // dispatch('blockUser', user)
-          
-          // localStorage.me = JSON.stringify(state.users[state.uid])      
-          // window.location.reload(true)
-        // }
+      commit('setUser', user)
+      if (user.uid === state.uid && user.blocked) {
+        commit('block')
       }
     },
-
 
     socket_message({ commit }, message) {
       commit('setMessage', message)
@@ -200,11 +184,6 @@ const store = new Vuex.Store({
         commit('setUserName', name)
       }
     },
-
-
-    // when you are disconnected (reloaded page
-    // or connection timed-out), mark everyone as 
-    // disconnected and save databases locally.
 
     socket_disconnect({ state }) { 
       if (state.save) {
@@ -248,20 +227,11 @@ const store = new Vuex.Store({
       )
     },
 
-
-    // DELETING: nothing is ever actually 'blocked'
-    // from any database, only markd as blocked. This
-    // is because the database sync/merge logic will
-    // always favour the largest database.
-
     blockUser({ state, commit, dispatch }, user ) {
       commit('setUserBlocked', user)
       this._vm.$socket.client.emit(
-        'block', user
+        'user', user
       )
-
-      // deleting a user == blocking them and then
-      // deleting all their messages.
 
       for(let uid in state.messages) {
         const message = state.messages[uid]
@@ -270,7 +240,6 @@ const store = new Vuex.Store({
         }
       }
     },
-
 
     // special treatment for deleting yourself:
     // your local storage is cleared so that you can
@@ -287,12 +256,10 @@ const store = new Vuex.Store({
 
     // deleting a message marks it as blocked.
 
-    deleteMessage({ state, commit }, message ) {
-      const cloned = { ...state.messages[message.uid] }
-      cloned.deleted = true
-      commit('setMessage', cloned)
+    deleteMessage({ commit }, message ) {
+      commit('setMessageDeleted', message)
       this._vm.$socket.client.emit(
-        'message', cloned
+        'message', message
       )
     },
 
@@ -419,7 +386,7 @@ const store = new Vuex.Store({
     },
 
     connectedUsersFirst: (state, getters) => {
-      return getters.notDeletedUsers.sort((a, b) => {
+      return getters.notBlockedUsers.sort((a, b) => {
         return a.connected === b.connected ? 0 : a.connected ? -1 : 1
       })
     },

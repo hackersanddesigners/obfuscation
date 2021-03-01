@@ -65,13 +65,13 @@ export default {
     }
   },
   computed: {
-    ...mapGetters({
-      me: 'me',
-      users: 'notBlockedUsers',
-      messages: 'notDeletedMessages',
-      messagesByUser: 'messagesByUser',
-      connectedUsersFirst: 'connectedUsersFirst'
-    })
+    ...mapGetters([
+      'me',
+      'notBlockedUsers',
+      'notDeletedMessages',
+      'messagesByUser',
+      'connectedUsersFirst'
+    ])
   },
   mounted() {
   },
