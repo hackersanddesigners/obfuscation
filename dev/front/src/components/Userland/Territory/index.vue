@@ -131,7 +131,7 @@ export default {
 
         .then((response) => { 
           this.content = response.data 
-          console.log(this.content)
+          // console.log(this.content)
         })
 
         .catch((error) => { 

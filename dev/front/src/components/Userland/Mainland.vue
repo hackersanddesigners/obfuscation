@@ -102,7 +102,7 @@
       </div>
 
       <div 
-        v-if="ready"
+        v-if="true"
         id="userland" 
         ref="userland"
         :style="{
@@ -275,30 +275,40 @@ export default {
       .get('https://obfuscation.karls.computer/users',)
       .then((response) => { 
 
+
         users = response.data
-        // this.$store.commit('setUsers', users)
+        this.$store.commit('setUsers', users)
 
 
+        // check if user is registered and get their datas.
 
-
-        if (localStorage.uid) {
-          console.log('youve visited')
-          // self = {
-          //   uid: localStorage.uid,
-          //   color: localStorage.color
-          // }
-          self = users[localStorage.uid]
+        if (localStorage.uid && users[localStorage.uid]) {
+          console.log("You've visited.")
           this.$store.commit('visit')
 
+          self = users[localStorage.uid]
 
+
+          // if they changed their user name they registered
 
           if (!users[self.uid].name.includes(self.uid)) {
-            console.log('youre a local')
-            self = users[self.uid]
+            console.log("You're a local.")
             this.$store.commit('register')
           }
-  
 
+
+          // if the user is marked as blocked, they have 
+          // been blocked. The component is unmounted here.
+
+          if (self.blocked) {
+            console.log("You're not welcome here.")
+            this.$store.commit('block')
+          }
+
+
+        // if not visited, store the generated UID and 
+        // color for later reference (i.e. when the user 
+        // comes back to register).
 
         } else {
           console.log('youre new')
@@ -314,80 +324,25 @@ export default {
           },
           localStorage.uid = self.uid
           localStorage.color = self.color
-        
         }
 
-        this.$store.commit('setUID', self.uid)
-        this.$store.commit('setUsers', users)
+        
+        // update the app store with the UID and user.
 
+        this.$store.commit('setUID', self.uid)
         this.$store.commit('setUser', self)
 
-        this.$socket.client.emit('user', self)
 
+        // announce existence to server and peers.
+
+        this.$socket.client.emit('user', self)
         this.ready = true
 
-        console.log(this.me)
 
       })
       .catch((error) => { 
         console.log(error)
       })
-
-
-    // // check if user is registered and get their datas.
-    
-    // if (localStorage.me && localStorage.me !== "undefined") {
-    //   console.log('youre a local')
-    //   self = JSON.parse(localStorage.me)
-    //   this.$store.commit('register')
-
-
-    //   // if the user is marked as blocked, they have 
-    //   // been blocked. The component is unmounted here.
-
-    //   if (self.blocked) {
-    //     this.$store.commit('block')
-    //   }
-
-
-    // // if not registered, check if previously visited
-    // // and get the previously defined UID and color.
-
-    // } else if (localStorage.uid) {
-    //   console.log('youve visited')
-    //   self = {
-    //     uid: localStorage.uid,
-    //     color: localStorage.color
-    //   }
-    //   this.$store.commit('visit')
-
-
-    // // if not visited, store the generated UID and 
-    // // color for later reference (i.e. when the user 
-    // // comes back to register).
-
-    // } else {
-    //   console.log('youre new')
-    //   self = {
-    //     uid: uid(),
-    //     connected: false,
-    //     name: 'newUser-' + uid(),
-    //     color: this.randomColor(),
-    //     x: 0,
-    //     y: 0,
-    //     typing: null,
-    //   },
-    //   localStorage.uid = self.uid
-    //   localStorage.color = self.color
-    // }
-
-
-    // // update the app store with the UID and user.
-
-    // this.$store.commit('setUID', self.uid)
-    // this.$store.commit('setUser', self)
-
-    // this.$socket.client.emit('user', self)
 
 
     // get message db from server.
