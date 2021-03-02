@@ -11,7 +11,11 @@
     @mouseout="!dragging && peak ? hover = false : null"
     @mouseup="!dragging && peak && hover ? visible = true : null"
   >
-    <div class="overlay">
+    <div 
+      :class="[
+        'overlay', content.slug
+      ]"
+    >
       <span 
         class="close"
         @click.stop="visible = hover = false"
@@ -19,7 +23,7 @@
 
       <div class="content">
         <Section
-          v-for="section in content"
+          v-for="section in content.Sections"
           :key="section.id"
           :section="section"
         />
@@ -43,7 +47,7 @@ export default {
   ],
   data() {
     return {
-      content: null,
+      content: {},
       type: null,
 
       peak: false,
@@ -60,8 +64,8 @@ export default {
       if (newLocation.slug !== oldLocation.slug) {
 
         if (this.location.slug !== 'general') {
-          this.content = []
-          this.content[0] = this.territoryBySlug(this.location.slug)
+          this.content = { Sections: [] }
+          this.content.Sections[0] = this.territoryBySlug(this.location.slug)
           this.peak = true
         } else {
           this.visible = this.hover = this.peak =  false
@@ -88,9 +92,18 @@ export default {
 
         .then((response) => { 
           this.content = 
-            response.data[0].Sections ||
+            response.data[0] ||
             response.data
-          console.log(this.content)
+          // console.log(this.content)
+
+          if (this.content.slug === 'register') {
+            console.log('register')
+            let aanmelder = document.createElement('script')
+            aanmelder.setAttribute('src', 
+              'https://www.aanmelder.nl/115987/xsembed?auth=UB-PSIJLXsgRsW62W1FtPyhMMTE1OTg3TApWRU1CRURVUkxDSEVDSwpwMAp0cDEKLg..'
+            )
+            document.head.appendChild(aanmelder)
+          }
         })
 
         .catch((error) => { 
