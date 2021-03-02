@@ -148,6 +148,7 @@
 
     <Overlay
       id="overlay"
+      :dragging="dragging"
       :wantsToView="moreInformation"
     />
 
@@ -772,7 +773,7 @@ header > div {
   /* background-position: center center; */
   /* background-size: 400px; */
   overflow: hidden;
-  opacity: 0.4;
+  opacity: 0.3;
 }
 
 .blur header,

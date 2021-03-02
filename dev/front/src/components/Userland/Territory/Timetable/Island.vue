@@ -11,58 +11,72 @@
       <span class="start">{{ start }}</span>
       <span class="end"> {{ end }}</span>
     </div>
+
+    <div class="info">
     
-    <div class="header">
-      <h1
-        class="title"
-        @mousedown.stop="$router.push(`/sessions/${ session.slug }`)"
-      > 
-        {{ session.Title }} 
-      </h1>
+      <div class="header">
+        <h1
+          class="title"
+        > 
+          {{ session.Title }} 
+        </h1>
+      </div>
+
+      <div 
+        class="body"
+        v-if="hosts.length > 0"
+      >
+
+        <span class="hosts">
+          <span> with </span>
+          <span
+            class="host"
+            v-for="host in hosts"
+            :key="host.Name"
+          >
+            <span class="name">{{ host.Name }}</span>
+            <span>, </span>
+          </span>
+        </span>
+
+        <span class="modertors">
+          <span
+            class="moderator"
+            v-for="moderator in moderators"
+            :key="moderator.Name"
+          >
+            <span v-if="isLast(moderator, moderators)">and </span>
+            <span class="name">{{ moderator.Name }}</span>
+            <span> (moderator)</span>
+            <span v-if="!isLast(moderator, moderators)">, </span>
+            <span v-else>. </span>
+          </span>
+        </span>
+
+      </div>
+
     </div>
 
-    <div 
-      class="body"
-      v-if="hosts.length > 0"
-    >
+    <BBB-link
+      :BBBLink="session.bbbURL"
+      @mousedown.native.stop
+      @mouseup.native.stop
+      @click.native.stop
+    />
 
-      <span class="hosts">
-        <span> with </span>
-        <span
-          class="host"
-          v-for="host in hosts"
-          :key="host.Name"
-        >
-          <span class="name">{{ host.Name }}</span>
-          <span>, </span>
-        </span>
-      </span>
 
-      <span class="modertors">
-        <span
-          class="moderator"
-          v-for="moderator in moderators"
-          :key="moderator.Name"
-        >
-          <span v-if="isLast(moderator, moderators)">and </span>
-          <span class="name">{{ moderator.Name }}</span>
-          <span> (moderator)</span>
-          <span v-if="!isLast(moderator, moderators)">, </span>
-          <span v-else>. </span>
-        </span>
-      </span>
-
-    </div>
 
   </div>
 </template>
 
 <script>
 import moment from 'moment'
+import BBBLink from './BBBLink'
 
 export default {
   name: 'Island',
   components: {
+    BBBLink
   },
   props: [
     'session'
@@ -113,37 +127,29 @@ export default {
   position: relative;
   flex-shrink: 0;
   min-width: 10%;
+  max-width: 40%;
   margin: 1.25vh 1.25vw;
-  padding: 2vh;
+  padding: 1vh;
 
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  /* flex-wrap: wrap; */
+  /* flex-direction: column; */
+  /* justify-content: center; */
+  /* align-items: flex-start; */
 
-  background-color: var(--white-glass);
-  background-image: var(--island-back);
-  box-shadow: var(--island-shadow);
-  border-top-left-radius: var(--island-curve);
-  border-bottom-right-radius: var(--island-curve);
-  border-top-right-radius: var(--small-island-curve);
-  border-bottom-left-radius: var(--small-island-curve);
-  /* border-radius: var(--small-island-curve); */
-  transition: border-radius 0.2s ease;
+  
 }
+
 .island:hover {
-  border-top-left-radius: 0px;
+  border-radius: 12vh;
+  border-top-left-radius: 2vh;
 }
-.island::before {
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  content: '';
-  background: var(--island-back);
-  border-top-left-radius: inherit;
-  border-bottom-right-radius: inherit;
-  border-top-right-radius:inherit;
-  border-bottom-left-radius: inherit;
-  overflow: hidden;
+
+.island .info {
+  flex: 1 0 50%;
+  box-sizing: border-box;
+  /* max-width: 40vw; */
+  padding: 2vh;
 }
 
 .island .time  {
@@ -155,6 +161,7 @@ export default {
   /* justify-content: space-between; */
   font-size: calc(5pt * var(--scale));
   font-family: sans-serif;
+  pointer-events: none;
 }
 .island .time .end {
   position: absolute;
@@ -167,12 +174,11 @@ export default {
 
 .island .header {
   /* flex: 1; */
-  margin: auto;
-  max-width: 30vw;
+  /* margin: auto; */
   /* margin-bottom: unset; */
   display: flex;
-  align-items: center;
-  justify-content: center;
+  /* align-items: center; */
+  /* justify-content: center; */
   font-size: calc(3pt * var(--scale));
 }
 .island .header h1 { 
@@ -180,17 +186,17 @@ export default {
   font-family: 'zxx-noise';
   font-weight: normal;
   margin-top: 0px;
-  text-align: center;
+  /* text-align: center; */
   cursor: pointer;
 }
 .island .header .title:hover {
   text-decoration: underline;
 }
 .island .body {
-  margin: auto;
+  /* margin: auto; */
   margin-top: unset;
   max-width: 30vw;
-  text-align: center;
+  /* text-align: center; */
   font-family: sans-serif;
   line-height: 1.2;
   font-size: calc(3pt * var(--scale));

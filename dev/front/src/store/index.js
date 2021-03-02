@@ -118,6 +118,9 @@ const store = new Vuex.Store({
     setMessageDeleted: (state, message) => {
       state.messages[message.uid].deleted = true
     },
+    setMessageCensored: (state, message) => {
+      state.messages[message.uid].censored = true
+    },
 
     setTerritories: (state, regions) => {
       state.territories = regions
@@ -266,8 +269,6 @@ const store = new Vuex.Store({
       }
     },
 
-    // deleting a message marks it as blocked.
-
     deleteMessage({ commit }, message ) {
       commit('setMessageDeleted', message)
       this._vm.$socket.client.emit(
@@ -275,14 +276,10 @@ const store = new Vuex.Store({
       )
     },
 
-    // censoring a message marks it as censored.
-
-    censorMessage({ state, commit }, message ) {
-      const cloned = { ...state.messages[message.uid] }
-      cloned.censored = !state.messages[message.uid].censored
-      commit('setMessage', cloned)
+    censorMessage({ commit }, message ) {
+      commit('setMessageCensored', message)
       this._vm.$socket.client.emit(
-        'message', cloned
+        'message', message
       )
     },
     

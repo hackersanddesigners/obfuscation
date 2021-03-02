@@ -7,9 +7,9 @@
       visible: visible,
     }"
 
-    @mouseover.stop="peak ? hover = true : null"
-    @mouseout.stop="peak ? hover = false : null"
-    @mouseup.stop="peak && hover ? visible = true : null"
+    @mouseover="!dragging && peak ? hover = true : null"
+    @mouseout="!dragging && peak ? hover = false : null"
+    @mouseup="!dragging && peak && hover ? visible = true : null"
   >
     <div class="overlay">
       <span 
@@ -38,6 +38,7 @@ export default {
     Section
   },
   props: [
+    'dragging',
     'wantsToView'
   ],
   data() {

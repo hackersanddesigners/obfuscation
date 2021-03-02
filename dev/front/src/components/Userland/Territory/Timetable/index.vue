@@ -11,6 +11,7 @@
           v-for="session in day.sessions"
           :key="session.slug"
           :session="session"
+          @mouseup.native="$router.push(`/sessions/${ session.slug }`)"
         />
       </div>
     </div>

@@ -3,20 +3,21 @@
     :class="[
       'cursorContainer',
       {
-        hovered: user.typing || hovered,
-        dragging: dragging
+        hovered: user.typing ||  hovered,
+        dragging: dragging,
+        me: isMe(user)
       }
     ]"
 
     :style="{ 
       left: ( 100 * user.x -  0.1) + '%',
-      top: ( 100 * user.y -  0.2) + '%',
+      top: ( 100 * user.y - 0.5) + '%',
       '--scale': 15,
       '--userColor': `var(--${ user.uid })`,
     }"
 
-    @mouseover="hovered=true"
-    @mouseout="hovered=false"
+    @mouseover.stop="hovered=true"
+    @mouseout.stop="hovered=false"
   >
     <input 
       v-if="isMe(user)" 
@@ -36,8 +37,9 @@
 
     <div class="cursor">
       <span 
-        v-if="user.typing || hovered" 
         class="name"
+        @mouseover.stop="hovered=true"
+        @mouseout.stop="hovered=false"
       >
         {{ 
           isMe(user) ? "me" : 
@@ -104,15 +106,6 @@ export default {
   methods: {
 
 
-    // send input live through $store.
-
-    updateTyping(text) {
-      this.$store.dispatch('updateSelfAppearance', {
-        typing: text,
-      })
-    },
-
-    
     // construct, sanitize and send the message through
     // the $socket.
 
@@ -185,15 +178,6 @@ export default {
             y: (this.windowPos.y + e.clientY) / (this.windowSize.h * this.scale),
           }
         this.$store.dispatch('updatePosition', pos)
-
-        // if (this.locationTimer < 20) {
-        //   this.locationTimer++
-        // } else {
-        //   console.log('location timer end')
-        //   const territory = this.territoryByBorders(pos)
-        //   this.$store.commit('setLocation', territory)
-        //   this.locationTimer = 0
-        // }
 
         e.preventDefault()
       })
@@ -288,7 +272,6 @@ export default {
 
       // announce every key press to your peers.
 
-      // this.updateTyping(input.value)
       this.$store.dispatch('updateTyping', {
         typing: input.value
       })
@@ -307,73 +290,85 @@ export default {
   align-items: flex-start;
   /* transition: all 0.2s ease; */
   color: var(--userColor);
-}
-.cursorContainer * {
-  /* cursor: none !important; */
-}
-.me .cursorContainer {
-  /* pointer-events: none; */
-  cursor: none;
-}
-.cursorContainer .cursor {
-  /* width: calc(1.5vh / var(--scale));
-  max-width: calc(1.5vh / var(--scale));
-  height: calc(1.5vh / var(--scale)); */
-  width: calc(0.07vh * var(--scale));
-  max-width: calc(0.07vh * var(--scale));
-  height: calc(0.1vh * var(--scale));
-  /* border-radius: 12px; */
-  /* display: flex;
-  justify-content: center;
-  align-items: center; */
-  background: var(--userColor);
-  /* box-shadow: var(--userColor) 0px 0px 30px; */
-  transition: all 0.2s ease;
-  /* padding: 0px 5px; */
-  /* opacity: 0; */
+  /* border: 0.5px solid black; */
   z-index: 1;
 }
-.me .cursorContainer .cursor {
-  cursor: none;
-  /* pointer-events: none; */
+.cursorContainer * {
+  /* border: 0.5px solid black !important; */
+}
+.me.cursorContainer {
+  pointer-events: none;
+  /* cursor: none; */
+}
+.cursorContainer .cursor {
+  min-width: calc(0.07vh * var(--scale));
+  max-width: calc(0.07vh * var(--scale));
+  height: calc(0.1vh * var(--scale));
+  padding: 1px 5px 3px 5px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  background: var(--userColor);
+  box-shadow: var(--userColor) 0px 0px 20px;
+  border-radius: 12px;
+  border-top-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+  border-top-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+  transition: all 0.2s ease;
+  overflow: hidden;
+
+  /* z-index: 1; */
+}
+.me.cursorContainer * {
+  pointer-events: none;
+  
+}
+.me.cursorContainer .cursor {
+  /* cursor: none; */
+  pointer-events: none;
+  /* z-index: 1; */
 
 }
 .cursorContainer .cursor .name {
   color: white;
   white-space: nowrap;
-  /* margin-bottom: -1px; */
+  max-width: 0px;
+  opacity: 0;
+  overflow: hidden;
+  transition: all 0.2s ease;
 }
 .cursorContainer .input {
   width: auto;
-  height: 15px;
-  /* height: 0px; */
   padding: 0px;
   font-size: inherit;
   font-family: inherit;
   color: inherit;
-  /* margin-left: 10px; */
   margin-left: 5px;
   margin-bottom: 3px;
-  /* pointer-events: auto; */
-  cursor: none;
-  /* pointer-events: none; */
-  /* background: rgba(255, 0, 0, 0.377); */
+  pointer-events: none;
+  transition: all 0.2s ease;
 }
 
 .cursorContainer.hovered .cursor {
-   width: auto;
+  width: auto;
   max-width: 450px;
-  /* padding: 0px 7.5px; */
-  padding: 0px 5px;
+  transition: all 0.2s ease;
+}
+.cursorContainer.hovered .cursor .name {
+  max-width: 450px;
+  opacity: 1;
+  transition: all 0.2s ease;
 }
 
 .cursorContainer.hovered .input, 
 .cursorContainer.hovered input,
 .cursorContainer.hovered input:hover,
 .cursorContainer.hovered input:active {
-  width: 450px;
-  max-width: 450px;
-  /* height: 15px; */
+  /* width: 450px; */
+  /* max-width: 450px; */
+  /* max-height: 1vh; */
+  /* height: auto; */
 }
 
 .cursorContainer input::selection,
@@ -398,9 +393,10 @@ export default {
 .cursorContainer.dragging input,
 .cursorContainer.dragging input:hover,
 .cursorContainer.dragging input:active {
-  width: 0vw;
-  max-width: 0vw;
-  height: 0vh;
+  padding: 0;
+  width: 0;
+  max-width: 0;
+  max-height: 0;
   cursor: grabbing;
 }
 /* .cursorContainer.dragging {

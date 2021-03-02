@@ -57,35 +57,7 @@ export default {
   flex-direction: column;
   justify-content: center;
 
-  background-color: var(--white-glass);
-  box-shadow: var(--island-shadow);
-  border-top-left-radius: var(--island-curve);
-  border-bottom-right-radius: var(--island-curve);
-  border-top-right-radius: var(--small-island-curve);
-  border-bottom-left-radius: var(--small-island-curve);
-  /* border-radius: var(--small-island-curve); */
-  transition: all 0.2s ease;
-  /* cursor: pointer; */
 }
-
-.island::before {
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  content: '';
-  background: var(--island-back);
-  border-top-left-radius: inherit;
-  border-bottom-right-radius: inherit;
-  border-top-right-radius:inherit;
-  border-bottom-left-radius: inherit;
-  overflow: hidden;
-}
-
-.island:hover {
-  background-color: var(--yellow-glass);
-  /* border-top-left-radius: 0px; */
-}
-
 .island .header {
   /* flex: 1; */
   /* margin: auto; */
