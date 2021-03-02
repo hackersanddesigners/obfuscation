@@ -113,6 +113,7 @@ html, body {
   /* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; */
   font-family: Helvetica, Arial, sans-serif;
   font-size: 9pt;
+  overflow: hidden;
 }
 a, a:hover, a:active, a:visited {
   color: blue;

@@ -1,5 +1,5 @@
 <template>
-  <div 
+  <main 
     :style="[
       userColors,
       { '--scale': scale }
@@ -143,7 +143,7 @@
     </div>
 
     <Ticker
-
+      content="May 4 & 7, 2021, Register Now. || May 4 & 7, 2021, Register Now. || May 4 & 7, 2021, Register Now. || May 4 & 7, 2021, Register Now. || May 4 & 7, 2021, Register Now. || May 4 & 7, 2021, Register Now. || "
     />
 
     <Overlay
@@ -152,7 +152,7 @@
       :wantsToView="moreInformation"
     />
 
-  </div>
+  </main>
 </template>
 
 <script>
@@ -614,6 +614,10 @@ export default {
 </script>
 
 <style>
+
+main {
+  overflow: hidden;
+}
 
 #location {
   position: sticky;

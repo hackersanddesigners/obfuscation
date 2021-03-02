@@ -12,7 +12,10 @@
     @mouseup.stop="peak && hover ? visible = true : null"
   >
     <div class="ticker">
-      <div class="content">
+      <div 
+        class="content"
+        ref="smarq"
+      >
         {{ content }}
       </div>
     </div>
@@ -20,19 +23,18 @@
 </template>
 
 <script>
+import Smarquee from 'smarquee'
+
 export default {
   name: 'Ticker',
   components: {
   },
   props: [
-    'wantsToView'
+    'content'
   ],
   data() {
     return {
-      content: null,
-      type: null,
-
-      peak: false,
+      peak: true,
       hover: false,
       visible: false
     }
@@ -43,6 +45,11 @@ export default {
   watch: {
   },
   mounted() {
+    let smarquee = new Smarquee({
+      element: this.$refs.smarq,
+      iterationCount: 'infinite',
+    })
+    smarquee.init()
   },
   methods: {
 
@@ -52,43 +59,41 @@ export default {
 </script>
 
 <style scoped>
-.tickerContainer {
-  cursor: auto;
+#tickerContainer {
+  /* cursor: auto; */
   box-sizing: border-box;
   position: absolute;
-  bottom: 0;
+  bottom: -2vh;
+  left: 0;
   width: 100%;
-  height: 100px;
+  height: 4vh;
   background: white;
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.534);
   /* box-shadow: inset 0 0 20px 0 rgba(0, 0, 0, 0.534); */
   overflow: hidden;
-  z-index: 2;
+  /* z-index: 5; */
   transition: all 0.4s ease;
-  border-top-left-radius: 20px;
-  border-bottom-left-radius: 20px;
+  font-size: 24pt;
+  color: rgb(255, 51, 51);
 }
-.tickerContainer.peak {
-  cursor: pointer;
-  right: calc(20px - 40%);
+#tickerContainer.peak {
+  bottom: -2vh;
   box-shadow: 0 0 50px 0 rgba(0, 0, 0, 0.534);
   /* box-shadow: inset 0 0 50px 0 rgba(0, 0, 0, 0.534); */
 }
-.tickerContainer.hover {
-  cursor: pointer;
-  right: calc(100px - 40%);
+#tickerContainer.hover {
+  bottom: 0;
+  font-size: 32pt;
   box-shadow:  0 0 30px 0 rgba(0, 0, 0, 0.534);
   /* box-shadow: inset 0 0 30px 0 rgba(0, 0, 0, 0.534); */
-}
-.tickerContainer.visible {
-  right: 0px;
 }
 .ticker {
   height: 100%;
   width: 100%;
   overflow: scroll;
 }
-.ticker .body {
-  font-size: calc(2.5pt * var(--scale));
+.ticker .content {
+  text-align: right;
+  /* font-weight: lighter; */
 }
 </style>
