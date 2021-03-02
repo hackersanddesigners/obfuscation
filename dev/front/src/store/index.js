@@ -95,12 +95,16 @@ const store = new Vuex.Store({
       state.users[color.uid].color = color.color
       state.users[color.uid].connected = true
     },
-    setUserName: (state, name) => {
-      state.users[name.uid].name = name.name
-      state.users[name.uid].connected = true
+    setUserAppearance: (state, user) => {
+      state.users[user.uid].name = user.name
+      state.users[user.uid].color = user.color
+      state.users[user.uid].connected = true
     },
     setUserBlocked: (state, user) => {
       state.users[user.uid].blocked = true
+    },
+    setUserDeleted: (state, user) => {
+      state.users[user.uid].deleted = true
     },
 
     setMessages: (state, messages) => {
@@ -152,8 +156,15 @@ const store = new Vuex.Store({
 
     socket_user({ state, commit }, user) {
       commit('setUser', user)
-      if (user.uid === state.uid && user.blocked) {
-        commit('block')
+      if (user.uid === state.uid) {
+        if (user.blocked) {
+          commit('block')
+        }
+        if (user.deleted) {
+          commit('doNotSave')
+          localStorage.clear()
+          window.location.reload(true)
+        }
       }
     },
 
@@ -179,9 +190,9 @@ const store = new Vuex.Store({
       }
     },
 
-    socket_name({ state, commit }, name) {
-      if (name.uid !== state.uid) {
-        commit('setUserName', name)
+    socket_appearance({ state, commit }, user) {
+      if (user.uid !== state.uid) {
+        commit('setUserAppearance', user)
       }
     },
 
@@ -219,11 +230,11 @@ const store = new Vuex.Store({
       )
     },
 
-    updateName({ state, commit }, name) {
-      name.uid = state.uid
-      commit('setUserName', name)
+    updateAppearance({ state, commit }, user) {
+      user.uid = state.uid
+      commit('setUserAppearance', user)
       this._vm.$socket.client.emit(
-        'name', name
+        'appearance', user
       )
     },
 
@@ -241,18 +252,19 @@ const store = new Vuex.Store({
       }
     },
 
-    // special treatment for deleting yourself:
-    // your local storage is cleared so that you can
-    // re-join as a new user that is not marked as
-    // blocked / blocked.
+    deleteUser({ state, commit, dispatch }, user ) {
+      commit('setUserDeleted', user)
+      this._vm.$socket.client.emit(
+        'user', user
+      )
 
-    deleteSelf({ state, commit, dispatch }) {
-      commit('doNotSave')
-      dispatch('blockUser', state.users[state.uid])
-      localStorage.clear()
-      window.location.reload(true)
+      for(let uid in state.messages) {
+        const message = state.messages[uid]
+        if (message.authorUID == user.uid) {
+          dispatch('deleteMessage', message)
+        }
+      }
     },
-
 
     // deleting a message marks it as blocked.
 

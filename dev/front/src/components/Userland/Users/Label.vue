@@ -32,6 +32,11 @@
         @click.stop="$store.dispatch('blockUser', user)"
         >block</span>
 
+      <span 
+        class="delete"
+        @click.stop="$store.dispatch('deleteUser', user)"
+        >delete</span>
+
     </div>
 
     <span class="goto"> {{ hovered ? '→' : ''  }}</span> 

@@ -99,9 +99,10 @@ low(adapter).then(db => {
       io.sockets.emit('color', color)
     })
 
-    socket.on('name', (name) => {
-      io.sockets.emit('name', name)
-      db.set(`users[${name.uid}].name`, name.name)
+    socket.on('appearance', (user) => {
+      io.sockets.emit('appearance', user)
+      db.set(`users[${user.uid}].name`, user.name)
+        .set(`users[${user.uid}].color`, user.color)
         .write()
     })
 

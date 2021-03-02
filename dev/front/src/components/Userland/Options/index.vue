@@ -22,7 +22,7 @@
       <input
         type="button"
         value="delete me"
-        @click.stop="deleteSelf"
+        @click.stop="$store.dispatch('deleteUser', me)"
       />
     </div>
 
@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import { mapActions, mapMutations, mapState } from 'vuex'
+import { mapGetters, mapMutations, mapState } from 'vuex'
 
 export default {
 
@@ -47,20 +47,16 @@ export default {
   computed: {
     ...mapState([
       'grid'
+    ]),
+    ...mapGetters([
+      'me'
     ])
   },
 
   methods: {
     ...mapMutations([
-
       'toggleGrid'
-
     ]),
-    ...mapActions([
-
-      'deleteSelf'
-
-    ])
   }
 }
 </script>
