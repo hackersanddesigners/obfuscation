@@ -29,15 +29,6 @@
         <Section
           :section="content"
         /> 
-        <div 
-          v-if="register"
-          id="aanmelderContainer"
-        >
-          <a href="https://www.aanmelder.nl/wo2021/subscribe">
-            Register online for the event.
-          </a>
-          <div id="AanmelderRootDiv"></div>
-        </div>
       </div>     
 
       <div
@@ -49,6 +40,15 @@
           :key="section.id"
           :section="section"
         />
+        <div 
+          v-if="register"
+          id="aanmelderContainer"
+        >
+          <a href="https://www.aanmelder.nl/wo2021/subscribe">
+            Register online for the event.
+          </a>
+          <div id="AanmelderRootDiv"></div>
+        </div>
         
       </div>
 
