@@ -35,7 +35,7 @@ export default {
     // ])
   },
   watch: {
-    stream() {
+    playbackId() {
       // this.playbackId = this.stream.playbackId  
       console.log(this.playbackId)
       // console.log(newState)
