@@ -108,13 +108,11 @@ export default {
           // console.log(this.content)
 
           if (this.content.slug === 'register') {
-            console.log('register')
             this.register = true
             let aanmelder = document.createElement('script')
             aanmelder.setAttribute('src', 
               'https://www.aanmelder.nl/115987/xsembed?auth=UB-PSIJLXsgRsW62W1FtPyhMMTE1OTg3TApWRU1CRURVUkxDSEVDSwpwMAp0cDEKLg..'
             )
-            // document.body.appendChild(aanmelderLink)
             document.head.appendChild(aanmelder)
           
           } else {

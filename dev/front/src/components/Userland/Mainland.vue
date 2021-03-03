@@ -370,7 +370,7 @@ export default {
       // if there is a slug, navigate to it.
 
       if (this.wantsToView) {
-        this.route(this.wantsToView)
+        this.route(this.wantsToView, 'smooth', true)
 
 
       // else, land in the center.
@@ -408,7 +408,7 @@ export default {
 
     // custom router.
 
-    route(slug) {
+    route(slug, behavior, pause) {
       let 
         type = slug.type,
         name = slug.name,
@@ -446,7 +446,7 @@ export default {
 
         // slugs map to locations on mainland.
 
-        this.scrollTo(position, 'smooth')
+        this.scrollTo(position, behavior ? behavior : 'smooth')
 
 
         // otherwise it is a "page", so it maps to
@@ -458,7 +458,7 @@ export default {
           name = name.substring(1)
         }
       
-        const 
+        let 
           collection = name.split('/')[0],
           page = name.split('/')[1],
           territoryName = 
@@ -471,14 +471,23 @@ export default {
       
         position = this.pixelsFrom(territory.borders)
 
-        if (this.location.slug !== territory.slug) {
-          this.scrollTo(position, 'smooth')
+                
+        console.log('oldpage:', page)
+        if (page.includes('?')) {
+          page = page.replace(/\?.*$/g,"")
+          console.log('newpage:', page)
         }
 
-        this.moreInformation = { 
-          collection: collection,
-          page: page
+        if (this.location.slug !== territory.slug) {
+          this.scrollTo(position, behavior ? behavior : 'smooth')
         }
+
+        setTimeout(() => {
+          this.moreInformation = { 
+            collection: collection,
+            page: page
+          }
+        }, pause ? 1000 : 0)
 
       }
 
