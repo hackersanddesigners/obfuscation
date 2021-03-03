@@ -121,10 +121,6 @@ export default {
       if (this.navigation) {
         this.$router.push(input.value)
 
-
-      // } else if (this.stream) {
-      //   message.content = message.content.replace('/stream ', '')
-      //   console.log(message.content)
       }
 
 
@@ -409,8 +405,8 @@ export default {
   max-height: 0;
   cursor: grabbing; */
   border-radius: 12px !important;
-  padding: 0 ;
-  max-height: 10px; max-width: 10px;
+  padding: 1px 0px;
+  height: 10px; width: 10px;
   box-shadow: none;
 }
 /* .cursorContainer.dragging {

@@ -43,9 +43,10 @@ export default {
 <style scoped>
 .glossary {
   box-sizing: border-box;
+  margin: auto;
   margin-top: 20vh;
   height: 100%;
-  width: 100%;
+  max-width: 70%;
   display: flex;
   flex-direction: column;
   align-items: center;

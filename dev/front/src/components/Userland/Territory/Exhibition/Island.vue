@@ -85,25 +85,27 @@ export default {
   /* flex-shrink: 0; */
   /* flex-grow: 1; */
   /* width: auto; */
-  margin-bottom: 10vh;
-  margin-right: 10vw;
+  /* margin-bottom: 10vh;
+  margin-right: 10vh; */
+  margin: 10vh;
+  padding: 0;
 
 
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
+/* 
   background-color: var(--white-glass);
   box-shadow: var(--island-shadow);
   border-top-left-radius: var(--small-island-curve);
-  border-bottom-right-radius: var(--small-island-curve);
+  border-bottom-right-radius: var(--small-island-curve); */
   /* border-radius: var(--small-island-curve); */
   transition: border-radius 0.2s ease;
 }
 
 .island:first-of-type {
-  margin-left: 10vw;
+  /* margin-left: 10vw; */
 }
 .island:hover {
   /* border-top-left-radius: 0px; */

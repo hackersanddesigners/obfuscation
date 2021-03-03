@@ -5,8 +5,8 @@
     :style="{
       left: `${ toNearestX(territory.borders.x, 0.4) }%`,
       top: `${ toNearestX(territory.borders.y, 0.4) }%`,
-      width: `${100 / 5}%`,
-      height: `${100 / 5}%`,
+
+
     }"
   >
   
@@ -18,52 +18,63 @@
 
     <Reception
       v-if="content && slug === 'reception'"
+      ref="firstChild"
       :content="content"
       @moreInfo="$emit('moreInfo', $event)"
     />
 
     <Exhibition
       v-else-if="content && slug === 'exhibition'"
+      ref="firstChild"
       :content="content"
     />
 
     <Timetable
       v-else-if="content && slug === 'timetable'"
+      ref="firstChild"
       :content="content"
     />
 
     <Glossary
       v-else-if="content && slug === 'glossary'"
+      ref="firstChild"
       :content="content"
     />
 
     <Library
       v-else-if="content && slug === 'library'"
+      ref="firstChild"
       :content="content"
     />
 
     <Hangout
       v-else-if="content && slug === 'hangout'"
+      ref="firstChild"
       :content="content"
     />
 
     <Livestream
       v-else-if="content && slug === 'livestream'"
+      ref="firstChild"
       :content="content"
     />
 
-    <Island
+    <div 
+      class="placeholder"
       v-else-if="content"
-      :name="territory.name"
-      :slug="territory.slug"
-      :content="content"
-    />
+      ref="firstChild"
+    >
+      <Island
+        :name="territory.name"
+        :slug="territory.slug"
+        :content="content"
+      />
+    </div>
 
   </div>
 </template>
 
 <script>
-
 import Reception from './Reception'
 import Exhibition from './Exhibition'
 import Timetable from './Timetable'
@@ -72,6 +83,12 @@ import Library from './Library'
 import Hangout from './Hangout'
 import Livestream from './Livestream'
 import Island from './Island'
+
+      // width: `${100 / 5}%`,
+      // height: `${100 / 5}%`,
+
+      // minWidth: `${15}%`,
+      // minHeight: `${15}%`,
 
 export default {
   name: 'Territory',
@@ -182,7 +199,16 @@ export default {
   /* align-items: center; */
   /* pointer-events: none; */
   cursor: inherit;
+  min-width: 10%;
+  min-height: 10%;
   /* z-index: 1; */
+
+}
+
+.territory .placeholder {
+  min-width: 70vw;
+  min-height: 60vh;
+  display: flex;
 
 }
 

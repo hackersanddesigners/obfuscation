@@ -42,8 +42,8 @@ export default {
   /* padding: 0vh 5vw; */
   margin: auto;
   /* padding: 0px 20%; */
-  height: 80%;
-  width: 80%;
+  height: 80vh;
+  width: 80vw;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;

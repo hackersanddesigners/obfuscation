@@ -1,6 +1,9 @@
 <template>
   <div 
-    class="island"
+    :class="[
+      'island',
+      { break: isBreak }
+    ]"
     :style="{
       width: `${ getWidth() }%`,
       height: `${100 / 4 }vh`,
@@ -90,7 +93,11 @@ export default {
     end() { return this.getHumanTime(this.session.End) },
     time() { return `${ this.start } — ${ this.end }` },
     hosts() { return this.session.hosts },
-    moderators() { return this.session.moderators }
+    moderators() { return this.session.moderators },
+    isBreak() {
+      // return this.session.Title.toLowerCase().includes('break')
+      return !this.session.Description || this.session.Description.length === 0
+    }
   },
   created() {
   },
@@ -101,7 +108,7 @@ export default {
         UnixStart = this.getUnixTime(this.session.Start),
         UnixEnd = this.getUnixTime(this.session.End),
         duration = UnixEnd - UnixStart,
-        width = duration / 200000
+        width = this.isBreak ? 5 : duration / 400000
       return width
     },
 
@@ -126,10 +133,11 @@ export default {
   box-sizing: border-box;
   position: relative;
   flex-shrink: 0;
-  min-width: 10%;
-  max-width: 20%;
+  min-width: 5%;
+  /* max-width: 25%; */
   margin: 1.25vh 1.25vw;
-  padding: 1vh;
+  margin-top: 10vh;
+  padding: 0vh;
 
   display: flex;
   /* flex-wrap: wrap; */
@@ -149,7 +157,9 @@ export default {
   flex: 1 0 50%;
   box-sizing: border-box;
   /* max-width: 40vw; */
-  padding: 2vh;
+  padding: 3vh;
+  border-radius: inherit;
+  overflow: hidden;
 }
 
 .island .time  {
@@ -162,6 +172,7 @@ export default {
   font-size: calc(5pt * var(--scale));
   font-family: sans-serif;
   pointer-events: none;
+
 }
 .island .time .end {
   position: absolute;
@@ -205,5 +216,17 @@ export default {
 .island .body .moderator .name {
   text-decoration: underline;
   cursor: pointer;
+}
+
+.island.break {
+  /* background-color: red; */
+  /* padding: 1vh; */
+}
+.island.break .info {
+  position: absolute;
+  padding: 3vh 5vh 3vh 3vh;
+}
+.island.break .body .BBB-container .BBB {
+  margin-bottom: 1vh;
 }
 </style>

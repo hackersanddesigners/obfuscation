@@ -8,6 +8,7 @@
 </template>
 <script>
 import Hls from 'hls.js'
+// import { mapState } from 'vuex'
 
 export default {
   name: 'Video',
@@ -29,15 +30,20 @@ export default {
   },
   computed: {
     playbackId() { return this.$store.state.stream.playbackId }
+    // ...mapState([
+    //   'stream'
+    // ])
   },
   watch: {
-    playbackId(newState) {
-      console.log(newState)
-      if (newState) {
+    stream() {
+      // this.playbackId = this.stream.playbackId  
+      console.log(this.playbackId)
+      // console.log(newState)
+      // if (newState) {
         this.updateVideo()
-      } else {
-        this.$el.src = null
-      }
+      // } else {
+        // this.$el.src = null
+      // }
     },
 
     // stream(newState) {
@@ -116,7 +122,8 @@ export default {
   },
   methods: {
 
-    src: playbackId => `https://bbb.tbm.tudelft.nl/hls/${playbackId}.m3u8`,
+    src: playbackId  => `https://bbb.tbm.tudelft.nl/hls/${playbackId}.m3u8`,
+    // src: playbackId => `https://stream.mux.com/${playbackId}.m3u8`,
     // poster: playbackId => `https://image.mux.com/${playbackId}/thumbnail.jpg?time=15`,
 
 

@@ -38,9 +38,9 @@ export default {
   /* padding: 0vh 5vw; */
   margin: auto;
   padding: 0px 20%;
-  height: 80%;
-  width: 80%;
-  border: 0.5px solid;
+  height: 80vh;
+  width: 80vh;
+  border: 1px solid;
   opacity: 0.15;
   border-radius: 100%;
   display: flex;

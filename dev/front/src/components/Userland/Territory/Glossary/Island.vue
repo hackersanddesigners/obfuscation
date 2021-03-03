@@ -85,7 +85,7 @@ export default {
   font-family: 'zxx-noise';
   text-align: center;
   font-weight: normal;
-  word-break: break-all;
+  /* word-break: break-all; */
   cursor: pointer;
 }
 .island .header .title:hover {

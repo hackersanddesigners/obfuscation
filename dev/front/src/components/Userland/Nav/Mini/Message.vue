@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="!message.navigation && !message.stream && message.uid"
     :class="[
       'minimessage',
     ]"
