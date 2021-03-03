@@ -389,11 +389,15 @@ export default {
     // an announcement.
 
     message(message) {
-      console.log(message.location)
+
       if (message.announcement) {
         this.scrollTo(
           this.positionOf(message), 
         'smooth')
+
+      } else if (message.stream) {
+        this.$store.commit('setStream', 
+          message.content.replace('/stream ', ''))
       }
     },
 

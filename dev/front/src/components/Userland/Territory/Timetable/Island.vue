@@ -127,7 +127,7 @@ export default {
   position: relative;
   flex-shrink: 0;
   min-width: 10%;
-  max-width: 40%;
+  max-width: 20%;
   margin: 1.25vh 1.25vw;
   padding: 1vh;
 

@@ -47,6 +47,11 @@
       :content="content"
     />
 
+    <Livestream
+      v-else-if="content && slug === 'livestream'"
+      :content="content"
+    />
+
     <Island
       v-else-if="content"
       :name="territory.name"
@@ -65,6 +70,7 @@ import Timetable from './Timetable'
 import Glossary from './Glossary'
 import Library from './Library'
 import Hangout from './Hangout'
+import Livestream from './Livestream'
 import Island from './Island'
 
 export default {
@@ -76,6 +82,7 @@ export default {
     Glossary,
     Library,
     Hangout,
+    Livestream,
     Island,
   },
   props: [

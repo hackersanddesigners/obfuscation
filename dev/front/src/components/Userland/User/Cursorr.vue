@@ -118,14 +118,13 @@ export default {
 
       // configure message type:
 
-      if (this.announcement) {
-        message.announcement = true
-        this.announcement = false
-
-      } else if (this.navigation) {
-        message.navigation = true
+      if (this.navigation) {
         this.$router.push(input.value)
-        this.navigation = false
+
+
+      // } else if (this.stream) {
+      //   message.content = message.content.replace('/stream ', '')
+      //   console.log(message.content)
       }
 
 
@@ -138,6 +137,9 @@ export default {
 
       // clear variables for next event.
 
+      this.announcement = false
+      this.navigation = false
+      this.stream = false
       this.current = null
       input.value = ''
       input.placeholder = ''
@@ -161,7 +163,9 @@ export default {
           y: this.me.y,
           deleted: false,
           censored: false,
-          announcement: false,
+          announcement: this.announcement,
+          navigation: this.navigation,
+          stream: this.stream,
           location: this.$store.state.location.slug,
         }
         return message
@@ -215,6 +219,12 @@ export default {
 
       } else if (input.value == '!') {
         this.announcement = true
+
+
+      // set the stream playbackID for everyone
+
+      } else if (input.value.includes('/stream')) {
+        this.stream = true
       }
 
 

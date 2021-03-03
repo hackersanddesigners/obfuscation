@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="!message.navigation && message.uid"
+    v-if="!message.navigation && !message.stream && message.uid"
     :id="message.uid"
     :class="[
       'messageContainer',

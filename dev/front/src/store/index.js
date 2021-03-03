@@ -42,6 +42,14 @@ const store = new Vuex.Store({
     location: {},
 
 
+    // livestream
+
+    stream: {
+      playbackId: null,
+      status: null,
+    },
+
+
     // default vlaues for map position, dimensions, 
     // grid, and scale (zoom).
 
@@ -129,13 +137,18 @@ const store = new Vuex.Store({
       Vue.set(state.territories[terr.slug].borders, 'w', terr.size.w)
       Vue.set(state.territories[terr.slug].borders, 'h', terr.size.h)
     },
+    setLocation: (state, newLocation) => {
+      state.location = newLocation
+    },
+
+
+    setStream: (state, playbackId) => {
+      state.stream.playbackId = playbackId
+    },
 
 
     // app interface mutations.
 
-    setLocation: (state, newLocation) => {
-      state.location = newLocation
-    },
     zero: state => state.scale = 5,
     zoomIn: state => state.scale += 0.25,
     zoomOut: state  => state.scale > 1 ? state.scale -= 0.25 : null, 
