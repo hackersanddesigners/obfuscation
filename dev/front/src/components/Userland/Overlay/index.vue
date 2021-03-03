@@ -98,11 +98,17 @@ export default {
 
           if (this.content.slug === 'register') {
             console.log('register')
+            let aanmelderLink = document.createElement('a')
+            aanmelderLink.setAttribute('src',
+              'https://www.aanmelder.nl/wo2021/subscribe'
+            )
             let aanmelder = document.createElement('script')
             aanmelder.setAttribute('src', 
               'https://www.aanmelder.nl/115987/xsembed?auth=UB-PSIJLXsgRsW62W1FtPyhMMTE1OTg3TApWRU1CRURVUkxDSEVDSwpwMAp0cDEKLg..'
             )
-            document.head.appendChild(aanmelder)
+            document.body.appendChild(aanmelderLink)
+            document.body.appendChild(aanmelder)
+          
           }
         })
 

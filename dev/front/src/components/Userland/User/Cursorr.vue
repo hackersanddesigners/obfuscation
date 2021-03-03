@@ -309,7 +309,7 @@ export default {
   justify-content: flex-start;
   align-items: center;
   background: var(--userColor);
-  box-shadow: var(--userColor) 0px 0px 20px;
+  box-shadow: var(--userColor) 5px 5px 20px;
   border-radius: 12px;
   border-top-left-radius: 6px;
   border-bottom-right-radius: 6px;
@@ -389,15 +389,19 @@ export default {
   cursor: none;
 }
 
-.cursorContainer.dragging .cursor,
-.cursorContainer.dragging input,
+.cursorContainer.dragging .cursor {
+/* .cursorContainer.dragging input,
 .cursorContainer.dragging input:hover,
-.cursorContainer.dragging input:active {
-  padding: 0;
+.cursorContainer.dragging input:active { */
+  /* padding: 0;
   width: 0;
   max-width: 0;
   max-height: 0;
-  cursor: grabbing;
+  cursor: grabbing; */
+  border-radius: 12px !important;
+  padding: 0 ;
+  max-height: 10px; max-width: 10px;
+  box-shadow: none;
 }
 /* .cursorContainer.dragging {
   cursor: grabbing;

@@ -78,13 +78,13 @@ export default {
 }
 #tickerContainer.peak {
   bottom: -2vh;
-  box-shadow: 0 0 50px 0 rgba(0, 0, 0, 0.534);
+  box-shadow: 0 0 30px 0 rgba(0, 0, 0, 0.534);
   /* box-shadow: inset 0 0 50px 0 rgba(0, 0, 0, 0.534); */
 }
 #tickerContainer.hover {
   bottom: 0;
   font-size: 32pt;
-  box-shadow:  0 0 30px 0 rgba(0, 0, 0, 0.534);
+  box-shadow:  0 0 50px 0 rgba(0, 0, 0, 0.534);
   /* box-shadow: inset 0 0 30px 0 rgba(0, 0, 0, 0.534); */
 }
 .ticker {
@@ -93,7 +93,7 @@ export default {
   overflow: scroll;
 }
 .ticker .content {
-  text-align: right;
+  text-align: center;
   /* font-weight: lighter; */
 }
 </style>

@@ -738,7 +738,7 @@ header > div {
   display: none;
 }
 #userlandContainer.dragging {
-  cursor: grabbing;
+  /* cursor: grabbing; */
   user-select: none;
 }
 .exhibition header,
