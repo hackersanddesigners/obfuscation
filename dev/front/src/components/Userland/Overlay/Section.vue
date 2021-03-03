@@ -40,7 +40,7 @@
 export default {
   name: 'Section',
   props: [
-    'section'
+    'section',
   ],
   data() {
     return {
@@ -49,6 +49,7 @@ export default {
   created() {
   },
   mounted() {
+  
   }
 }
 </script>

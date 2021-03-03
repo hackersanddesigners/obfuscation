@@ -27,6 +27,16 @@
           :key="section.id"
           :section="section"
         />
+        <div 
+          v-if="register"
+          id="aanmelderContainer"
+        >
+          <a href="https://www.aanmelder.nl/wo2021/subscribe">
+            Register online for the event.
+          </a>
+          <div id="AanmelderRootDiv">
+          </div>
+        </div>
       </div>
 
     </div>
@@ -49,6 +59,7 @@ export default {
     return {
       content: {},
       type: null,
+      register: false,
 
       peak: false,
       hover: false,
@@ -98,17 +109,16 @@ export default {
 
           if (this.content.slug === 'register') {
             console.log('register')
-            let aanmelderLink = document.createElement('a')
-            aanmelderLink.setAttribute('src',
-              'https://www.aanmelder.nl/wo2021/subscribe'
-            )
+            this.register = true
             let aanmelder = document.createElement('script')
             aanmelder.setAttribute('src', 
               'https://www.aanmelder.nl/115987/xsembed?auth=UB-PSIJLXsgRsW62W1FtPyhMMTE1OTg3TApWRU1CRURVUkxDSEVDSwpwMAp0cDEKLg..'
             )
-            document.body.appendChild(aanmelderLink)
-            document.body.appendChild(aanmelder)
+            // document.body.appendChild(aanmelderLink)
+            document.head.appendChild(aanmelder)
           
+          } else {
+            this.register = false
           }
         })
 
