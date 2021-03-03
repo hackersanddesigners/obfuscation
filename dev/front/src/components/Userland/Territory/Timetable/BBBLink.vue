@@ -36,10 +36,11 @@ export default {
 <style scoped>
 .BBB-container {
   /* flex: 1 0 20%; */
-  flex: 0 1 28vh;
+  flex: 0 1 25vh;
   box-sizing: border-box;
   position: relative;
   min-width: 10vh;
+  margin: 1vh;
   padding: 1vh;
 
   display: flex;
@@ -50,11 +51,12 @@ export default {
   outline: none;
   background-color: var(--white-glass);
   box-shadow: var(--island-shadow);
-  border-top-right-radius: var(--island-curve);
+  /* border-top-right-radius: var(--island-curve);
   border-bottom-left-radius: var(--island-curve);
   border-top-left-radius: var(--small-island-curve);
-  border-bottom-right-radius: var(--small-island-curve);
+  border-bottom-right-radius: var(--small-island-curve); */
   /* border-radius: var(--small-island-curve); */
+  border-radius: inherit;
   transition: all 0.2s ease;
   /* cursor: pointer; */
 
@@ -76,6 +78,7 @@ export default {
 .island:hover .BBB-container {
   border-radius: 12vh;
   border-top-left-radius: 2vh;
+  transform: scale(1.03);
 }
 
 .BBB {
@@ -85,5 +88,7 @@ export default {
   max-width: 10vh;
 
 }
-
+.break .BBB-container .BBB {
+  margin-bottom: 4vh;
+}
 </style>

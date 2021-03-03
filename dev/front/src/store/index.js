@@ -143,7 +143,7 @@ const store = new Vuex.Store({
 
 
     setStream: (state, playbackId) => {
-      state.stream.playbackId = playbackId
+      Vue.set(state.stream, 'playbackId', playbackId)
     },
 
 

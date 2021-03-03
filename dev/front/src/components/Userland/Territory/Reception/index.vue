@@ -61,10 +61,12 @@ export default {
   margin: auto;
   padding: 0 30%;
   /* max-height: 100%; */
-  width: 100%; 
+  width: 100vw;
+  height: 100vh; 
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  align-content: center;
   align-items: center;
 }
 

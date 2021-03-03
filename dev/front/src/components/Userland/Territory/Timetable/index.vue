@@ -101,7 +101,8 @@ export default {
   margin-top: 20vh;
   /* padding: 0vh 5vw; */
   /* width: 100%;  */
-  height: 100%;
+  /* height: 100%; */
+  max-width: 300vw;
   display: flex;
   flex-direction: column;
   justify-content: stretch;
@@ -112,7 +113,7 @@ export default {
 .timetable .day  {
   /* flex: 1 0; */
   /* height: 50%; */
-  margin-bottom: 5vh;
+  margin-bottom: 10vh;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -122,22 +123,24 @@ export default {
   /* float: 0 0 auto; */
   margin: 2.5vh 2.5vw;
   margin: 2.5vh 1vw;
+  margin: 0vh 1vw;
   font-size: calc(8pt * var(--scale));
   font-family: sans-serif;
   font-weight: lighter;
-  width: 100%;
+  /* width: 100%; */
 }
 
 .timetable .day .sessionsContainer {
-  margin-top: 5vh;
+  /* margin-top: 5vh; */
   margin-left: 5vw;
   /* float: 1 0 100%; */
   width: 100%;
   height: 100%;
   display: flex;
   /* justify-content: stretch; */
-  /* align-items: flex-start; */
-  /* flex-wrap: wrap; */
+  align-items: flex-start;
+  align-content: flex-start;
+  flex-wrap: wrap;
 }
 
 </style>

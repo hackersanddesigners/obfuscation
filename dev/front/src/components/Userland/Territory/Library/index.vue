@@ -42,9 +42,10 @@ export default {
 <style scoped>
 .library {
   box-sizing: border-box;
+  margin: auto;
   margin-top: 20vh;
-  height: 100%;
-  width: 100%;
+  /* height: 100%; */
+  max-width: 60vw;
   display: flex;
   flex-direction: column;
   align-items: center;

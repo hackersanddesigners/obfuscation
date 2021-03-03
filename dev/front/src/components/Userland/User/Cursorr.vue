@@ -121,10 +121,6 @@ export default {
       if (this.navigation) {
         this.$router.push(input.value)
 
-
-      // } else if (this.stream) {
-      //   message.content = message.content.replace('/stream ', '')
-      //   console.log(message.content)
       }
 
 
