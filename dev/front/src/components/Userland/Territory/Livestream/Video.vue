@@ -122,8 +122,8 @@ export default {
   },
   methods: {
 
-    src: playbackId  => `https://bbb.tbm.tudelft.nl/hls/${playbackId}.m3u8`,
-    // src: playbackId => `https://stream.mux.com/${playbackId}.m3u8`,
+    // src: playbackId  => `https://bbb.tbm.tudelft.nl/hls/${playbackId}.m3u8`,
+    src: playbackId => `https://stream.mux.com/${playbackId}.m3u8`,
     // poster: playbackId => `https://image.mux.com/${playbackId}/thumbnail.jpg?time=15`,
 
 
