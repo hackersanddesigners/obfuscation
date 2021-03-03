@@ -23,7 +23,7 @@
 
       <div class="content">
         <Section
-          v-for="section in content.Sections"
+          v-for="section in content.Sections || content"
           :key="section.id"
           :section="section"
         />
@@ -168,12 +168,17 @@ export default {
   width: 100%;
   overflow: scroll;
 }
-.overlay .close {
+.overlayContainer .close {
   position: sticky;
   left: 3%;
   top: 2%;
   cursor: pointer;
   font-size: calc(3.5pt * var(--scale));
+  opacity: 0;
+  transition: all 0.2s ease;
+}
+.overlayContainer.visible .close {
+  opacity: 1;
 }
 .overlay .header {
   font-size: calc(5pt * var(--scale));
@@ -184,5 +189,9 @@ export default {
 }
 .overlay .body {
   font-size: calc(2.5pt * var(--scale));
+}
+
+#AanmelderCSS {
+
 }
 </style>

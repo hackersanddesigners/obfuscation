@@ -2,41 +2,49 @@
  <section>
     <div class="header">
       <h3 class="subtitle"> 
-        {{ section.Subtitle || section.Start}} 
+        {{ subtitle }}
+        <!-- {{
+          section.Subtitle || 
+          moment(this.section.Start).format('dddd, MMMM Do [at] HH:mm')
+        }} -->
       </h3>
       <h1 class="title"> 
-        {{ 
+        {{ title }} 
+        <!-- {{
           section.Title || 
           section.title ||
           section.Name ||
           section.name ||
           section.Term 
-        }} 
+        }} -->
       </h1>
     </div>
     <div class="body">
       <vue-markdown
         :source="
-          section.Body || 
-          section.body || 
-          section.Description ||
-          section.description ||
-          section.Definition
+          body
         "
       />
     </div>
     <div class="footer">
       <vue-markdown
-        :source="
-          section.Source || 
-          ''
-        "
+        :source="source"
       />
     </div>
  </section>
 </template>
 
 <script>
+import moment from 'moment'
+
+
+// this.processBody(
+//             section.Body || 
+//             section.body || 
+//             section.Description ||
+//             section.description ||
+//             section.Definition
+//           )
 export default {
   name: 'Section',
   props: [
@@ -44,12 +52,62 @@ export default {
   ],
   data() {
     return {
+      moment: moment
     }
+  },
+
+  computed: {
+
+    subtitle() { return this.getSubtitle() },
+    title() { return this.getTitle() },
+    body() { return this.getBody() },
+    source() { return this.getSubtitle() }
+
   },
   created() {
   },
   mounted() {
-  
+  },
+  methods: {
+    getSubtitle() {
+      return (
+        this.section.Subtitle || 
+        moment(this.section.Start).format('dddd, MMMM Do [at] HH:mm') || ''
+      )
+    },
+
+    getTitle() {
+      return (
+        this.section.Title || 
+        this.section.title ||
+        this.section.Name ||
+        this.section.name ||
+        this.section.Term || ''
+      )
+    },
+
+    getBody() {
+      return (
+        this.processBody(
+          this.section.Body || 
+          this.section.body || 
+          this.section.Description ||
+          this.section.description ||
+          this.section.Definition || ''
+        )
+      )
+    },
+
+    getSource() {
+      return (
+        this.section.Source || ''
+      )
+    },
+
+    processBody(text) {
+      if (text) text = text.replace(/\]\(\/uploads\//g, `](${this.$apiURL}/uploads/`)
+      return text
+    }
   }
 }
 </script>
