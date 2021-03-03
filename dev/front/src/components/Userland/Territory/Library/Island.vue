@@ -1,18 +1,19 @@
 <template>
-  <div 
+  <div
     class="island"
     :style="{
     }"
   >
     
-    <div class="header">
-      <h1
-        class="title"
-        @mousedown.stop="handleClick()"
-      > 
+    <a
+      target="_blank"
+      :href="src"
+      class="header"
+    >
+      <h1 class="title"> 
         {{ section.Name }} 
       </h1>
-    </div>
+    </a>
 
 
   </div>
@@ -55,11 +56,8 @@ export default {
 .island {
   box-sizing: border-box;
   position: relative;
-  /* flex: 0 0; */
   flex: 0 0;
-  /* flex-grow: 1; */
   width: auto;
-  /* height: auto; */
   max-width: 70%;
   margin-bottom: 2.5vh;
   padding: 1vh 3vw;
@@ -72,12 +70,12 @@ export default {
   box-shadow: var(--island-shadow);
   border-top-left-radius: var(--small-island-curve);
   border-bottom-right-radius: var(--small-island-curve);
-  /* border-radius: var(--small-island-curve); */
-  transition: border-radius 0.2s ease;
+  transition: all 0.2s ease;
 }
 .island:hover {
   /* border-top-left-radius: 0px; */
 }
+
 
 .island .header {
   /* flex: 1; */
@@ -88,6 +86,11 @@ export default {
   align-items: center;
   justify-content: center;
   font-size: calc(3pt * var(--scale));
+  z-index: 1;
+  text-decoration: none;
+}
+.island .header:hover {
+  text-decoration: none;
 }
 .island .header h1 { 
   color: black;
@@ -100,7 +103,9 @@ export default {
   /* word-break: break-all; */
   cursor: pointer;
 }
+.island .header .title,
 .island .header .title:hover {
-  text-decoration: underline;
+  /* text-decoration: underline; */
+  text-decoration: none;
 }
 </style>

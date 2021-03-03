@@ -1,6 +1,7 @@
 <template>
   <div class="library">
     <Island
+      :ref="section.slug"
       v-for="section in content"
       :key="section.slug"
       :section="section"
@@ -30,10 +31,15 @@ export default {
   },
 
   created() {
+      // @mousedown.native.stop="handleClick(section)"
+
 
   },
   methods: {
-
+    handleClick(section) {
+      console.log(this.$refs[section.slug][0].$el)
+      this.$refs[section.slug][0].$el.click()
+    }
   }
 
 }

@@ -11,7 +11,7 @@
           v-for="session in day.sessions"
           :key="session.slug"
           :session="session"
-          @mouseup.native="$router.push(`/sessions/${ session.slug }`)"
+          @mouseup.native="handleIslandClick(session)"
         />
       </div>
     </div>
@@ -76,6 +76,19 @@ export default {
 
   },
   methods: {
+
+     handleIslandClick(section) {
+      const current = this.$router.history.current.path
+      const next = `/sessions/${section.slug}`
+      
+      if (current === next) {
+        this.$emit('moreInfo', {
+          name: next
+        })
+      } else {
+        this.$router.push(`${next}`)
+      }
+    },
 
     sessionInDay(session, day) {
       return this.getDay(session.Start) === this.getDay(day) 

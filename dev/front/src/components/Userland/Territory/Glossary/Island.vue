@@ -8,7 +8,6 @@
     <div class="header">
       <h1
         class="title"
-        @mousedown.stop="$router.push(`/glossaries/${ section.slug }`)"
       > 
         {{ section.Term }} 
       </h1>

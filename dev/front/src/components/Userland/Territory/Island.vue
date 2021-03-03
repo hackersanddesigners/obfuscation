@@ -55,22 +55,13 @@ export default {
   box-sizing: border-box;
   padding: 1vh;
   margin: auto;
-  /* max-width: 500px;
-  max-height: 500px; */
-  /* position: absolute; */
-  /* top: 30vh; */
-  /* left: 30vw; */
-  /* margin: auto; */
-  /* border: 1px dashed black; */
   background-color: var(--white-glass);
   box-shadow: var(--island-shadow);
   border-top-right-radius: var(--island-curve);
   border-bottom-left-radius: var(--island-curve);
   border-top-left-radius: var(--small-island-curve);
   border-bottom-right-radius: var(--small-island-curve);
-  /* border-radius: var(--small-island-curve); */
   transition: all 0.2s ease;
-  /* cursor: pointer; */
 }
 
 .island::before {

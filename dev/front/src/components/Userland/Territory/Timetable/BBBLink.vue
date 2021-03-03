@@ -35,7 +35,6 @@ export default {
 
 <style scoped>
 .BBB-container {
-  /* flex: 1 0 20%; */
   flex: 0 1 25vh;
   box-sizing: border-box;
   position: relative;
@@ -44,22 +43,12 @@ export default {
   padding: 1vh;
 
   display: flex;
-  /* flex-direction: column; */
-  /* justify-content: center; */
-  /* align-items: flex-start; */
   color: inherit;
   outline: none;
   background-color: var(--white-glass);
   box-shadow: var(--island-shadow);
-  /* border-top-right-radius: var(--island-curve);
-  border-bottom-left-radius: var(--island-curve);
-  border-top-left-radius: var(--small-island-curve);
-  border-bottom-right-radius: var(--small-island-curve); */
-  /* border-radius: var(--small-island-curve); */
   border-radius: inherit;
   transition: all 0.2s ease;
-  /* cursor: pointer; */
-
 }
 
 .BBB-container::before {

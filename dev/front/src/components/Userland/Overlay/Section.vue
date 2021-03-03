@@ -3,31 +3,19 @@
     <div class="header">
       <h3 class="subtitle"> 
         {{ subtitle }}
-        <!-- {{
-          section.Subtitle || 
-          moment(this.section.Start).format('dddd, MMMM Do [at] HH:mm')
-        }} -->
       </h3>
       <h1 class="title"> 
         {{ title }} 
-        <!-- {{
-          section.Title || 
-          section.title ||
-          section.Name ||
-          section.name ||
-          section.Term 
-        }} -->
       </h1>
     </div>
     <div class="body">
       <vue-markdown
-        :source="
-          body
-        "
+        :source="body"
       />
     </div>
     <div class="footer">
       <vue-markdown
+        v-if="source"
         :source="source"
       />
     </div>
@@ -38,13 +26,6 @@
 import moment from 'moment'
 
 
-// this.processBody(
-//             section.Body || 
-//             section.body || 
-//             section.Description ||
-//             section.description ||
-//             section.Definition
-//           )
 export default {
   name: 'Section',
   props: [
@@ -52,7 +33,6 @@ export default {
   ],
   data() {
     return {
-      moment: moment
     }
   },
 
@@ -61,7 +41,7 @@ export default {
     subtitle() { return this.getSubtitle() },
     title() { return this.getTitle() },
     body() { return this.getBody() },
-    source() { return this.getSubtitle() }
+    source() { return this.getSource() }
 
   },
   created() {
@@ -71,8 +51,10 @@ export default {
   methods: {
     getSubtitle() {
       return (
-        this.section.Subtitle || 
-        moment(this.section.Start).format('dddd, MMMM Do [at] HH:mm') || ''
+        this.section.Subtitle ? 
+          this.section.Subtitle :
+        this.section.Start ? 
+          moment(this.section.Start).format('dddd, MMMM Do [at] HH:mm') : ''
       )
     },
 
@@ -99,9 +81,7 @@ export default {
     },
 
     getSource() {
-      return (
-        this.section.Source || ''
-      )
+      return this.section.Source
     },
 
     processBody(text) {

@@ -4,6 +4,7 @@
       v-for="section in content"
       :key="section.slug"
       :section="section"
+      @mouseup.native="handleIslandClick(section)"
     />
   </div>
 </template>
@@ -33,6 +34,19 @@ export default {
 
   },
   methods: {
+
+    handleIslandClick(section) {
+      const current = this.$router.history.current.path
+      const next = `/glossaries/${section.slug}`
+      
+      if (current === next) {
+        this.$emit('moreInfo', {
+          name: next
+        })
+      } else {
+        this.$router.push(`${next}`)
+      }
+    }
 
 
   }

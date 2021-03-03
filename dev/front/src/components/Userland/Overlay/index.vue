@@ -21,12 +21,14 @@
         @click.stop="visible = hover = false"
       >✕</span>
 
-      <div class="content">
+      
+      <div 
+        v-if="!content.Sections"
+        class="content"
+      >
         <Section
-          v-for="section in content.Sections || content"
-          :key="section.id"
-          :section="section"
-        />
+          :section="content"
+        /> 
         <div 
           v-if="register"
           id="aanmelderContainer"
@@ -34,9 +36,20 @@
           <a href="https://www.aanmelder.nl/wo2021/subscribe">
             Register online for the event.
           </a>
-          <div id="AanmelderRootDiv">
-          </div>
+          <div id="AanmelderRootDiv"></div>
         </div>
+      </div>     
+
+      <div
+        v-else-if="content.Sections"
+        class="content"
+      >
+        <Section
+          v-for="section in content.Sections"
+          :key="section.id"
+          :section="section"
+        />
+        
       </div>
 
     </div>
@@ -44,19 +57,22 @@
 </template>
 
 <script>
+import moment from 'moment'
 import Section from './Section'
 
 export default {
   name: 'Overlay',
   components: {
     Section
-  },
+    },
   props: [
     'dragging',
     'wantsToView'
   ],
   data() {
     return {
+      moment: moment,
+
       content: {},
       type: null,
       register: false,
@@ -75,8 +91,8 @@ export default {
       if (newLocation.slug !== oldLocation.slug) {
 
         if (this.location.slug !== 'general') {
-          this.content = { Sections: [] }
-          this.content.Sections[0] = this.territoryBySlug(this.location.slug)
+          this.content = this.territoryBySlug(this.location.slug)
+          // console.log(this.content)
           this.peak = true
         } else {
           this.visible = this.hover = this.peak =  false
@@ -102,9 +118,7 @@ export default {
       this.$http.get(`${ this.$apiURL }/${ query }`)
 
         .then((response) => { 
-          this.content = 
-            response.data[0] ||
-            response.data
+          this.content = response.data[0] 
           // console.log(this.content)
 
           if (this.content.slug === 'register') {
@@ -181,14 +195,15 @@ export default {
   opacity: 1;
 }
 .overlay .header {
-  font-size: calc(5pt * var(--scale));
+  margin: 7%;
+}
+.overlay .header h3 { 
+  font-size: 15pt;
+  font-weight: normal;
 }
 .overlay .header h1 { 
-  font-size: inherit;
-  /* margin-top: 0px; */
-}
-.overlay .body {
-  font-size: calc(2.5pt * var(--scale));
+  font-size: 25pt;
+  font-family: 'zxx-noise';
 }
 
 #AanmelderCSS {
