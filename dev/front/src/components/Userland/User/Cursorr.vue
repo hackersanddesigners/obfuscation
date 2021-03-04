@@ -324,7 +324,7 @@ export default {
   transition: all 0.2s ease;
   overflow: hidden;
 
-  /* z-index: 1; */
+  /* z-index: 5; */
 }
 .me.cursorContainer * {
   pointer-events: none;

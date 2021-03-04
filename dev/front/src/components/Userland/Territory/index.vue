@@ -214,13 +214,16 @@ export default {
   /* mask-image: var(--image); */
   /* filter:drop-shadow(0px 0px 30px var(--ground)); */
 }
+#reception {
+  z-index: 1;
+}
 
 .territory::before {
   box-sizing: border-box;
   position: absolute;
   content: '';
-  top: -20%; left: -20%;
-  height: 140%; width: 140%;
+  top: -30%; left: -30%;
+  height: 160%; width: 160%;
   z-index: 0;
   pointer-events: none;
   background: var(--island-back) ;
@@ -231,6 +234,7 @@ export default {
   mask-position: center center;
   overflow: visible;
   background-color: var(--ground);
+  /* transform: scale(1.3); */
   /* filter:drop-shadow(0px 0px 20px var(--ground)); */
 }
 

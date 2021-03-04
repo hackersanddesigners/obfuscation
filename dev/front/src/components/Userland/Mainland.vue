@@ -116,6 +116,13 @@
 
         <Grid />
 
+        <Territory
+          v-for="territory in territories"
+          :key='territory.slug'
+          :territory='territory'
+          @moreInfo="route($event)"
+        />
+
         <Cursorr
           v-for="user in notBlockedUsers"
           :key="user.uid"
@@ -130,13 +137,6 @@
           :message="message"
           :isMe="message.authorUID === me.uid"
           @goTo="goTo(userByName($event))"
-        />
-
-        <Territory
-          v-for="territory in territories"
-          :key='territory.slug'
-          :territory='territory'
-          @moreInfo="route($event)"
         />
         
       </div>
