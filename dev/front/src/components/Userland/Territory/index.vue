@@ -219,9 +219,8 @@ export default {
   box-sizing: border-box;
   position: absolute;
   content: '';
-  top: -10%; left: -10%;
-  height: 120%;
-  width: 120%;
+  top: -20%; left: -20%;
+  height: 140%; width: 140%;
   z-index: 0;
   pointer-events: none;
   background: var(--island-back) ;
