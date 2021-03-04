@@ -3,7 +3,7 @@ import Axios from 'axios'
 import VueMarkdown from 'vue-markdown'
 import VueSocketIOExt from 'vue-socket.io-extended'
 import { io } from 'socket.io-client'
-// import smoothscroll from 'smoothscroll-polyfill'
+import smoothscroll from 'smoothscroll-polyfill'
 
 import App from './App'
 import router from './router'
@@ -22,7 +22,7 @@ VueMarkdown.props.anchorAttributes.default = () => ({
 
 Vue.component('vue-markdown', VueMarkdown)
 
-// smoothscroll.polyfill()
+smoothscroll.polyfill()
 
 
 // const socket = io('https://io.karls.computer')

@@ -203,6 +203,8 @@ export default {
   min-height: 10%;
   /* z-index: 1; */
 
+  /* background-color: var(--ground); */
+
 }
 
 .territory .placeholder {
