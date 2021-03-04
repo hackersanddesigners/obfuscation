@@ -5,7 +5,8 @@
     :style="{
       left: `${ toNearestX(territory.borders.x, 0.4) }%`,
       top: `${ toNearestX(territory.borders.y, 0.4) }%`,
-      '--ground': territory.color
+      '--ground': territory.color,
+      '--image': shape,
 
     }"
   >
@@ -114,7 +115,8 @@ export default {
     slug() { return this.territory.slug },
     scale() { return this.$store.state.scale },
     windowWidth() { return this.$store.state.windowSize.w },
-    windowHeight() { return this.$store.state.windowSize.h }
+    windowHeight() { return this.$store.state.windowSize.h },
+    shape() { return `url(${this.$apiURL}${this.territory.shape.url})` }
   },
 
   created() {
@@ -203,8 +205,34 @@ export default {
   min-height: 10%;
   /* z-index: 1; */
 
-  /* background-color: var(--ground); */
 
+  /* background: var(--image);
+  background-size:cover; */
+  /* clip-path: var(--image); */
+  /* shape-outside: var(--image); */
+  /* background-color: var(--ground); */
+  /* mask-image: var(--image); */
+  /* filter:drop-shadow(0px 0px 200px var(--ground)); */
+}
+
+.territory::before {
+  box-sizing: border-box;
+  position: absolute;
+  content: '';
+  top: -10%; left: -10%;
+  height: 120%;
+  width: 120%;
+  z-index: 0;
+  pointer-events: none;
+  background: var(--island-back) ;
+  background-position: center center;
+  mask-image: var(--image);
+  -webkit-mask-image: var(--image);
+  mask-size: 100% 100%;
+  mask-position: center center;
+  overflow: visible;
+  background-color: var(--ground);
+  filter:drop-shadow(0px 0px 20px var(--ground));
 }
 
 .territory .placeholder {

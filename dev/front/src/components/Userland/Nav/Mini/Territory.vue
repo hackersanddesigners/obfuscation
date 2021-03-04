@@ -13,6 +13,8 @@
       top: `${ toNearestX(territory.borders.y, 0.4) }%`,
       width: `${ toNearestX(territory.borders.w, 0.4) }%`,
       height: `${ toNearestX(territory.borders.h, 0.4) }%`,
+      '--ground': territory.color,
+      '--image': shape,
     }"
   >
     <div class="box">
@@ -33,6 +35,8 @@ export default {
     'hovered'
   ], 
   computed: {
+
+    shape() { return `url(${this.$apiURL}${this.territory.shape.url})` },
 
     isCircle() {
       return (
@@ -78,7 +82,26 @@ export default {
   filter: blur(1px);
   opacity: 0.5;
   transition: all 0.1s ease;
+  overflow: visible;
 }
+
+.mini-territory::before {
+  box-sizing: border-box;
+  position: absolute;
+  content: '';
+  top: -20%; left: -20%;
+  height: 140%;
+  width: 140%;
+  z-index: 0;
+  pointer-events: none;
+  mask-image: var(--image);
+  -webkit-mask-image: var(--image);
+  mask-size: 100% 100%;
+  mask-position: center center;
+  background-color: var(--ground);
+  overflow: visible;
+}
+
 .mini-territory .background div {
   max-width: 100%;
 }
@@ -89,12 +112,12 @@ export default {
 .mini-territory .box {
   height: 100%;
   width: 100%;
-  border: 1px solid grey;
-  border-radius: 5px;
+  /* border: 1px solid grey; */
+  /* border-radius: 5px; */
   /* border: 1px solid grey; */
   /* border-radius: 100%; */
 }
 .mini-territory.circle .box {
-  border-radius: 100%;
+  /* border-radius: 100%; */
 }
 </style>
