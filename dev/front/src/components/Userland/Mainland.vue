@@ -245,7 +245,8 @@ export default {
       'notDeletedMessages',
 
       'positionOf',
-      'pixelsFrom'
+      'centerOf',
+      'pixelsFrom',
 
     ]),
   },
@@ -437,7 +438,7 @@ export default {
         } else if (type == 'territory') {
           const territory = this.territories[name]
           if (territory) {
-            position = this.pixelsFrom(territory.borders)
+            position = this.centerOf(territory.borders)
           } else {
             console.log('not found')
           }

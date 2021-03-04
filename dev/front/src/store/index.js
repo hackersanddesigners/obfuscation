@@ -439,11 +439,14 @@ const store = new Vuex.Store({
 
     centerOf: (state, getters) => obj => {
       obj = getters.pixelsFrom(obj)
+      const 
+        // x = obj.x - obj.w / 2,
+        // y = obj.y - obj.h / 2
+        x = obj.x,
+        y = obj.y
       return {
-        x: obj.x - obj.w / 2,
-        y: obj.y - obj.h / 2,
-        w: obj.w || 0,
-        h: obj.h || 0,
+        x: x,
+        y: y,
       }
     },
 
@@ -459,8 +462,8 @@ const store = new Vuex.Store({
       return {
         x: coords.x * state.scale * state.windowSize.w,
         y: coords.y * state.scale * state.windowSize.h,
-        w: coords.w || 0,
-        h: coords.h || 0,
+        w: coords.w * state.scale * state.windowSize.w || 0,
+        h: coords.h * state.scale * state.windowSize.h || 0,
       }
     },
 

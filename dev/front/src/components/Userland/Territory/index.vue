@@ -5,7 +5,7 @@
     :style="{
       left: `${ toNearestX(territory.borders.x, 0.4) }%`,
       top: `${ toNearestX(territory.borders.y, 0.4) }%`,
-
+      '--ground': territory.color
 
     }"
   >

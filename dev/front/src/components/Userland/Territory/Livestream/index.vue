@@ -1,6 +1,6 @@
 <template>
-  <div class="livestream">\
-    <island
+  <div class="livestream">
+    <Island
     />
   </div>
 </template>

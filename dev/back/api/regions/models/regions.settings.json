@@ -23,6 +23,9 @@
     },
     "borders": {
       "type": "json"
+    },
+    "color": {
+      "type": "string"
     }
   }
 }

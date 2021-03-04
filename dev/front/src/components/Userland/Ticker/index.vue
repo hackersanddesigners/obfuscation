@@ -71,7 +71,7 @@ export default {
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.534);
   /* box-shadow: inset 0 0 20px 0 rgba(0, 0, 0, 0.534); */
   overflow: hidden;
-  /* z-index: 5; */
+  z-index: 1;
   transition: all 0.4s ease;
   font-size: 24pt;
   color: rgb(255, 51, 51);

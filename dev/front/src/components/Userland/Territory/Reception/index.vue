@@ -55,12 +55,8 @@ export default {
 <style scoped>
 .reception {
   box-sizing: border-box;
-  /* margin-left: 20vw; */
-  /* margin-top: 20vh; */
-  /* padding: 0vh 5vw; */
   margin: auto;
   padding: 0 30%;
-  /* max-height: 100%; */
   width: 100vw;
   height: 100vh; 
   display: flex;
