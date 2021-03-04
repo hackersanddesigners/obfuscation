@@ -2,8 +2,6 @@
   <div 
     class="island"
     :style="{
-      width: `${ 100 / 5 }vh`,
-      height: `${ 100 / 5 }vh`,
     }"
   >
     
@@ -46,12 +44,15 @@ export default {
 <style scoped>
 .island {
   box-sizing: border-box;
-  position: relative;
+  /* position: relative; */
+  position: absolute;
   /* flex: 0 1; */
   /* min-width: 20vw; */
   /* margin: 1.25vh 1.25vw; */
+  /* width: 20%; */
+  height: 10%;
   margin: 1vh;
-  padding: 2vh;
+  padding: 2vh 3vh;
 
   display: flex;
   flex-direction: column;

@@ -56,14 +56,31 @@ export default {
 .reception {
   box-sizing: border-box;
   margin: auto;
-  padding: 0 30%;
+  /* padding: 0 30%; */
   width: 100vw;
   height: 100vh; 
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-content: center;
-  align-items: center;
+  /* display: flex; */
+  /* flex-wrap: wrap; */
+  /* justify-content: center; */
+  /* align-content: center; */
+  /* align-items: center; */
 }
-
+.reception .island:nth-of-type(1) {
+  top: 20%; left: 30%;
+}
+.reception .island:nth-of-type(2) {
+  top: 20%; left:45%;
+}
+.reception .island:nth-of-type(3) {
+  top: 45%; left: 30%;
+}
+.reception .island:nth-of-type(4) {
+  top: 70%; right: 30%;
+}
+.reception .island:nth-of-type(5) {
+  top: 10%; right: 10%;
+}
+.reception .island:nth-of-type(6) {
+  top: 60%; left: 70%;
+}
 </style>
