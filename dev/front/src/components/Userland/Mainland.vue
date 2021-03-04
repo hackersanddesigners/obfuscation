@@ -758,7 +758,7 @@ header > div {
 .exhibition header,
 .exhibition #userlandContainer {
   /* mix-blend-mode: exclusion; */
-  filter: invert(100%);
+  /* filter: invert(100%); */
 }
 #userland {
   position: absolute;

@@ -116,7 +116,7 @@ export default {
     scale() { return this.$store.state.scale },
     windowWidth() { return this.$store.state.windowSize.w },
     windowHeight() { return this.$store.state.windowSize.h },
-    shape() { return `url(${this.$apiURL}${this.territory.shape.url})` }
+    shape() { return `url("${this.$apiURL}${this.territory.shape.url}#svgView(preserveAspectRatio(none))")` }
   },
 
   created() {
@@ -212,7 +212,7 @@ export default {
   /* shape-outside: var(--image); */
   /* background-color: var(--ground); */
   /* mask-image: var(--image); */
-  /* filter:drop-shadow(0px 0px 200px var(--ground)); */
+  /* filter:drop-shadow(0px 0px 30px var(--ground)); */
 }
 
 .territory::before {
@@ -232,7 +232,7 @@ export default {
   mask-position: center center;
   overflow: visible;
   background-color: var(--ground);
-  filter:drop-shadow(0px 0px 20px var(--ground));
+  /* filter:drop-shadow(0px 0px 20px var(--ground)); */
 }
 
 .territory .placeholder {

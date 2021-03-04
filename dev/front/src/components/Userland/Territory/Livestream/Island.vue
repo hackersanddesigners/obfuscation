@@ -53,6 +53,8 @@ export default {
 .island {
   box-sizing: border-box;
   position: relative;
+  height: 80% !important;
+  width: 80% !important;
   /* flex: 0 1; */
   /* min-width: 20vw; */
   /* margin: 1.25vh 1.25vw; */

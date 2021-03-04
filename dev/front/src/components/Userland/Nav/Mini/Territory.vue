@@ -36,7 +36,7 @@ export default {
   ], 
   computed: {
 
-    shape() { return `url(${this.$apiURL}${this.territory.shape.url})` },
+    shape() { return `url("${this.$apiURL}${this.territory.shape.url}#svgView(preserveAspectRatio(none))")` },
 
     isCircle() {
       return (

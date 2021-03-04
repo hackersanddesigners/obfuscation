@@ -168,7 +168,7 @@ export default {
   height: 100%;
   max-width: 100%;
   max-height: 100%;
-  filter: invert(100%);
+  /* filter: invert(100%); */
 }
 
 

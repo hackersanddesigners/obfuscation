@@ -62,6 +62,7 @@ export default {
   border-top-left-radius: var(--small-island-curve);
   border-bottom-right-radius: var(--small-island-curve);
   transition: all 0.2s ease;
+  z-index: 1;
 }
 
 .island::before {

@@ -42,11 +42,9 @@ export default {
   /* padding: 0vh 5vw; */
   margin: auto;
   /* padding: 0px 20%; */
-  height: 80vh;
-  width: 80vw;
+  height: 100vh;
+  width: 100vw;
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
 
