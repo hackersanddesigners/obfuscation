@@ -440,10 +440,14 @@ const store = new Vuex.Store({
     centerOf: (state, getters) => obj => {
       obj = getters.pixelsFrom(obj)
       const 
-        // x = obj.x - obj.w / 2,
-        // y = obj.y - obj.h / 2
-        x = obj.x,
-        y = obj.y
+        shiftX = 
+          ((state.windowSize.w - obj.w) / 2) >= 0 ? 
+          ((state.windowSize.w - obj.w) / 2) : 0,
+        shiftY = 
+          ((state.windowSize.h - obj.h) / 2) >= 0 ? 
+          ((state.windowSize.h - obj.h) / 2) : 0,
+        x = obj.x - shiftX,
+        y = obj.y - shiftY
       return {
         x: x,
         y: y,

@@ -12,12 +12,12 @@
   >
 
     <Editor
-      v-if="ready && (!registered || editing)" 
+      v-if="socketsReady && (!registered || editing)" 
       @stopEdit="editing = false"
     />
 
     <header
-      v-if="ready"
+      v-if="socketsReady"
     >
 
       <div id="navTitle">
@@ -62,7 +62,7 @@
 
       <Minilist 
         v-if="desiresList"
-        @goTo="scrollTo(pixelsFrom($event),'smooth')"
+        @goTo="scrollTo(centerOf($event),'smooth')"
       />
 
       <Minimap 
@@ -199,7 +199,7 @@ export default {
   data () {
     return { 
       
-      ready: false,
+      socketsReady: false,
 
       moreInformation: null,
 
@@ -339,7 +339,7 @@ export default {
         // announce existence to server and peers.
 
         this.$socket.client.emit('user', self)
-        this.ready = true
+        this.socketsReady = true
 
 
       })
@@ -539,7 +539,7 @@ export default {
 
     goTo(zone) {
       this.scrollTo(
-        this.positionOf(zone), 
+        this.centerOf(zone), 
       'smooth')
     },
 
