@@ -7,9 +7,7 @@
       visible: visible,
     }"
 
-    @mouseover="!dragging && peak ? hover = true : null"
-    @mouseout="!dragging && peak ? hover = false : null"
-    @mouseup="!dragging && peak && hover ? visible = true : null"
+
   >
 
     <div id="infoTitle">
@@ -83,6 +81,10 @@
 <script>
 import moment from 'moment'
 import Section from './Section'
+
+    // @mouseover="!dragging && peak ? hover = true : null"
+    // @mouseout="!dragging && peak ? hover = false : null"
+    // @mouseup="!dragging && peak && hover ? visible = true : null"
 
 export default {
   name: 'Overlay',
@@ -178,10 +180,8 @@ export default {
   right: -600px;
   min-width: 500px;
   width: 40%;
-  max-width: 600px;
-  min-height: 500px;
-  height: 90%;
-  max-height: 90%;
+  max-width: 550px;
+  max-height: 800px;
   overflow: hidden;
   z-index: 2;
   transition: all 0.2s ease;

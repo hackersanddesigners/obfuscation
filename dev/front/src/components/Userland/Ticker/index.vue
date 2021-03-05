@@ -48,6 +48,9 @@ export default {
     let smarquee = new Smarquee({
       element: this.$refs.smarq,
       iterationCount: 'infinite',
+      onAnimationStart() { console.log('smarquee start') },
+      onAnimationIterate() { console.log('smarquee loop') },
+      onAnimationEnd() { console.log('smarquee stop') },
     })
     smarquee.init()
   },
@@ -74,7 +77,7 @@ export default {
   z-index: 1;
   transition: all 0.4s ease;
   font-size: 24pt;
-  color: rgb(255, 51, 51);
+  /* color: rgb(255, 51, 51); */
 }
 #tickerContainer.peak {
   bottom: -25px;

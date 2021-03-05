@@ -230,6 +230,7 @@ export default {
       'location',
       'scale',
       'windowPos',
+      'windowSize',
 
     ]),
     ...mapGetters([
@@ -560,17 +561,23 @@ export default {
           x: this.windowPos.x - e.movementX,
           y: this.windowPos.y - e.movementY
         }
+        // console.log(e.clientX, this.windowSize.w)
+        // if (
+        //   e.clientX < this.windowSize.w &&
+        //   e.clientY < this.windowSize.h
+        // ) {
         this.scrollTo(position)
+        // }
 
 
         // store the position for 'intertial throwing'.
 
-        this.movement = {
-          x: position.x,
-          y: position.y,
-          extraX: 10 * e.movementX,
-          extraY: 10 * e.movementY,
-        }
+        // this.movement = {
+        //   x: position.x,
+        //   y: position.y,
+        //   extraX: 10 * e.movementX,
+        //   extraY: 10 * e.movementY,
+        // }
       }
     },
 
@@ -579,27 +586,38 @@ export default {
  
     dragRelease() {
       this.dragging = false
-      if (Math.abs(this.movement.extraX) > 0) {
-        this.scrollTo({
-          x: this.movement.x - this.movement.extraX,
-          y: this.movement.y - this.movement.extraY
-        }, 'smooth')
-        this.movement.extraX -= 0.1
-        this.movement.extraY -= 0.1
-      }
+      // if (Math.abs(this.movement.extraX) > 0) {
+      //   this.scrollTo({
+      //     x: this.movement.x - this.movement.extraX,
+      //     y: this.movement.y - this.movement.extraY
+      //   }, 'smooth')
+      //   this.movement.extraX -= 0.1
+      //   this.movement.extraY -= 0.1
+      // }
     },
 
 
     // core of app navigation is this following:
 
     scrollTo(to, behavior) {
-      requestAnimationFrame(() => {
-        this.$refs.userlandContainer.scroll({
-          left: to.x,
-          top: to.y,
-          behavior: behavior || 'auto'
+      if (this.dragging) {
+        // requestAnimationFrame(() => {
+          this.$refs.userlandContainer.scroll({
+            left: to.x,
+            top: to.y,
+            behavior: behavior || 'auto'
+          })
+        // })
+      } else {
+        requestAnimationFrame(() => {
+          this.$refs.userlandContainer.scroll({
+            left: to.x,
+            top: to.y,
+            behavior: behavior || 'auto'
+          })
         })
-      })
+      }
+
     },
 
 
