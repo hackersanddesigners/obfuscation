@@ -5,13 +5,13 @@
       { active: active }
     ]"
     :style="{
-      minHeight: `${ 30 }vh`,
+      height: `${ 40 }vh`,
       width: `${ 40 }vw`,
     }"
   >
     
-    <div class="header">
-      <h1
+    <!-- <div class="header"> -->
+      <!-- <h1
         class="title"
         @mousedown.stop="$router.push(`/videos/${ section.slug }`)"
       > 
@@ -22,10 +22,10 @@
         @click.stop="play()"
       >
         {{ active ? 'pause' : 'play' }}
-      </h1>
-    </div>
+      </h1> -->
+    <!-- </div> -->
     <div class="body">
-      <video 
+      <!-- <video 
         ref="player"
         :controls="active"
         :loop="active"
@@ -33,7 +33,7 @@
         @mouseleave.stop
       >
         <source :src="src" type="video/mp4">
-      </video>
+      </video> -->
     </div>
 
 
@@ -101,7 +101,7 @@ export default {
   border-top-left-radius: var(--small-island-curve);
   border-bottom-right-radius: var(--small-island-curve); */
   /* border-radius: var(--small-island-curve); */
-  transition: border-radius 0.2s ease;
+  /* transition: border-radius 0.2s ease; */
 }
 
 .island:first-of-type {
