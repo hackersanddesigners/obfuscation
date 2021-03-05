@@ -79,9 +79,13 @@ export default {
   margin-top: 1vh;
   margin-left: 1vh;
   padding: 0.5vh;
-  min-width: 16vw;
+  /* min-width: 16vw; */
   font-size: 14pt;
-  background: white;
+  /* display: flex; */
+  /* flex-direction: column; */
+  /* align-items: flex-start; */
+  color: var(--ui-front);
+  background: var(--ui-back);
   border: 1px solid grey;
   border-radius: var(--ui-border-radius);
 }

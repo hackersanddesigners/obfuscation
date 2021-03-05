@@ -100,7 +100,7 @@ export default {
 #userlist {
   box-sizing: border-box;
   /* margin-top: 1vh; */
-  min-width: 10vw;
+  /* min-width: 10vw; */
   max-width: 14vw;
   max-height: 300px;
   overflow: hidden;
@@ -108,13 +108,13 @@ export default {
   flex-direction: column;
   border-radius: inherit;
   font-size: 10pt;
+
 }
 #userlist.moderating {
   max-width: unset;
 }
 #userlist .title {
   box-sizing: border-box;
-  background: white;
   flex: 0 0;
   box-sizing: border-box;
   padding: 0.25vh 0.75vh;

@@ -49,6 +49,7 @@ export default {
   /* display: flex;
   align-items: center;
   justify-content: flex-start; */
+  /* word-wrap: none; */
 }
 .list-territory:last-of-type {
   margin-bottom: 0.5vh;

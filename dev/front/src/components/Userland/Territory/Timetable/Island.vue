@@ -61,6 +61,7 @@
     </div>
 
     <BBB-link
+      v-if="soon"
       :BBBLink="session.bbbURL"
       @mousedown.native.stop
       @mouseup.native.stop
@@ -92,6 +93,7 @@ export default {
     start() { return this.getHumanTime(this.session.Start) },
     end() { return this.getHumanTime(this.session.End) },
     time() { return `${ this.start } — ${ this.end }` },
+    soon() { return this.getUnixTime(this.session.Start) - new Date() < 90000 },
     hosts() { return this.session.hosts },
     moderators() { return this.session.moderators },
     isBreak() {

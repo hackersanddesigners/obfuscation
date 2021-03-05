@@ -28,6 +28,7 @@
     "vue-color": "^2.8.1",
     "vue-markdown": "^2.2.4",
     "vue-router": "^3.4.9",
+    "vue-smooth-height": "^1.6.4",
     "vue-socket.io": "^3.0.10",
     "vue-socket.io-extended": "^4.0.6",
     "vue2-leaflet": "^2.6.0",

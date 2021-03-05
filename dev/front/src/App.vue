@@ -82,9 +82,11 @@ export default {
 }
 
 :root {
-  --disconnected: rgb(156, 156, 156);
+  /* --disconnected: rgb(156, 156, 156); */
+  --disconnected: black;
   --ui-border-radius: 7.5px;
-  --ui-back: white;
+  --ui-back: black;
+  --ui-front: white;
   --ui-box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.199);
   --ui-border: 1px solid grey;
   --island-curve: 10vh;

@@ -675,8 +675,8 @@ main {
   padding: 0.5vh;
   height: auto;
   border: none;
-  color: white;
-  background: black;
+  color: var(--ui-back);
+  background: var(--ui-front);
   font-family: 'jet';
   border-radius: var(--ui-border-radius);
   box-shadow: var(--ui-box-shadow);
@@ -686,7 +686,7 @@ main {
 header {
   position: absolute;
   left: 0;
-  width: 0;
+  /* width:x 0; */
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -696,7 +696,8 @@ header {
 }
 
 header > div {
-  background: white;
+  color: var(--ui-front);
+  background: var(--ui-back);
   border: var(--ui-border);
   border-radius: var(--ui-border-radius);
   box-shadow: var(--ui-box-shadow);
@@ -727,7 +728,7 @@ header > div {
   display: flex;
   align-items: center;
   padding: 0vh 0.5vh;
-  background: white;
+  background: var(--ui-back);
   border: 1px solid grey;
   border-radius: var(--ui-border-radius);
   box-shadow: var(--ui-box-shadow);
@@ -798,7 +799,9 @@ header > div {
   /* ; */
   /* background-position: center center; */
   /* background-size: 400px; */
-  background-color: rgb(241, 241, 241);
+  /* background-color: rgb(241, 241, 241); */
+    /* color: var(--ui-front); */
+  background: var(--ui-back);
   overflow: hidden;
 }
 #userland::before {

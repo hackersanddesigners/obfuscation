@@ -177,7 +177,9 @@ export default {
             x: (this.windowPos.x + e.clientX) / (this.windowSize.w * this.scale),
             y: (this.windowPos.y + e.clientY) / (this.windowSize.h * this.scale),
           }
-        this.$store.dispatch('updatePosition', pos)
+        requestAnimationFrame(() => {
+          this.$store.dispatch('updatePosition', pos)
+        })
 
         e.preventDefault()
       })

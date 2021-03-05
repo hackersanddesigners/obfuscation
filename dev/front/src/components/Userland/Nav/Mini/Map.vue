@@ -191,7 +191,8 @@ export default {
   margin-left: 1vh;
   position: relative;
   box-sizing: border-box;
-  background: white;
+  color: var(--ui-front);
+  background: var(--ui-back);
   border: 1px solid grey;
   cursor: pointer;
   overflow: hidden;
@@ -223,7 +224,8 @@ export default {
   font-size: 12pt;
   text-align: center;
   color: grey;
-  background: white;
+  color: var(--ui-front);
+  background: var(--ui-back);
 }
 #minimap .zoom div {
   box-sizing: border-box;

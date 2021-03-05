@@ -101,7 +101,7 @@ export default {
   filter: var(--blur);
   transition: filter 0.2 ease;
   z-index: 1;
-  color: var(--userColor);
+  /* color: var(--userColor); */
   padding: 0px 5px;
 }
 .messageContainer *::selection {
@@ -136,7 +136,7 @@ export default {
 .messageContainer .details {
   margin-top: -4px;
   font-size: 80%;
-  color: rgb(161, 161, 161);
+  color: black;
   transition: opacity 0.2s ease;
   opacity: 0;
   height: 0;
@@ -153,7 +153,7 @@ export default {
 }
 
 .messageContainer .message.censored {
-  color: lightgray;
+  color: black;
   font-style: italic;
 }
 

@@ -34,6 +34,7 @@
     </div>
 
     <div 
+      ref="overlay"
       :class="[
         'overlay', content.slug
       ]"
@@ -80,6 +81,7 @@
 
 <script>
 import moment from 'moment'
+import smoothHeight from 'vue-smooth-height'
 import Section from './Section'
 
     // @mouseover="!dragging && peak ? hover = true : null"
@@ -95,6 +97,7 @@ export default {
     'dragging',
     'wantsToView'
   ],
+  mixins:[smoothHeight],
   data() {
     return {
       moment: moment,
@@ -137,6 +140,11 @@ export default {
 
   },
   mounted() {
+    this.$smoothElement({
+      el: this.$refs.overlay,
+      hideOverflow: true,
+      transition: 'height 0.2s ease'
+    })
   },
   methods: {
 
@@ -233,7 +241,8 @@ export default {
   display: flex;
   align-items: center;
   padding: 0vh 0.5vh;
-  background: white;
+  color: var(--ui-front);
+  background: var(--ui-back);
   border: 1px solid grey;
   border-radius: var(--ui-border-radius);
   box-shadow: var(--ui-box-shadow);
@@ -262,12 +271,14 @@ export default {
   margin: 0vh 1vh 1vh 1vh;
   /* height: 100%; */
   /* width: 100%; */
+  color: var(--ui-front);
   background: var(--ui-back);
   box-shadow: var(--ui-box-shadow);
   border-radius: var(--ui-border-radius);
   border: var(--ui-border);
   box-shadow: var(--ui-box-shadow);
   overflow: scroll;
+  /* transition: height 2s ease; */
 }
 .overlayContainer .close {
   position: sticky;

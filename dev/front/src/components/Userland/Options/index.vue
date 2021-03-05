@@ -121,8 +121,11 @@ export default {
   align-items: center;
   /* height: 2vh; */
   border: 1px solid grey;
-  background: white;
+  /* background: white; */
+  color: var(--ui-front);
+  background: var(--ui-back);
   border-radius: var(--ui-border-radius);
+  box-shadow: var(--ui-box-shadow);
 }
 #options .db input {
   color: red;
@@ -142,6 +145,7 @@ input {
   border-radius: 10px;
   background: none;
   margin: 0px;
+  color: var(--ui-front);
 }
 input[type="button"] {
   cursor: pointer;

@@ -90,7 +90,9 @@ li {
   margin: 0.5vh 0.5vw;
   display: flex;
   align-items: center;
-  color: var(--userColor);
+  /* color: var(--userColor); */
+  color: var(--ui-front);
+  /* background: var(--ui-back); */
   cursor: pointer;
 }
 
