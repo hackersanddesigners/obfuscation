@@ -71,12 +71,13 @@ export default {
 
   /* background-color: var(--white-glass); */
   background: none;
-  box-shadow:
+  --bevel:
     0 0px 0px rgba(255,255,255,0.8), /*bottom external highlight */
     0 0px 0px #666, /*top external shadow*/ 
     inset 0 -5px 10px rgba(0, 0, 0, 0.4), /*bottom internal shadow*/ 
     inset 0 5px 10px rgba(255, 255, 255, 0.4); /*top internal highlight*/
   ;
+  box-shadow: var(--bevel);
   border-radius: 1vh;
   transition: all 0.2s ease;
 }
@@ -96,6 +97,7 @@ export default {
 
 .island:hover {
   transform: translateX(2vh);
+  box-shadow: var(--bevel);
 }
 
 
