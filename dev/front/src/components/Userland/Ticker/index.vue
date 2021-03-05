@@ -63,10 +63,10 @@ export default {
   /* cursor: auto; */
   box-sizing: border-box;
   position: absolute;
-  bottom: -2vh;
+  /* bottom: ; */
   left: 0;
   width: 100%;
-  height: 4vh;
+  height: 50px;
   background: white;
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.534);
   /* box-shadow: inset 0 0 20px 0 rgba(0, 0, 0, 0.534); */
@@ -77,12 +77,12 @@ export default {
   color: rgb(255, 51, 51);
 }
 #tickerContainer.peak {
-  bottom: -2vh;
+  bottom: -25px;
   box-shadow: 0 0 30px 0 rgba(0, 0, 0, 0.534);
   /* box-shadow: inset 0 0 50px 0 rgba(0, 0, 0, 0.534); */
 }
 #tickerContainer.hover {
-  bottom: 0;
+  bottom: -10px;
   font-size: 32pt;
   box-shadow:  0 0 50px 0 rgba(0, 0, 0, 0.534);
   /* box-shadow: inset 0 0 30px 0 rgba(0, 0, 0, 0.534); */

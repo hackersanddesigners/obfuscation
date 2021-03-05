@@ -77,7 +77,7 @@ export default {
   },
   methods: {
 
-     handleIslandClick(section) {
+    handleIslandClick(section) {
       const current = this.$router.history.current.path
       const next = `/sessions/${section.slug}`
       

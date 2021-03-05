@@ -28,36 +28,42 @@
       v-else-if="content && slug === 'exhibition'"
       ref="firstChild"
       :content="content"
+      @moreInfo="$emit('moreInfo', $event)"
     />
 
     <Timetable
       v-else-if="content && slug === 'timetable'"
       ref="firstChild"
       :content="content"
+      @moreInfo="$emit('moreInfo', $event)"
     />
 
     <Glossary
       v-else-if="content && slug === 'glossary'"
       ref="firstChild"
       :content="content"
+      @moreInfo="$emit('moreInfo', $event)"
     />
 
     <Library
       v-else-if="content && slug === 'library'"
       ref="firstChild"
       :content="content"
+      @moreInfo="$emit('moreInfo', $event)"
     />
 
     <Hangout
       v-else-if="content && slug === 'hangout'"
       ref="firstChild"
       :content="content"
+      @moreInfo="$emit('moreInfo', $event)"
     />
 
     <Livestream
       v-else-if="content && slug === 'livestream'"
       ref="firstChild"
       :content="content"
+      @moreInfo="$emit('moreInfo', $event)"
     />
 
     <div 

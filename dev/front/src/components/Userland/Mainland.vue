@@ -593,10 +593,12 @@ export default {
     // core of app navigation is this following:
 
     scrollTo(to, behavior) {
-      this.$refs.userlandContainer.scroll({
-        left: to.x,
-        top: to.y,
-        behavior: behavior || 'auto'
+      requestAnimationFrame(() => {
+        this.$refs.userlandContainer.scroll({
+          left: to.x,
+          top: to.y,
+          behavior: behavior || 'auto'
+        })
       })
     },
 

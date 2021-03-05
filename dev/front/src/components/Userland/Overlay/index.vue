@@ -130,7 +130,7 @@ export default {
       const query = newSlug.collection + '?slug=' + newSlug.page
       
       this.updateContent(query)
-      this.visible = this.peak = true
+      // this.visible = this.peak = true
     }
 
   },
@@ -156,6 +156,7 @@ export default {
           } else {
             this.register = false
           }
+          this.visible = this.peak = true
         })
 
         .catch((error) => { 
@@ -183,7 +184,7 @@ export default {
   max-height: 90%;
   overflow: hidden;
   z-index: 2;
-  transition: all 0.4s ease;
+  transition: all 0.2s ease;
 
   display: flex;
   flex-direction: column;
@@ -258,7 +259,7 @@ export default {
 
 .overlay {
   box-sizing: border-box;
-  margin-right: 1vh;
+  margin: 0vh 1vh 1vh 1vh;
   /* height: 100%; */
   /* width: 100%; */
   background: var(--ui-back);

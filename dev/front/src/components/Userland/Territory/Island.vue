@@ -79,7 +79,8 @@ export default {
 }
 
 .island:hover {
-  background-color: var(--yellow-glass);
+  background-color: rgba(0, 0, 0, 0.13);
+  box-shadow: inset 0 0 2vh 0.5vh rgba(0, 0, 0, 0.267);
   /* border-top-left-radius: 0px; */
 }
 

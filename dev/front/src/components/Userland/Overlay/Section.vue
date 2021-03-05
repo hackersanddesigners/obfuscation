@@ -95,7 +95,7 @@ export default {
 <style scoped>
 section {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  margin: 7%;
+  margin: 2vh;
 }
 section .header {
 }

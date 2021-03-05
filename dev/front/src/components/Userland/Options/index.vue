@@ -64,7 +64,7 @@ export default {
 <style scoped>
 #options {
   box-sizing: border-box;
-  margin-top: 1vh;
+  margin-top: 0vh;
   margin-left: 1vh;
   width: 16vw;
   display: flex;
@@ -87,6 +87,7 @@ export default {
   border-bottom: 1px solid grey;
 }
 #options div {
+  margin-top: 1vh;
   /* margin: 2.5px; */
   padding: 0.5vh;
   margin-right: 1vh;
