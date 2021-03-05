@@ -27,7 +27,7 @@
           'show',
           { hidden: visible }
         ]"
-        @click.stop="!dragging && peak && hover ? visible = true : null"
+        @click.stop="!dragging && peak ? visible = true : null"
       > 
         <!-- &gt; -->
           &lt; info

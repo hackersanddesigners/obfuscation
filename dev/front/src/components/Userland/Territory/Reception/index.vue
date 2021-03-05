@@ -59,6 +59,7 @@ export default {
   /* padding: 0 30%; */
   width: 100vw;
   height: 100vh; 
+
   /* display: flex; */
   /* flex-wrap: wrap; */
   /* justify-content: center; */
@@ -66,19 +67,19 @@ export default {
   /* align-items: center; */
 }
 .reception .island:nth-of-type(1) {
-  top: 20%; left: 25%;
+  top: 5%; left: 35%;
 }
 .reception .island:nth-of-type(2) {
-  top: 20%; left: 40%;
+  top: 35%; left: 30%;
 }
 .reception .island:nth-of-type(3) {
-  top: 45%; left: 25%;
+  top: 50%; left: 45%;
 }
 .reception .island:nth-of-type(4) {
-  top: 70%; right: 35%;
+  top: 65%; left: 35%;
 }
 .reception .island:nth-of-type(5) {
-  top: 10%; right: 15%;
+  top: 20%; left: 40%;
 }
 .reception .island:nth-of-type(6) {
   top: 60%; left: 65%;
