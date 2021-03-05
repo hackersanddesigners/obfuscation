@@ -129,8 +129,7 @@ export default {
   font-size: calc(3pt * var(--scale));
   z-index: 1;
   background: rgba(255, 255, 255, 0.315);
-  border-top-left-radius: var(--small-island-curve);
-  border-bottom-right-radius: var(--small-island-curve);
+  border-radius: inherit;
   /* transition: all 0.2s ease; */
 }
 .island .header h1 { 
@@ -158,8 +157,7 @@ export default {
   height: 100%;
   overflow: hidden;
   justify-content: center;
-  border-top-left-radius: var(--small-island-curve);
-  border-bottom-right-radius: var(--small-island-curve);
+  border-radius: inherit;
 }
 
 .island .body video {

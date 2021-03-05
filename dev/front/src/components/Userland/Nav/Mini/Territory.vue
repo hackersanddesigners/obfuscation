@@ -68,6 +68,10 @@ export default {
   display: flex;
   padding: 5px;
 }
+
+#mini-reception {
+  z-index: 1;
+}
 .mini-territory .background {
   position: absolute;
   top: 0; left: 0;
@@ -89,9 +93,9 @@ export default {
   box-sizing: border-box;
   position: absolute;
   content: '';
-  top: -20%; left: -20%;
-  height: 140%;
-  width: 140%;
+  top: -5%; left: -5%;
+  height: 110%;
+  width: 110%;
   z-index: 0;
   pointer-events: none;
   mask-image: var(--image);

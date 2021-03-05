@@ -66,21 +66,21 @@ export default {
   /* align-items: center; */
 }
 .reception .island:nth-of-type(1) {
-  top: 20%; left: 30%;
+  top: 20%; left: 25%;
 }
 .reception .island:nth-of-type(2) {
-  top: 20%; left:45%;
+  top: 20%; left: 40%;
 }
 .reception .island:nth-of-type(3) {
-  top: 45%; left: 30%;
+  top: 45%; left: 25%;
 }
 .reception .island:nth-of-type(4) {
-  top: 70%; right: 30%;
+  top: 70%; right: 35%;
 }
 .reception .island:nth-of-type(5) {
-  top: 10%; right: 10%;
+  top: 10%; right: 15%;
 }
 .reception .island:nth-of-type(6) {
-  top: 60%; left: 70%;
+  top: 60%; left: 65%;
 }
 </style>

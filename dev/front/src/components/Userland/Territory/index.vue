@@ -222,8 +222,8 @@ export default {
   box-sizing: border-box;
   position: absolute;
   content: '';
-  top: -30%; left: -30%;
-  height: 160%; width: 160%;
+  top: -15%; left: -15%;
+  height: 130%; width: 130%;
   z-index: 0;
   pointer-events: none;
   background: var(--island-back) ;

@@ -30,12 +30,15 @@
       "type": "string"
     },
     "sessions": {
-      "via": "references",
-      "collection": "sessions"
+      "collection": "sessions",
+      "via": "references"
     },
     "slug": {
       "type": "uid",
       "targetField": "Name"
+    },
+    "author": {
+      "type": "richtext"
     }
   }
 }

@@ -28,7 +28,7 @@ export default {
   position: absolute;
   border: 1px solid;
   cursor: move;
-  z-index: 1;
+  z-index: 10;
 }
  #viewport:hover {
   border-color: rgb(187, 187, 7);

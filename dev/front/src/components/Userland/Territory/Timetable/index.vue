@@ -130,6 +130,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  z-index: 1;
 }
 
 .timetable .day h1 {
