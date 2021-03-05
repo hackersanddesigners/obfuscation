@@ -10,19 +10,26 @@
       />
     </div> -->
 
+    <div class="participants">
+      <input
+        v-if="!showParticipants"
+        type="button"
+        value="participants"
+        class="showParticipants"
+        @click="showParticipants = true"
+      />
+      <Userslist
+        v-else
+        @goTo="$emit('goTo', $event)"
+        @hide="showParticipants = false"
+      />
+    </div>
+
     <div class="edituser">
       <input
         type="button"
         value="edit appearance"
         @click.stop="$emit('startEdit')"
-      />
-    </div>
-
-    <div class="storage">
-      <input
-        type="button"
-        value="delete me"
-        @click.stop="$store.dispatch('deleteUser', me)"
       />
     </div>
 
@@ -33,16 +40,34 @@
         @click.stop="$socket.client.emit('clearDBs')"
       />
     </div> -->
+
+    <div class="storage">
+      <input
+        type="button"
+        value="delete me"
+        @click.stop="$store.dispatch('deleteUser', me)"
+      />
+    </div>
     
   </div>
 </template>
 
 <script>
 import { mapGetters, mapMutations, mapState } from 'vuex'
+import Userslist from './Users'
 
 export default {
 
   name: 'Options',
+
+  components: {
+    Userslist
+  },
+  data() {
+    return {
+      showParticipants: false,
+    }
+  },
 
   computed: {
     ...mapState([
@@ -68,9 +93,9 @@ export default {
   margin-left: 1vh;
   width: 16vw;
   display: flex;
-  /* flex-direction: column; */
-  flex-wrap: wrap;
-  /* align-items: center; */
+  flex-direction: column;
+  /* flex-wrap: wrap; */
+  align-items: flex-start;
   /* justify-content: space-around; */
   line-height: 1.9vh;
   padding: 0.5vh;
@@ -86,10 +111,11 @@ export default {
   width: 100%;
   border-bottom: 1px solid grey;
 }
-#options div {
+#options .edituser,
+#options .storage,
+#options .participants {
   margin-top: 1vh;
   /* margin: 2.5px; */
-  padding: 0.5vh;
   margin-right: 1vh;
   display: flex;
   align-items: center;
@@ -101,7 +127,12 @@ export default {
 #options .db input {
   color: red;
 }
+.showParticipants {
+  /* padding: 0.5vh 1vh; */
+  cursor: pointer;
+}
 input {
+  padding: 0.5vh 0.75vh;
   border: none;
   outline: none;
   font-size: 10pt;

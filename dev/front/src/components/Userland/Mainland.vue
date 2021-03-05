@@ -77,9 +77,6 @@
 
       <Options
         @startEdit="editing = true"
-      />
-
-      <Userslist
         @goTo="goTo($event)"
       />
 
@@ -164,7 +161,6 @@ import Grid from './Grid'
 import Editor from './Options/Editor'
 import Minimap from './Nav/Mini/Map'
 import Options from './Options'
-import Userslist from './Users'
 import Cursorr from './User/Cursorr'
 import Message from './User/Message'
 import Territory from './Territory'
@@ -183,7 +179,6 @@ export default {
     Minimap,
     Minilist,
     Options,
-    Userslist,
     Grid,
     Cursorr,
     Message,
@@ -204,7 +199,8 @@ export default {
       moreInformation: null,
 
       nav: true,
-      desiresList: true,     
+      desiresList: true,   
+      showParticipants: false,  
 
       editing: false,
       scrolling: false,
@@ -766,6 +762,7 @@ header > div {
 #navTitle .navType span.selected {
   text-decoration: line-through;
 }
+
 #userlandContainer {  
   cursor: none;
   position: absolute;

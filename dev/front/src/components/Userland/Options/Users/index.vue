@@ -4,7 +4,10 @@
     :class="{ moderating: moderating }"
   >
     <div class="title"> 
-      <span>participants</span>
+      <span
+        class="hideParticipants"
+        @click="$emit('hide')"
+      >participants</span>
       <div id="moderate">
         <span 
           class="moderateButton"
@@ -96,28 +99,33 @@ export default {
 
 #userlist {
   box-sizing: border-box;
-  margin-top: 1vh;
-  margin-left: 1vh;
+  /* margin-top: 1vh; */
+  min-width: 10vw;
   max-width: 14vw;
   max-height: 300px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  border-radius: inherit;
+  font-size: 10pt;
 }
 #userlist.moderating {
   max-width: unset;
 }
 #userlist .title {
+  box-sizing: border-box;
   background: white;
   flex: 0 0;
   box-sizing: border-box;
-  padding-left: 0.5vw;
+  padding: 0.25vh 0.75vh;
   line-height: 1.9vh;
   width: 100%;
-  height: 2vh;
   display: flex;
   align-items: center;
   border-bottom: 1px solid grey;
+}
+#userlist .title .hideParticipants {
+  cursor: pointer;
 }
 
 
