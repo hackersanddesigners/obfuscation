@@ -10,6 +10,9 @@
       :href="src"
       class="header"
     >
+      <h3 class="subtitle">
+        {{ section.author }}
+      </h3>
       <h1 class="title"> 
         {{ section.Name }} 
       </h1>
@@ -70,25 +73,29 @@ export default {
   background: none;
   box-shadow:
     0 0px 0px rgba(255,255,255,0.8), /*bottom external highlight */
-    0 -1px 0px #666, /*top external shadow*/ 
-    inset 0 -1px 20px rgba(0, 0, 0, 0.596), /*bottom internal shadow*/ 
-    inset 0 10px 20px rgba(255, 255, 255, 0.849); /*top internal highlight*/
+    0 0px 0px #666, /*top external shadow*/ 
+    inset 0 -5px 10px rgba(0, 0, 0, 0.4), /*bottom internal shadow*/ 
+    inset 0 5px 10px rgba(255, 255, 255, 0.4); /*top internal highlight*/
   ;
-  /* border-top-left-radius: var(--small-island-curve);
-  border-bottom-right-radius: var(--small-island-curve); */
-  border-radius: 1.5vh;
+  border-radius: 1vh;
   transition: all 0.2s ease;
 }
 .island:before {
   background: none;
 }
 
-.island:nth-of-type(n) {
-  background: rgb(189,179,174);
-
+.island:nth-of-type(1n) {
+  background: rgb(179,198,186);
 }
+.island:nth-of-type(2n) {
+  background: rgb(189,179,174);
+}
+.island:nth-of-type(3n) {
+  background: rgb(138,121,111);
+}
+
 .island:hover {
-  /* border-top-left-radius: 0px; */
+  transform: translateX(2vh);
 }
 
 
@@ -98,6 +105,7 @@ export default {
   /* max-width: 30vw; */
   /* margin-bottom: unset; */
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(3pt * var(--scale));
@@ -113,11 +121,18 @@ export default {
   font-size: calc(5pt * var(--scale));
   line-height: calc(5pt * var(--scale));
   /* font-family: 'zxx-noise'; */
-  font-family: sans-serif;
+  font-family: serif;
   font-weight: lighter;
   text-align: center;
   /* word-break: break-all; */
   cursor: pointer;
+}
+.island .header .subtitle {
+  font-family: sans-serif;
+  color: black;
+  margin: 0;
+  text-align: center;
+  font-weight: lighter;
 }
 .island .header .title,
 .island .header .title:hover {
