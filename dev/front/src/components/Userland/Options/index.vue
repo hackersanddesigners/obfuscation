@@ -2,13 +2,13 @@
   <div id="options">
     <!-- <span class="title"> options </span> -->
 
-    <div class="grid">
+    <!-- <div class="grid">
       <input 
         type="button" 
         :value="grid ? 'hide grid' : 'show grid'" 
         @click.stop="toggleGrid"
       />
-    </div>
+    </div> -->
 
     <div class="edituser">
       <input
@@ -66,17 +66,18 @@ export default {
   box-sizing: border-box;
   margin-top: 1vh;
   margin-left: 1vh;
-  max-width: 16vw;
+  width: 16vw;
   display: flex;
   /* flex-direction: column; */
   flex-wrap: wrap;
   /* align-items: center; */
-  justify-content: space-around;
-  border: 1px solid grey;
-  background: white;
+  /* justify-content: space-around; */
   line-height: 1.9vh;
-  border-radius: var(--ui-border-radius);
   padding: 0.5vh;
+  background: none;
+  border: none;
+  padding: 0;
+  box-shadow: none;
 }
 #options .title {
   box-sizing: border-box;
@@ -86,9 +87,15 @@ export default {
   border-bottom: 1px solid grey;
 }
 #options div {
-  margin: 2.5px;
+  /* margin: 2.5px; */
+  padding: 0.5vh;
+  margin-right: 1vh;
   display: flex;
   align-items: center;
+  /* height: 2vh; */
+  border: 1px solid grey;
+  background: white;
+  border-radius: var(--ui-border-radius);
 }
 #options .db input {
   color: red;
@@ -96,10 +103,13 @@ export default {
 input {
   border: none;
   outline: none;
-  border: 0.5px solid lightgray;
-  padding: 2px 10px;
+  font-size: 10pt;
+  font-family: sans-serif;
+  /* border: 0.5px solid lightgray; */
+  /* padding: 2px 10px; */
   border-radius: 10px;
-  margin-top: 0px;
+  background: none;
+  margin: 0px;
 }
 input[type="button"] {
   cursor: pointer;

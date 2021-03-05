@@ -28,7 +28,7 @@
             { hidden: !nav }
           ]"
           @click.stop="nav = false"
-        > &lt; </span>
+        > &lt;  </span>
 
         <div class="navType">
           <span 
@@ -55,7 +55,7 @@
           @click.stop="nav = true"
         > 
           <!-- &gt; -->
-           &gt; nav
+           nav &gt; 
            <!-- ⓘ -->
         </span>
       </div>
@@ -404,6 +404,14 @@ export default {
 
   },
 
+  beforeDestroy() {
+
+    if (this.registered && this.me) {
+      this.$store.dispatch('disconnect')
+    }
+
+  },
+
   methods: {
 
 
@@ -673,7 +681,7 @@ header {
 
 header > div {
   background: white;
-  border: 1px solid grey;
+  border: var(--ui-border);
   border-radius: var(--ui-border-radius);
   box-shadow: var(--ui-box-shadow);
 }

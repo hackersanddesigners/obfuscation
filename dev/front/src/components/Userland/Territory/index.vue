@@ -11,11 +11,11 @@
     }"
   >
   
-    <div class="background">
+    <!-- <div class="background">
       <vue-markdown>
         {{ territory.name || territory.body }}
       </vue-markdown>
-    </div>
+    </div> -->
 
     <Reception
       v-if="content && slug === 'reception'"

@@ -84,7 +84,9 @@ export default {
 :root {
   --disconnected: rgb(156, 156, 156);
   --ui-border-radius: 7.5px;
+  --ui-back: white;
   --ui-box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.199);
+  --ui-border: 1px solid grey;
   --island-curve: 10vh;
   --island-shadow: inset 0 0 1vh 0.5vh rgba(0, 0, 0, 0.267);
   --small-island-curve: 5vh;
@@ -117,5 +119,8 @@ html, body {
 }
 a, a:hover, a:active, a:visited {
   color: blue;
+}
+h1 {
+  font-weight: normal;
 }
 </style>

@@ -11,15 +11,39 @@
     @mouseout="!dragging && peak ? hover = false : null"
     @mouseup="!dragging && peak && hover ? visible = true : null"
   >
+
+    <div id="infoTitle">
+      <span 
+        :class="[
+          'infoToggle',
+          'hide',
+          { hidden: !visible }
+        ]"
+        @click.stop="visible = hover = false"
+      > hide &gt; </span>
+      <span 
+        :class="[
+          'infoToggle',
+          'show',
+          { hidden: visible }
+        ]"
+        @click.stop="!dragging && peak && hover ? visible = true : null"
+      > 
+        <!-- &gt; -->
+          &lt; info
+          <!-- ⓘ -->
+      </span>
+    </div>
+
     <div 
       :class="[
         'overlay', content.slug
       ]"
     >
-      <span 
+      <!-- <span 
         class="close"
         @click.stop="visible = hover = false"
-      >✕</span>
+      >✕</span> -->
 
       
       <div 
@@ -76,7 +100,7 @@ export default {
       content: {},
       type: null,
       register: false,
-
+      info: true,
       peak: false,
       hover: false,
       visible: false
@@ -149,37 +173,99 @@ export default {
   box-sizing: border-box;
   position: absolute;
   top: 0;
-  right: -43%;
+  /* top: 1vh; */
+  right: -600px;
+  min-width: 500px;
   width: 40%;
-  height: 100%;
-  background: rgb(255,253,84);
-  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.534);
-  /* box-shadow: inset 0 0 20px 0 rgba(0, 0, 0, 0.534); */
+  max-width: 600px;
+  min-height: 500px;
+  height: 90%;
+  max-height: 90%;
   overflow: hidden;
   z-index: 2;
   transition: all 0.4s ease;
-  border-top-left-radius: 20px;
-  border-bottom-left-radius: 20px;
+
+  display: flex;
+  flex-direction: column;
 }
 .overlayContainer.peak {
   cursor: pointer;
-  right: calc(20px - 40%);
-  box-shadow: 0 0 50px 0 rgba(0, 0, 0, 0.534);
+  right: calc(20px - 600px);
+  right: calc(0px - 600px);
+  /* box-shadow: 0 0 50px 0 rgba(0, 0, 0, 0.534); */
   /* box-shadow: inset 0 0 50px 0 rgba(0, 0, 0, 0.534); */
+  /* box-shadow: var(--ui-box-shadow); */
 }
 .overlayContainer.hover {
   cursor: pointer;
-  right: calc(100px - 40%);
-  box-shadow:  0 0 30px 0 rgba(0, 0, 0, 0.534);
+  right: calc(100px - 600px);
+  right: calc(0px - 600px);
+  /* box-shadow:  0 0 30px 0 rgba(0, 0, 0, 0.534); */
   /* box-shadow: inset 0 0 30px 0 rgba(0, 0, 0, 0.534); */
+  /* box-shadow: var(--ui-box-shadow); */
 }
 .overlayContainer.visible {
   cursor: default;
-  right: 0px;
+  right: 0;
+  /* box-shadow: var(--ui-box-shadow); */
 }
+
+
+#infoTitle {
+  box-sizing: border-box;
+  position: relative;
+  margin: 1vh;
+  font-size: 10pt;
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-end;
+}
+
+#infoTitle span {
+  cursor: pointer;
+  text-decoration: none;
+  padding: 0.5vh;
+}
+
+#infoTitle .infoToggle {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  padding: 0vh 0.5vh;
+  background: white;
+  border: 1px solid grey;
+  border-radius: var(--ui-border-radius);
+  box-shadow: var(--ui-box-shadow);
+  z-index: 1;
+}
+
+#infoTitle .infoToggle {
+  padding: 0.5vh 1vh;
+  transition: all 0.2s ease;
+}
+.infoToggle.hide {
+  /* z-index: 1; */
+}
+ #infoTitle .infoToggle.show {
+  position: fixed;
+  padding: 0.5vh 1vh;
+  right: 1vh;
+  z-index: 0;
+}
+.infoToggle.hidden {
+  opacity: 0;
+}
+
 .overlay {
-  height: 100%;
-  width: 100%;
+  box-sizing: border-box;
+  margin-right: 1vh;
+  /* height: 100%; */
+  /* width: 100%; */
+  background: var(--ui-back);
+  box-shadow: var(--ui-box-shadow);
+  border-radius: var(--ui-border-radius);
+  border: var(--ui-border);
+  box-shadow: var(--ui-box-shadow);
   overflow: scroll;
 }
 .overlayContainer .close {

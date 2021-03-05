@@ -108,6 +108,9 @@ const store = new Vuex.Store({
       state.users[user.uid].color = user.color
       state.users[user.uid].connected = true
     },
+    setUserDisconnected: (state, uid) => {
+      state.users[uid].connected = false
+    },
     setUserBlocked: (state, user) => {
       state.users[user.uid].blocked = true
     },
@@ -252,6 +255,11 @@ const store = new Vuex.Store({
       this._vm.$socket.client.emit(
         'appearance', user
       )
+    },
+
+    disconnect({ state, commit }) {
+      commit('setUserDisconnected', state.uid)
+      this._vm.$socket.client.emit('user', state.users[state.uid])
     },
 
     blockUser({ state, commit, dispatch }, user ) {
