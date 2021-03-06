@@ -1,8 +1,9 @@
 <template>
   <div class="library">
     <Island
-      :ref="section.slug"
       v-for="section in content"
+      :id="section.slug + 'Island'"
+      :ref="section.slug"
       :key="section.slug"
       :section="section"
     />

@@ -81,7 +81,8 @@ export default {
     // handle routing.
 
     if (this.slug) {
-      this.handleRouting(this.slug)
+      // this.handleRouting(this.slug)
+      this.wantsToView = this.slug
     }
 
   },
@@ -97,27 +98,16 @@ export default {
     // })
 
     this.$router.afterEach((to) => {
-      const slug = to.fullPath.replace(this.$publicPath, '')
-      this.handleRouting(slug)
+      const slug = to.fullPath.replace(this.$publicPath, '/')
+      // this.handleRouting(slug)
+      this.wantsToView = slug
     })
 
   },
   methods: {
     handleRouting(slug) {
 
-      let
-        type =
-          slug.startsWith('~') ? 'user' :
-          slug.startsWith('#') ? 'territory' :
-          null,
-
-        name = 
-          type ? slug.slice(1) : slug
-
-      this.wantsToView = {
-        type: type,
-        name: name
-      }
+      this.wantsToView = slug
       
     },
   }

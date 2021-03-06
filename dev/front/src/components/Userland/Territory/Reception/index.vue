@@ -3,6 +3,7 @@
     <Island
       v-for="section in content"
       :key="section.slug"
+      :id="section.slug + 'Island'"
       :section="section"
       @mousedown.native.stop="handleIslandClick(section)"
     />
@@ -36,7 +37,7 @@ export default {
 
     handleIslandClick(section) {
       const current = this.$router.history.current.path
-      const next = `/statics/${section.slug}`
+      const next = `/reception/${section.slug}`
       
       if (current === next) {
         this.$emit('moreInfo', {

@@ -57,7 +57,7 @@ export default {
 
     handleTerritoryClick(territory) {
       const current = this.$router.history.current.hash
-      const next = `#${territory.slug}`
+      const next = territory.slug
       
       if (current === next) {
         this.$emit('goTo', territory.borders)

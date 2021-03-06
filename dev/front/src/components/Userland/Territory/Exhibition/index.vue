@@ -2,6 +2,7 @@
   <div class="exhibition">
     <Island
       v-for="section in content"
+      :id="section.slug + 'Island'"
       :key="section.slug"
       :section="section"
     />

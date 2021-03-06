@@ -95,7 +95,7 @@
     >
       
       <div id="location">
-        <span> #{{location.slug}} </span>
+        <span> /{{location.slug}} </span>
       </div>
 
       <div 
@@ -188,7 +188,7 @@ export default {
   },
 
   props: {
-    wantsToView: Object
+    wantsToView: String
   },
 
   data () {
@@ -242,6 +242,7 @@ export default {
       'notDeletedMessages',
 
       'positionOf',
+      'positionOfIsland',
       'centerOf',
       'pixelsFrom',
 
@@ -249,8 +250,8 @@ export default {
   },
 
   watch: {
-    wantsToView(zone) {
-      this.route(zone)
+    wantsToView(slug) {
+      this.route(slug)
     },
 
     me(newMe, oldMe) {
@@ -374,7 +375,7 @@ export default {
       // else, land in the center.
 
       } else {
-        this.$router.push(`#reception`)
+        this.$router.push(`reception`)
       }
   
     }, 50)
@@ -415,87 +416,70 @@ export default {
     // custom router.
 
     route(slug, behavior, pause) {
-      let 
-        type = slug.type,
-        name = slug.name,
+      slug = slug.slice(1)
+
+      let
+        type =
+          slug.startsWith('~') ? 
+          'user' : 
+          'territory',
+        name = 
+          type === 'user' ?
+          slug.split('/')[0] : 
+          slug.split('/')[0],
+        page = 
+          type === 'territory' ? 
+          slug.split('/')[1] : 
+          null,
         position
 
+      console.log(name, page)
 
-      // if the slug is preceeded with ~ or #, it
-      // maps to a position on the map.
-
-      if (type) {
-
-
-      // user slugs are preceded with "~".
-
-        if (type == 'user') {
-          const user = this.userByName(name)
-          if (user) {
+      if (type === 'user') {
+        const user = this.userByName(name)
+        if (user) {
             position = this.positionOf(user)
-          } else {
-            console.log('not found')
-          }
+        } else {
+          console.log('user not found')
+        }
 
-        
-        // territory slugs are preceded with "#".
-        
-        } else if (type == 'territory') {
-          const territory = this.territories[name]
-          if (territory) {
+      } else if (type === 'territory') {
+        const territory = this.territories[name]
+        if (territory) {
+          if (page) {
+            // check if paage exists
+
+            //   if (page.includes('?')) {
+            //     page = page.replace(/\?.*$/g,"")
+            //     console.log('newpage:', page)
+            //   }
+
+            position = this.positionOfIsland(page)
+
+          } else {
             position = this.centerOf(territory.borders)
-          } else {
-            console.log('not found')
+
           }
+        } else {
+          console.log('territory not found')
         }
+      }
 
+      setTimeout(() => {
+        this.scrollTo(
+          position, behavior || 'smooth'
+        )
+      }, pause || 0)
 
-        // slugs map to locations on mainland.
-
-        this.scrollTo(position, behavior ? behavior : 'smooth')
-
-
-        // otherwise it is a "page", so it maps to
-        // second level information.
-
-      } else {
-
-        if (name.startsWith('/')) {
-          name = name.substring(1)
-        }
-      
-        let 
-          collection = name.split('/')[0],
-          page = name.split('/')[1],
-          territoryName = 
-            collection === 'statics' ? 'reception' :
-            collection === 'sessions' ? 'timetable' :
-            collection === 'videos' ? 'exhibition' :
-            collection === 'glossaries' ? 'glossary' :
-            null,
-          territory = this.territories[territoryName]
-      
-        position = this.pixelsFrom(territory.borders)
-
-                
-        console.log('oldpage:', page)
-        if (page.includes('?')) {
-          page = page.replace(/\?.*$/g,"")
-          console.log('newpage:', page)
-        }
-
-        if (this.location.slug !== territory.slug) {
-          this.scrollTo(position, behavior ? behavior : 'smooth')
-        }
-
+      if (page) {
         setTimeout(() => {
           this.moreInformation = { 
-            collection: collection,
+            name: name,
             page: page
           }
         }, pause ? 1000 : 0)
-
       }
+
 
     },
 

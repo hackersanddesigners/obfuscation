@@ -28,7 +28,7 @@ export default {
     // get "slug", prefer a path over a hash
 
     const 
-      path = window.location.pathname.replace(this.$publicPath, ''),
+      path = window.location.pathname.replace(this.$publicPath, '/'),
       hash = window.location.hash
 
     this.slug = path || hash
@@ -85,8 +85,8 @@ export default {
   /* --disconnected: rgb(156, 156, 156); */
   --disconnected: black;
   --ui-border-radius: 7.5px;
-  --ui-back: black;
-  --ui-front: white;
+  --ui-back: white;
+  --ui-front: black;
   --ui-box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.199);
   --ui-border: 1px solid grey;
   --island-curve: 10vh;

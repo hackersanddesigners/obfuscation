@@ -132,7 +132,15 @@ export default {
     },
 
     wantsToView(newSlug) {
-      const query = newSlug.collection + '?slug=' + newSlug.page
+      const 
+        terrName = newSlug.name,
+        collection = 
+          terrName === 'reception' ? 'statics' :
+          terrName === 'timetable' ? 'sessions' :
+          terrName === 'exhibition' ? 'videos' :
+          terrName === 'glossary' ? 'glossaries' :
+          null,
+        query = collection + '?slug=' + newSlug.page
       
       this.updateContent(query)
       // this.visible = this.peak = true

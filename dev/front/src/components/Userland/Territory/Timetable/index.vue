@@ -10,6 +10,7 @@
         <Island
           v-for="session in day.sessions"
           :key="session.slug"
+          :id="session.slug + 'Island'"
           :session="session"
           @mouseup.native="handleIslandClick(session)"
         />
@@ -79,12 +80,10 @@ export default {
 
     handleIslandClick(section) {
       const current = this.$router.history.current.path
-      const next = `/sessions/${section.slug}`
+      const next = `/timetable/${section.slug}`
       
       if (current === next) {
-        this.$emit('moreInfo', {
-          name: next
-        })
+        this.$emit('moreInfo', next)
       } else {
         this.$router.push(`${next}`)
       }

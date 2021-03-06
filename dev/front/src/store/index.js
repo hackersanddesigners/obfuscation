@@ -462,6 +462,21 @@ const store = new Vuex.Store({
       }
     },
 
+    positionOfIsland: state => slug => {
+      const 
+        selector = slug + 'Island',
+        island = document.getElementById(selector),
+        left = island.offsetLeft + island.offsetParent.offsetLeft,
+        top = island.offsetTop + island.offsetParent.offsetTop,
+        centerX = left - (state.windowSize.w - island.offsetWidth) / 2,
+        centerY = top - (state.windowSize.h - island.offsetHeight) / 2 
+
+      return {
+        x: centerX,
+        y: centerY
+      }
+    },
+
     positionOf: (state, getters) => obj => {
       obj = getters.pixelsFrom(obj)
       return {
