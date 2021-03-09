@@ -204,6 +204,23 @@ export default {
   height: 130%; width: 130%;
   z-index: 0;
   pointer-events: none;
+  background-color: var(--ground);
+  /* background: var(--island-back) ;
+  background-position: center center; */
+  mask-image: var(--image);
+  -webkit-mask-image: var(--image);
+  mask-size: 100% 100%;
+  mask-position: center center;
+  overflow: visible;
+}
+.territory::after {
+  box-sizing: border-box;
+  position: absolute;
+  content: '';
+  top: -15%; left: -15%;
+  height: 130%; width: 130%;
+  z-index: 0;
+  pointer-events: none;
   background: var(--island-back) ;
   background-position: center center;
   mask-image: var(--image);
@@ -211,11 +228,9 @@ export default {
   mask-size: 100% 100%;
   mask-position: center center;
   overflow: visible;
-  background-color: var(--ground);
-  /* transform: scale(1.3); */
-  /* filter:drop-shadow(0px 0px 20px var(--ground)); */
+  opacity: 0.3;
+  /* background-color: var(--ground); */
 }
-
 .territory .placeholder {
   min-width: 70vw;
   min-height: 60vh;

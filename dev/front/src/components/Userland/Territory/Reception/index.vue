@@ -75,12 +75,12 @@ export default {
   top: 50%; left: 45%;
 }
 .reception .island:nth-of-type(4) {
-  top: 65%; left: 35%;
+  top: 75%; left: 35%;
 }
 .reception .island:nth-of-type(5) {
   top: 20%; left: 40%;
 }
 .reception .island:nth-of-type(6) {
-  top: 60%; left: 65%;
+  top: 65%; left: 65%;
 }
 </style>

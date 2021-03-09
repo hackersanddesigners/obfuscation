@@ -76,6 +76,7 @@ export default {
   border-top-right-radius:inherit;
   border-bottom-left-radius: inherit;
   overflow: hidden;
+  opacity: 0.5;
 }
 
 .island:hover {

@@ -695,15 +695,7 @@ header > div {
   left: 0px;
   font-family: jet;
   font-size: calc(1.7pt * var(--scale));
-  /* background:  */
-    /* url("../../assets/textures/1.png") repeat 1000px */
-  /* , url("../../assets/textures/2.png") repeat 2000px */
-  /* , url("../../assets/textures/favicon.png") repeat scroll */
-  /* ; */
-  /* background-position: center center; */
-  /* background-size: 400px; */
-  /* background-color: rgb(241, 241, 241); */
-    /* color: var(--ui-front); */
+  color: var(--ui-front);
   background: var(--ui-back);
   overflow: hidden;
 }
