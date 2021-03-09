@@ -83,4 +83,7 @@ export default {
 .reception .island:nth-of-type(6) {
   top: 65%; left: 65%;
 }
+.reception .island:nth-of-type(7) {
+  top: 30%; left: 60%;
+}
 </style>

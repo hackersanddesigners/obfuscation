@@ -173,27 +173,12 @@ export default {
   box-sizing: border-box;
   position: absolute;
   display: flex;
-  /* align-items: center; */
-  /* justify-content: center; */
-  /* align-items: center; */
-  /* pointer-events: none; */
   cursor: inherit;
   min-width: 10%;
   min-height: 10%;
-  /* z-index: 1; */
-
-  /* background: var(--island-back) ; */
-
-  /* background: var(--image);
-  background-size:cover; */
-  /* clip-path: var(--image); */
-  /* shape-outside: var(--image); */
-  /* background-color: var(--ground); */
-  /* mask-image: var(--image); */
-  /* filter:drop-shadow(0px 0px 30px var(--ground)); */
 }
 #reception {
-  z-index: 1;
+  /* z-index: 1; */
 }
 
 .territory::before {
@@ -210,26 +195,11 @@ export default {
   mask-image: var(--image);
   -webkit-mask-image: var(--image);
   mask-size: 100% 100%;
+  -webkit-mask-size: 100% 100%;
   mask-position: center center;
+  -webkit-mask-position: center center;
   overflow: visible;
-}
-.territory::after {
-  box-sizing: border-box;
-  position: absolute;
-  content: '';
-  top: -15%; left: -15%;
-  height: 130%; width: 130%;
-  z-index: 0;
-  pointer-events: none;
-  background: var(--island-back) ;
-  background-position: center center;
-  mask-image: var(--image);
-  -webkit-mask-image: var(--image);
-  mask-size: 100% 100%;
-  mask-position: center center;
-  overflow: visible;
-  opacity: 0.3;
-  /* background-color: var(--ground); */
+  mix-blend-mode: multiply;
 }
 .territory .placeholder {
   min-width: 70vw;
