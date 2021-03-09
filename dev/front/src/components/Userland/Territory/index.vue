@@ -18,49 +18,49 @@
     </div> -->
 
     <Reception
-      v-if="content && slug === 'reception'"
+      v-if="slug === 'reception'"
       ref="firstChild"
       :content="content"
       @moreInfo="$emit('moreInfo', $event)"
     />
 
     <Exhibition
-      v-else-if="content && slug === 'exhibition'"
+      v-else-if="slug === 'exhibition'"
       ref="firstChild"
       :content="content"
       @moreInfo="$emit('moreInfo', $event)"
     />
 
     <Timetable
-      v-else-if="content && slug === 'timetable'"
+      v-else-if="slug === 'timetable'"
       ref="firstChild"
       :content="content"
       @moreInfo="$emit('moreInfo', $event)"
     />
 
     <Glossary
-      v-else-if="content && slug === 'glossary'"
+      v-else-if="slug === 'glossary'"
       ref="firstChild"
       :content="content"
       @moreInfo="$emit('moreInfo', $event)"
     />
 
     <Library
-      v-else-if="content && slug === 'library'"
+      v-else-if="slug === 'library'"
       ref="firstChild"
       :content="content"
       @moreInfo="$emit('moreInfo', $event)"
     />
 
     <Hangout
-      v-else-if="content && slug === 'hangout'"
+      v-else-if="slug === 'hangout'"
       ref="firstChild"
       :content="content"
       @moreInfo="$emit('moreInfo', $event)"
     />
 
     <Livestream
-      v-else-if="content && slug === 'livestream'"
+      v-else-if="slug === 'livestream'"
       ref="firstChild"
       :content="content"
       @moreInfo="$emit('moreInfo', $event)"
