@@ -1,0 +1,28 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/ticker",
+      "handler": "ticker.find",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/ticker",
+      "handler": "ticker.update",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/ticker",
+      "handler": "ticker.delete",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}

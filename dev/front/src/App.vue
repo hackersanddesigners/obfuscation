@@ -62,6 +62,12 @@ export default {
   src: url('./assets/fonts/terminal-grotesque.ttf');
   font-weight: normal;
 }
+@font-face {
+  font-family: 'auth';
+  src: url('./assets/fonts/auth.woff');
+  font-weight: normal;
+}
+
 
 @font-face {
   font-family: 'jet';
@@ -81,7 +87,7 @@ export default {
 
 :root {
   /* --disconnected: rgb(156, 156, 156); */
-  --disconnected: rgba(0, 0, 0, 0.5);
+  --disconnected: rgb(119, 119, 119);
   --ui-border-radius: 7.5px;
   /* --ui-border-radius: 4px 7.5px 4px 7.5px; */
   --ui-back: white;
@@ -114,7 +120,7 @@ html, body {
   height: 100%;
   width: 100%;
   /* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; */
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: 'auth', Helvetica, Arial, sans-serif;
   font-size: 9pt;
   overflow: hidden;
 }

@@ -20,6 +20,7 @@
   >
 
     <vue-markdown 
+      :inline="true"
       v-if="!message.censored" 
       class="message"
     > 

@@ -1,0 +1,17 @@
+{
+  "kind": "singleType",
+  "collectionName": "tickers",
+  "info": {
+    "name": "ticker"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "phrase": {
+      "type": "richtext"
+    }
+  }
+}

@@ -65,7 +65,6 @@ export default {
 
     handleMousemove(e) {
       this.x = e.clientX
-      console.log(this.x)
     }
 
   }

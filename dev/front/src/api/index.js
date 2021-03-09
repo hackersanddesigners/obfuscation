@@ -33,10 +33,21 @@ const api = {
         axios
           .get(apiURL + 'regions')
           .then(async (response) => { 
-            const regions = {}
+            const regions = {
+              'reception': {},
+              'readme': {},
+              'hangout': {},
+              'exhibition': {},
+              'livestream': {},
+              'timetable': {},
+              'study-room': {},
+              'library': {},
+              'glossary': {},
+            }
 
             for (let r = 0; r < response.data.length; r++) {
               const region = response.data[r]
+              delete region.id
               region.content = await this.getRegionContent(region.slug)
               regions[region.slug] = region
             }

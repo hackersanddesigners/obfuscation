@@ -47,6 +47,10 @@ export default {
   created() {
   },
   mounted() {
+    setTimeout(() => {
+      this.handleLinks()
+    }, 500)
+
   },
   methods: {
     getSubtitle() {
@@ -85,8 +89,24 @@ export default {
     },
 
     processBody(text) {
-      if (text) text = text.replace(/\]\(\/uploads\//g, `](${this.$apiURL}/uploads/`)
+      if (text) {
+        text = text.replace(/\]\(\/uploads\//g, `](${this.$apiURL}/uploads/`)
+      }
       return text
+    },
+
+    handleLinks() {
+      Array
+        .from(document.querySelectorAll(`section a`))
+        .forEach(a => {
+          const href = a.attributes.href.value 
+          if (href.startsWith('/')) {
+            a.addEventListener('click', (e) => {
+              this.$router.push(href)
+              e.preventDefault()
+            })
+          }
+        })
     }
   }
 }
