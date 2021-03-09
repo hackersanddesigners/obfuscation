@@ -24,14 +24,12 @@ export default {
   },
 
   created() {
+  
 
-    // get "slug", prefer a path over a hash
+    // get "slug"
 
-    const 
-      path = window.location.pathname.replace(this.$publicPath, '/'),
-      hash = window.location.hash
+    this.slug = window.location.pathname
 
-    this.slug = path || hash
 
     // window dimensions: important for positioning!
 
@@ -83,8 +81,9 @@ export default {
 
 :root {
   /* --disconnected: rgb(156, 156, 156); */
-  --disconnected: black;
+  --disconnected: rgba(0, 0, 0, 0.5);
   --ui-border-radius: 7.5px;
+  /* --ui-border-radius: 4px 7.5px 4px 7.5px; */
   --ui-back: white;
   --ui-front: black;
   --ui-box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.199);

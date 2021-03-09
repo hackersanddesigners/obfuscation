@@ -24,7 +24,7 @@
           >
             {{
                 invalid ? 'Your display name cannot contain any spaces or special characters.'
-              : tooshort ? 'Your display name must contain at least 3 characters.'
+              : tooshort ? 'Your display name must contain at least 2 characters.'
               : inuse ? 'This name has already been taken by someone else.'
               : null
             }}
@@ -158,7 +158,7 @@ export default {
     },
 
     validateLength(string) {
-      return string.length > 2
+      return string.length > 1
     },
 
     existingUser(string) {

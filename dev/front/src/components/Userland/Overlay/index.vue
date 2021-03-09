@@ -2,7 +2,6 @@
   <div 
     class="overlayContainer"
     :class="{
-      peak: peak,
       hover: hover,
       visible: visible,
     }"
@@ -25,7 +24,7 @@
           'show',
           { hidden: visible }
         ]"
-        @click.stop="!dragging && peak ? visible = true : null"
+        @click.stop="!dragging ? visible = true : null"
       > 
         <!-- &gt; -->
           &lt; info
@@ -106,7 +105,6 @@ export default {
       type: null,
       register: false,
       info: true,
-      peak: false,
       hover: false,
       visible: false
     }
@@ -121,10 +119,9 @@ export default {
 
         if (this.location.slug !== 'general') {
           this.content = this.territoryBySlug(this.location.slug)
-          // console.log(this.content)
-          this.peak = true
+          this.visible = true
         } else {
-          this.visible = this.hover = this.peak =  false
+          this.visible = this.hover =  false
         
         }
 

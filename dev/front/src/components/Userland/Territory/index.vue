@@ -114,62 +114,33 @@ export default {
   ],
   data() {
     return {
-      content: [],
+      // content: [],
     }
   },
   computed: {
     slug() { return this.territory.slug },
+    content() { return this.territory.content },
     scale() { return this.$store.state.scale },
     windowWidth() { return this.$store.state.windowSize.w },
     windowHeight() { return this.$store.state.windowSize.h },
     shape() { return `url("${this.$apiURL}${this.territory.shape.url}#svgView(preserveAspectRatio(none))")` }
+    // shape() { return `url()` }
   },
 
   created() {
 
-    let 
-      slug = this.slug,
-      query = 
-        slug === 'reception' ? 'statics' :
-        slug === 'exhibition' ? 'videos' :
-        slug === 'timetable' ? 'sessions' :
-        slug === 'glossary' ? 'glossaries' :
-        slug === 'library' ? 'libraries' :
-        null
-
-    if (query) {
-      this.getContent(query)    
-    }
 
   },
   mounted() {
 
-    setTimeout(() => {
-
-      const size = this.getTerritorySize()
-      this.$store.commit('setTerritorySize', {
-        slug: this.territory.slug,
-        size: size
-      })
-
-    }, 500)
-
+    const size = this.getTerritorySize()
+    this.$store.commit('setTerritorySize', {
+      slug: this.territory.slug,
+      size: size
+    })
   
   },
   methods: {
-
-    getContent(query) {
-      this.$http.get(`${ this.$apiURL }/${ query }`)
-
-        .then((response) => { 
-          this.content = response.data 
-          // console.log(this.content)
-        })
-
-        .catch((error) => { 
-          console.log(error)
-        })
-    },
 
     toNearestX(num, X) {
       return Math.floor(100 * (num) / X) * X

@@ -40,9 +40,7 @@ export default {
       const next = `/reception/${section.slug}`
       
       if (current === next) {
-        this.$emit('moreInfo', {
-          name: next
-        })
+        this.$emit('moreInfo', next)
       } else {
         this.$router.push(`${next}`)
       }

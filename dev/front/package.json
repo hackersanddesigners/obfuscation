@@ -32,7 +32,8 @@
     "vue-socket.io": "^3.0.10",
     "vue-socket.io-extended": "^4.0.6",
     "vue2-leaflet": "^2.6.0",
-    "vuex": "^3.6.2"
+    "vuex": "^3.6.2",
+    "vuex-strong-cache": "^0.1.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",

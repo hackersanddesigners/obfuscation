@@ -134,7 +134,9 @@ const store = new Vuex.Store({
     },
 
     setTerritories: (state, regions) => {
-      state.territories = regions
+      for (let slug in regions) {
+        Vue.set(state.territories, slug, regions[slug])
+      }
     },
     setTerritorySize: (state, terr) => {
       Vue.set(state.territories[terr.slug].borders, 'w', terr.size.w)
@@ -465,15 +467,20 @@ const store = new Vuex.Store({
     positionOfIsland: state => slug => {
       const 
         selector = slug + 'Island',
-        island = document.getElementById(selector),
-        left = island.offsetLeft + island.offsetParent.offsetLeft,
-        top = island.offsetTop + island.offsetParent.offsetTop,
-        centerX = left - (state.windowSize.w - island.offsetWidth) / 2,
-        centerY = top - (state.windowSize.h - island.offsetHeight) / 2 
-
-      return {
-        x: centerX,
-        y: centerY
+        island = document.getElementById(selector)
+      
+      if (island) {
+        const 
+          left = island.offsetLeft + island.offsetParent.offsetLeft,
+          top = island.offsetTop + island.offsetParent.offsetTop,
+          centerX = left - (state.windowSize.w - island.offsetWidth) / 2,
+          centerY = top - (state.windowSize.h - island.offsetHeight) / 2 
+        return {
+          x: centerX,
+          y: centerY
+        }
+      } else {
+        return null
       }
     },
 

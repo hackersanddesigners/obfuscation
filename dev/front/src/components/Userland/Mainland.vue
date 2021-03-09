@@ -12,12 +12,12 @@
   >
 
     <Editor
-      v-if="socketsReady && (!registered || editing)" 
+      v-if="(!registered || editing)" 
       @stopEdit="editing = false"
     />
 
     <header
-      v-if="socketsReady"
+      v-if="true"
     >
 
       <div id="navTitle">
@@ -95,7 +95,10 @@
     >
       
       <div id="location">
-        <span> /{{location.slug}} </span>
+        <span
+          @click="route(location.slug)"
+        > /{{location.slug}} 
+        </span>
       </div>
 
       <div 
@@ -154,7 +157,6 @@
 
 <script>
 
-import { uid } from 'uid'
 import { mapState, mapGetters } from 'vuex'
 
 import Grid from './Grid'
@@ -254,6 +256,12 @@ export default {
       this.route(slug)
     },
 
+    location(newLoc, oldLoc) {
+      if (newLoc.slug !== oldLoc.slug) {
+        // console.log(this.location)
+      }
+    },
+
     me(newMe, oldMe) {
       if (oldMe && newMe.uid !== oldMe.uid) {
         console.log('you: ', newMe.uid)
@@ -263,124 +271,32 @@ export default {
 
   created() {   
 
-    let 
-      self,
-      users,
-      messages
-
-
-    // get user db from server.
-
-    this.$http
-      .get('https://obfuscation.karls.computer/users',)
-      .then((response) => { 
-
-
-        users = response.data
-        this.$store.commit('setUsers', users)
-
-
-        // check if user is registered and get their datas.
-
-        if (localStorage.uid && users[localStorage.uid]) {
-          console.log("You've visited.")
-          this.$store.commit('visit')
-
-          self = users[localStorage.uid]
-
-
-          // if they changed their user name they registered
-
-          if (!users[self.uid].name.includes(self.uid)) {
-            console.log("You're a local.")
-            this.$store.commit('register')
-          }
-
-
-          // if the user is marked as blocked, they have 
-          // been blocked. The component is unmounted here.
-
-          if (self.blocked) {
-            console.log("You're not welcome here.")
-            this.$store.commit('block')
-          }
-
-
-        // if not visited, store the generated UID and 
-        // color for later reference (i.e. when the user 
-        // comes back to register).
-
-        } else {
-          console.log('youre new')
-          const id = uid()
-          self = {
-            uid: id,
-            connected: false,
-            name: 'newUser-' + id,
-            color: this.randomColor(),
-            x: 0,
-            y: 0,
-            typing: null,
-            blocked: false,
-          },
-          localStorage.uid = self.uid
-          localStorage.color = self.color
-        }
-
-        
-        // update the app store with the UID and user.
-
-        this.$store.commit('setUID', self.uid)
-        this.$store.commit('setUser', self)
-
-
-        // announce existence to server and peers.
-
-        this.$socket.client.emit('user', self)
-        this.socketsReady = true
-
-
-      })
-      .catch((error) => { 
-        console.log(error)
-      })
-
-
-    // get message db from server.
-
-    this.$http
-      .get('https://obfuscation.karls.computer/messages',)
-      .then((response) => { 
-        messages = response.data
-        this.$store.commit('setMessages', messages)
-      })
-      .catch((error) => { 
-        console.log(error)
-      })
-
-
-
   },
+
   mounted() {
 
-    setTimeout(() => {   
 
+    // if there is a slug, navigate to it.
 
-      // if there is a slug, navigate to it.
-
-      if (this.wantsToView) {
-        this.route(this.wantsToView, 'smooth', true)
-
-
-      // else, land in the center.
-
+    // setTimeout(() => { 
+      if (this.wantsToView && this.wantsToView !== '/') {
+        this.route(this.wantsToView, 'smooth')
       } else {
-        this.$router.push(`reception`)
+        this.$router.push('reception')
       }
-  
-    }, 50)
+    // }, 50)
+
 
   },
+
+  beforeDestroy() {
+
+    if (this.registered && this.me) {
+      this.$store.dispatch('disconnect')
+    }
+
+  },
+
   sockets: {
 
 
@@ -402,82 +318,82 @@ export default {
 
   },
 
-  beforeDestroy() {
-
-    if (this.registered && this.me) {
-      this.$store.dispatch('disconnect')
-    }
-
-  },
-
   methods: {
 
 
     // custom router.
 
     route(slug, behavior, pause) {
-      slug = slug.slice(1)
+
+      slug = 
+        slug.startsWith('/') ?
+        slug.slice(1) :
+        slug
 
       let
-        type =
-          slug.startsWith('~') ? 
-          'user' : 
-          'territory',
-        name = 
-          type === 'user' ?
-          slug.split('/')[0] : 
-          slug.split('/')[0],
-        page = 
-          type === 'territory' ? 
-          slug.split('/')[1] : 
-          null,
+        name = slug.split('/')[0],
+        page = slug.split('/')[1],
         position
 
       console.log(name, page)
+      
 
-      if (type === 'user') {
+      // routing to users
+      
+      if (slug.startsWith('~') ) {
         const user = this.userByName(name)
         if (user) {
-            position = this.positionOf(user)
+          position = this.positionOf(user)
         } else {
           console.log('user not found')
         }
 
-      } else if (type === 'territory') {
+
+      // routing to territoriees
+
+      } else {
         const territory = this.territories[name]
         if (territory) {
-          if (page) {
-            // check if paage exists
-
-            //   if (page.includes('?')) {
-            //     page = page.replace(/\?.*$/g,"")
-            //     console.log('newpage:', page)
-            //   }
-
-            position = this.positionOfIsland(page)
-
-          } else {
-            position = this.centerOf(territory.borders)
-
-          }
+          position = this.centerOf(territory.borders)
         } else {
           console.log('territory not found')
         }
       }
 
-      setTimeout(() => {
-        this.scrollTo(
-          position, behavior || 'smooth'
-        )
-      }, pause || 0)
+
+      // first scroll action
+
+      if (this.location.slug !== name) {
+        setTimeout(() => {
+          this.scrollTo(position, behavior || 'smooth')
+        }, pause || 0)
+      } else {
+        pause = 10
+      }
+
+
+      // routing to pages
 
       if (page) {
-        setTimeout(() => {
-          this.moreInformation = { 
-            name: name,
-            page: page
-          }
-        }, pause ? 1000 : 0)
+
+        // check if paage exists
+
+        const islandPos = this.positionOfIsland(page)
+        if (islandPos) {
+        
+
+        // second scroll action
+
+          setTimeout(() => {
+            this.scrollTo(islandPos, behavior || 'smooth')
+            this.moreInformation = { 
+              name: name,
+              page: page
+            }
+          }, pause || 300 || 0)
+
+        }
+
       }
 
 
@@ -649,6 +565,7 @@ main {
   overflow: visible;
   width: 100%;
   z-index: 2;
+  cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: flex-start;

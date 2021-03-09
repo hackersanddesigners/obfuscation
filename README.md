@@ -10,12 +10,9 @@ This is the development space for the Obfuscation workshop platform.
 ![](minimap.png)
 
 - → Inventory, communication: https://pad.constantvzw.org/p/obfuscation_platframe_inventory.
-- → Brianstorm, notes, references: https://etherpad.hackersanddesigners.nl/p/platform-obfuscation.
+<!-- - → Brianstorm, notes, references: https://etherpad.hackersanddesigners.nl/p/platform-obfuscation. -->
+- → To-Do: https://ethercalc.karls.computer/obfuscation.
 - → Planning: https://etherpad.hackersanddesigners.nl/p/obfuscation-platframe-budget_planning.
-
-### To-Do 
-
-(coming soon)
 
 ### Authors
 

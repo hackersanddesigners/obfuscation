@@ -174,9 +174,10 @@ export default {
       document.addEventListener('mousemove', (e) => {
 
         const pos = {
-            x: (this.windowPos.x + e.clientX) / (this.windowSize.w * this.scale),
-            y: (this.windowPos.y + e.clientY) / (this.windowSize.h * this.scale),
-          }
+          x: (this.windowPos.x + e.clientX) / (this.windowSize.w * this.scale),
+          y: (this.windowPos.y + e.clientY) / (this.windowSize.h * this.scale),
+        }
+        // console.log(pos.x,pos.y)
         requestAnimationFrame(() => {
           this.$store.dispatch('updatePosition', pos)
         })
