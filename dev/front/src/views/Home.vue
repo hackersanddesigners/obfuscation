@@ -47,6 +47,7 @@ export default {
       wantsToView: null,
 
       loadingMessage: 'Loading...',
+      serverError: 'server error.',
 
       territoriesLoaded: false,
       messagesLoaded: false,
@@ -113,7 +114,7 @@ export default {
       })
       .catch((error) => { 
         console.log(error)
-        this.loadingMessage = 'error.'
+        this.loadingMessage = this.serverError
       })
 
 
@@ -129,7 +130,7 @@ export default {
       })
       .catch((error) => { 
         console.log(error)
-        this.loadingMessage = 'error.'
+        this.loadingMessage = this.serverError
       })
 
 
@@ -200,12 +201,12 @@ export default {
 
         this.$socket.client.emit('user', self)
         this.selfEvaluated = true
-        // this.loadingMessage = 'Ready.'
+        this.loadingMessage = 'Ready.'
 
       })
       .catch((error) => { 
         console.log(error)
-        this.loadingMessage = 'error.'
+        this.loadingMessage = this.serverError
       })
 
 

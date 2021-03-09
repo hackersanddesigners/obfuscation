@@ -217,7 +217,8 @@ const store = new Vuex.Store({
       }
     },
 
-    socket_disconnect({ state }) { 
+    socket_disconnect({ state, dispatch }) { 
+      dispatch('disconnect')
       if (state.save) {
         if (state.registered) {
           // localStorage.me = JSON.stringify(state.users[state.uid])

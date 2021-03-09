@@ -2,7 +2,6 @@
   <div 
     class="overlayContainer"
     :class="{
-      hover: hover,
       visible: visible,
     }"
 
@@ -16,7 +15,7 @@
           'hide',
           { hidden: !visible }
         ]"
-        @click.stop="visible = hover = false"
+        @click.stop="handleClose"
       > hide &gt; </span>
       <span 
         :class="[
@@ -105,7 +104,6 @@ export default {
       type: null,
       register: false,
       info: true,
-      hover: false,
       visible: false
     }
   },
@@ -121,7 +119,7 @@ export default {
           this.content = this.territoryBySlug(this.location.slug)
           this.visible = true
         } else {
-          this.visible = this.hover =  false
+          this.visible = false
         
         }
 
@@ -171,7 +169,7 @@ export default {
           } else {
             this.register = false
           }
-          this.visible = this.peak = true
+          this.visible = true
         })
 
         .catch((error) => { 
@@ -179,6 +177,15 @@ export default {
         })
     },
 
+    handleClose() {
+      if (this.$router.history.current.path.split('/')[2]) {
+        this.$router.push('/' + this.location.slug)
+      }
+      this.visible = false
+      setTimeout(() => {
+        this.content = this.territoryBySlug(this.location.slug)
+      }, 500)
+    }
   }
 }
 </script>
@@ -201,22 +208,6 @@ export default {
 
   display: flex;
   flex-direction: column;
-}
-.overlayContainer.peak {
-  cursor: pointer;
-  right: calc(20px - 600px);
-  right: calc(0px - 600px);
-  /* box-shadow: 0 0 50px 0 rgba(0, 0, 0, 0.534); */
-  /* box-shadow: inset 0 0 50px 0 rgba(0, 0, 0, 0.534); */
-  /* box-shadow: var(--ui-box-shadow); */
-}
-.overlayContainer.hover {
-  cursor: pointer;
-  right: calc(100px - 600px);
-  right: calc(0px - 600px);
-  /* box-shadow:  0 0 30px 0 rgba(0, 0, 0, 0.534); */
-  /* box-shadow: inset 0 0 30px 0 rgba(0, 0, 0, 0.534); */
-  /* box-shadow: var(--ui-box-shadow); */
 }
 .overlayContainer.visible {
   cursor: default;
@@ -309,7 +300,9 @@ export default {
   font-family: 'zxx-noise';
 }
 
+#aanmelderContainer {
+  border-top: 1px solid black;
+}
 #AanmelderCSS {
-
 }
 </style>

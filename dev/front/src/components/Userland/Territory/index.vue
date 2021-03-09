@@ -182,6 +182,7 @@ export default {
   min-height: 10%;
   /* z-index: 1; */
 
+  /* background: var(--island-back) ; */
 
   /* background: var(--image);
   background-size:cover; */

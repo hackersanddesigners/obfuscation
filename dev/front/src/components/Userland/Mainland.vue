@@ -143,7 +143,7 @@
     </div>
 
     <Ticker
-      content="May 4 & 7, 2021, Register Now. || May 4 & 7, 2021, Register Now. || May 4 & 7, 2021, Register Now. || May 4 & 7, 2021, Register Now. || May 4 & 7, 2021, Register Now. || May 4 & 7, 2021, Register Now. || "
+     :phrase="tickerPhrase"
     />
 
     <Overlay
@@ -199,6 +199,8 @@ export default {
       socketsReady: false,
 
       moreInformation: null,
+
+      tickerPhrase: 'May 4 & 7, 2021, Register Now.',
 
       nav: true,
       desiresList: true,   
@@ -726,6 +728,7 @@ header > div {
 .blur header,
 .blur #location,
 .blur #overlay,
+.blur #tickerContainer,
 .blur #userlandContainer {
   filter: blur(10px);
   opacity: 0.5;
