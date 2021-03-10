@@ -102,7 +102,7 @@ export default {
   filter: var(--blur);
   transition: filter 0.2 ease;
   z-index: 1;
-  /* color: var(--userColor); */
+  color: var(--userColor);
   padding: 0px 5px;
 }
 .messageContainer *::selection {
