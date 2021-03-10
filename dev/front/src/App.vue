@@ -1,5 +1,8 @@
 <template>
-  <div id="app">
+  <div 
+    id="app"
+    :class="{ mobile: isMobile }"    
+  >
     <Home 
       :slug="slug"
     />
@@ -20,11 +23,16 @@ export default {
   data() {
     return {
       slug: null,
+      isMobile: null,
     }
   },
 
   created() {
   
+    this.isMobile = this.checkIfMobile()
+    if (this.isMobile) {
+      this.$store.commit('makeMobile')  
+    }
 
     // get "slug"
 
@@ -38,9 +46,23 @@ export default {
         w: window.innerWidth,
         h: window.innerHeight,
       })
+      this.isMobile = this.checkIfMobile()
+      if (this.isMobile) {
+        this.$store.commit('makeMobile')  
+      } else {
+        this.$store.commit('makeDesktop')  
+      }
     })
 
   },
+
+  methods: {
+
+    checkIfMobile() {
+      return window.innerWidth < 700
+    },
+
+  }
 
 }
 </script>
@@ -86,26 +108,25 @@ export default {
 }
 
 :root {
-  /* --disconnected: rgb(156, 156, 156); */
   --disconnected: rgb(119, 119, 119);
+
   --ui-border-radius: 7.5px;
   /* --ui-border-radius: 4px 7.5px 4px 7.5px; */
   --ui-back: white;
   --ui-front: black;
   --ui-box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.199);
   --ui-border: 1px solid grey;
+
   --island-curve: 10vh;
   --island-shadow: inset 0 0 1vh 0.5vh rgba(0, 0, 0, 0.267);
   --small-island-curve: 5vh;
-  /* --white-glass: rgba(255, 255, 255, 0.041); */
-  /* --white-glass: white; */
   --white-glass: rgba(0, 0, 0, 0.055);
-  --yellow-glass: rgba(238, 255, 0, 0.733);
   --island-back:
     url("assets/textures/1.png") repeat 100px
   , url("assets/textures/2.png") repeat 100px
-  /* , url("../../assets/textures/favicon.png") repeat scroll */
   ;
+
+
 
 }
 
@@ -130,4 +151,10 @@ a, a:hover, a:active, a:visited {
 h1 {
   font-weight: normal;
 }
+
+
+#app.mobile {
+  font-size: 12pt;
+}
+
 </style>

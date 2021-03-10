@@ -52,7 +52,8 @@ const store = new Vuex.Store({
 
     // default vlaues for map position, dimensions, 
     // grid, and scale (zoom).
-
+    
+    isMobile: false,
     scale: 5,
     grid: false,
     windowSize: {
@@ -158,6 +159,8 @@ const store = new Vuex.Store({
     zoomIn: state => state.scale += 0.25,
     zoomOut: state  => state.scale > 1 ? state.scale -= 0.25 : null, 
 
+    makeMobile: state => state.isMobile = true,
+    makeDesktop: state => state.isMobile = false,
     toggleGrid: state => state.grid = !state.grid,
     resize: (state, size) => state.windowSize = size,
     viewerPosition: (state, pos) => state.windowPos = pos,

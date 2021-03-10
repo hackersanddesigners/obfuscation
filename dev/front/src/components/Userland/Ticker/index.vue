@@ -31,7 +31,8 @@ export default {
   components: {
   },
   props: [
-    'phrase'
+    'phrase',
+    'marquee'
   ],
   data() {
     return {
@@ -54,27 +55,32 @@ export default {
   },
   mounted() {
 
-    // let smarquee = new Smarquee({
-    //   element: this.$refs.smarq,
-    //   iterationCount: 'infinite',
-    //   onAnimationStart() { console.log('smarquee start') },
-    //   onAnimationIterate() { console.log('smarquee loop') },
-    //   onAnimationEnd() { console.log('smarquee stop') },
-    // })
-    // smarquee.init()
+    // console.log(this.marquee)
 
     setTimeout(() => {
+      // let smarquee = new Smarquee({
+      //   element: this.$refs.smarq,
+      //   iterationCount: 'infinite',
+      //   // playState: this.marquee ? 'running' : 'paused',
+      //   onAnimationStart() { console.log('smarquee start') },
+      //   onAnimationIterate() { console.log('smarquee loop') },
+      //   onAnimationEnd() { console.log('smarquee stop') },
+      // })
+      // smarquee.init()
+
       this.href = 
         document.querySelector('#ticker a')
         .attributes.href.value
-    }, 2000)
+      }, 2000)
 
    
   },
   methods: {
 
     handleMousemove(e) {
-      this.x = e.clientX
+      if (!this.marquee) {
+        this.x = e.clientX
+      }
     },
 
   }
@@ -100,7 +106,6 @@ export default {
   bottom: -10px;
   font-size: 32pt;
   box-shadow:  0 0 50px 0 rgba(0, 0, 0, 0.534);
-  /* box-shadow: inset 0 0 30px 0 rgba(0, 0, 0, 0.534); */
 }
 #ticker {
   cursor: none;
@@ -112,6 +117,7 @@ export default {
 }
 #ticker .content {
   text-align: center;
+  overflow: visible;
   /* font-weight: lighter; */
 }
 
@@ -121,5 +127,11 @@ export default {
 #tickerContainer #ticker .content a:visited {
   color: var(--ui-front) !important;
   text-decoration: none;
+}
+
+.mobile #tickerContainer.hover {
+  bottom: unset;
+  font-size: unset;
+  box-shadow:  unset;
 }
 </style>

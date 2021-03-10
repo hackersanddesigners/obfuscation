@@ -193,10 +193,10 @@ export default {
   /* background: var(--island-back) ;
   background-position: center center; */
   mask-image: var(--image);
-  -webkit-mask-image: var(--image);
   mask-size: 100% 100%;
-  -webkit-mask-size: 100% 100%;
   mask-position: center center;
+  -webkit-mask-image: var(--image);
+  -webkit-mask-size: 100% 100%;
   -webkit-mask-position: center center;
   overflow: visible;
   mix-blend-mode: multiply;

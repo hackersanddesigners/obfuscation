@@ -71,7 +71,7 @@ export default {
 
   computed: {
     ...mapState([
-      'grid'
+      'grid',
     ]),
     ...mapGetters([
       'me'

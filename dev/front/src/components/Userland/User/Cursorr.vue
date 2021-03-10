@@ -80,6 +80,7 @@ export default {
   computed: {
     ...mapState([
 
+      'isMobile',
       'scale',
       'windowSize',
       'windowPos'
@@ -97,7 +98,7 @@ export default {
 
   mounted() {
 
-    if (this.isMe) {
+    if (this.isMe && !this.isMobile) {
       this.trackCursor()
     }
 

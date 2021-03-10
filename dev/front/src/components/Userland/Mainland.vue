@@ -20,7 +20,10 @@
       v-if="true"
     >
 
-      <div id="navTitle">
+      <div 
+        v-if="!isMobile"
+        id="navTitle"
+      >
         <span 
           :class="[
             'navToggle',
@@ -54,9 +57,31 @@
           ]"
           @click.stop="nav = true"
         > 
-          <!-- &gt; -->
            nav &gt; 
-           <!-- ⓘ -->
+        </span>
+      </div>
+
+      <div 
+        v-else
+        id="navTitle"
+      >
+        <span 
+          :class="[
+            'navToggle',
+            'hide',
+            { hidden: !nav }
+          ]"
+          @click.stop="nav = false"
+        > &lt; nav </span>
+        <span 
+          :class="[
+            'navToggle',
+            'show',
+            { hidden: nav }
+          ]"
+          @click.stop="nav = true"
+        > 
+           nav &gt; 
         </span>
       </div>
 
@@ -76,9 +101,17 @@
       />
 
       <Options
+        v-if="!isMobile"
         @startEdit="editing = true"
         @goTo="goTo($event)"
       />
+
+      <div
+        v-else
+        id="joinChat"
+      >
+        <p>To join the discussion, please open this website on a larger screen.</p>
+      </div>
 
     </header>
 
@@ -144,6 +177,7 @@
 
     <Ticker
      :phrase="tickerPhrase"
+     :marquee="isMobile"
     />
 
     <Overlay
@@ -228,6 +262,7 @@ export default {
       'territories',
 
       'location',
+      'isMobile',
       'scale',
       'windowPos',
       'windowSize',
@@ -398,6 +433,10 @@ export default {
 
       }
 
+      if (this.isMobile) {
+        this.nav = false
+      }
+
 
     },
 
@@ -405,7 +444,7 @@ export default {
     // tells the cursor component to handle input.
 
     handleInput(e) {
-      if (!this.editing) {
+      if (!this.editing && !this.isMobile) {
         this.$refs.me[0].trackInput(e)
       }
     },
@@ -576,6 +615,7 @@ main {
 #location span {
   margin: 1vh;
   padding: 0.5vh;
+  padding: 0.75vh 0.5vh;
   height: auto;
   border: none;
   color: var(--ui-back);
@@ -588,8 +628,9 @@ main {
 
 header {
   position: absolute;
+  box-sizing: border-box;
   left: 0;
-  /* width:x 0; */
+  /* widt 0; */
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -644,6 +685,7 @@ header > div {
 }
 #navTitle .navToggle.hide {
   /* z-index: 1; */
+  padding: 0.5vh 1vh;
 }
 #navTitle .navToggle.show {
   position: fixed;
@@ -726,4 +768,29 @@ header > div {
   opacity: 0.5;
 }
 
+.mobile #location span {
+  font-size: 9pt;
+}
+
+.mobile header {
+  width: 100%;
+  align-items: stretch;
+  padding-right: 1vh;
+}
+
+.mobile .navHidden header {
+  left: -100vw;
+}
+
+.mobile #joinChat {
+  margin: 1vh 0 0 1vh;
+  padding: 1vh;
+}
+.mobile #joinChat p {
+  margin: 0;
+}
+
+.mobile #userlandContainer {  
+  cursor: default;
+}
 </style>

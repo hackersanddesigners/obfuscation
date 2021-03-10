@@ -95,7 +95,7 @@ export default {
     'dragging',
     'wantsToView'
   ],
-  mixins:[smoothHeight],
+  mixins:[ smoothHeight ],
   data() {
     return {
       moment: moment,
@@ -109,6 +109,7 @@ export default {
   },
   computed: {
     location() { return this.$store.state.location },
+    isMobile() { return this.$store.state.isMobile },
     territoryBySlug() { return this.$store.getters.territoryBySlug },
   },
   watch: {
@@ -117,10 +118,11 @@ export default {
 
         if (this.location.slug !== 'general') {
           this.content = this.territoryBySlug(this.location.slug)
-          this.visible = true
+          if (!this.isMobile) {
+            this.visible = true
+          }
         } else {
           this.visible = false
-        
         }
 
       }
@@ -201,7 +203,7 @@ export default {
   min-width: 500px;
   width: 40%;
   max-width: 550px;
-  max-height: 800px;
+  max-height: 750px;
   overflow: hidden;
   z-index: 2;
   transition: all 0.2s ease;
@@ -305,4 +307,32 @@ export default {
 }
 #AanmelderCSS {
 }
+
+.mobile .overlayContainer {
+  right: -100vw;
+  min-width: 100vw;
+  width: 100vw;
+  max-width: 100vw;
+  max-height: calc(100vh - 25px);
+  /* max-height: 800px; */
+}
+
+.mobile .overlayContainer.visible {
+  cursor: default;
+  right: 0;
+}
+
+.mobile #infoTitle .infoToggle.show {
+  /* position: fixed;
+  right: 0; */
+}
+
+@media screen and (max-height: 730px) {
+
+  .overlayContainer {
+    max-height: 90vh;
+  }
+  
+}
+
 </style>
