@@ -14,7 +14,7 @@ You will recieve a link from me that will direct you to a page where you can aut
 
 ### 🖥️ Environment 
 
-Once authenticated, you will be presented with the content management environment. On the top right, there are the buttons to log out and change the interface language. On the left side, there is a navigation menu with all the collections and single types. The rest of the interface is the editing area. It changes based on the part of the navigation that you are in.
+Once authenticated, you will be presented with the content management environment. On the top right, there are the buttons to log out and change the interface language. On the left side, there is a navigation menu with all the collections (please scroll) and single types. The rest of the interface is the editing area. It changes based on the part of the navigation that you are in.
 
 
 ### 📄 Single Types 
