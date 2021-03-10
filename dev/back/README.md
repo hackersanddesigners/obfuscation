@@ -34,7 +34,7 @@ Some entries in the regions have their URLs mapped to collections based on their
   - — the **Reception** region maps to the **Statics** collection (e.g. /reception/about).
   - — the **Exhibition Space** region maps to the **Video** collection (e.g. /exhibition/hearbeat-to-print).
   - — the **Timetable** region maps to the **Sessions** collection (e.g. /timetable/obfuscating-software).
-  - — the **Resource Library** region maps to the **Resources** collection (e.g. /library/karen-barad-getting-real).
+  - — the **Resource Library** region maps to the **Resources** collection (e.g. /library/getting-real).
   - — the **Glossary** region maps to the **Glossaries** collection (e.g. /glossary/1-1-scale).
 
   
