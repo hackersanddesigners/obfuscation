@@ -44,12 +44,16 @@ export default {
     source() { return this.getSource() }
 
   },
+  watch: {
+    body() {
+      this.handleLinks()
+    }
+  },
   created() {
   },
   mounted() {
-    setTimeout(() => {
-      this.handleLinks()
-    }, 500)
+
+    this.handleLinks()
 
   },
   methods: {
@@ -96,7 +100,8 @@ export default {
     },
 
     handleLinks() {
-      Array
+      setTimeout(() => {
+        Array
         .from(document.querySelectorAll(`section a`))
         .forEach(a => {
           const href = a.attributes.href.value 
@@ -107,6 +112,7 @@ export default {
             })
           }
         })
+      }, 500)
     }
   }
 }
@@ -116,6 +122,9 @@ export default {
 section {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   margin: 2vh;
+}
+section a {
+  /* text-decoration: underline; */
 }
 section .header {
 }

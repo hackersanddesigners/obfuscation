@@ -8,15 +8,17 @@
     @mouseover.stop="hover = true"
     @mousemove.stop="handleMousemove($event)"
     @mouseout.stop="hover = false"
+    @mouseup.stop="$router.push(href)"
   >
-    <div class="ticker">
-      <div 
+    <div id="ticker">
+      <vue-markdown 
         class="content"
         ref="smarq"
+        inline
         :style="{ transform: 'translateX(' + x + 'px)' }"
       >
         {{ content }}
-      </div>
+      </vue-markdown>
     </div>
   </div>
 </template>
@@ -35,6 +37,7 @@ export default {
     return {
       hover: false,
       x: 0,
+      href: '',
     }
   },
   computed: {
@@ -59,13 +62,20 @@ export default {
     //   onAnimationEnd() { console.log('smarquee stop') },
     // })
     // smarquee.init()
-    
+
+    setTimeout(() => {
+      this.href = 
+        document.querySelector('#ticker a')
+        .attributes.href.value
+    }, 2000)
+
+   
   },
   methods: {
 
     handleMousemove(e) {
       this.x = e.clientX
-    }
+    },
 
   }
 }
@@ -92,7 +102,7 @@ export default {
   box-shadow:  0 0 50px 0 rgba(0, 0, 0, 0.534);
   /* box-shadow: inset 0 0 30px 0 rgba(0, 0, 0, 0.534); */
 }
-.ticker {
+#ticker {
   cursor: none;
   position: absolute;
   left: -100vw;
@@ -100,8 +110,16 @@ export default {
   overflow: visible;
   word-break: keep-all;
 }
-.ticker .content {
+#ticker .content {
   text-align: center;
   /* font-weight: lighter; */
+}
+
+#tickerContainer #ticker .content a,
+#tickerContainer #ticker .content a:active,
+#tickerContainer #ticker .content a:hover,
+#tickerContainer #ticker .content a:visited {
+  color: var(--ui-front) !important;
+  text-decoration: none;
 }
 </style>

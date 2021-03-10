@@ -27,6 +27,15 @@ const api = {
       })
     },
 
+    getTicker() {
+      return new Promise ((resolve, reject) => {
+        axios
+          .get(apiURL + 'ticker')
+          .then((response) => { resolve(response.data.phrase ) })
+          .catch((error) => { reject(error) })
+      })
+    },
+
 
     getRegions() {
       return new Promise ((resolve, reject) => {

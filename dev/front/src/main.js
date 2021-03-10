@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Axios from 'axios'
-import VueMarkdown from 'vue-markdown'
+import VueMarkdown from '@adapttive/vue-markdown'
 import VueSocketIOExt from 'vue-socket.io-extended'
 import { io } from 'socket.io-client'
 import smoothscroll from 'smoothscroll-polyfill'

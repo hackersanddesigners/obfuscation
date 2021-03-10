@@ -89,7 +89,7 @@
         { dragging: dragging },
       ]"
 
-      @scroll.stop="setViewerPosition()"
+      @scroll.stop="setViewerPosition($event)"
       @keyup="handleInput($event)"
       @click="handleClick($event)"
     >
@@ -190,7 +190,8 @@ export default {
   },
 
   props: {
-    wantsToView: String
+    wantsToView: String,
+    tickerPhrase: String,
   },
 
   data () {
@@ -200,7 +201,6 @@ export default {
 
       moreInformation: null,
 
-      tickerPhrase: 'May 4 & 7, 2021, Register Now.',
 
       nav: true,
       desiresList: true,   

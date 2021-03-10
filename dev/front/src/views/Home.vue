@@ -8,6 +8,7 @@
     <Mainland 
       v-else-if="contentLoaded"
       :wantsToView="wantsToView"
+      :tickerPhrase="tickerPhrase"
     />
 
     <div
@@ -48,7 +49,9 @@ export default {
 
       loadingMessage: 'Loading...',
       serverError: 'server error.',
+      tickerPhrase: '',
 
+      tickerLoaded: false,
       territoriesLoaded: false,
       messagesLoaded: false,
       usersLoaded: false,
@@ -60,6 +63,7 @@ export default {
   
     contentLoaded() {
       return (
+        this.tickerLoaded &&
         this.territoriesLoaded && 
         this.messagesLoaded &&
         this.usersLoaded &&
@@ -98,6 +102,20 @@ export default {
       messages,
       users,
       self
+
+
+    // get ticker from CMS
+
+    api
+      .getTicker()
+      .then((response) => {
+        this.tickerPhrase = response
+        this.tickerLoaded = true
+      })
+      .catch((error) => {
+        console.log(error)
+        this.loadingMessage = this.serverError
+      })
 
 
     // get regions from CMS
