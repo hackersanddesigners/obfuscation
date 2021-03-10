@@ -38,29 +38,34 @@ The collections are:
   - — **People**: The people conducting the sessions.
   - — **Regions**: The only "meta" collection. The entries in this collection describe the different areas on the canvas, their positions, colors, and meta-texts.
 
+#### URL Dictionary
+
 Some entries in the regions have their URLs mapped to collections based on their slugs:
-  - — the **Reception** region maps to the **Statics** collection (e.g. /reception/about).
-  - — the **Exhibition Space** region maps to the **Video** collection (e.g. /exhibition/hearbeat-to-print).
-  - — the **Timetable** region maps to the **Sessions** collection (e.g. /timetable/obfuscating-software).
-  - — the **Resource Library** region maps to the **Resources** collection (e.g. /library/getting-real).
-  - — the **Glossary** region maps to the **Glossaries** collection (e.g. /glossary/1-1-scale).
+  - — the **Reception** region maps to the **Statics** collection (e.g. **/reception/about**).
+  - — the **Exhibition Space** region maps to the **Video** collection (e.g. **/exhibition/hearbeat-to-print**).
+  - — the **Timetable** region maps to the **Sessions** collection (e.g. **/timetable/obfuscating-software**).
+  - — the **Resource Library** region maps to the **Resources** collection (e.g. **/library/getting-real**).
+  - — the **Glossary** region maps to the **Glossaries** collection (e.g. **/glossary/1-1-scale**).
+
+The importance of this will be addressed in the following section.
 
 ### ✏️ Editing 
 
-All entries have different fields. Most of them are self explanatory.
+All entries have different fields. Most of them are self-explanatory.
 
-### ⌨️ Markdown 
+Some fields support **rich text** and are edited in Markdown. There is a built-in editor for rich text fields that will provide all the formatting options as buttons. When you select text and click the 'Bold' button, it will create the syntax that will make that text bold. To see how a rich text is going to be formatted on the website, you can click the **Switch to Preview** button on the upper right corner of the rich text editors.
 
-Fields that support **rich text**, such as the 'Body', 'Summary' and 'Impressum' fields are all written in Markdown. Markdown is a syntax that allows for formatting of raw text in order for it to render that way on a website.
-
-There is a built-in editor for rich text fields that will provide all the formatting options as buttons. When you select text and click the 'Bold' button, it will create the syntax that will make that text bold. 
-
-To see how a rich text is going to be formatted on the website, you can click the **"Switch to Preview"** button on the upper right corner of the rich text editor.
-
-When you want to **include an image in a rich text**, for a project or journal entry for example, you can click the image icon on the editor and either choose a previously uploaded image, or upload a new one. This will paste a URL to the image in the text. You can see this in action on the entries that are already there.
+When you want to **include an image in a rich text**, you can click the image icon on the editor and either choose a previously uploaded image, or upload a new one. This will paste a URL to the image in the text. You can see this in action on the entries that are already there.
 
 Markdown cheat sheet: https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet/.
 
+Please note the following about links: all aboslute links (starting with "http...") will open in a new tab when clicked in the website. All relative links (starting with "/...") will use the website's custom router to scroll to the different part of the canvas.
+
+So if you want to link from one part of the website to another, and you are using the rich text editor, please use relative links based on the **URL Dictionary**, and format them as follows:
+
+```js
+[text](link)
+```
 
 ### 🪰Known Bugs 
 
