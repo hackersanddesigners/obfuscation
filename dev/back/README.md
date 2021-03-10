@@ -14,36 +14,28 @@ You will recieve a link from me that will direct you to a page where you can aut
 
 ### 🖥️ Environment 
 
-Once authenticated, you will be presented with the content management environment. On the top right, there are the buttons to log out and change the interface language. 
-
-On the left side, there is a navigation menu with all the collections and single types. 
-
-The rest of the interface is the editing area. It changes based on the part of the navigation that you are in.
+Once authenticated, you will be presented with the content management environment. On the top right, there are the buttons to log out and change the interface language. On the left side, there is a navigation menu with all the collections and single types. The rest of the interface is the editing area. It changes based on the part of the navigation that you are in.
 
 ### 🗄️ Collections 
 
-Collections contain many entries. When choosing a collection, you can:
-  - — view all your entries
-  - — filter, sort, or search them
-  - — create, edit, delete an entry
-  - — publish or unpublish an entry
+Collections contain many entries. When choosing a collection, you can view, filter, sort, search, create, edit, publish, unpublish or delete an entry.
 
 
 The collections are: 
   - — **Statics**: The static information (about, contact, etc...) of the Reception area.
   - — **Videos**: The videos for the Exhibition Space.
-  - — **Sessions**: The entries of the Timetable of the event.
+  - — **Sessions**: The entries of the Timetable of the workshop.
   - — **Resources**: The links, files, or texts that are displayed in the Resource Library.
   - — **Glossaries**: The terms and their definitions that are displayed in the Glossary region.
   - — **People**: The people conducting the sessions.
   - — **Regions**: The only "meta" collection. The entries in this collection describe the different areas on the canvas, their positions, colors, and meta-texts.
 
 Some entries in the regions have their URLs mapped to collections based on their slugs:
-  - — the "Reception" region maps to the "Statics" collection (e.g. /reception/about).
-  - — the "Exhibition Space" region maps to the "Videos" collection (e.g. /exhibition/hearbeat-to-print).
-  - — the "Timetable" region maps to the "Sessions" collection (e.g. /timetable/obfuscating-software).
-  - — the "Resource Library" region maps to the "Resources" collection (e.g. /library/karen-barad-getting-real).
-  - — the "Glossary" region maps to the "Glossaries" collection (e.g. /glossary/1-1-scale).
+  - — the **Reception** region maps to the **Statics** collection (e.g. /reception/about).
+  - — the **Exhibition Space** region maps to the **Video** collection (e.g. /exhibition/hearbeat-to-print).
+  - — the **Timetable** region maps to the **Sessions** collection (e.g. /timetable/obfuscating-software).
+  - — the **Resource Library** region maps to the **Resources** collection (e.g. /library/karen-barad-getting-real).
+  - — the **Glossary** region maps to the **Glossaries** collection (e.g. /glossary/1-1-scale).
 
   
  
