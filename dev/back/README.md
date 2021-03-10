@@ -16,6 +16,14 @@ You will recieve a link from me that will direct you to a page where you can aut
 
 Once authenticated, you will be presented with the content management environment. On the top right, there are the buttons to log out and change the interface language. On the left side, there is a navigation menu with all the collections and single types. The rest of the interface is the editing area. It changes based on the part of the navigation that you are in.
 
+
+### 📄 Single Types 
+
+Single types are only one entry.
+
+The **ticker** entry has one field, a 'phrase', the one-liner that shows up in the website on the bottom. If you want the ticker to link to a part of the website, include one relative link in the phrase.
+
+
 ### 🗄️ Collections 
 
 Collections contain many entries. When choosing a collection, you can view, filter, sort, search, create, edit, publish, unpublish or delete an entry.
@@ -37,25 +45,9 @@ Some entries in the regions have their URLs mapped to collections based on their
   - — the **Resource Library** region maps to the **Resources** collection (e.g. /library/getting-real).
   - — the **Glossary** region maps to the **Glossaries** collection (e.g. /glossary/1-1-scale).
 
-  
- 
-### 📄 Single Types 
-
-Single types are only one entry.
-
-The **ticker** entry has one field, a 'phrase', the one-liner that shows up in the website on the bottom. If you want the ticker to link to a part of the website, include one relative link in the phrase.
-
 ### ✏️ Editing 
 
 All entries have different fields. Most of them are self explanatory.
-
-- — Projects have a **start and end date**. On the website, these are trimmed to the year and displayed as "YYYY - YYYY" in the order of the most recent EndDate first. **If you'd like to show a project as "Ongoing", please leave the EndDate field empty**.
-- — Projects have a **'summary' field**. This is for what we have been working on before so as not to display the full body on first click. It won't show on the website for now since we are parking that feature, so do with this field what you like.
-- — Projects have a **'Role' field**. This is a short text that describes what your role is in the project and is appended to the end of the project body in the website, with a thin grey border. This field is optional.
-- — On the right side, projects have a **'Collaborators' field**. This is a bi-directional link with the Collaborators collection. For each project, choose from your list of collaborators which ones were involved in the project. You will need to create the collaborator entry first.
-- — Collaborators have a **'summary' field**. It is up to you how you populate this field, but I personally think it's nice to include an external link to their work if applicable.
-- — Collaborators have a **'Projects' field** that is the inverse of the 'Collaborators' field in the project entries.
-- — Journal entries have a title and body, supporting rich text and images. There is no date field here. **The date that appears on the website is the date that you publish journal entries**. Note that you can draft and save as many as you like before publishing them.
 
 ### ⌨️ Markdown 
 
