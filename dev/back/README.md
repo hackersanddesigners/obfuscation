@@ -64,7 +64,9 @@ Please note the following about links: all aboslute links (starting with "http..
 So if you want to link from one part of the website to another, and you are using the rich text editor, please use relative links based on the **URL Dictionary**, and format them as follows:
 
 ```js
-[text](link)
+[text](/relative/path)                // template
+[Go to the Study Room!](/study-room)  // example of region access
+[Obfuscation](/glossary/obfuscation)  // example of region + overlay access
 ```
 
 ### 🪰Known Bugs 
