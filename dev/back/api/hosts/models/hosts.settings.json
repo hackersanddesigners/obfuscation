@@ -2,7 +2,7 @@
   "kind": "collectionType",
   "collectionName": "hosts",
   "info": {
-    "name": "Hosts",
+    "name": "People",
     "description": ""
   },
   "options": {
@@ -18,8 +18,8 @@
       "type": "email"
     },
     "sessions": {
-      "via": "hosts",
-      "collection": "sessions"
+      "collection": "sessions",
+      "via": "hosts"
     },
     "slug": {
       "type": "uid",
@@ -29,8 +29,8 @@
       "type": "string"
     },
     "moderating": {
-      "via": "moderators",
-      "collection": "sessions"
+      "collection": "sessions",
+      "via": "moderators"
     }
   }
 }
