@@ -1,7 +1,7 @@
 # Backend
 
 For the content management system (CMS), we are using [Strapi](https://strapi.io/) .    
-The CMS is accessible at http://api.obfuscation.karls.computer.  
+The CMS is accessible at https://api.obfuscation.karls.computer.  
 
 ## Using the CMS
 ### 🌍 Context 
@@ -69,10 +69,7 @@ So if you want to link from one part of the website to another, and you are usin
 [Obfuscation](/glossary/obfuscation)   <!-- example of region + overlay access --> 
 ```
 
-### 🪰Known Bugs 
-
-- — Project EndDates: For some reason, if you've already entered an end date for a project, and choose later that you want to mark it as Ongoing, **you can not delete the EndDate you put in**. So for now, if you want to mark a previously finished project as ongoing, you'd need to recreate that project page.
-- — **Including video and audio links** (for example Youtube / soundcloud): These will just look like normal links for now. I would like them to be embedded video / audio players in the future, but I haven't worked on this yet. (please let me know if this gets priority).
+<!-- ### 🪰Known Bugs  -->
 
 ## Development
 
@@ -95,7 +92,7 @@ Then stage, commit and push your changes to the remote server.
 
 ### Remote
 
-Strapi is running on http://localhost:1337 and proxied to http://piacw.karls.computer.
+Strapi is running on http://localhost:1339 and proxied to https://api.obfuscation.karls.computer.
 
 The initial set up starts with the build command:
 ```
@@ -104,12 +101,12 @@ NODE_ENV=production npm run build
 
 Then,
 ```
-pm2 start "NODE_ENV=production npm run start"
+pm2 start "NODE_ENV=production npm run start" --name "API.OBFS"
 ```
 
 We are using `pm2` to manage the service. 
 
 If changes have been made and pushed to the server, re-build the admin interface if necessary, and then restart the process:
 ```
-pm2 restart piacw.api
+pm2 restart API.OBFS
 ```
