@@ -8,7 +8,7 @@ The CMS is accessible at https://api.obfuscation.karls.computer.
 
 The CMS is hosted on this server which is provided by [Greenhost](https://greenhost.net/). For now, I have dedicated **5GB** of storage for this. If you would like more storage, please let me know.
 
-There are three users on Strapi: Anja, me, and you. As admin, Anja and I can create content types, update the infrastructure, change the API, and create and delete users. As author and editor, you can create content, edit it, publish it, unpublish it and delete it.
+There are two types of users on Strapi: admin and author/editor. As admin, Anja and I can create content types, update the infrastructure, change the API, and create and delete users. As author and editor, you can create content, edit it, publish it, unpublish it and delete it.
 
 You will recieve a link from me that will direct you to a page where you can authenticate your user. Please store your credentials.
 
