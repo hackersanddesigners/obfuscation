@@ -8,26 +8,15 @@ The CMS is accessible at http://api.obfuscation.karls.computer.
 
 The CMS is hosted on this server which is provided by [Greenhost](https://greenhost.net/). For now, I have dedicated **5GB** of storage for this. If you would like more storage, please let me know.
 
-There are two users on Strapi: you and I. As admin, I can create content types, update the infrastructure, change the API, and create and delete users. As author and editor, you can create content, edit it, publish it, unpublish it and delete it.
+There are three users on Strapi: Anja, me, and you. As admin, Anja and I can create content types, update the infrastructure, change the API, and create and delete users. As author and editor, you can create content, edit it, publish it, unpublish it and delete it.
 
 You will recieve a link from me that will direct you to a page where you can authenticate your user. Please store your credentials.
 
 ### 🖥️ Environment 
 
-Once authenticated, you will be presented with the content management environment. On the top right, there are the buttons to log out and change the interface language. On the left side, there is a navigation menu with all your content types. 
+Once authenticated, you will be presented with the content management environment. On the top right, there are the buttons to log out and change the interface language. 
 
-Collections: 
-  - — Projects
-  - — Collaborators
-  - — Journal Entries
-
-Single Types:
-  - — Tagline
-  - — About
-  - — Contact
-  - — Book
-  - — Movie
-  - — Computer
+On the left side, there is a navigation menu with all the collections and single types. 
 
 The rest of the interface is the editing area. It changes based on the part of the navigation that you are in.
 
@@ -39,35 +28,35 @@ Collections contain many entries. When choosing a collection, you can:
   - — create, edit, delete an entry
   - — publish or unpublish an entry
 
-Please note the following about collections:
-  - — The order you see them in the CMS is not necessarily the order they are visible on the website.
-  - — Projects are ordered on the website based on their EndDates.
-  - — Collaborators are ordered randomly.
-  - — Journal entries are ordered reverse-chronologically.
-  - — If there no published journal entries, that column will be hidden on the website.
 
+The collections are: 
+  - — **Statics**: The static information (about, contact, etc...) of the Reception area.
+  - — **Videos**: The videos for the Exhibition Space.
+  - — **Sessions**: The entries of the Timetable of the event.
+  - — **Resources**: The links, files, or texts that are displayed in the Resource Library.
+  - — **Glossaries**: The terms and their definitions that are displayed in the Glossary region.
+  - — **People**: The people conducting the sessions.
+  - — **Regions**: The only "meta" collection. The entries in this collection describe the different areas on the canvas, their positions, colors, and meta-texts.
+
+Some entries in the regions have their URLs mapped to collections based on their slugs:
+  - — the "Reception" region maps to the "Statics" collection (e.g. /reception/about).
+  - — the "Exhibition Space" region maps to the "Videos" collection (e.g. /exhibition/hearbeat-to-print).
+  - — the "Timetable" region maps to the "Sessions" collection (e.g. /timetable/obfuscating-software).
+  - — the "Resource Library" region maps to the "Resources" collection (e.g. /library/karen-barad-getting-real).
+  - — the "Glossary" region maps to the "Glossaries" collection (e.g. /glossary/1-1-scale).
+
+  
+ 
 ### 📄 Single Types 
 
-Single types contain only one entry.
+Single types are only one entry.
 
-The **tagline** is the first sentence on the upper left corner of the website. Please make sure that this entry is not too long or too short.
-
-The **about** entry is for you to play with as you like. Formatting is in rich text / markdown (more on this in a bit). Including images inline is optional.
-
-The **contact** entry includes a body, which is the text dispalyed on the top of that section in the website, a separate profile photo that appears when a visitor clicks on the appropiate link, and the impressum, which is linked at the bottom of the website.
-
-**The above three entries need to have something in them for the website to work. If you want some of them to be optional, let me know.**
-
-**Book**, **Movie**, **Computer**: These are the entries that link to the furniture on the website. The main field that is important is the "ExternalLink". Which will send the visitor to your most recent read, watch or upcoming event. They also have a few other fields (title, summary). These are not important for now, but in case we choose to work more with this feature, we can look at them. For the movie entry, please upload the appropriate poster for the given movie you are linking to.
-
-Please note the following about external links: you can choose to directly link to the pdf of a book or the full version of the movie, but this puts both of us at risk of re-distributing pirated content, so please be aware of this when pasting an external link.
+The **ticker** entry has one field, a 'phrase', the one-liner that shows up in the website on the bottom. If you want the ticker to link to a part of the website, include one relative link in the phrase.
 
 ### ✏️ Editing 
 
-All entries have different fields. Most of these are self explanatory: The title is a project title, the start and end dates are when the project started and ended, etc...
+All entries have different fields. Most of them are self explanatory.
 
-Some things to note: 
-- — Some entries have a **'slug' field**. This is the part that is appended to the end of the URL. This is auto-generated based on the title. **Please do not edit this field**.
 - — Projects have a **start and end date**. On the website, these are trimmed to the year and displayed as "YYYY - YYYY" in the order of the most recent EndDate first. **If you'd like to show a project as "Ongoing", please leave the EndDate field empty**.
 - — Projects have a **'summary' field**. This is for what we have been working on before so as not to display the full body on first click. It won't show on the website for now since we are parking that feature, so do with this field what you like.
 - — Projects have a **'Role' field**. This is a short text that describes what your role is in the project and is appended to the end of the project body in the website, with a thin grey border. This field is optional.
