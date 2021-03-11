@@ -4,16 +4,12 @@
       'island',
       { active: active }
     ]"
-    :style="{
-      height: `${ 40 }vh`,
-      width: `${ 40 }vw`,
-    }"
   >
     
-    <!-- <div class="header"> -->
-      <!-- <h1
+    <!-- <div class="header">
+      <h1
         class="title"
-        @mousedown.stop="$router.push(`/videos/${ section.slug }`)"
+        @mousedown.stop="$router.push(`/exhibition/${ section.slug }`)"
       > 
         {{ section.Name }} 
       </h1>
@@ -22,10 +18,10 @@
         @click.stop="play()"
       >
         {{ active ? 'pause' : 'play' }}
-      </h1> -->
-    <!-- </div> -->
+      </h1>
+    </div>
     <div class="body">
-      <!-- <video 
+      <video 
         ref="player"
         :controls="active"
         :loop="active"
@@ -33,8 +29,8 @@
         @mouseleave.stop
       >
         <source :src="src" type="video/mp4">
-      </video> -->
-    </div>
+      </video>
+    </div> -->
 
 
   </div>
@@ -79,49 +75,25 @@ export default {
 
 <style scoped>
 .island {
-  box-sizing: border-box;
-  position: relative;
-  /* flex: 0 0; */
-  /* flex-shrink: 0; */
-  /* flex-grow: 1; */
-  /* width: auto; */
-  /* margin-bottom: 10vh;
-  margin-right: 10vh; */
-  margin: 10vh;
+  width: calc(60 * var(--one));
+  height: calc(40 * var(--one));
+  margin: calc(10 * var(--one));
   padding: 0;
-
-
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-/* 
-  background-color: var(--white-glass);
-  box-shadow: var(--island-shadow);
-  border-top-left-radius: var(--small-island-curve);
-  border-bottom-right-radius: var(--small-island-curve); */
-  /* border-radius: var(--small-island-curve); */
-  /* transition: border-radius 0.2s ease; */
-}
-
-.island:first-of-type {
-  /* margin-left: 10vw; */
-}
-.island:hover {
-  /* border-top-left-radius: 0px; */
 }
 
 .island .header {
   box-sizing: border-box;
-  padding: 2vh 3vw;
+  padding: 
+    calc(2 * var(--one)) 
+    calc(4 * var(--one))
+  ;
   position: absolute;
   height: 100%;
   width: 100%;
-
-  /* flex: 1; */
-  /* margin: auto; */
-  /* max-width: 30vw; */
-  /* margin-bottom: unset; */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -130,14 +102,12 @@ export default {
   z-index: 1;
   background: rgba(255, 255, 255, 0.315);
   border-radius: inherit;
-  /* transition: all 0.2s ease; */
 }
 .island .header h1 { 
   font-size: calc(5pt * var(--scale));
   font-family: 'zxx-noise';
   font-weight: normal;
   text-align: center;
-  /* word-break: break-all; */
   cursor: pointer;
 }
 
@@ -161,12 +131,9 @@ export default {
 }
 
 .island .body video {
-  /* width: 100%; */
-
   height: 100%;
   max-width: 100%;
   max-height: 100%;
-  /* filter: invert(100%); */
 }
 
 

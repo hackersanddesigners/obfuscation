@@ -19,7 +19,7 @@
   >
 
     <vue-markdown 
-      :inline="true"
+      inline
       v-if="!message.censored" 
       class="message"
     > 
@@ -115,14 +115,17 @@ export default {
   box-sizing: border-box;
   border: 1px solid;
   border-color: transparent;
-  line-height: 1.9vh;
+  line-height: calc(1.5 * var(--one));
   transition: all 0.2s ease;
-  filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.37));
+  filter: 
+    drop-shadow(0 0 
+    calc(0.15 * var(--one))
+    rgba(0, 0, 0, 0.37));
 }
 .messageContainer .message p,
 .messageContainer .message * {
   text-decoration: none;
-  margin: 0px;
+  margin: 0;
 }
 .messageContainer .message a {
   text-decoration: underline;
@@ -132,8 +135,8 @@ export default {
 
 
 .messageContainer .details {
-  margin-top: -4px;
-  font-size: 80%;
+  margin-top: calc(-0.15 * var(--one));
+  font-size: calc(0.8 * var(--one));
   color: black;
   transition: opacity 0.2s ease;
   opacity: 0;
@@ -163,9 +166,9 @@ export default {
 }
 .messageContainer.announcement .message {
   border: 1.5px dashed;
-  border-radius: 12px;
-  padding: 0vh 0.5vh;
-  margin-bottom: 0.5vh;
+  border-radius: calc(5 * var(--one));
+  padding: 0 calc(0.5 * var(--one));
+  margin-bottom: calc(0.5 * var(--one));;
 }
 
 </style>

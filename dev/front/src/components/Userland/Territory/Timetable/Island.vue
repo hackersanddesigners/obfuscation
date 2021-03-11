@@ -6,7 +6,6 @@
     ]"
     :style="{
       width: `${ getWidth() }%`,
-      height: `${100 / 4 }vh`,
     }"
   >
     
@@ -25,7 +24,7 @@
         </h1>
       </div>
 
-      <div 
+      <h3 
         class="body"
         v-if="hosts.length > 0"
       >
@@ -56,7 +55,7 @@
           </span>
         </span>
 
-      </div>
+      </h3>
 
     </div>
 
@@ -68,8 +67,6 @@
       @click.native.stop
     />
 
-
-
   </div>
 </template>
 
@@ -79,12 +76,8 @@ import BBBLink from './BBBLink'
 
 export default {
   name: 'Island',
-  components: {
-    BBBLink
-  },
-  props: [
-    'session'
-  ],
+  components: { BBBLink },
+  props: [ 'session' ],
   data() {
     return {
     }
@@ -132,45 +125,37 @@ export default {
 
 <style scoped>
 .island {
-  box-sizing: border-box;
-  position: relative;
-  flex-shrink: 0;
-  min-width: 5%;
+  min-width: calc(20 * var(--one));
+  height: calc(20 * var(--one));
   /* max-width: 25%; */
   margin: 1.25vh 1.25vw;
-  margin-top: 10vh;
-  padding: 0vh;
-
+  margin: 
+    calc(1.25 * var(--one))
+    calc(1.25 * var(--one))
+  ;
+  margin-top: calc(8 * var(--one));
   display: flex;
-  /* flex-wrap: wrap; */
-  /* flex-direction: column; */
-  /* justify-content: center; */
-  /* align-items: flex-start; */
-
-  
 }
 
 .island:hover {
-  border-radius: 12vh;
-  border-top-left-radius: 2vh;
+  border-radius: calc(12 * var(--one));
+  border-top-left-radius: calc(2 * var(--one));
 }
 
 .island .info {
   flex: 1 0 50%;
   box-sizing: border-box;
-  /* max-width: 40vw; */
-  padding: 3vh;
+  padding: calc(3 * var(--one));
   border-radius: inherit;
   overflow: hidden;
 }
 
 .island .time  {
   position: absolute;
-  top: -6vh;
-  left: -4vh;
+  top: calc(-5 * var(--one));
+  left: calc(-4 * var(--one));
   width: 100%;
   display: flex;
-  /* justify-content: space-between; */
   font-size: calc(5pt * var(--scale));
   font-family: sans-serif;
   pointer-events: none;
@@ -178,57 +163,32 @@ export default {
 }
 .island .time .end {
   position: absolute;
-  right: -10vh;
+  right: calc(-10 * var(--one));
   display: none;
 }
 .island:last-of-type .time .end {
   display: block;
 }
-
-.island .header {
-  /* flex: 1; */
-  /* margin: auto; */
-  /* margin-bottom: unset; */
-  display: flex;
-  /* align-items: center; */
-  /* justify-content: center; */
-  font-size: calc(3pt * var(--scale));
-}
-.island .header h1 { 
-  font-size: calc(5pt * var(--scale));
-  font-family: 'zxx-noise';
-  font-weight: normal;
-  margin-top: 0px;
-  /* text-align: center; */
-  cursor: pointer;
-}
-.island .header .title:hover {
-  text-decoration: underline;
-}
 .island .body {
-  /* margin: auto; */
   margin-top: unset;
-  max-width: 30vw;
-  /* text-align: center; */
-  font-family: sans-serif;
-  line-height: 1.2;
-  font-size: calc(3pt * var(--scale));
+  max-width: calc(35 * var(--one));
 }
 .island .body .host .name,
 .island .body .moderator .name {
   text-decoration: underline;
-  cursor: pointer;
 }
-
 .island.break {
-  /* background-color: red; */
-  /* padding: 1vh; */
 }
 .island.break .info {
   position: absolute;
-  padding: 3vh 5vh 3vh 3vh;
+  padding: 
+    calc(3 * var(--one))
+    calc(5 * var(--one))
+    calc(3 * var(--one))
+    calc(3 * var(--one))
+  ;
 }
 .island.break .body .BBB-container .BBB {
-  margin-bottom: 1vh;
+  margin-bottom: calc(1 * var(--one));
 }
 </style>

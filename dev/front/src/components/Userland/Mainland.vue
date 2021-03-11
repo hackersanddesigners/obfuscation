@@ -70,7 +70,7 @@
       
       <div id="location">
         <div
-          @click="route(location.slug)"
+          @click="route(location.slug, false, false, true)"
         > 
           {{ location.slug }} 
         </div>
@@ -265,6 +265,10 @@ export default {
     } else {
       this.$router.push('reception')
     }
+
+    // this.$el.addEventListener("wheel", () => {
+    //   this.$store.commit('zoomOut')
+    // })
 
 
   },
@@ -521,13 +525,29 @@ export default {
 main {
   height: 100%; width: 100%;
   overflow: hidden;
+
+  --one: calc(2.5px * var(--scale));
+  --island-back-color: rgba(0, 0, 0, 0.055);
+  --island-back-darker: rgba(0, 0, 0, 0.13);
+  --island-back:
+    url("../../assets/textures/1.png") repeat calc(20px * var(--scale))
+  , url("../../assets/textures/2.png") repeat calc(20px * var(--scale))
+  ;
+  --island-curve: calc(10 * var(--one));
+  --small-island-curve: calc(5 * var(--one));
+  --island-shadow: 
+      inset 0 0 
+      calc(1 * var(--one))
+      calc(0.5 * var(--one))
+    rgba(0, 0, 0, 0.267);
+
 }
 
 main nav {
   position: absolute;
   box-sizing: border-box;
   top: 0; left: 0;
-  height: 0px;
+  height: 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -582,7 +602,7 @@ main nav.hidden {
 }
 #userland {
   position: absolute;
-  top: 0px; left: 0px;
+  top: 0; left: 0;
   color: var(--ui-front);
   background: var(--ui-back);
   overflow: hidden;
@@ -590,15 +610,57 @@ main nav.hidden {
 #userland::before {
   content: '';
   position: absolute;
-  top: 0px; left: 0px;
+  top: 0; left: 0;
   width: 100%; height: 100%;
   background: 
-    url("../../assets/textures/1.png") repeat 1000px
-  , url("../../assets/textures/2.png") repeat 2000px
+    url("../../assets/textures/1.png") repeat calc(200px * var(--scale))
+  , url("../../assets/textures/2.png") repeat calc(400px * var(--scale))
   ;
   overflow: hidden;
   opacity: 0.3;
 }
+
+
+.island {
+  position: relative;
+  box-sizing: border-box;
+  background-color: var(--island-back-color);
+  box-shadow: var(--island-shadow);
+  border-radius: 
+    var(--small-island-curve)
+    var(--island-curve)
+    var(--small-island-curve)
+    var(--island-curve)
+  ;
+  transition: all 0.2s ease;
+}
+.island::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: var(--island-back);
+  border-radius: inherit;
+  overflow: hidden;
+  opacity: 0.5;
+}
+.island:hover {
+  background-color: var(--island-back-darker);
+}
+.island h1 { 
+  margin: 0;
+  font-size: calc(5pt * var(--scale));
+  line-height: 1.1;
+}
+.island h3 {
+  margin: 0;
+  font-size: calc(3pt * var(--scale));
+  line-height: 1.2;
+}
+
+
+
+
 
 
 main.blur nav,

@@ -164,7 +164,7 @@ const store = new Vuex.Store({
     // app interface mutations.
 
     zero: state => state.scale = 5,
-    zoomIn: state => state.scale += 0.25,
+    zoomIn: state => state.scale < 10 ? state.scale += 0.25 : null,
     zoomOut: state  => state.scale > 1 ? state.scale -= 0.25 : null, 
 
     makeMobile: state => state.isMobile = true,
@@ -460,7 +460,7 @@ const store = new Vuex.Store({
       const 
         selector = slug + 'Island',
         island = document.getElementById(selector)
-      
+
       if (island) {
         const 
           left = island.offsetLeft + island.offsetParent.offsetLeft,

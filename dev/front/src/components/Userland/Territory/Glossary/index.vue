@@ -1,5 +1,5 @@
 <template>
-  <div class="glossary">
+  <div>
     <Island
       v-for="section in content"
       :key="section.slug"
@@ -15,25 +15,8 @@ import Island from './Island'
 
 export default {
   name: 'Glossary',
-  components: {
-    Island
-  },
-  props: [
-    'content',
-  ],
-  data() {
-    return {  
-      
-    }
-  },
-  computed: {
-
-
-  },
-
-  created() {
-
-  },
+  components: { Island },
+  props: [ 'content' ],
   methods: {
 
     handleIslandClick(section) {
@@ -47,9 +30,7 @@ export default {
       }
     }
 
-
   }
-
 }
 </script>
 
@@ -57,12 +38,11 @@ export default {
 .glossary {
   box-sizing: border-box;
   margin: auto;
-  margin-top: 20vh;
+  margin-top: calc(10 * var(--one));
   height: 100%;
-  max-width: 70%;
+  overflow: scroll;
   display: flex;
   flex-direction: column;
-  align-content: start;
   align-items: center;
 }
 </style>

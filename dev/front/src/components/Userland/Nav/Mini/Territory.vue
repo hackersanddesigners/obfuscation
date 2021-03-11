@@ -80,8 +80,8 @@ export default {
   content: '';
   top: -5%; left: -5%;
   height: 110%; width: 110%;
-  top: 0%; left: 0%;
-  height: 100%; width: 100%;
+  /* top: 0%; left: 0%;
+  height: 100%; width: 100%; */
   z-index: 0;
   pointer-events: none;
   background-color: var(--ground);

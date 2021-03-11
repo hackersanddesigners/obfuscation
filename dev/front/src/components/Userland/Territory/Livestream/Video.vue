@@ -8,16 +8,12 @@
 </template>
 <script>
 import Hls from 'hls.js'
-// import { mapState } from 'vuex'
 
 export default {
   name: 'Video',
   components: {
   },
   props: [
-    // 'playbackId',
-    // 'stream',
-
     'desiresPosition',
     'muted',
     'playing',
@@ -30,20 +26,10 @@ export default {
   },
   computed: {
     playbackId() { return this.$store.state.stream.playbackId }
-    // ...mapState([
-    //   'stream'
-    // ])
   },
   watch: {
     playbackId() {
-      // this.playbackId = this.stream.playbackId  
-      console.log(this.playbackId)
-      // console.log(newState)
-      // if (newState) {
-        this.updateVideo()
-      // } else {
-        // this.$el.src = null
-      // }
+      this.updateVideo()
     },
 
     // stream(newState) {

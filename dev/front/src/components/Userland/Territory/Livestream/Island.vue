@@ -1,23 +1,9 @@
 <template>
-  <div 
-    class="island"
-    :style="{
-      width: `${ 100 }%`,
-      height: `${ 100 }%`,
-    }"
-  >
-    
+  <div class="island" >
 
     <div class="body">
-    
-      <Video
-
-
-      />
-
-
+      <Video />
     </div>
-
 
   </div>
 </template>
@@ -27,25 +13,7 @@ import Video from './Video'
 
 export default {
   name: 'Island',
-  components: {
-    Video
-  },
-  props: [
-    'section'
-  ],
-  data() {
-    return {
-    }
-  },
-  computed: {
-  },
-  created() {
-  },
-  methods: {
-
-
-  }
-
+  components: { Video },
 }
 </script>
 
@@ -53,25 +21,17 @@ export default {
 .island {
   box-sizing: border-box;
   position: relative;
-  height: 80% !important;
-  width: 80% !important;
-  /* flex: 0 1; */
-  /* min-width: 20vw; */
-  /* margin: 1.25vh 1.25vw; */
-  margin: 1vh;
-  padding: 0vh;
-
+  height: 80%; width: 80%;
+  margin: calc(1 * var(--one));
+  padding: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
   overflow: hidden;
-
 }
-
 .island:hover {
   background-color: initial;
 }
-
 .island .body {
   height: 100%;
   width: 100%;

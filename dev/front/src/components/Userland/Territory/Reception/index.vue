@@ -1,5 +1,5 @@
 <template>
-  <div class="reception">
+  <div>
     <Island
       v-for="section in content"
       :key="section.slug"
@@ -15,24 +15,8 @@ import Island from './Island'
 
 export default {
   name: 'Reception',
-  components: {
-    Island
-  },
-  props: [
-    'content',
-  ],
-  data() {
-    return {
-    }
-  },
-  computed: {
-
-
-  },
-
-  created() {
-
-  },
+  components: { Island },
+  props: [ 'content' ],
   methods: {
 
     handleIslandClick(section) {
@@ -53,37 +37,28 @@ export default {
 
 <style scoped>
 .reception {
-  box-sizing: border-box;
-  margin: auto;
-  /* padding: 0 30%; */
-  width: 100vw;
-  height: 100vh; 
-
-  /* display: flex; */
-  /* flex-wrap: wrap; */
-  /* justify-content: center; */
-  /* align-content: center; */
-  /* align-items: center; */
+  width: 100%;
+  height: 100%; 
 }
-.reception .island:nth-of-type(1) {
+#aboutIsland {
   top: 5%; left: 35%;
 }
-.reception .island:nth-of-type(2) {
+#contactIsland {
   top: 35%; left: 30%;
 }
-.reception .island:nth-of-type(3) {
+#call-for-participationIsland {
   top: 50%; left: 45%;
 }
-.reception .island:nth-of-type(4) {
+#registerIsland {
   top: 75%; left: 35%;
 }
-.reception .island:nth-of-type(5) {
+#wo-2017Island {
   top: 20%; left: 40%;
 }
-.reception .island:nth-of-type(6) {
+#code-of-conductIsland {
   top: 65%; left: 65%;
 }
-.reception .island:nth-of-type(7) {
+#study-groupIsland {
   top: 30%; left: 60%;
 }
 </style>

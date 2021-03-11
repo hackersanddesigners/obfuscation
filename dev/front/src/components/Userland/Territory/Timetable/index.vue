@@ -1,11 +1,11 @@
 <template>
-  <div class="timetable">
+  <div>
     <div 
       v-for="day in contentByDays"
       :key="day.date"
       class="day"
     >
-      <h1>{{ cuteDate(day.date) }}</h1>
+      <div class="date">{{ cuteDate(day.date) }}</div>
       <div class="sessionsContainer">
         <Island
           v-for="session in day.sessions"
@@ -20,22 +20,13 @@
 </template>
 
 <script>
-// import moment from 'moment-timezone'
 import moment from 'moment'
 import Island from './Island'
 
 export default {
   name: 'Territory',
-  components: {
-    Island
-  },
-  props: [
-    'content',
-  ],
-  data() {
-    return {
-    }
-  },
+  components: { Island },
+  props: [ 'content' ],
   computed: {
 
     contentByDays() {
@@ -110,48 +101,34 @@ export default {
 <style scoped>
 .timetable {
   box-sizing: border-box;
-  margin-left: 20vw;
-  margin-top: 20vh;
-  /* padding: 0vh 5vw; */
-  /* width: 100%;  */
-  /* height: 100%; */
-  max-width: 300vw;
+  margin-left: calc(25 * var(--one));
+  margin-top: calc(20 * var(--one));
+  max-width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: stretch;
-  /* align-items: stretch; */
-  /* flex-wrap: wrap; */
 }
 
 .timetable .day  {
-  /* flex: 1 0; */
-  /* height: 50%; */
-  margin-bottom: 10vh;
+  margin-bottom: calc(10 * var(--one));
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   z-index: 1;
 }
 
-.timetable .day h1 {
-  /* float: 0 0 auto; */
-  margin: 2.5vh 2.5vw;
-  margin: 2.5vh 1vw;
-  margin: 0vh 1vw;
+.timetable .day .date {
+  margin: 0 calc(1.5 * var(--one));
   font-size: calc(8pt * var(--scale));
   font-family: sans-serif;
   font-weight: lighter;
-  /* width: 100%; */
 }
 
 .timetable .day .sessionsContainer {
-  /* margin-top: 5vh; */
-  margin-left: 5vw;
-  /* float: 1 0 100%; */
+  margin-left: calc(4 * var(--one));
   width: 100%;
   height: 100%;
   display: flex;
-  /* justify-content: stretch; */
   align-items: flex-start;
   align-content: flex-start;
   flex-wrap: wrap;

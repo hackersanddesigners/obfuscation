@@ -145,6 +145,7 @@ export default {
   overflow: hidden;
   z-index: 2;
   cursor: auto;
+  opacity: 1;
   transition: all 0.2s ease;
   display: flex;
   flex-direction: column;

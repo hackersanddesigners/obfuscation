@@ -1,5 +1,5 @@
 <template>
-  <div class="library">
+  <div>
     <Island
       v-for="section in content"
       :id="section.slug + 'Island'"
@@ -15,34 +15,8 @@ import Island from './Island'
 
 export default {
   name: 'Library',
-  components: {
-    Island
-  },
-  props: [
-    'content',
-  ],
-  data() {
-    return {  
-      
-    }
-  },
-  computed: {
-
-
-  },
-
-  created() {
-      // @mousedown.native.stop="handleClick(section)"
-
-
-  },
-  methods: {
-    handleClick(section) {
-      console.log(this.$refs[section.slug][0].$el)
-      this.$refs[section.slug][0].$el.click()
-    }
-  }
-
+  components: { Island },
+  props: [ 'content' ],
 }
 </script>
 
@@ -50,12 +24,11 @@ export default {
 .library {
   box-sizing: border-box;
   margin: auto;
-  margin-top: 20vh;
-  /* height: 100%; */
-  max-width: 60vw;
+  margin-top: calc(10 * var(--one));
+  height: 100%;
+  overflow: scroll;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
-
 </style>
