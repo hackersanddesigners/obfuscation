@@ -37,11 +37,13 @@ export default {
         date2,
         sessions2
 
-      if (this.content[0]) {
-        date1 = this.content[0].Start
-        sessions1 = this.content.filter(s => this.sessionInDay(s, date1))
-        date2 = this.content[this.content.length-1].Start
-        sessions2 = this.content.filter(s => this.sessionInDay(s, date2))
+      const sessionsArray = Object.values(this.content)
+
+      if (sessionsArray[0]) {
+        date1 = sessionsArray[0].Start
+        sessions1 = sessionsArray.filter(s => this.sessionInDay(s, date1))
+        date2 = sessionsArray[sessionsArray.length-1].Start
+        sessions2 = sessionsArray.filter(s => this.sessionInDay(s, date2))
       }
 
       return {

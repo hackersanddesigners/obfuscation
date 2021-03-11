@@ -49,6 +49,7 @@ const api = {
               'exhibition': {},
               'livestream': {},
               'timetable': {},
+              'contributors': {},
               'study-room': {},
               'library': {},
               'glossary': {},
@@ -82,9 +83,6 @@ const api = {
           axios
             .get(apiURL + query)
             .then((response) => { 
-              if (slug === 'timetable') {
-                resolve(response.data)
-              }
               for (let c = 0; c < response.data.length; c++) {
                 const page = response.data[c]
                 content[page.slug] = page
@@ -104,6 +102,7 @@ const api = {
         slug === 'reception' ? 'statics' :
         slug === 'exhibition' ? 'videos' :
         slug === 'timetable' ? 'sessions' :
+        slug === 'contributors' ? 'hosts' :
         slug === 'glossary' ? 'glossaries' :
         slug === 'library' ? 'libraries' : 
         null

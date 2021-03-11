@@ -1,4 +1,4 @@
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 module.exports = {
   configureWebpack: {
@@ -8,6 +8,6 @@ module.exports = {
         'hls.js': 'hls.js/dist/hls.light.min.js'
       }
     },
-    plugins: [new BundleAnalyzerPlugin()]
+    // plugins: [new BundleAnalyzerPlugin()]
   }
 }
