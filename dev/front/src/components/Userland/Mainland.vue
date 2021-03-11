@@ -260,15 +260,29 @@ export default {
 
     // if there is a slug, navigate to it.
 
-    if (this.wantsToView && this.wantsToView !== '/') {
+    if ( this.wantsToView && 
+         this.wantsToView !== '/' &&
+         this.wantsToView !== '/general') {
       this.route(this.wantsToView, 'smooth')
     } else {
       this.$router.push('reception')
     }
 
-    // this.$el.addEventListener("wheel", () => {
-    //   this.$store.commit('zoomOut')
-    // })
+    
+    let buffer = 0
+
+    this.$el.addEventListener("wheel", (e) => {
+      if (e.ctrlKey && buffer < 100) {
+        this.$store.commit('zoomOut')
+        buffer++
+      } else {
+        buffer = 0
+      //   posX -= e.deltaX * 2
+      //   posY -= e.deltaY * 2
+      }
+      e.preventDefault()
+      e.stopPropagation()
+    })
 
 
   },
