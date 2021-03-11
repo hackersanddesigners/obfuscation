@@ -152,9 +152,19 @@ a, a:hover, a:active, a:visited {
 }
 
 h1 {
+  font-size: 25pt;
+  font-family: 'zxx-noise';
   font-weight: normal;
 }
 
+h2 {
+  font-weight: normal;
+}
+
+h3 { 
+  font-size: 15pt;
+  font-weight: normal;
+}
 .ui {
   box-sizing: border-box;
   position: relative;

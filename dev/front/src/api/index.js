@@ -31,7 +31,7 @@ const api = {
       return new Promise ((resolve, reject) => {
         axios
           .get(apiURL + 'ticker')
-          .then((response) => { resolve(response.data.phrase ) })
+          .then((response) => { resolve(response.data ) })
           .catch((error) => { reject(error) })
       })
     },

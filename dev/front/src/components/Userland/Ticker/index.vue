@@ -30,18 +30,18 @@ export default {
   components: {
   },
   props: [
-    'phrase',
     'marquee'
   ],
   data() {
     return {
       hover: false,
       x: 0,
-      href: '',
     }
   },
   computed: {
     location() { return this.$store.state.location },
+    phrase() { return this.$store.state.ticker.phrase },
+    href() { return this.$store.state.ticker.link },
     content() {
       let content = ''
       for (let i = 0; i < 20; i++ ) {
@@ -67,15 +67,6 @@ export default {
     this.smarquee.init()
     this.handleSmarquee()
 
-    setTimeout(() => {
-      const 
-         a = document.querySelector('#ticker a'),
-         href = a.attributes.href.value
-      this.href = href
-      a.addEventListener('click', e => e.preventDefault())
-    }, 2000)
-
-   
   },
   methods: {
 
@@ -97,7 +88,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 #tickerContainer {
   box-sizing: border-box;
   position: absolute;

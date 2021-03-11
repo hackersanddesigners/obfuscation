@@ -128,12 +128,8 @@ section a {
 section .header {
 }
 section .header h3 { 
-  /* font-size: 15pt; */
-  /* font-weight: normal; */
 }
-section .header h1 { 
-  font-size: 25pt;
-  font-family: 'zxx-noise';
+section .header h1 {  
 }
 section .body {
   font-size: 12.5pt;

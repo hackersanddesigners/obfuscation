@@ -3,7 +3,7 @@
     :class="[
       'cursorContainer',
       {
-        hovered: user.typing ||  hovered,
+        hovered: user.typing || hovered,
         dragging: dragging,
         me: isMe(user)
       }

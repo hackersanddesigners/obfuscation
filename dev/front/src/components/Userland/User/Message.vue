@@ -39,7 +39,6 @@
         class="author"
         @click.stop="$emit('goTo', message.author)"
         >{{ message.author }}</span>
-
       <span 
         class="time"
         >, {{ fromNow(message.time) }}</span>
@@ -95,29 +94,29 @@ export default {
 <style>
 .messageContainer {
   position: absolute;
-  /* display: flex; */
-  /* align-items: center; */
+  z-index: 1;
   cursor: text;
-  filter: var(--blur);
-  transition: filter 0.2s ease;
   font-family: jet;
   font-size: calc(1.7pt * var(--scale));
-  z-index: 1;
   color: var(--userColor);
-  padding: 0px 5px;
+  filter: var(--blur);
+  transition: filter 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 .messageContainer *::selection {
-  background: var(--userColor);
   color: white;
+  background: var(--userColor);
 }
+
+
 .messageContainer .message {
   box-sizing: border-box;
   border: 1px solid;
   border-color: transparent;
-  border-radius: 12px;
-  transition: all 0.2s ease;
-  /* line-height: 1.65; */
   line-height: 1.9vh;
+  transition: all 0.2s ease;
 }
 .messageContainer .message p,
 .messageContainer .message * {
@@ -128,12 +127,8 @@ export default {
   text-decoration: underline;
   color: inherit;
 }
-.messageContainer .message iframe {
-  width: 300px !important;
-  height: 650px !important;
-  border: none !important;
-  border-radius: 15px;
-}
+
+
 
 .messageContainer .details {
   margin-top: -4px;
@@ -141,7 +136,6 @@ export default {
   color: black;
   transition: opacity 0.2s ease;
   opacity: 0;
-  height: 0;
 }
 .messageContainer .details .delete,
 .messageContainer .details .author,
@@ -154,21 +148,23 @@ export default {
   cursor: pointer;
 }
 
-.messageContainer .message.censored {
-  color: black;
-  font-style: italic;
-}
 
 .messageContainer.hover {
   filter: blur(0px);
-  /* transition: filter 0.2s ease; */
-}
-.messageContainer.announcement .message {
-  border: 1px dashed;
 }
 .messageContainer.hover .details {
   opacity: 1;
   height: auto;
+}
+.messageContainer .message.censored {
+  opacity: 0.5;
+  font-style: italic;
+}
+.messageContainer.announcement .message {
+  border: 1.5px dashed;
+  border-radius: 12px;
+  padding: 0vh 0.5vh;
+  margin-bottom: 0.5vh;
 }
 
 </style>

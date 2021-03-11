@@ -49,6 +49,8 @@ const store = new Vuex.Store({
       status: null,
     },
 
+    ticker: {},
+
 
     // default vlaues for map position, dimensions, 
     // grid, and scale (zoom).
@@ -151,7 +153,9 @@ const store = new Vuex.Store({
     setStream: (state, playbackId) => {
       Vue.set(state.stream, 'playbackId', playbackId)
     },
-
+    setTicker: (state, ticker) => {
+      state.ticker = ticker
+    },
 
     // app interface mutations.
 

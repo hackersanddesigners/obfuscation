@@ -116,7 +116,6 @@
     </div>
 
     <Ticker
-     :phrase="tickerPhrase"
      :marquee="isMobile"
     />
 
@@ -165,7 +164,6 @@ export default {
 
   props: {
     wantsToView: String,
-    tickerPhrase: String,
   },
 
   data () {

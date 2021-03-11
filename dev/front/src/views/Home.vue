@@ -8,7 +8,6 @@
     <Mainland 
       v-else-if="contentLoaded"
       :wantsToView="wantsToView"
-      :tickerPhrase="tickerPhrase"
     />
 
     <div
@@ -49,7 +48,6 @@ export default {
 
       loadingMessage: 'Loading...',
       serverError: 'server error.',
-      tickerPhrase: '',
 
       tickerLoaded: false,
       territoriesLoaded: false,
@@ -110,7 +108,7 @@ export default {
     api
       .getTicker()
       .then((response) => {
-        this.tickerPhrase = response
+        this.$store.commit('setTicker', response)
         this.tickerLoaded = true
       })
       .catch((error) => {
