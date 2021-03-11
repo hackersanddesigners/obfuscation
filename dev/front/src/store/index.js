@@ -341,48 +341,38 @@ const store = new Vuex.Store({
     },
 
     territoryByBorders: (state, getters) => pos => {
-      let general = {
-        name: 'general',
-        slug: 'general'
-      }
       let 
+        general = {
+          name: 'general',
+          slug: 'general'
+        },
+        diff = 0.5 / state.scale,
         coords = getters.coordsFrom(pos),
-        diff = 0.5,
-        // coords = pos,
-        // diff = 0,
         found = getters.territoriesArray.find((territory) => {
+          const 
+            minX = territory.borders.x - diff,
+            minY = territory.borders.y - diff,
+            maxX = territory.borders.w + territory.borders.x - diff,
+            maxY = territory.borders.h + territory.borders.y - diff
 
-        const 
-          minX = territory.borders.x - diff / state.scale,
-          minY = territory.borders.y - diff / state.scale,
-          maxX = territory.borders.w + territory.borders.x - diff / state.scale,
-          maxY = territory.borders.h + territory.borders.y - diff / state.scale
-
+          if ( coords.x > minX && coords.x < maxX
+            && coords.y > minY && coords.y < maxY ) {
+            return territory
+          }
           // if (territory.slug === 'glossary') {
           //   console.log('* territory:  ', territory.slug)
           //   console.log('**********************************')
-          //   console.log('* realWidth:  ', realWidth)
-          //   console.log('* width:      ', width)
           //   console.log('* minX:       ', minX)
           //   console.log('* borderX:    ', territory.borders.x)
           //   console.log('* maxX:       ', maxX)
           //   console.log('* coordsX:    ', coords.x)
-          //   console.log('* realHeight: ', realHeight)
-          //   console.log('* height:     ', height)
           //   console.log('* minY:       ', minY)
           //   console.log('* borderY:    ', territory.borders.y)
           //   console.log('* maxY:       ', maxY)
           //   console.log('* coordsY:    ', coords.y)
           //   console.log('**********************************')
           // }
-
-        if (coords.x > minX && coords.x < maxX
-         && coords.y > minY && coords.y < maxY
-         ) {
-            return territory
-          }
-
-      }) 
+        }) 
       return found || general
     },
 

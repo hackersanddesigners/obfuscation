@@ -3,8 +3,10 @@
     class="territory"
     :id="slug"
     :style="{
-      left: `${ toNearestX(territory.borders.x, 0.4) }%`,
-      top: `${ toNearestX(territory.borders.y, 0.4) }%`,
+      left: `${ territory.borders.x * 100 }%`,
+      top: `${ territory.borders.y * 100 }%`,
+      width: `${ territory.borders.w * 100 }%`,
+      height: `${ territory.borders.h * 100 }%`,
       '--ground': territory.color,
       '--image': shape,
 
@@ -71,11 +73,6 @@
       v-else-if="content"
       ref="firstChild"
     >
-      <Island
-        :name="territory.name"
-        :slug="territory.slug"
-        :content="content"
-      />
     </div>
 
   </div>
@@ -89,13 +86,11 @@ import Glossary from './Glossary'
 import Library from './Library'
 import Hangout from './Hangout'
 import Livestream from './Livestream'
-import Island from './Island'
 
-      // width: `${100 / 5}%`,
-      // height: `${100 / 5}%`,
-
-      // minWidth: `${15}%`,
-      // minHeight: `${15}%`,
+// left: `${ toNearestX(territory.borders.x, 0.4) }%`,
+//       top: `${ toNearestX(territory.borders.y, 0.4) }%`,
+//       width: `${ toNearestX(territory.borders.w, 0.4) }%`,
+//       height: `${ toNearestX(territory.borders.h, 0.4) }%`,
 
 export default {
   name: 'Territory',
@@ -107,7 +102,6 @@ export default {
     Library,
     Hangout,
     Livestream,
-    Island,
   },
   props: [
     'territory',
@@ -133,11 +127,11 @@ export default {
   },
   mounted() {
 
-    const size = this.getTerritorySize()
-    this.$store.commit('setTerritorySize', {
-      slug: this.territory.slug,
-      size: size
-    })
+    // const size = this.getTerritorySize()
+    // this.$store.commit('setTerritorySize', {
+    //   slug: this.territory.slug,
+    //   size: size
+    // })
   
   },
   methods: {
@@ -174,8 +168,8 @@ export default {
   position: absolute;
   display: flex;
   cursor: inherit;
-  min-width: 10%;
-  min-height: 10%;
+  /* min-width: 10%;
+  min-height: 10%; */
 }
 #reception {
   /* z-index: 1; */
@@ -185,12 +179,12 @@ export default {
   box-sizing: border-box;
   position: absolute;
   content: '';
-  /* top: 0%; left: 0%;
-  height: 100%; width: 100%; */
+  top: 0%; left: 0%;
+  height: 100%; width: 100%;
   /* top: -5%; left: -5%;
   height: 110%; width: 110%; */
-  top: -15%; left: -15%;
-  height: 130%; width: 130%;
+  /* top: -15%; left: -15%;
+  height: 130%; width: 130%; */
   z-index: 0;
   pointer-events: none;
   background-color: var(--ground);

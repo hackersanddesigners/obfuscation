@@ -57,6 +57,12 @@ const api = {
             for (let r = 0; r < response.data.length; r++) {
               const region = response.data[r]
               delete region.id
+              region.borders = {
+                x: region.borders.x / 100,
+                y: region.borders.y / 100,
+                w: region.borders.w / 100,
+                h: region.borders.h / 100,
+              }
               region.content = await this.getRegionContent(region.slug)
               regions[region.slug] = region
             }

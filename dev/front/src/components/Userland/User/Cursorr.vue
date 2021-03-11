@@ -292,54 +292,39 @@ export default {
 </script>
 
 <style scoped>
+
 .cursorContainer {
   position: absolute;
+  font-family: jet;
+  color: var(--userColor);
+  z-index: 1;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   align-items: flex-start;
-  /* transition: all 0.2s ease; */
-  font-family: jet;
-  color: var(--userColor);
-  /* border: 0.5px solid black; */
-  z-index: 1;
 }
-.cursorContainer * {
-  /* border: 0.5px solid black !important; */
-}
-.me.cursorContainer {
+.cursorContainer.me {
   pointer-events: none;
-  /* cursor: none; */
 }
+.cursorContainer.me * {
+  pointer-events: none;
+}
+
+
+
 .cursorContainer .cursor {
   min-width: calc(0.07vh * var(--scale));
   max-width: calc(0.07vh * var(--scale));
   height: calc(0.1vh * var(--scale));
+  background: var(--userColor);
+  box-shadow: var(--userColor) 5px 5px 20px;
   padding: 1px 5px 3px 5px;
+  border-radius: 6px 10px 6px 10px;
+  transition: all 0.2s ease;
+  overflow: hidden;
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  background: var(--userColor);
-  box-shadow: var(--userColor) 5px 5px 20px;
-  border-radius: 12px;
-  border-top-left-radius: 6px;
-  border-bottom-right-radius: 6px;
-  border-top-right-radius: 10px;
-  border-bottom-left-radius: 10px;
-  transition: all 0.2s ease;
-  overflow: hidden;
-
-  /* z-index: 5; */
-}
-.me.cursorContainer * {
-  pointer-events: none;
-  
-}
-.me.cursorContainer .cursor {
-  /* cursor: none; */
-  pointer-events: none;
-  /* z-index: 1; */
-
 }
 .cursorContainer .cursor .name {
   color: white;
@@ -360,28 +345,6 @@ export default {
   pointer-events: none;
   transition: all 0.2s ease;
 }
-
-.cursorContainer.hovered .cursor {
-  width: auto;
-  max-width: 450px;
-  transition: all 0.2s ease;
-}
-.cursorContainer.hovered .cursor .name {
-  max-width: 450px;
-  opacity: 1;
-  transition: all 0.2s ease;
-}
-
-.cursorContainer.hovered .input, 
-.cursorContainer.hovered input,
-.cursorContainer.hovered input:hover,
-.cursorContainer.hovered input:active {
-  /* width: 450px; */
-  /* max-width: 450px; */
-  /* max-height: 1vh; */
-  /* height: auto; */
-}
-
 .cursorContainer input::selection,
 .cursorContainer .input::selection {
   background: var(--userColor);
@@ -393,29 +356,35 @@ export default {
   overflow: hidden;
   line-height: 1.6;
   resize: none;
-  /* width: 400px; */
   border: none;
   outline: none;
   background: transparent;
   cursor: none;
 }
 
+.cursorContainer.hovered .cursor {
+  width: auto;
+  max-width: 450px;
+  transition: all 0.2s ease;
+}
+.cursorContainer.hovered .cursor .name {
+  max-width: 450px;
+  opacity: 1;
+  transition: all 0.2s ease;
+}
+.cursorContainer.hovered .input, 
+.cursorContainer.hovered input,
+.cursorContainer.hovered input:hover,
+.cursorContainer.hovered input:active {
+  width: 700px;
+  max-width: 700px;
+}
+
 .cursorContainer.dragging .cursor {
-/* .cursorContainer.dragging input,
-.cursorContainer.dragging input:hover,
-.cursorContainer.dragging input:active { */
-  /* padding: 0;
-  width: 0;
-  max-width: 0;
-  max-height: 0;
-  cursor: grabbing; */
-  border-radius: 12px !important;
-  padding: 1px 0px;
   height: 10px; width: 10px;
+  padding: 1px 0px;
+  border-radius: 12px;
   box-shadow: none;
 }
-/* .cursorContainer.dragging {
-  cursor: grabbing;
-} */
 
 </style>

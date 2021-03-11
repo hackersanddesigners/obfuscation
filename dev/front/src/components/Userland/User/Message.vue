@@ -117,6 +117,7 @@ export default {
   border-color: transparent;
   line-height: 1.9vh;
   transition: all 0.2s ease;
+  filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.37));
 }
 .messageContainer .message p,
 .messageContainer .message * {

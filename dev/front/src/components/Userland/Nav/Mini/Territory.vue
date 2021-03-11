@@ -6,10 +6,10 @@
       { hovered: hovered }  
     ]"
     :style="{ 
-      left: `${ toNearestX(territory.borders.x, 0.4) }%`,
-      top: `${ toNearestX(territory.borders.y, 0.4) }%`,
-      width: `${ toNearestX(territory.borders.w, 0.4) }%`,
-      height: `${ toNearestX(territory.borders.h, 0.4) }%`,
+      left: `${ territory.borders.x * 100 }%`,
+      top: `${ territory.borders.y * 100 }%`,
+      width: `${ territory.borders.w * 100 }%`,
+      height: `${ territory.borders.h * 100 }%`,
       '--ground': territory.color,
       '--image': shape,
     }"
@@ -80,8 +80,8 @@ export default {
   content: '';
   top: -5%; left: -5%;
   height: 110%; width: 110%;
-  /* top: 0%; left: 0%;
-  height: 100%; width: 100%; */
+  top: 0%; left: 0%;
+  height: 100%; width: 100%;
   z-index: 0;
   pointer-events: none;
   background-color: var(--ground);
