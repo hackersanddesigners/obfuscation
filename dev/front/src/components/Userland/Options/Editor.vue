@@ -1,6 +1,10 @@
 <template>
   <div id="registerContainer">
-    <div id="register">
+    <div 
+      id="register" 
+      class="ui"
+      @keyup.enter="save"
+    >
 
       <div 
         class="introText" 
@@ -13,6 +17,7 @@
       <div class="form">
 
           <input 
+            class="ui"
             ref="name" 
             type="text" 
             placeholder="pick a display name"
@@ -31,6 +36,7 @@
           </p>
 
           <input 
+            class="ui"
             ref="color" 
             type="text" 
             data-jscolor
@@ -38,10 +44,11 @@
           > 
 
           <input 
+            class="ui"
             ref="submit" 
             type="button" 
             value="save"
-            @click.stop="save()" 
+            @click.stop="save" 
           >
 
       </div>
@@ -105,12 +112,6 @@ export default {
       this.$refs.name.value = this.me.name
       this.$refs.name.select()
     }
-
-    this.$nextTick(() => {
-      if (this.registered) {
-        new jscolor(this.$refs.color)   
-      }
-    })
     
   },
   methods: {
@@ -186,41 +187,50 @@ export default {
 }
 </script>
 <style scoped>
+
 #registerContainer {
   position: absolute;
-  top: 0;
-  left: 0;
-  height: 100vh;
-  width: 100vw;
+  top: 0; left: 0;
+  height: 100%; width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  line-height: 1.2;
   z-index: 3;
 }
+
 #register {
   width: 260px;
+  padding: 1vh;
 }
+#register h3 {
+  margin-top: 0;
+}
+#register .introText:last-of-type p:last-of-type {
+  margin-bottom: 0;
+}
+
 .form {
   display: flex;
   flex-direction: column;
 }
+
 input {
-  background: rgb(245, 245, 245);
-  border: none;
   outline: none;
-  border: 0.5px solid lightgray;
+  box-shadow: none;
   padding: 2px 10px;
-  border-radius: 10px;
-  margin-top: 5px;
+  margin-bottom: 0.5vh;
+}
+input:last-of-type {
+  margin-bottom: 0;
 }
 input[type="button"] {
   cursor: pointer;
 }
+
 .error  {
   margin: 5px;
-  margin-bottom: 0px;
   font-size: 9pt;
   color: red;
 }
+
 </style>

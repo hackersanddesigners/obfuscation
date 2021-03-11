@@ -1,6 +1,5 @@
 <template>
   <div
-    class="cursor"
     :style="{ 
       left: ( 100 * user.x -  0.1) + '%',
       top: ( 100 * user.y -  0.2) + '%',
@@ -21,7 +20,7 @@ export default {
 </script>
 
 <style scoped>
-.cursor {
+div {
   position: absolute;
   width: calc(0.07vh * var(--scale));
   max-width: calc(0.07vh * var(--scale));

@@ -4,86 +4,25 @@
       userColors,
       { '--scale': scale }
     ]"
-    :class="[
-      { blur: !registered || editing },
-      { navHidden: !nav },
-      location.slug
-    ]"
+    :class="{ blur: !registered || editing }"
   >
 
     <Editor
-      v-if="(!registered || editing)" 
+      v-if="!registered || editing" 
       @stopEdit="editing = false"
     />
 
-    <header
-      v-if="true"
-    >
+    <nav :class="{ hidden: !desiresNav }">
 
-      <div 
-        v-if="!isMobile"
-        id="navTitle"
-      >
-        <span 
-          :class="[
-            'navToggle',
-            'hide',
-            { hidden: !nav }
-          ]"
-          @click.stop="nav = false"
-        > &lt;  </span>
-
-        <div class="navType">
-          <span 
-            :class="[
-              'map',
-              { selected: !desiresList }
-            ]"
-            @click.stop="desiresList = false"
-          > map </span>
-          <span 
-            :class="[
-              'list',
-              { selected: desiresList }
-            ]"
-            @click.stop="desiresList = true"
-          > list </span>
-        </div>
-        <span 
-          :class="[
-            'navToggle',
-            'show',
-            { hidden: nav }
-          ]"
-          @click.stop="nav = true"
-        > 
-           nav &gt; 
-        </span>
-      </div>
-
-      <div 
-        v-else
-        id="navTitle"
-      >
-        <span 
-          :class="[
-            'navToggle',
-            'hide',
-            { hidden: !nav }
-          ]"
-          @click.stop="nav = false"
-        > &lt; nav </span>
-        <span 
-          :class="[
-            'navToggle',
-            'show',
-            { hidden: nav }
-          ]"
-          @click.stop="nav = true"
-        > 
-           nav &gt; 
-        </span>
-      </div>
+      <NavHandle
+        :desiresNav="desiresNav"
+        @showNav="desiresNav = true"
+        @hideNav="desiresNav = false"
+        :desiresList="desiresList"
+        @showList="desiresList = true"
+        @showMap="desiresList = false"
+        :isMobile="isMobile"
+      />
 
       <Minilist 
         v-if="desiresList"
@@ -109,11 +48,14 @@
       <div
         v-else
         id="joinChat"
+        class="ui"
       >
-        <p>To join the discussion, please open this website on a larger screen.</p>
+        <p>
+          To join the discussion, please open this website on a larger screen.
+        </p>
       </div>
 
-    </header>
+    </nav>
 
     <div 
       id="userlandContainer" 
@@ -121,17 +63,17 @@
       :class="[
         { dragging: dragging },
       ]"
-
       @scroll.stop="setViewerPosition($event)"
       @keyup="handleInput($event)"
       @click="handleClick($event)"
     >
       
       <div id="location">
-        <span
+        <div
           @click="route(location.slug)"
-        > /{{location.slug}} 
-        </span>
+        > 
+          {{ location.slug }} 
+        </div>
       </div>
 
       <div 
@@ -146,8 +88,6 @@
         @mousemove="drag($event)"
         @mouseup.stop="dragRelease()"
       >
-
-        <Grid />
 
         <Territory
           v-for="territory in territories"
@@ -193,7 +133,7 @@
 
 import { mapState, mapGetters } from 'vuex'
 
-import Grid from './Grid'
+import NavHandle from './Nav/Handle'
 import Editor from './Options/Editor'
 import Minimap from './Nav/Mini/Map'
 import Options from './Options'
@@ -211,11 +151,11 @@ export default {
   name: 'Mainland',
 
   components: {
+    NavHandle,
     Editor,
     Minimap,
     Minilist,
     Options,
-    Grid,
     Cursorr,
     Message,
     Territory,
@@ -235,8 +175,7 @@ export default {
 
       moreInformation: null,
 
-
-      nav: true,
+      desiresNav: true,
       desiresList: true,   
       showParticipants: false,  
 
@@ -289,6 +228,7 @@ export default {
   },
 
   watch: {
+
     wantsToView(slug) {
       this.route(slug)
     },
@@ -304,6 +244,7 @@ export default {
         console.log('you: ', newMe.uid)
       }
     }
+
   },
 
   created() {   
@@ -315,13 +256,11 @@ export default {
 
     // if there is a slug, navigate to it.
 
-    // setTimeout(() => { 
-      if (this.wantsToView && this.wantsToView !== '/') {
-        this.route(this.wantsToView, 'smooth')
-      } else {
-        this.$router.push('reception')
-      }
-    // }, 50)
+    if (this.wantsToView && this.wantsToView !== '/') {
+      this.route(this.wantsToView, 'smooth')
+    } else {
+      this.$router.push('reception')
+    }
 
 
   },
@@ -434,7 +373,7 @@ export default {
       }
 
       if (this.isMobile) {
-        this.nav = false
+        this.desiresNav = false
       }
 
 
@@ -464,7 +403,8 @@ export default {
     handleMini(position) {
       this.scrollTo(
         position, 
-        this.miniDragging ? 'auto' : 'smooth')
+        this.miniDragging ? 'auto' : 'smooth'
+      )
     },
 
 
@@ -499,12 +439,15 @@ export default {
           y: this.windowPos.y - e.movementY
         }
         // console.log(e.clientX, this.windowSize.w)
-        // if (
-        //   e.clientX < this.windowSize.w &&
-        //   e.clientY < this.windowSize.h
-        // ) {
+        if (
+          (e.clientX > 0 && e.clientX < this.windowSize.w) ||
+          (e.clientY > 0 && e.clientY < this.windowSize.h)
+        ) {
         this.scrollTo(position)
-        // }
+        } else {
+          console.log('release')
+          this.dragRelease()        
+        }
 
 
         // store the position for 'intertial throwing'.
@@ -574,18 +517,6 @@ export default {
       this.$store.commit('setLocation', territory)
     },
 
-
-    // generate a random color.
-
-    randomColor() {
-      const 
-        r = Math.floor(Math.random() * 256),
-        g = Math.floor(Math.random() * 256),
-        b = Math.floor(Math.random() * 256),
-        a = 1
-      return `rgb(${r}, ${g}, ${b}, ${a})`
-    },
-
   },
   
   
@@ -595,16 +526,34 @@ export default {
 <style>
 
 main {
+  height: 100%; width: 100%;
   overflow: hidden;
 }
 
+main nav {
+  position: absolute;
+  box-sizing: border-box;
+  top: 0; left: 0;
+  height: 0px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  z-index: 2;
+  transition: all 0.2s ease;
+}
+
+main nav.hidden {
+  left: -50vw;
+}
+
+
+
 #location {
+  box-sizing: border-box;
   position: sticky;
-  top: 0;
-  left: 0;
-  height: 0;
+  top: 0; left: 0;
+  height: 0; width: 100%;
   overflow: visible;
-  width: 100%;
   z-index: 2;
   cursor: pointer;
   display: flex;
@@ -612,131 +561,35 @@ main {
   align-items: flex-start;
 }
 
-#location span {
+#location div {
+  box-sizing: border-box;
   margin: 1vh;
   padding: 0.5vh;
-  padding: 0.75vh 0.5vh;
-  height: auto;
-  border: none;
+  padding: 0.5vh 0.75vh 0.6vh 0.75vh;
+  font-family: 'jet';
   color: var(--ui-back);
   background: var(--ui-front);
-  font-family: 'jet';
   border-radius: var(--ui-border-radius);
   box-shadow: var(--ui-box-shadow);
 }
 
 
-header {
-  position: absolute;
-  box-sizing: border-box;
-  left: 0;
-  /* widt 0; */
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  z-index: 2;
-  /* transition: filter 0.3s ease; */
-  transition: all 0.2s ease;
-}
-
-header > div {
-  color: var(--ui-front);
-  background: var(--ui-back);
-  border: var(--ui-border);
-  border-radius: var(--ui-border-radius);
-  box-shadow: var(--ui-box-shadow);
-}
-
-.navHidden header {
-  left: -22vw;
-
-}
-
-#navTitle {
-  box-sizing: border-box;
-  position: relative;
-  margin-top: 1vh;
-  margin-left: 1vh;
-  /* padding: 0vh 0.5vh; */
-  font-size: 10pt;
-  display: flex;
-  align-items: stretch;
-  background: none;
-  border: none;
-  box-shadow: none;
-}
-
-#navTitle .navToggle,
-#navTitle .navType {
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  padding: 0vh 0.5vh;
-  background: var(--ui-back);
-  border: 1px solid grey;
-  border-radius: var(--ui-border-radius);
-  box-shadow: var(--ui-box-shadow);
-  z-index: 1;
-}
-#navTitle .navToggle {
-  margin-right: 1vh;
-  padding: 0vh 1vh;
-  transition: all 0.2s ease;
-}
-#navTitle .navToggle.hide {
-  /* z-index: 1; */
-  padding: 0.5vh 1vh;
-}
-#navTitle .navToggle.show {
-  position: fixed;
-  padding: 0.5vh 1vh;
-  left: 1vh;
-  z-index: 0;
-}
-#navTitle .navToggle.hidden {
-  opacity: 0;
-}
-
-#navTitle span {
-  cursor: pointer;
-  text-decoration: none;
-  padding: 0.5vh;
-}
-#navTitle .navType span.map {
-  border-right: 1px solid grey;
-}
-#navTitle .navType span.selected {
-  text-decoration: line-through;
-}
 
 #userlandContainer {  
-  cursor: none;
   position: absolute;
-  height: 100%;
-  width: 100%;
+  height: 100%; width: 100%;
   overflow: scroll;
   transition: filter 0.3s ease;
+  cursor: none;
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
 #userlandContainer::-webkit-scrollbar {
   display: none;
 }
-#userlandContainer.dragging {
-  /* cursor: grabbing; */
-  user-select: none;
-}
-.exhibition header,
-.exhibition #userlandContainer {
-  /* mix-blend-mode: exclusion; */
-  /* filter: invert(100%); */
-}
 #userland {
   position: absolute;
-  top: 0px;
-  left: 0px;
-  font-family: jet;
-  font-size: calc(1.7pt * var(--scale));
+  top: 0px; left: 0px;
   color: var(--ui-front);
   background: var(--ui-back);
   overflow: hidden;
@@ -744,41 +597,45 @@ header > div {
 #userland::before {
   content: '';
   position: absolute;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  height: 100%;
+  top: 0px; left: 0px;
+  width: 100%; height: 100%;
   background: 
     url("../../assets/textures/1.png") repeat 1000px
   , url("../../assets/textures/2.png") repeat 2000px
-  /* , url("../../assets/textures/favicon.png") repeat scroll */
   ;
-  /* background-position: center center; */
-  /* background-size: 400px; */
   overflow: hidden;
   opacity: 0.3;
 }
 
-.blur header,
-.blur #location,
-.blur #overlay,
-.blur #tickerContainer,
-.blur #userlandContainer {
+
+main.blur nav,
+main.blur #location,
+main.blur #overlay,
+main.blur #tickerContainer,
+main.blur #userlandContainer {
   filter: blur(10px);
   opacity: 0.5;
 }
 
-.mobile #location span {
-  font-size: 9pt;
+#userlandContainer.dragging {
+  user-select: none;
 }
 
-.mobile header {
+
+
+
+
+.mobile #location div {
+  padding: 0.65vh 0.75vh 0.8vh 0.75vh;
+}
+
+.mobile nav {
   width: 100%;
   align-items: stretch;
   padding-right: 1vh;
 }
 
-.mobile .navHidden header {
+.mobile nav.hidden {
   left: -100vw;
 }
 

@@ -63,17 +63,15 @@ export default {
 
 <style scoped>
 .miniMessageContainer {
-  padding-left: 20px;
+  padding-left: 1vh;
   display: flex;
   align-items: center;  
-
 }
 .miniMessageContainer .message {
   flex: 0 0 40%;
   width: 100%;
   box-sizing: border-box;
   padding: 0px 5px;
-  /* white-space: nowrap; */
   cursor: pointer;
   overflow: hidden;
 }
@@ -99,7 +97,7 @@ export default {
 .miniMessageContainer .goto {
   margin-left: auto;
   margin-right: 5px;
-  width: 2vw;
+  width: 1.5vh;
   cursor: pointer;
 }
 .miniMessageContainer .delete:hover {

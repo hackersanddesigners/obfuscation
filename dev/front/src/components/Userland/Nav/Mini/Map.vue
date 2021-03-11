@@ -1,25 +1,29 @@
 <template>
   <div 
     id="minimap"
-    :class="{ hovered: hovered || dragging }"
+    :class="[
+      'ui',
+      { hovered: hovered || dragging }
+    ]"
     :style="{
-      height: `${ height }px`,
+      minHeight: `${ height }px`,
       width: `${ width }px`
     }"
-
     @mouseover="hovered=true"
     @mouseout="hovered=false"
-
     @mousedown="mouseDown($event)"
     @mousemove="mouseMove($event)"
     @mouseup="mouseUp($event)"
   >
 
-    <Cursorr
-      v-for="user in users"
-      :key="user.uid"
-      :user="user"
-    />
+    <div class="terrContainer">
+      <Territory
+        v-for="territory in territories"
+        :key='territory.slug'
+        :hovered="hovered"
+        :territory="territory"
+      />
+    </div>
 
     <div class="messageContainer">
       <Message
@@ -30,6 +34,14 @@
     </div>
 
 
+    <div class="cursorContainer">
+      <Cursorr
+        v-for="user in users"
+        :key="user.uid"
+        :user="user"
+      />
+    </div>
+
     <Window
       id="viewport"
       :width="width / scale"
@@ -38,19 +50,8 @@
       :top="top / scale"
     />
 
-    <Territory
-      v-for="territory in territories"
-      :key='territory.slug'
-      :hovered="hovered"
-      :territory="territory"
-
-      @mousedown.native="handleTerrMouseDown($event)"
-      @mousemove.native="handleTerrMouseMove($event)"
-      @mouseup.native="handleTerrMouseUp($event, territory)"
-    />
-
     <div class="zoom">
-<!-- 
+
       <div class="in" 
         @mousedown.stop="$store.commit('zoomIn')"
         @mouseup.stop
@@ -59,7 +60,7 @@
       <div class="out" 
         @mousedown.stop="$store.commit('zoomOut')"
         @mouseup.stop
-      >-</div> -->
+      >-</div>
 
       <div class="zero" 
         @mousedown.stop="$emit('zero')"
@@ -142,30 +143,6 @@ export default {
       this.sendDesiredPosition(e)
     },
 
-    handleTerrMouseDown() {
-      // if (!this.miniDragging) {
-        // this.territoryDown = true
-        // e.stopPropagation()
-      // }
-    },
-
-    handleTerrMouseMove() {
-      // if (this.territoryDown) {
-      //   this.sendDesiredPosition(e)
-      //   this.$emit('startedDrag')
-      //   // e.stopPropagation()
-      // }
-    },
-
-    handleTerrMouseUp() {
-      // console.log(e)
-      // // if (!this.miniDragging) {
-      //   this.territoryDown = false
-      //   this.$router.push(`#${territory.slug}`)
-      //   e.stopPropagation()
-      // // }
-    },
-    
     sendDesiredPosition(e) {
       const 
         clickX = e.pageX - this.$el.offsetLeft,
@@ -176,7 +153,7 @@ export default {
         centerY = this.height / (2 * this.scale),
         y = (clickY - centerY) * this.zoomIndex
 
-      this.$emit('newPosition', {x,y})
+      this.$emit('newPosition', {x, y})
     },
 
   }
@@ -186,41 +163,40 @@ export default {
 </script>
 
 <style scoped>
+
 #minimap {
   margin-top: 1vh;
   margin-left: 1vh;
-  position: relative;
-  box-sizing: border-box;
-  color: var(--ui-front);
-  background: var(--ui-back);
-  border: 1px solid grey;
+  padding: 0;
   cursor: pointer;
   overflow: hidden;
   user-select: none;
 }
+
 #minimap .messageContainer {
-  width: 100%;
-  height: 100%;
+  width: 100%; height: 100%;
   cursor: inherit;
-  filter: blur(2px);
+  filter: blur(1px);
   opacity: 0.9;
   transition: all 0.2s ease;
+  z-index: 4;
 }
 #minimap.hovered .messageContainer {
-  transition: all 0.2s ease;
-  opacity: 1;
   filter: blur(0px);
+  opacity: 1;
+  transition: all 0.2s ease;
 }
+
 #minimap .zoom {
-  z-index: 1;
+  z-index: 10;
   box-sizing: border-box;
   position: absolute;
   right: 0px;
+  width: 24px;
   display: flex;
   justify-content: center;
   flex-direction: column;
   align-items: stretch;
-  width: 24px;
   font-size: 12pt;
   text-align: center;
   color: grey;

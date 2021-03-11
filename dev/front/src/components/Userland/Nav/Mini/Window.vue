@@ -23,14 +23,14 @@ export default {
 </script>
 
 <style scoped>
-#viewport {
+div {
   box-sizing: border-box;
   position: absolute;
   border: 1px solid;
   cursor: move;
-  z-index: 10;
+  z-index: 9;
 }
- #viewport:hover {
+div:hover {
   border-color: rgb(187, 187, 7);
 }
 </style>

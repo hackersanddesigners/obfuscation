@@ -281,9 +281,8 @@ export default {
   justify-content: center;
   align-items: center;
 }
-
 #loading .message {
-  font-family: jet;
+  font-family: 'jet';
 }
 
 </style>

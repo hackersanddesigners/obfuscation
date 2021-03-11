@@ -1,13 +1,9 @@
 <template>
   <div
-    v-if="!message.navigation && !message.stream && message.uid"
-    :class="[
-      'minimessage',
-    ]"
     :style="{ 
       left: `${ toNearestX(message.x, 0.4) }%`,
       top: `${ toNearestX(message.y, 0.4) }%`,
-      width: `${ message.content.length / 2 }px`,
+      width: `${ message.content.length / 1.5 }px`,
       '--userColor': `var(--${ message.authorUID })`,
     }"
   >
@@ -30,8 +26,8 @@ export default {
 }
 </script>
 
-<style>
-.minimessage {
+<style scoped>
+div {
   position: absolute;
   height: 1px;
   background: var(--userColor);

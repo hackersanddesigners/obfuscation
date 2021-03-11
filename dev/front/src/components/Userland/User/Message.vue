@@ -1,6 +1,5 @@
 <template>
   <div
-    v-if="!message.navigation && !message.stream && message.uid"
     :id="message.uid"
     :class="[
       'messageContainer',
@@ -100,7 +99,9 @@ export default {
   /* align-items: center; */
   cursor: text;
   filter: var(--blur);
-  transition: filter 0.2 ease;
+  transition: filter 0.2s ease;
+  font-family: jet;
+  font-size: calc(1.7pt * var(--scale));
   z-index: 1;
   color: var(--userColor);
   padding: 0px 5px;
@@ -160,7 +161,7 @@ export default {
 
 .messageContainer.hover {
   filter: blur(0px);
-  transition: filter 0.2 ease;
+  /* transition: filter 0.2s ease; */
 }
 .messageContainer.announcement .message {
   border: 1px dashed;

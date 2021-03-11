@@ -10,13 +10,12 @@
     @mouseout.stop="hover = false"
     @mouseup.stop="$router.push(href)"
   >
-    <div id="ticker">
-      <vue-markdown 
-        class="content"
-        ref="smarq"
-        inline
-        :style="{ transform: 'translateX(' + x + 'px)' }"
-      >
+    <div 
+      id="ticker"
+      ref="smarq"
+      :style="{ transform: 'translateX(' + x + 'px)' }"
+    >
+      <vue-markdown class="content" inline>
         {{ content }}
       </vue-markdown>
     </div>
@@ -24,7 +23,7 @@
 </template>
 
 <script>
-// import Smarquee from 'smarquee'
+import Smarquee from 'smarquee'
 
 export default {
   name: 'Ticker',
@@ -52,26 +51,29 @@ export default {
     }
   },
   watch: {
+    marquee() {
+      this.handleSmarquee()
+    }
   },
   mounted() {
 
-    // console.log(this.marquee)
+    this.smarquee = new Smarquee({
+      element: this.$refs.smarq,
+      iterationCount: 'infinite',
+      onAnimationStart() { console.log('smarquee start') },
+      onAnimationIterate() { console.log('smarquee loop') },
+      onAnimationEnd() { console.log('smarquee stop') },
+    })
+    this.smarquee.init()
+    this.handleSmarquee()
 
     setTimeout(() => {
-      // let smarquee = new Smarquee({
-      //   element: this.$refs.smarq,
-      //   iterationCount: 'infinite',
-      //   // playState: this.marquee ? 'running' : 'paused',
-      //   onAnimationStart() { console.log('smarquee start') },
-      //   onAnimationIterate() { console.log('smarquee loop') },
-      //   onAnimationEnd() { console.log('smarquee stop') },
-      // })
-      // smarquee.init()
-
-      this.href = 
-        document.querySelector('#ticker a')
-        .attributes.href.value
-      }, 2000)
+      const 
+         a = document.querySelector('#ticker a'),
+         href = a.attributes.href.value
+      this.href = href
+      a.addEventListener('click', e => e.preventDefault())
+    }, 2000)
 
    
   },
@@ -83,11 +85,19 @@ export default {
       }
     },
 
+    handleSmarquee() {
+      if (this.marquee) {
+        this.smarquee.play()
+      } else {
+        this.smarquee.pause()
+      }
+    }
+
   }
 }
 </script>
 
-<style scoped>
+<style>
 #tickerContainer {
   box-sizing: border-box;
   position: absolute;
@@ -118,14 +128,13 @@ export default {
 #ticker .content {
   text-align: center;
   overflow: visible;
-  /* font-weight: lighter; */
 }
 
-#tickerContainer #ticker .content a,
-#tickerContainer #ticker .content a:active,
-#tickerContainer #ticker .content a:hover,
-#tickerContainer #ticker .content a:visited {
-  color: var(--ui-front) !important;
+#ticker .content a,
+#ticker .content a:active,
+#ticker .content a:hover,
+#ticker .content a:visited {
+  color: var(--ui-front);
   text-decoration: none;
 }
 

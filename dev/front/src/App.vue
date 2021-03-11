@@ -108,14 +108,34 @@ export default {
 }
 
 :root {
+
+
+
+
+}
+
+html, body {
+  margin: 0; padding: 0;
+  height: 100%; width: 100%;
+  overflow: hidden;
+}
+
+#app {
+  height: 100%; width: 100%;
+  font-family: 'auth', Helvetica, Arial, sans-serif;
+  font-size: 9pt;
+  overflow: hidden;
+
   --disconnected: rgb(119, 119, 119);
 
-  --ui-border-radius: 7.5px;
   /* --ui-border-radius: 4px 7.5px 4px 7.5px; */
+  --ui-padding: 0.5vh;
   --ui-back: white;
   --ui-front: black;
-  --ui-box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.199);
+  --ui-font-size: 10pt;
   --ui-border: 1px solid grey;
+  --ui-border-radius: 7.5px;
+  --ui-box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.199);
 
   --island-curve: 10vh;
   --island-shadow: inset 0 0 1vh 0.5vh rgba(0, 0, 0, 0.267);
@@ -125,35 +145,31 @@ export default {
     url("assets/textures/1.png") repeat 100px
   , url("assets/textures/2.png") repeat 100px
   ;
-
-
-
 }
 
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
-}
-#app {
-  height: 100%;
-  width: 100%;
-  /* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; */
-  font-family: 'auth', Helvetica, Arial, sans-serif;
-  font-size: 9pt;
-  overflow: hidden;
-}
 a, a:hover, a:active, a:visited {
   color: blue;
 }
+
 h1 {
   font-weight: normal;
 }
 
+.ui {
+  box-sizing: border-box;
+  position: relative;
+  padding: var(--ui-padding);
+  background: var(--ui-back);
+  color: var(--ui-front);
+  font-size: var(--ui-font-size);
+  border: var(--ui-border);
+  border-radius: var(--ui-border-radius);
+  box-shadow: var(--ui-box-shadow);
+  transition: all 0.2s ease;
+}
 
 #app.mobile {
+  --ui-font-size: 12pt;
   font-size: 12pt;
 }
 

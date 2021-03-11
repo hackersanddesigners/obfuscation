@@ -309,17 +309,6 @@ const store = new Vuex.Store({
         'message', message
       )
     },
-    
-
-    // exceptional action, triggered for everyone
-    // if anyone clicks the 'delete everything'
-    // button. Development purposes only.
-
-    socket_clearDBs({ commit }) {
-      commit('setUsers', {})
-      commit('setMessages', {})
-      window.location.reload(true)
-    },
 
 
   },
@@ -422,21 +411,26 @@ const store = new Vuex.Store({
     },
 
     connectedUsersFirst: (state, getters) => {
-      return getters.notBlockedUsers.sort((a, b) => {
-        return a.connected === b.connected ? 0 : a.connected ? -1 : 1
-      })
+      return getters.notBlockedUsers.sort((a, b) => (
+        a.connected === b.connected ? 0 : a.connected ? -1 : 1
+      ))
     },
 
     notBlockedUsers: (state, getters) => {
-      return getters.notDeletedUsers.filter(u => u.blocked !== true)
+      return getters.notDeletedUsers.filter(u => !u.blocked)
     },
 
     notDeletedUsers: (state, getters) => {
-      return getters.usersArray.filter(u => u.deleted !== true)
+      return getters.usersArray.filter(u => !u.deleted)
     },
 
     notDeletedMessages: (state, getters) => {
-      return getters.messagesArray.filter(m => (m.deleted !== true && m.uid)) 
+      return getters.messagesArray.filter(m => (
+        m.uid && 
+        !m.deleted && 
+        !m.navigation &&
+        !m.stream
+      ))
     },
 
     usersArray: state => {

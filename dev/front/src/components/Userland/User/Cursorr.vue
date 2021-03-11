@@ -299,6 +299,7 @@ export default {
   justify-content: flex-end;
   align-items: flex-start;
   /* transition: all 0.2s ease; */
+  font-family: jet;
   color: var(--userColor);
   /* border: 0.5px solid black; */
   z-index: 1;

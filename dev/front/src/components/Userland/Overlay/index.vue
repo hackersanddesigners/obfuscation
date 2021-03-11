@@ -1,48 +1,37 @@
 <template>
   <div 
-    class="overlayContainer"
-    :class="{
-      visible: visible,
-    }"
-
-
+    :class="[
+      'overlayContainer',
+      { visible: visible },
+    ]"
   >
 
     <div id="infoTitle">
       <span 
         :class="[
-          'infoToggle',
-          'hide',
+          'ui', 'infoToggle', 'hide',
           { hidden: !visible }
         ]"
         @click.stop="handleClose"
       > hide &gt; </span>
       <span 
         :class="[
-          'infoToggle',
-          'show',
+          'ui', 'infoToggle', 'show',
           { hidden: visible }
         ]"
         @click.stop="!dragging ? visible = true : null"
       > 
-        <!-- &gt; -->
-          &lt; info
-          <!-- ⓘ -->
+        &lt; info
       </span>
     </div>
 
     <div 
       ref="overlay"
       :class="[
-        'overlay', content.slug
+        'ui', 'overlay', content.slug
       ]"
     >
-      <!-- <span 
-        class="close"
-        @click.stop="visible = hover = false"
-      >✕</span> -->
 
-      
       <div 
         v-if="!content.Sections"
         class="content"
@@ -81,10 +70,6 @@
 import moment from 'moment'
 import smoothHeight from 'vue-smooth-height'
 import Section from './Section'
-
-    // @mouseover="!dragging && peak ? hover = true : null"
-    // @mouseout="!dragging && peak ? hover = false : null"
-    // @mouseup="!dragging && peak && hover ? visible = true : null"
 
 export default {
   name: 'Overlay',
@@ -193,68 +178,40 @@ export default {
 </script>
 
 <style scoped>
+
 .overlayContainer {
-  cursor: auto;
   box-sizing: border-box;
   position: absolute;
-  top: 0;
-  /* top: 1vh; */
-  right: -600px;
-  min-width: 500px;
-  width: 40%;
-  max-width: 550px;
+  top: 0; right: -600px;
+  width: 550px;
   max-height: 750px;
   overflow: hidden;
   z-index: 2;
+  cursor: auto;
   transition: all 0.2s ease;
-
   display: flex;
   flex-direction: column;
 }
 .overlayContainer.visible {
   cursor: default;
   right: 0;
-  /* box-shadow: var(--ui-box-shadow); */
 }
-
 
 #infoTitle {
   box-sizing: border-box;
   position: relative;
   margin: 1vh;
-  font-size: 10pt;
   display: flex;
   align-items: stretch;
   justify-content: flex-end;
 }
-
-#infoTitle span {
-  cursor: pointer;
-  text-decoration: none;
-  padding: 0.5vh;
-}
-
 #infoTitle .infoToggle {
-  box-sizing: border-box;
   display: flex;
   align-items: center;
-  padding: 0vh 0.5vh;
-  color: var(--ui-front);
-  background: var(--ui-back);
-  border: 1px solid grey;
-  border-radius: var(--ui-border-radius);
-  box-shadow: var(--ui-box-shadow);
   z-index: 1;
+  cursor: pointer;
 }
-
-#infoTitle .infoToggle {
-  padding: 0.5vh 1vh;
-  transition: all 0.2s ease;
-}
-.infoToggle.hide {
-  /* z-index: 1; */
-}
- #infoTitle .infoToggle.show {
+#infoTitle .infoToggle.show {
   position: fixed;
   padding: 0.5vh 1vh;
   right: 1vh;
@@ -267,39 +224,8 @@ export default {
 .overlay {
   box-sizing: border-box;
   margin: 0vh 1vh 1vh 1vh;
-  /* height: 100%; */
-  /* width: 100%; */
-  color: var(--ui-front);
-  background: var(--ui-back);
-  box-shadow: var(--ui-box-shadow);
-  border-radius: var(--ui-border-radius);
-  border: var(--ui-border);
-  box-shadow: var(--ui-box-shadow);
+  padding: 0;
   overflow: scroll;
-  /* transition: height 2s ease; */
-}
-.overlayContainer .close {
-  position: sticky;
-  left: 3%;
-  top: 2%;
-  cursor: pointer;
-  font-size: calc(3.5pt * var(--scale));
-  opacity: 0;
-  transition: all 0.2s ease;
-}
-.overlayContainer.visible .close {
-  opacity: 1;
-}
-.overlay .header {
-  margin: 7%;
-}
-.overlay .header h3 { 
-  font-size: 15pt;
-  font-weight: normal;
-}
-.overlay .header h1 { 
-  font-size: 25pt;
-  font-family: 'zxx-noise';
 }
 
 #aanmelderContainer {
@@ -328,11 +254,9 @@ export default {
 }
 
 @media screen and (max-height: 730px) {
-
   .overlayContainer {
     max-height: 90vh;
   }
-  
 }
 
 </style>

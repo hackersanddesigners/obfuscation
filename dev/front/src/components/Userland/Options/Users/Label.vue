@@ -1,13 +1,7 @@
 <template>
   <li
-    :class="[
-      'userLabel',
-      user.uid,
-    ]"
-    :style="{ 
-      '--userColor': `var(--${ user.uid })`
-    }"
-
+    class="userLabel"
+    :style="{ '--userColor': `var(--${ user.uid })` }"
     @mouseover.stop="hovered=true"
     @mouseleave.stop="hovered=false"
   >
@@ -23,17 +17,17 @@
       class="moderatorOptions"
     >
       <span 
-        class="messages"
+        class="ui button messages"
         @click.stop="messagesVisible = !messagesVisible"
         >messages</span>
 
       <span 
-        class="block"
+        class="ui button block"
         @click.stop="$store.dispatch('blockUser', user)"
         >block</span>
 
       <span 
-        class="delete"
+        class="ui button delete"
         @click.stop="$store.dispatch('deleteUser', user)"
         >delete</span>
 
@@ -85,15 +79,38 @@ export default {
 </script>
 <style scoped>
 li {
-  list-style: none;
   padding: 0;
-  margin: 0.5vh 0.5vw;
+  margin: 0.5vh;
   display: flex;
   align-items: center;
   color: var(--userColor);
-  /* color: var(--ui-front); */
-  /* background: var(--ui-back); */
+}
+
+li span {
+  margin-right: 0.5vh;
+}
+li .name {
+  width: 100%;
+  max-width: 200px;
   cursor: pointer;
+}
+li .goto {
+  margin-left: auto;
+  width: 1.5vh;
+  cursor: pointer;
+}
+
+li .moderatorOptions {
+  display: flex;
+}
+li .moderatorOptions .button {
+  padding: 0.2vh 0.5vh;
+  font-size: 8.5pt;
+  color:grey;
+  border: 0.5px solid grey;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: none;
 }
 
 .moderating li {
@@ -110,34 +127,5 @@ li {
   margin-top: 5px;
   width: 100%;
   padding:5px 0px;
-}
-
-li span {
-  margin-right: 0.5vw;
-}
-li .name {
-  width: 100%;
-  max-width: 200px;
-}
-li .moderatorOptions {
-  display: flex;
-  width: 100px;
-  justify-content: space-around;
-}
-li .moderatorOptions span {
-  background: rgb(245, 245, 245);
-  color:grey;
-  font-family: sans-serif;
-  font-size: 8.5pt;
-  font-weight: normal;
-  border: 0.5px solid lightgray;
-  padding: 2px 10px;
-  border-radius: 10px;
-  cursor: pointer;
-}
-li .goto {
-  margin-left: auto;
-  width: 2vw;
-  cursor: pointer;
 }
 </style>

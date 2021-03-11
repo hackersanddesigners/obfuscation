@@ -124,13 +124,12 @@ section {
   margin: 2vh;
 }
 section a {
-  /* text-decoration: underline; */
 }
 section .header {
 }
 section .header h3 { 
-  font-size: 15pt;
-  font-weight: normal;
+  /* font-size: 15pt; */
+  /* font-weight: normal; */
 }
 section .header h1 { 
   font-size: 25pt;

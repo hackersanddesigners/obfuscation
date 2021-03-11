@@ -1,13 +1,19 @@
 <template>
   <div
     id="userlist"
-    :class="{ moderating: moderating }"
+    :class="[
+      'ui',
+      { moderating: moderating }
+    ]"
   >
+
     <div class="title"> 
       <span
         class="hideParticipants"
         @click="$emit('hide')"
-      >participants</span>
+      >
+        participants
+      </span>
       <div id="moderate">
         <span 
           class="moderateButton"
@@ -32,6 +38,7 @@
         />
       </div>
     </div>
+
     <ul>
       <Label
         v-for="user in connectedUsersFirst"
@@ -40,11 +47,11 @@
         :isMe="user.uid === me.uid"
         :moderating="moderating"
         :messages="messagesByUser(user)"
-
         @goTo="$emit('goTo', $event)"
         @click.native.stop="$emit('goTo', user)"
       />
     </ul>
+    
   </div>
 </template>
 
@@ -98,55 +105,45 @@ export default {
 <style scoped>
 
 #userlist {
-  box-sizing: border-box;
-  /* margin-top: 1vh; */
-  /* min-width: 10vw; */
-  max-width: 14vw;
+  margin-top: 1vh;
+  padding: 0;
   max-height: 300px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  border-radius: inherit;
-  font-size: 10pt;
-
 }
 #userlist.moderating {
-  max-width: unset;
+  /* max-width: unset; */
 }
+
 #userlist .title {
   box-sizing: border-box;
-  flex: 0 0;
-  box-sizing: border-box;
-  padding: 0.25vh 0.75vh;
-  line-height: 1.9vh;
-  width: 100%;
   display: flex;
-  align-items: center;
+  align-items: stretch;
   border-bottom: 1px solid grey;
 }
 #userlist .title .hideParticipants {
+  padding: 0.5vh;
   cursor: pointer;
 }
-
-
-#moderate {
+#userlist .title #moderate {
   margin-left: auto;
-  flex-shrink: 0;
   cursor: pointer;
-}
-#moderate .moderateButton {
-  padding: 0vh 0.5vw;
-  padding-left: 0.5vw;
-  margin-left: 1vw;
+  display: flex;
+  align-items: center;
   border-left: 1px solid grey;
 }
-#moderate input {
+#userlist .title #moderate .moderateButton,
+#userlist .title #moderate .moderateButton span {
+  padding: 0.5vh;
+}
+#userlist .title #moderate input {
+  width: 65px;
   border: none;
   outline: none;
-  padding: 2px;
-  border-radius: 10px;
-  margin-top: 0px;
+  padding-bottom: 4px;
 }
+
 #userlist ul { 
   margin: 0;
   padding: 0;
