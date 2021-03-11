@@ -62,6 +62,7 @@ export default {
   max-width: 70%;
   display: flex;
   flex-direction: column;
+  align-content: start;
   align-items: center;
 }
 </style>

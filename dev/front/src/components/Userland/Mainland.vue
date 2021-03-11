@@ -26,7 +26,7 @@
 
       <Minilist 
         v-if="desiresList"
-        @goTo="scrollTo(centerOf($event),'smooth')"
+        @goTo="route($event, false, false, true)"
       />
 
       <Minimap 
@@ -86,7 +86,7 @@
         }"
         @mousedown.stop="dragging = true"
         @mousemove="drag($event)"
-        @mouseup.stop="dragRelease()"
+        @mouseup.stop="dragging = false"
       >
 
         <Territory
@@ -120,16 +120,20 @@
     />
 
     <Overlay
+      v-if="moreInformation"
       id="overlay"
       :dragging="dragging"
-      :wantsToView="moreInformation"
+      :content="moreInformation"
+      :desiresOverlay="desiresOverlay"
+      :isGeneral="location.slug === 'general'"
+      @showOverlay="desiresOverlay = true"
+      @hideOverlay="handleOverlayClose"
     />
 
   </main>
 </template>
 
 <script>
-
 import { mapState, mapGetters } from 'vuex'
 
 import NavHandle from './Nav/Handle'
@@ -169,20 +173,17 @@ export default {
   data () {
     return { 
       
-      socketsReady: false,
-
-      moreInformation: null,
+      moreInformation: {},
+      secondPath: false,
 
       desiresNav: true,
-      desiresList: true,   
-      showParticipants: false,  
+      desiresList: true, 
+      desiresOverlay: true,  
 
       editing: false,
       scrolling: false,
       dragging: false,
       miniDragging: false,
-
-      movement: {},
 
     }
   },
@@ -196,9 +197,11 @@ export default {
 
       'users',
       'messages',
-      'territories',
 
+      'territories',
       'location',
+      'general',
+
       'isMobile',
       'scale',
       'windowPos',
@@ -211,6 +214,7 @@ export default {
       'isMe',
 
       'territoryByBorders',
+      'territoryBySlug',
       'userByName',
 
       'userColors',
@@ -231,9 +235,11 @@ export default {
       this.route(slug)
     },
 
-    location(newLoc, oldLoc) {
-      if (newLoc.slug !== oldLoc.slug) {
-        // console.log(this.location)
+    location(newLocation, oldLocation) {
+      if (newLocation.slug !== oldLocation.slug) {
+        if (!this.secondPath) {
+          this.$router.push('/' + this.location.slug)
+        }
       }
     },
 
@@ -297,7 +303,7 @@ export default {
 
     // custom router.
 
-    route(slug, behavior, pause) {
+    route(slug, behavior, pause, force) {
 
       slug = 
         slug.startsWith('/') ?
@@ -307,7 +313,8 @@ export default {
       let
         name = slug.split('/')[0],
         page = slug.split('/')[1],
-        position
+        position,
+        content
 
       console.log(name, page)
       
@@ -316,10 +323,10 @@ export default {
       
       if (slug.startsWith('~') ) {
         const user = this.userByName(name)
-        if (user) {
-          position = this.positionOf(user)
-        } else {
+        if (!user) {
           console.log('user not found')
+        } else {
+          position = this.positionOf(user)
         }
 
 
@@ -327,54 +334,64 @@ export default {
 
       } else {
         const territory = this.territories[name]
-        if (territory) {
-          position = this.centerOf(territory.borders)
-        } else {
+        if (!territory) {
           console.log('territory not found')
+        } else {
+          position = this.centerOf(territory.borders)
+          content = territory
+
+      
+          // routing to pages
+
+          if (page) {
+            this.secondPath = true
+            position = this.positionOfIsland(page)
+            content = this.territories[name].content[page]
+
+            setTimeout(() => {
+              this.secondPath = false
+            }, 1000)
+
+          }
+
         }
-      }
 
+      }        
+      
+      // scroll action
 
-      // first scroll action
-
-      if (this.location.slug !== name) {
+      if (force || this.location.slug !== name || page) {
         setTimeout(() => {
           this.scrollTo(position, behavior || 'smooth')
         }, pause || 0)
-      } else {
-        pause = 10
       }
 
+      
+      // setting overlay content
 
-      // routing to pages
-
-      if (page) {
-
-        // check if paage exists
-
-        const islandPos = this.positionOfIsland(page)
-        if (islandPos) {
-        
-
-        // second scroll action
-
-          setTimeout(() => {
-            this.scrollTo(islandPos, behavior || 'smooth')
-            this.moreInformation = { 
-              name: name,
-              page: page
-            }
-          }, pause || 300 || 0)
-
-        }
-
-      }
+      this.moreInformation = content
 
       if (this.isMobile) {
         this.desiresNav = false
+        this.desiresOverlay = false
+      } else {
+        if (name === 'general') {
+          this.desiresOverlay = false
+        } else {
+          this.desiresOverlay = true        
+        }
       }
 
 
+    },
+
+    handleOverlayClose() {
+      if (this.$router.history.current.path.split('/')[2]) {
+        this.$router.push('/' + this.location.slug)
+      }
+      setTimeout(() => {
+        this.desiresOverlay = false
+      }, 10)
     },
 
 
@@ -436,7 +453,6 @@ export default {
           x: this.windowPos.x - e.movementX,
           y: this.windowPos.y - e.movementY
         }
-        // console.log(e.clientX, this.windowSize.w)
         if (
           (e.clientX > 0 && e.clientX < this.windowSize.w) ||
           (e.clientY > 0 && e.clientY < this.windowSize.h)
@@ -444,35 +460,13 @@ export default {
         this.scrollTo(position)
         } else {
           console.log('release')
-          this.dragRelease()        
+          this.dragging = false        
         }
 
 
-        // store the position for 'intertial throwing'.
-
-        // this.movement = {
-        //   x: position.x,
-        //   y: position.y,
-        //   extraX: 10 * e.movementX,
-        //   extraY: 10 * e.movementY,
-        // }
       }
     },
 
-
-    // 'intertial throwing' function.
- 
-    dragRelease() {
-      this.dragging = false
-      // if (Math.abs(this.movement.extraX) > 0) {
-      //   this.scrollTo({
-      //     x: this.movement.x - this.movement.extraX,
-      //     y: this.movement.y - this.movement.extraY
-      //   }, 'smooth')
-      //   this.movement.extraX -= 0.1
-      //   this.movement.extraY -= 0.1
-      // }
-    },
 
 
     // core of app navigation is this following:
@@ -513,6 +507,7 @@ export default {
 
       this.$store.commit('viewerPosition', pos)
       this.$store.commit('setLocation', territory)
+
     },
 
   },

@@ -39,6 +39,10 @@ const store = new Vuex.Store({
     // territories are defined in Strapi.
 
     territories: {},
+    general: {
+      name: 'general',
+      slug: 'general'
+    },
     location: {},
 
 
@@ -342,10 +346,6 @@ const store = new Vuex.Store({
 
     territoryByBorders: (state, getters) => pos => {
       let 
-        general = {
-          name: 'general',
-          slug: 'general'
-        },
         diff = 0.5 / state.scale,
         coords = getters.coordsFrom(pos),
         found = getters.territoriesArray.find((territory) => {
@@ -373,7 +373,7 @@ const store = new Vuex.Store({
           //   console.log('**********************************')
           // }
         }) 
-      return found || general
+      return found || state.general
     },
 
     messagesByUser: state => user => {

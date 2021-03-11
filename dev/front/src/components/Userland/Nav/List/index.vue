@@ -29,16 +29,18 @@ export default {
   methods: {
 
     handleTerritoryClick(territory) {
-      const current = this.$router.history.current.path.slice(1)
-      const next = territory.slug
+      // this.$emit('goTo', territory.borders)
+      this.$emit('goTo', territory.slug)
+      // const current = this.$router.history.current.path.slice(1)
+      // const next = territory.slug
       
-      console.log(current, next)
+      // // console.log(current, next)
 
-      if (current === next) {
-        this.$emit('goTo', territory.borders)
-      } else {
-        this.$router.push(`/${next}`)
-      }
+      // if (current === next) {
+      //   this.$emit('goTo', territory.borders)
+      // } else {
+      //   this.$router.push(`/${next}`)
+      // }
     }
 
   }

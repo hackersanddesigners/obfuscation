@@ -78,9 +78,19 @@ const api = {
       return new Promise ((resolve, reject) => {
         const query = this.resolveQueryFromRegion(slug)
         if (query) {
+          const content = {}
           axios
             .get(apiURL + query)
-            .then((response) => { resolve(response.data) })
+            .then((response) => { 
+              if (slug === 'timetable') {
+                resolve(response.data)
+              }
+              for (let c = 0; c < response.data.length; c++) {
+                const page = response.data[c]
+                content[page.slug] = page
+              }
+              resolve(content) 
+            })
             .catch((error) => { reject(error) })
         } else {
           resolve(null)

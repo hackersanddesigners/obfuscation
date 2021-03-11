@@ -2,7 +2,8 @@
   <div 
     :class="[
       'overlayContainer',
-      { visible: visible },
+      { visible: desiresOverlay },
+      { hidden: isGeneral }
     ]"
   >
 
@@ -10,16 +11,16 @@
       <span 
         :class="[
           'ui', 'infoToggle', 'hide',
-          { hidden: !visible }
+          { hidden: !desiresOverlay }
         ]"
-        @click.stop="handleClose"
+        @click.stop="$emit('hideOverlay')"
       > hide &gt; </span>
       <span 
         :class="[
           'ui', 'infoToggle', 'show',
-          { hidden: visible }
+          { hidden: desiresOverlay }
         ]"
-        @click.stop="!dragging ? visible = true : null"
+        @click.stop="!dragging ? $emit('showOverlay') : null"
       > 
         &lt; info
       </span>
@@ -51,10 +52,13 @@
           :section="section"
         />
         <div 
-          v-if="register"
+          v-if="isRegister"
           id="aanmelderContainer"
         >
-          <a href="https://www.aanmelder.nl/wo2021/subscribe">
+          <a 
+            id="backupLink"
+            href="https://www.aanmelder.nl/wo2021/subscribe"
+          >
             Register online for the event.
           </a>
           <div id="AanmelderRootDiv"></div>
@@ -67,112 +71,65 @@
 </template>
 
 <script>
-import moment from 'moment'
 import smoothHeight from 'vue-smooth-height'
 import Section from './Section'
 
 export default {
+
   name: 'Overlay',
-  components: {
-    Section
-    },
+
+  components: { Section },
+
   props: [
     'dragging',
-    'wantsToView'
+    'content',
+    'isGeneral',
+    'desiresOverlay'
   ],
+
   mixins:[ smoothHeight ],
+
   data() {
     return {
-      moment: moment,
-
-      content: {},
-      type: null,
-      register: false,
-      info: true,
-      visible: false
+      isRegister: false,
     }
   },
+
   computed: {
-    location() { return this.$store.state.location },
-    isMobile() { return this.$store.state.isMobile },
-    territoryBySlug() { return this.$store.getters.territoryBySlug },
   },
+
   watch: {
-    location (newLocation, oldLocation) {
-      if (newLocation.slug !== oldLocation.slug) {
-
-        if (this.location.slug !== 'general') {
-          this.content = this.territoryBySlug(this.location.slug)
-          if (!this.isMobile) {
-            this.visible = true
-          }
-        } else {
-          this.visible = false
-        }
-
-      }
-    },
-
-    wantsToView(newSlug) {
-      const 
-        terrName = newSlug.name,
-        collection = 
-          terrName === 'reception' ? 'statics' :
-          terrName === 'timetable' ? 'sessions' :
-          terrName === 'exhibition' ? 'videos' :
-          terrName === 'glossary' ? 'glossaries' :
-          null,
-        query = collection + '?slug=' + newSlug.page
-      
-      this.updateContent(query)
-      // this.visible = this.peak = true
+    content() {
+      this.handleAanmelder()
     }
-
   },
+
   mounted() {
+
     this.$smoothElement({
       el: this.$refs.overlay,
       hideOverflow: true,
       transition: 'height 0.2s ease'
     })
+
+    this.handleAanmelder()
   },
+
   methods: {
 
-    updateContent(query) {
-      this.$http.get(`${ this.$apiURL }/${ query }`)
-
-        .then((response) => { 
-          this.content = response.data[0] 
-          // console.log(this.content)
-
-          if (this.content.slug === 'register') {
-            this.register = true
-            let aanmelder = document.createElement('script')
-            aanmelder.setAttribute('src', 
-              'https://www.aanmelder.nl/115987/xsembed?auth=UB-PSIJLXsgRsW62W1FtPyhMMTE1OTg3TApWRU1CRURVUkxDSEVDSwpwMAp0cDEKLg..'
-            )
-            document.head.appendChild(aanmelder)
-          
-          } else {
-            this.register = false
-          }
-          this.visible = true
-        })
-
-        .catch((error) => { 
-          console.log(error)
-        })
+    handleAanmelder() {
+      if (this.content.slug === 'register') {
+        this.isRegister = true
+        let aanmelder = document.createElement('script')
+        aanmelder.setAttribute('src', 
+          'https://www.aanmelder.nl/115987/xsembed?auth=UB-PSIJLXsgRsW62W1FtPyhMMTE1OTg3TApWRU1CRURVUkxDSEVDSwpwMAp0cDEKLg..'
+        )
+        document.head.appendChild(aanmelder)
+      } else {
+        this.isRegister = false
+      }
     },
 
-    handleClose() {
-      if (this.$router.history.current.path.split('/')[2]) {
-        this.$router.push('/' + this.location.slug)
-      }
-      this.visible = false
-      setTimeout(() => {
-        this.content = this.territoryBySlug(this.location.slug)
-      }, 500)
-    }
   }
 }
 </script>
@@ -195,6 +152,10 @@ export default {
 .overlayContainer.visible {
   cursor: default;
   right: 0;
+}
+.overlayContainer.hidden {
+  right: -100vw;
+  opacity: 0;
 }
 
 #infoTitle {
@@ -230,6 +191,9 @@ export default {
 
 #aanmelderContainer {
   border-top: 1px solid black;
+}
+#backupLink {
+  margin: 2vh;
 }
 #AanmelderCSS {
 }
