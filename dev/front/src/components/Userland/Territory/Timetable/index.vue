@@ -20,13 +20,24 @@
     >
       <div class="date">{{ cuteDate(day.date) }}</div>
       <div class="sessionsContainer">
-        <Island
+        <div 
+          class="islandContainer"
           v-for="session in day.sessions"
           :key="session.slug"
-          :id="session.slug + 'Island'"
-          :session="session"
-          @mouseup.native="handleIslandClick(session)"
-        />
+          :style="{
+            height: sizeByDuration(session),
+          }"
+        >
+          <div class="time">
+            <span class="start">{{ start(session) }}</span>
+            <span class="end"> {{ end(session) }}</span>
+          </div>
+          <Island
+            :id="session.slug + 'Island'"
+            :session="session"
+            @mouseup.native="handleIslandClick(session)"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -97,6 +108,36 @@ export default {
       return this.getDay(session.Start) === day
     },
 
+    sizeByDuration(session) {
+      const 
+        UnixStart = this.getUnixTime(session.Start),
+        UnixEnd = this.getUnixTime(session.End),
+        duration = UnixEnd - UnixStart,
+        factor = this.isBreak(session) ? 8 : duration / 400000,
+        size = `calc(${ factor } * var(--one))`
+      return size
+    },
+
+    start(session) { 
+      return this.getHumanTime(session.Start) 
+    },
+    end(session) { 
+      return this.getHumanTime(session.Ens) 
+    },
+
+    isBreak(session) {
+      // return this.session.Title.toLowerCase().includes('break')
+      return !session.Description || session.Description.length === 0
+    },
+
+    getHumanTime(date) { 
+      return moment(date).format('HH:mm')
+    },
+
+     getUnixTime(date) { 
+      return moment(date).format('x')
+    },
+
     getDay(date) { 
       return moment(date).format('D')
     },
@@ -113,19 +154,26 @@ export default {
 <style scoped>
 .timetable {
   box-sizing: border-box;
-  margin-left: calc(25 * var(--one));
-  margin-top: calc(20 * var(--one));
-  max-width: 100%;
+  padding-left: calc(10 * var(--one));
+  padding-top: calc(20 * var(--one));
+  width: 100%;
+  height: 100%;
   display: flex;
-  /* flex-direction: column; */
-  justify-content: stretch;
+  flex-direction: column;
+  flex-wrap: wrap;
+  /* justify-content: stretch; */
+  /* justify-content: center; */
+  align-items: flex-start;
+  align-content: flex-start;
 }
 
 #timeZone {
   position: absolute;
   top: calc(10 * var(--one));
+  left: calc(50 * var(--one));
 }
 #timeZone h3 {
+  font-size: calc(3pt * var(--scale));
   margin: 0;
 }
 #timeZone h3.toggle {
@@ -134,15 +182,20 @@ export default {
 }
 
 .timetable .day  {
+  /* flex: 1 0 auto; */
+  max-width: calc(60 * var(--one));
   margin-bottom: calc(10 * var(--one));
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  flex-wrap: wrap;
+  /* align-items: flex-start; */
+  align-items: center;
+  align-content: center;
   z-index: 1;
 }
 
 .timetable .day .date {
-  margin: 0 calc(1.5 * var(--one));
+  margin: calc(5 * var(--one));
   font-size: calc(8pt * var(--scale));
   font-family: sans-serif;
   font-weight: lighter;
@@ -151,12 +204,44 @@ export default {
 .timetable .day .sessionsContainer {
   margin-left: calc(4 * var(--one));
   /* width: 100%; */
-  height: 100%;
+  /* height: 100%; */
   display: flex;
-  /* flex-direction: column; */
-  align-items: flex-start;
+  flex-direction: column;
+  /* align-items: flex-start; */
+  align-items: center;
   align-content: flex-start;
   flex-wrap: wrap;
+}
+.timetable .day .sessionsContainer .islandContainer {
+  box-sizing: border-box;
+  position: relative;
+  width: 100%;
+  margin: calc(1 * var(--one));
+  /* margin-top: calc(8 * var(--one)); */
+  /* margin-top: calc(3 * var(--one)); */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.timetable .day .sessionsContainer .islandContainer .time  {
+  position: absolute;
+  left: calc(-3 * var(--one));
+  top: calc(-2 * var(--one));
+  /* width: 100%; */
+  height: 100%;
+  display: flex;
+  font-size: calc(4pt * var(--scale));
+  font-family: sans-serif;
+  pointer-events: none;
+
+}
+.timetable .day .sessionsContainer .islandContainer .time .end {
+  position: absolute;
+  bottom: calc(-3 * var(--one));
+  display: none;
+}
+.timetable .day .sessionsContainer .islandContainer:last-of-type .time .end {
+  display: block;
 }
 
 </style>

@@ -243,6 +243,10 @@ export default {
       }
     },
 
+    scale() {
+      this.route('/~' + this.me.name, 'auto')    
+    },
+
     me(newMe, oldMe) {
       if (oldMe && newMe.uid !== oldMe.uid) {
         console.log('you: ', newMe.uid)
@@ -340,7 +344,7 @@ export default {
       // routing to users
       
       if (slug.startsWith('~') ) {
-        const user = this.userByName(name)
+        const user = this.userByName(name.replace('~',''))
         if (!user) {
           console.log('user not found')
         } else {

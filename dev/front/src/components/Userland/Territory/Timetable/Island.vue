@@ -4,16 +4,7 @@
       'island',
       { break: isBreak }
     ]"
-    :style="{
-      height: `${ getWidth() }%`,
-    }"
   >
-    
-    <div class="time">
-      <span class="start">{{ start }}</span>
-      <span class="end"> {{ end }}</span>
-    </div>
-
     <div class="info">
     
       <div class="header">
@@ -24,7 +15,7 @@
         </h1>
       </div>
 
-      <h3 
+      <!-- <h3 
         class="body"
         v-if="hosts.length > 0"
       >
@@ -55,7 +46,7 @@
           </span>
         </span>
 
-      </h3>
+      </h3> -->
 
     </div>
 
@@ -71,7 +62,6 @@
 </template>
 
 <script>
-import moment from 'moment'
 import BBBLink from './BBBLink'
 
 export default {
@@ -83,10 +73,7 @@ export default {
     }
   },
   computed: {
-    start() { return this.getHumanTime(this.session.Start) },
-    end() { return this.getHumanTime(this.session.End) },
-    time() { return `${ this.start } — ${ this.end }` },
-    soon() { return this.getUnixTime(this.session.Start) - new Date() < 90000 },
+    // soon() { return this.getUnixTime(this.session.Start) - new Date() < 90000 },
     hosts() { return this.session.hosts },
     moderators() { return this.session.moderators },
     isBreak() {
@@ -97,27 +84,6 @@ export default {
   created() {
   },
   methods: {
-
-    getWidth() {
-      const 
-        UnixStart = this.getUnixTime(this.session.Start),
-        UnixEnd = this.getUnixTime(this.session.End),
-        duration = UnixEnd - UnixStart,
-        width = this.isBreak ? 5 : duration / 400000
-      return width
-    },
-
-    getHumanTime(date) { 
-      return moment(date).format('HH:mm')
-    },
-
-    getUnixTime(date) { 
-      return moment(date).format('x')
-    },
-
-    isLast(person, people) {
-      return people.indexOf(person) === people.length - 1
-    }
   }
 
 }
@@ -125,16 +91,10 @@ export default {
 
 <style scoped>
 .island {
-  min-width: calc(20 * var(--one));
-  min-height: calc(20 * var(--one));
-  max-width: 50%;
-  margin: 1.25vh 1.25vw;
-  margin: 
-    calc(1.25 * var(--one))
-    calc(1.25 * var(--one))
-  ;
-  margin-top: calc(8 * var(--one));
+  height: 100%;
+  max-width: 80%;
   display: flex;
+  /* align-items: center; */
 }
 
 .island:hover {
@@ -150,25 +110,6 @@ export default {
   overflow: hidden;
 }
 
-.island .time  {
-  position: absolute;
-  top: calc(-5 * var(--one));
-  left: calc(-4 * var(--one));
-  width: 100%;
-  display: flex;
-  font-size: calc(5pt * var(--scale));
-  font-family: sans-serif;
-  pointer-events: none;
-
-}
-.island .time .end {
-  position: absolute;
-  right: calc(-10 * var(--one));
-  display: none;
-}
-.island:last-of-type .time .end {
-  display: block;
-}
 .island .body {
   margin-top: unset;
   max-width: calc(35 * var(--one));
@@ -180,15 +121,15 @@ export default {
 .island.break {
 }
 .island.break .info {
-  position: absolute;
+  /* position: absolute;
   padding: 
     calc(3 * var(--one))
     calc(5 * var(--one))
     calc(3 * var(--one))
     calc(3 * var(--one))
-  ;
+  ; */
 }
 .island.break .body .BBB-container .BBB {
-  margin-bottom: calc(1 * var(--one));
+  /* margin-bottom: calc(1 * var(--one)); */
 }
 </style>
