@@ -62,7 +62,6 @@
       :class="[
         { dragging: dragging },
       ]"
-      @scroll.stop="setViewerPosition($event)"
       @keyup="handleInput($event)"
       @click="handleClick($event)"
     >
@@ -146,6 +145,7 @@ import Minilist from './Nav/List/'
 import Ticker from './Ticker/'
 import Overlay from './Overlay/'
 
+      // @scroll.stop="setViewerPosition($event)"
 
 export default {
 
@@ -183,6 +183,9 @@ export default {
       scrolling: false,
       dragging: false,
       miniDragging: false,
+
+      lastScrollX: 0,
+      lastScrollY: 0,
 
     }
   },
@@ -295,6 +298,13 @@ export default {
     })
 
     this.handleLinks('.message a')
+
+    // this.currentX = 0
+    // this.currentY = 0
+
+    this.$refs.userlandContainer.addEventListener('scroll', (e) => {
+      this.setViewerPosition(e)
+    })
 
 
   },
@@ -517,6 +527,7 @@ export default {
     // left corner of the (larger) userland div. 
 
     setViewerPosition() {
+
       const
         pos = {
           x: this.$refs.userlandContainer.scrollLeft,
@@ -526,6 +537,24 @@ export default {
 
       this.$store.commit('viewerPosition', pos)
       this.$store.commit('setLocation', territory)
+
+      const 
+        deltaScrollX = pos.x - this.lastScrollX,
+        deltaScrollY = pos.y - this.lastScrollY,
+        currPos = {
+          x: this.me.x * this.windowSize.w * this.scale,
+          y: this.me.y * this.windowSize.h * this.scale
+        },
+        mePos = {
+          x: (currPos.x + deltaScrollX) / (this.windowSize.w * this.scale),
+          y:(currPos.y + deltaScrollY) / (this.windowSize.h * this.scale)
+        }
+      
+      
+      this.$store.dispatch('updatePosition', mePos)
+
+      this.lastScrollX = pos.x
+      this.lastScrollY = pos.y
 
     },
 
