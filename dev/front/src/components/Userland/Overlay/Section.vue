@@ -83,13 +83,17 @@ export default {
           this.section.body || 
           this.section.Description ||
           this.section.description ||
+          this.section.Bio ||
           this.section.Definition || ''
         )
       )
     },
 
     getSource() {
-      return this.section.Source
+      return (
+        this.section.Source ||
+        this.section.link
+      )
     },
 
     processBody(text) {

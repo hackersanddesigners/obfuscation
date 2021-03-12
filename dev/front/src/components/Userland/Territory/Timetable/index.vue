@@ -1,5 +1,18 @@
 <template>
   <div>
+    <div id="timeZone">
+      <h3>Sessions are displayed in timezone: {{ timeZone }}.</h3>
+      <h3
+        v-if="!isInDefaultTimeZone"
+        class="toggle"
+        @click.stop="toggleTimezone"
+      > {{ 
+            desiresOwnTimezone ?
+            `View sessions in ${ defaultTimeZone } time.` :
+            `View sessions in ${ ownTimeZone } time.`
+        }}
+      </h3>
+    </div>
     <div 
       v-for="day in contentByDays"
       :key="getDay(day.date)"
@@ -27,14 +40,37 @@ export default {
   name: 'Timetable',
   components: { Island },
   props: [ 'content' ],
+  data() {
+    return {
+      // defaultTimeZone: "Europe/Amsterdam",
+      defaultTimeZone: "Australia/Sydney",
+      ownTimeZone: moment.tz.guess(),
+      desiresOwnTimezone: false,
+      contentByDays: {}
+    }
+  },
   computed: {
+    timeZone() { return this.desiresOwnTimezone ? this.ownTimeZone : this.defaultTimeZone },
+    isInDefaultTimeZone() { return this.ownTimeZone === this.defaultTimeZone },
+  },
+  created() {
+    moment.tz.setDefault(this.defaultTimeZone)
+    this.orderContentByDays()
+  },
+  methods: {
 
-    contentByDays() {
+    handleIslandClick(section) {
+      const current = this.$router.history.current.path
+      const next = `/timetable/${section.slug}`
+      
+      if (current === next) {
+        this.$emit('moreInfo', next)
+      } else {
+        this.$router.push(`${next}`)
+      }
+    },
 
-      // moment.tz.setDefault("America/New_York")
-      // moment.tz.setDefault("Asia/Tokyo")
-      // moment.tz.setDefault("Australia/Sydney")
-
+    orderContentByDays() {
       const 
         contentByDays = {},
         sessionsArray = Object.values(this.content),
@@ -48,27 +84,13 @@ export default {
           sessions: sessionsInDay
         }
       })
+      this.$set(this, 'contentByDays', contentByDays)
+    },
 
-      return contentByDays
-
-    }
-
-  },
-
-  mounted() {
-
-  },
-  methods: {
-
-    handleIslandClick(section) {
-      const current = this.$router.history.current.path
-      const next = `/timetable/${section.slug}`
-      
-      if (current === next) {
-        this.$emit('moreInfo', next)
-      } else {
-        this.$router.push(`${next}`)
-      }
+    toggleTimezone() {
+      this.desiresOwnTimezone = !this.desiresOwnTimezone
+      moment.tz.setDefault(this.timeZone)
+      this.orderContentByDays()
     },
 
     sessionInDay(session, day) {
@@ -97,6 +119,18 @@ export default {
   display: flex;
   /* flex-direction: column; */
   justify-content: stretch;
+}
+
+#timeZone {
+  position: absolute;
+  top: calc(10 * var(--one));
+}
+#timeZone h3 {
+  margin: 0;
+}
+#timeZone h3.toggle {
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .timetable .day  {
