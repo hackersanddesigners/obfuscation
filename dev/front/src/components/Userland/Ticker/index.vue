@@ -8,7 +8,7 @@
     @mouseover.stop="hover = true"
     @mousemove.stop="handleMousemove($event)"
     @mouseout.stop="hover = false"
-    @mouseup.stop="$router.push(href)"
+    @mouseup.stop="href ? $router.push(href) : null"
   >
     <div 
       id="ticker"

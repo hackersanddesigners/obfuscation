@@ -269,18 +269,18 @@ export default {
     }
 
     
-    let buffer = 0
+    // let buffer = 0
 
     this.$el.addEventListener("wheel", (e) => {
-      if (e.ctrlKey && buffer < 100) {
-        this.$store.commit('zoomOut')
-        buffer++
-      } else {
-        buffer = 0
-      //   posX -= e.deltaX * 2
-      //   posY -= e.deltaY * 2
-      }
-      e.preventDefault()
+      // if (e.ctrlKey && buffer < 100) {
+      //   this.$store.commit('zoomOut')
+      //   buffer++
+      // } else {
+      //   buffer = 0
+      // //   posX -= e.deltaX * 2
+      // //   posY -= e.deltaY * 2
+      // }
+      // e.preventDefault()
       e.stopPropagation()
     })
 

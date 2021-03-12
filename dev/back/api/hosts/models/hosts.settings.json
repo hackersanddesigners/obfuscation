@@ -14,9 +14,6 @@
     "Name": {
       "type": "string"
     },
-    "Email": {
-      "type": "email"
-    },
     "sessions": {
       "collection": "sessions",
       "via": "hosts"
@@ -31,6 +28,12 @@
     "moderating": {
       "collection": "sessions",
       "via": "moderators"
+    },
+    "Bio": {
+      "type": "richtext"
+    },
+    "link": {
+      "type": "string"
     }
   }
 }

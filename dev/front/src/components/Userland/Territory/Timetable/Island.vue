@@ -5,7 +5,7 @@
       { break: isBreak }
     ]"
     :style="{
-      width: `${ getWidth() }%`,
+      height: `${ getWidth() }%`,
     }"
   >
     
@@ -126,8 +126,8 @@ export default {
 <style scoped>
 .island {
   min-width: calc(20 * var(--one));
-  height: calc(20 * var(--one));
-  /* max-width: 25%; */
+  min-height: calc(20 * var(--one));
+  max-width: 50%;
   margin: 1.25vh 1.25vw;
   margin: 
     calc(1.25 * var(--one))

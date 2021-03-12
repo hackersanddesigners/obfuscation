@@ -24,7 +24,7 @@ import moment from 'moment-timezone'
 import Island from './Island'
 
 export default {
-  name: 'Territory',
+  name: 'Timetable',
   components: { Island },
   props: [ 'content' ],
   computed: {
@@ -95,7 +95,7 @@ export default {
   margin-top: calc(20 * var(--one));
   max-width: 100%;
   display: flex;
-  flex-direction: column;
+  /* flex-direction: column; */
   justify-content: stretch;
 }
 
@@ -116,9 +116,10 @@ export default {
 
 .timetable .day .sessionsContainer {
   margin-left: calc(4 * var(--one));
-  width: 100%;
+  /* width: 100%; */
   height: 100%;
   display: flex;
+  /* flex-direction: column; */
   align-items: flex-start;
   align-content: flex-start;
   flex-wrap: wrap;

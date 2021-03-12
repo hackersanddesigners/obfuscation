@@ -21,7 +21,7 @@ Once authenticated, you will be presented with the content management environmen
 
 Single types are only one entry.
 
-The **ticker** entry has one field, a 'phrase', the one-liner that shows up in the website on the bottom. If you want the ticker to link to a part of the website, include one relative link in the phrase.
+The **ticker** entry has two fields, a 'phrase', the one-liner that shows up in the website on the bottom, and a 'link'. If you want the ticker to link to a part of the website, include one relative link in the 'link' field.
 
 
 ### 🗄️ Collections 
@@ -44,6 +44,7 @@ Some entries in the regions have their URLs mapped to collections based on their
   - — the **Reception** region maps to the **Statics** collection (e.g. **/reception/about**).
   - — the **Exhibition Space** region maps to the **Video** collection (e.g. **/exhibition/hearbeat-to-print**).
   - — the **Timetable** region maps to the **Sessions** collection (e.g. **/timetable/obfuscating-software**).
+  - — the **Contributors** region maps to the **People** collection (e.g. **/contributors/karl**).
   - — the **Resource Library** region maps to the **Resources** collection (e.g. **/library/getting-real**).
   - — the **Glossary** region maps to the **Glossaries** collection (e.g. **/glossary/1-1-scale**).
 
