@@ -2,7 +2,8 @@
   <div
     :id="message.uid"
     :class="[
-      'messageContainer',
+      'messageContainer', 
+      `message${message.uid}`,
       {
         hover: hovered,
         announcement: message.announcement

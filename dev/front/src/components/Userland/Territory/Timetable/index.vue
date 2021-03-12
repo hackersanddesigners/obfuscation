@@ -113,8 +113,9 @@ export default {
         UnixStart = this.getUnixTime(session.Start),
         UnixEnd = this.getUnixTime(session.End),
         duration = UnixEnd - UnixStart,
-        factor = this.isBreak(session) ? 8 : duration / 400000,
+        factor = this.isBreak(session) ? 8 : duration / 450000,
         size = `calc(${ factor } * var(--one))`
+        // size = `${ factor }%`
       return size
     },
 
@@ -154,8 +155,10 @@ export default {
 <style scoped>
 .timetable {
   box-sizing: border-box;
-  padding-left: calc(10 * var(--one));
-  padding-top: calc(20 * var(--one));
+  padding: 
+    calc(5 * var(--one))
+    /* calc(10 * var(--one)) */
+  ;
   width: 100%;
   height: 100%;
   display: flex;
@@ -163,13 +166,14 @@ export default {
   flex-wrap: wrap;
   /* justify-content: stretch; */
   /* justify-content: center; */
-  align-items: flex-start;
-  align-content: flex-start;
+  align-items: center;
+  align-content: center;
+  /* align-content: flex-start; */
 }
 
 #timeZone {
   position: absolute;
-  top: calc(10 * var(--one));
+  top: calc(0 * var(--one));
   left: calc(50 * var(--one));
 }
 #timeZone h3 {
@@ -182,20 +186,24 @@ export default {
 }
 
 .timetable .day  {
-  /* flex: 1 0 auto; */
-  max-width: calc(60 * var(--one));
-  margin-bottom: calc(10 * var(--one));
+  /* max-width: 30%; */
+  /* max-width: calc(60 * var(--one)); */
+  max-width: 40%;
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
-  /* align-items: flex-start; */
+  justify-content: flex-start;
   align-items: center;
   align-content: center;
   z-index: 1;
 }
 
 .timetable .day .date {
-  margin: calc(5 * var(--one));
+  align-self: flex-start;
+  margin: 
+    calc(5 * var(--one))
+    calc(10 * var(--one))
+  ;
   font-size: calc(8pt * var(--scale));
   font-family: sans-serif;
   font-weight: lighter;
@@ -203,11 +211,8 @@ export default {
 
 .timetable .day .sessionsContainer {
   margin-left: calc(4 * var(--one));
-  /* width: 100%; */
-  /* height: 100%; */
   display: flex;
   flex-direction: column;
-  /* align-items: flex-start; */
   align-items: center;
   align-content: flex-start;
   flex-wrap: wrap;
@@ -215,10 +220,8 @@ export default {
 .timetable .day .sessionsContainer .islandContainer {
   box-sizing: border-box;
   position: relative;
-  width: 100%;
   margin: calc(1 * var(--one));
-  /* margin-top: calc(8 * var(--one)); */
-  /* margin-top: calc(3 * var(--one)); */
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -227,7 +230,6 @@ export default {
   position: absolute;
   left: calc(-3 * var(--one));
   top: calc(-2 * var(--one));
-  /* width: 100%; */
   height: 100%;
   display: flex;
   font-size: calc(4pt * var(--scale));
@@ -241,7 +243,7 @@ export default {
   display: none;
 }
 .timetable .day .sessionsContainer .islandContainer:last-of-type .time .end {
-  display: block;
+  /* display: block; */
 }
 
 </style>

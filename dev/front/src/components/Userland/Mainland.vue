@@ -273,20 +273,22 @@ export default {
     }
 
     
-    // let buffer = 0
+    let buffer = 0
 
     this.$el.addEventListener("wheel", (e) => {
-      // if (e.ctrlKey && buffer < 100) {
-      //   this.$store.commit('zoomOut')
-      //   buffer++
-      // } else {
-      //   buffer = 0
-      // //   posX -= e.deltaX * 2
-      // //   posY -= e.deltaY * 2
-      // }
-      // e.preventDefault()
-      e.stopPropagation()
+      if (e.ctrlKey) {
+        if (buffer < 10) {
+          buffer++
+        } else {
+          buffer = 0
+          this.$store.commit('zoomOut')
+        }
+        e.preventDefault()
+        e.stopPropagation()
+      }
     })
+
+    this.handleLinks('.message a')
 
 
   },
@@ -306,6 +308,8 @@ export default {
     // an announcement.
 
     message(message) {
+
+      this.handleLinks(`.message${message.uid} a`)
 
       if (message.announcement) {
         this.scrollTo(
@@ -518,6 +522,22 @@ export default {
       this.$store.commit('setLocation', territory)
 
     },
+
+    handleLinks(selector) {
+      setTimeout(() => {
+        Array
+        .from(document.querySelectorAll(selector))
+        .forEach(a => {
+          const href = a.attributes.href.value 
+          if (href && href.startsWith('/')) {
+            a.addEventListener('click', (e) => {
+              this.$router.push(href)
+              e.preventDefault()
+            })
+          }
+        })
+      }, 1000)
+    }
 
   },
   

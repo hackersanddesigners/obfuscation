@@ -22,15 +22,16 @@ export default {
 <style scoped>
 .exhibition {
   box-sizing: border-box;
+  height: 100%;
+  width: 100%;
   margin: 
     calc(5 * var(--one)) 
-    calc(10 * var(--one)) 
   ;
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start;
+  /* justify-content: flex-start;
   align-items: flex-start;
-  align-content: flex-start;
+  align-content: flex-start; */
   justify-content: center;
   align-items: center;
   align-content: center;

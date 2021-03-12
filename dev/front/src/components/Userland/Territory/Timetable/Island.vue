@@ -93,7 +93,7 @@ export default {
 <style scoped>
 .island {
   height: 100%;
-  max-width: 80%;
+  max-width: 85%;
   display: flex;
   /* align-items: center; */
 }
@@ -113,7 +113,7 @@ export default {
 
 .island .body {
   margin-top: unset;
-  max-width: calc(35 * var(--one));
+  /* max-width: calc(35 * var(--one)); */
 }
 .island .body .host .name,
 .island .body .moderator .name {

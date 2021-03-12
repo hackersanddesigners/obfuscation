@@ -75,14 +75,17 @@ export default {
 
 <style scoped>
 .island {
-  width: calc(60 * var(--one));
-  height: calc(40 * var(--one));
-  margin: calc(10 * var(--one));
+  width: calc(9vw * var(--scale));
+  height: calc(9vh * var(--scale));
+  /* min-width: 15%; */
+  /* height; */
+  margin: calc(6 * var(--one));
   padding: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  transition: background-color 0.2s ease;
 }
 
 .island .header {
