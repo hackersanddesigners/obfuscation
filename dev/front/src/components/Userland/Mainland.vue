@@ -36,7 +36,6 @@
         @startedDrag="miniDragging = true"
         @stoppedDrag="miniDragging = false"
         @newPosition="handleMini($event)"
-        @zero="centerMe"
       />
 
       <Options
@@ -244,7 +243,8 @@ export default {
     },
 
     scale() {
-      this.route('/~' + this.me.name, 'auto')    
+      // this.route('/~' + this.me.name, 'auto')    
+      this.goTo(this.me, 'auto')    
     },
 
     me(newMe, oldMe) {
@@ -445,25 +445,12 @@ export default {
     },
 
 
-    // zoom to default scale and scroll to center.
-
-    centerMe() {
-      this.$store.commit('zero')
-      setTimeout(() => {
-        this.goTo({
-          x: 0.5,
-          y: 0.5
-        })
-      }, 50)
-    },
-
-
     // go to zone (user, message, or territory).
 
-    goTo(zone) {
+    goTo(zone, behavior) {
       this.scrollTo(
         this.centerOf(zone), 
-      'smooth')
+      behavior || 'smooth')
     },
 
 
