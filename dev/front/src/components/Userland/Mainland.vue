@@ -247,6 +247,12 @@ export default {
       this.goTo(this.me, 'auto')    
     },
 
+    // users() {
+      // if(this.users['519a87e43c9']) {
+        // console.log('change')
+      // }
+    // },
+
     me(newMe, oldMe) {
       if (oldMe && newMe.uid !== oldMe.uid) {
         console.log('you: ', newMe.uid)

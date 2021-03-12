@@ -26,7 +26,7 @@
           :key="session.slug"
           :id="session.slug + 'Island'"
           :style="{
-            height: sizeByDuration(session),
+            minHeight: sizeByDuration(session),
           }"
         >
           <div class="time">
@@ -188,7 +188,7 @@ export default {
 .timetable .day  {
   /* max-width: 30%; */
   /* max-width: calc(60 * var(--one)); */
-  max-width: 40%;
+  max-width: 30%;
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
@@ -199,18 +199,18 @@ export default {
 }
 
 .timetable .day .date {
-  align-self: flex-start;
+  /* align-self: flex-start; */
   margin: 
     calc(5 * var(--one))
     calc(10 * var(--one))
   ;
-  font-size: calc(8pt * var(--scale));
-  font-family: sans-serif;
-  font-weight: lighter;
+  font-size: calc(6pt * var(--scale));
+  /* font-family: sans-serif; */
+  /* font-weight: lighter; */
 }
 
 .timetable .day .sessionsContainer {
-  margin-left: calc(4 * var(--one));
+  margin: 0 calc(4 * var(--one));
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -228,7 +228,7 @@ export default {
 }
 .timetable .day .sessionsContainer .islandContainer .time  {
   position: absolute;
-  left: calc(-3 * var(--one));
+  left: calc(-7 * var(--one));
   top: calc(-2 * var(--one));
   height: 100%;
   display: flex;

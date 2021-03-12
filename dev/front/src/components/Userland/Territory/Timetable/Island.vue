@@ -93,7 +93,7 @@ export default {
 <style scoped>
 .island {
   height: 100%;
-  max-width: 85%;
+  max-width: 90%;
   display: flex;
   /* align-items: center; */
 }
