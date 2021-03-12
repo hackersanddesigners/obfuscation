@@ -1,7 +1,7 @@
 <template>
   <div>
     <div id="timeZone">
-      <h3>Sessions are displayed in timezone: {{ timeZone }}.</h3>
+      <h3>Sessions are displayed in {{ timeZone }} time.</h3>
       <h3
         v-if="!isInDefaultTimeZone"
         class="toggle"
@@ -24,6 +24,7 @@
           class="islandContainer"
           v-for="session in day.sessions"
           :key="session.slug"
+          :id="session.slug + 'Island'"
           :style="{
             height: sizeByDuration(session),
           }"
@@ -33,7 +34,6 @@
             <span class="end"> {{ end(session) }}</span>
           </div>
           <Island
-            :id="session.slug + 'Island'"
             :session="session"
             @mouseup.native="handleIslandClick(session)"
           />

@@ -74,6 +74,7 @@ export default {
   },
   computed: {
     // soon() { return this.getUnixTime(this.session.Start) - new Date() < 90000 },
+    soon() { return false },  
     hosts() { return this.session.hosts },
     moderators() { return this.session.moderators },
     isBreak() {
