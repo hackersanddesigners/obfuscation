@@ -87,6 +87,9 @@ const api = {
                 const page = response.data[c]
                 content[page.slug] = page
               }
+              if (slug === 'timetable') {
+                this.correctDates(content)
+              }
               resolve(content) 
             })
             .catch((error) => { reject(error) })
@@ -96,6 +99,20 @@ const api = {
       })
     },
 
+    correctDates(sessions) {
+      for (let key in sessions) {
+        const session = sessions[key]
+        session.Start = this.correctTimeZone(session.Start)
+        session.End = this.correctTimeZone(session.End)
+      }
+      return sessions
+    },
+
+    correctTimeZone(datestring) {
+      // datestring = datestring.replace('Z', '+01:00')
+      // datestring = datestring.replace('Z', '+02:00')
+      return datestring
+    },
 
     resolveQueryFromRegion(slug) {
       return (

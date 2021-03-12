@@ -5,6 +5,7 @@ module.exports = {
     resolve: {
       alias: {
         'moment': 'moment/src/moment',
+        // 'moment-timezone': 'moment/src/moment',
         'hls.js': 'hls.js/dist/hls.light.min.js'
       }
     },

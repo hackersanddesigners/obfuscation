@@ -2,7 +2,7 @@
   <div>
     <div 
       v-for="day in contentByDays"
-      :key="day.date"
+      :key="getDay(day.date)"
       class="day"
     >
       <div class="date">{{ cuteDate(day.date) }}</div>
@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import moment from 'moment'
+import moment from 'moment-timezone'
 import Island from './Island'
 
 export default {
@@ -31,43 +31,31 @@ export default {
 
     contentByDays() {
 
-      let 
-        date1,
-        sessions1,
-        date2,
-        sessions2
+      // moment.tz.setDefault("America/New_York")
+      // moment.tz.setDefault("Asia/Tokyo")
+      // moment.tz.setDefault("Australia/Sydney")
 
-      const sessionsArray = Object.values(this.content)
+      const 
+        contentByDays = {},
+        sessionsArray = Object.values(this.content),
+        dates = sessionsArray.map(session => this.getDay(session['Start'])),
+        uniqueDates = Array.from(new Set(dates))
 
-      if (sessionsArray[0]) {
-        date1 = sessionsArray[0].Start
-        sessions1 = sessionsArray.filter(s => this.sessionInDay(s, date1))
-        date2 = sessionsArray[sessionsArray.length-1].Start
-        sessions2 = sessionsArray.filter(s => this.sessionInDay(s, date2))
-      }
-
-      return {
-        1: { 
-          date: date1,
-          sessions: sessions1,
-        },
-        2: {
-          date: date2,
-          sessions: sessions2
+      uniqueDates.forEach(day => {
+        const sessionsInDay = sessionsArray.filter(s => this.sessionInDay(s, day))
+        contentByDays[day] = {
+          date: sessionsInDay[0].Start,
+          sessions: sessionsInDay
         }
-      }
+      })
+
+      return contentByDays
 
     }
 
   },
 
   mounted() {
-    // let d = new Date()
-    // let m = moment(d)
-    // let t = m.tz("Asia/Taipei").format()
-    // let userTZ = moment.tz.guess()
-    // let firstEvent = moment(this.content[0].Start).format()
-    // console.log(firstEvent)
 
   },
   methods: {
@@ -84,7 +72,7 @@ export default {
     },
 
     sessionInDay(session, day) {
-      return this.getDay(session.Start) === this.getDay(day) 
+      return this.getDay(session.Start) === day
     },
 
     getDay(date) { 
