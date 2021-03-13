@@ -25,7 +25,7 @@ export default {
   height: 100%;
   width: 100%;
   margin: 
-    calc(5 * var(--one)) 
+    calc(2.5 * var(--one)) 
   ;
   display: flex;
   flex-wrap: wrap;

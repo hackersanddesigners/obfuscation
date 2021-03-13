@@ -75,8 +75,8 @@ export default {
 
 <style scoped>
 .island {
-  width: calc(9vw * var(--scale));
-  height: calc(9vh * var(--scale));
+  width: calc(4vw * var(--scale));
+  height: calc(4vh * var(--scale));
   /* min-width: 15%; */
   /* height; */
   margin: calc(6 * var(--one));
@@ -101,13 +101,13 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(3pt * var(--scale));
+  font-size: calc(2 * var(--one));
   z-index: 1;
   background: rgba(255, 255, 255, 0.315);
   border-radius: inherit;
 }
 .island .header h1 { 
-  font-size: calc(5pt * var(--scale));
+  font-size: calc(3 * var(--one));
   font-family: 'zxx-noise';
   font-weight: normal;
   text-align: center;

@@ -60,7 +60,7 @@ const store = new Vuex.Store({
     // grid, and scale (zoom).
     
     isMobile: false,
-    scale: 5,
+    scale: 10,
     grid: false,
     windowSize: {
       w: window.innerWidth,
@@ -163,8 +163,8 @@ const store = new Vuex.Store({
 
     // app interface mutations.
 
-    zero: state => state.scale = 5,
-    zoomIn: state => state.scale < 10 ? state.scale += 0.25 : null,
+    zero: state => state.scale = 10,
+    zoomIn: state => state.scale < 20 ? state.scale += 0.25 : null,
     zoomOut: state  => state.scale > 1 ? state.scale -= 0.25 : null, 
 
     makeMobile: state => state.isMobile = true,

@@ -10,8 +10,8 @@
       } 
     ]"
     :style="{ 
-      left: `${ toNearestX(message.x, 0.4) }%`,
-      top: `${ toNearestX(message.y, 0.4) }%`,
+      left: `${ toNearestX(message.x, 0.2) }%`,
+      top: `${ toNearestX(message.y, 0.2) }%`,
       '--blur': `blur(${ (now - message.time) / 100000000 }px)`,
       '--userColor': `var(--${ message.authorUID })`,
     }"
@@ -98,7 +98,7 @@ export default {
   z-index: 1;
   cursor: text;
   font-family: jet;
-  font-size: calc(1.7pt * var(--scale));
+  font-size: calc(1 * var(--one));
   color: var(--userColor);
   filter: var(--blur);
   transition: filter 0.2s ease;

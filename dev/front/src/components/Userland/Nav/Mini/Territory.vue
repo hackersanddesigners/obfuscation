@@ -67,7 +67,7 @@ export default {
   align-items: center;
   text-align: center;
   font-family: 'zxx-noise';
-  font-size: calc(0.7pt * var(--scale));
+  font-size: calc(0.5 * var(--one));
   line-height: calc(0.7pt * var(--scale));
   opacity: 0.5;
   transition: all 0.1s ease;

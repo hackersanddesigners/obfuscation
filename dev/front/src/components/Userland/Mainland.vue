@@ -584,7 +584,7 @@ main {
   height: 100%; width: 100%;
   overflow: hidden;
 
-  --one: calc(2.5px * var(--scale));
+  --one: calc(1.2px * var(--scale));
   --island-back-color: rgba(0, 0, 0, 0.055);
   --island-back-darker: rgba(0, 0, 0, 0.13);
   --island-back:
@@ -707,12 +707,12 @@ main nav.hidden {
 }
 .island h1 { 
   margin: 0;
-  font-size: calc(5pt * var(--scale));
+  font-size: calc(3 * var(--one));
   line-height: 1.1;
 }
 .island h3 {
   margin: 0;
-  font-size: calc(3pt * var(--scale));
+  font-size: calc(2 * var(--one));
   line-height: 1.2;
 }
 
