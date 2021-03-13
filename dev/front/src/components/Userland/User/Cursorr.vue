@@ -56,7 +56,6 @@
 import { mapGetters, mapState } from 'vuex'
 
 
-
 export default {
 
   name: 'Cursorr',
@@ -175,12 +174,12 @@ export default {
       document.addEventListener('mousemove', (e) => {
 
         if(!this.dragging) {
-          const pos = {
-            x: (this.windowPos.x + e.clientX) / (this.windowSize.w * this.scale),
-            y: (this.windowPos.y + e.clientY) / (this.windowSize.h * this.scale),
-          }
-          
-          this.$store.dispatch('updatePosition', pos)
+            const pos = {
+              x: (this.windowPos.x + e.clientX) / (this.windowSize.w * this.scale),
+              y: (this.windowPos.y + e.clientY) / (this.windowSize.h * this.scale),
+            }
+            
+            this.$store.dispatch('updatePosition', pos)
           e.preventDefault()
         }
         

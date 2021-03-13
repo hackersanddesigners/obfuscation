@@ -145,8 +145,6 @@ import Minilist from './Nav/List/'
 import Ticker from './Ticker/'
 import Overlay from './Overlay/'
 
-      // @scroll.stop="setViewerPosition($event)"
-
 export default {
 
 
