@@ -8,9 +8,6 @@
       width: `${ territory.borders.w * 100 }%`,
       height: `${ territory.borders.h * 100 }%`,
       '--ground': territory.color,
-      '--image': shape,
-      '--mobileImage': mobileShape,
-
     }"
   >
   
@@ -20,10 +17,13 @@
       </vue-markdown>
     </div> -->
 
-    <!-- <svg viewBox="0 0 100 100" class="shape" preserveAspectRatio="none">       
-     <image :xlink:href="src" />    
-    </svg> -->
-
+    <svg 
+      class="shape" 
+      :viewBox="viewBox"
+      preserveAspectRatio="none"
+    >       
+     <path :fill="territory.color" :d="d"/>
+    </svg>
 
     <Reception
       v-if="slug === 'reception'"
@@ -118,16 +118,27 @@ export default {
   ],
   data() {
     return {
+      d: null,
+      viewBox: null,
     }
   },
   computed: { 
     slug() { return this.territory.slug },
     content() { return this.territory.content },
-    src() { return `${this.$apiURL}${this.territory.shape.url}` },
-    shape() { return `url("${this.$apiURL}${this.territory.shape.url}#svgView(preserveAspectRatio(none))")` },
-    mobileShape() { return `url("${this.$apiURL}${this.territory.shape.url}")` }
   },
   created() {
+    this.$http
+      .get(`${this.$apiURL}${this.territory.shape.url}`)
+      .then((res) => {
+        this.d = res.data
+          .match(/ d="([\s\S]*?)"/g)[0]
+          .replace(' d="', '')
+          .replace('"', '')
+        this.viewBox = res.data
+          .match(/ viewBox="([\s\S]*?)"/g)[0]
+          .replace(' viewBox="', '')
+          .replace('"', '')
+      })
   },
   mounted() {
   },
@@ -146,42 +157,17 @@ export default {
   cursor: inherit;
 }
 
-/* .territory svg.shape {
+.territory svg.shape {
   box-sizing: border-box;
   position: absolute;
   top: -15%; left: -15%;
   height: 130%; width: 130%;
   z-index: 0;
   pointer-events: none;
-  fill: var(--ground);
-} */
-.territory::before {
-  box-sizing: border-box;
-  position: absolute;
-  content: '';
-  /* display: none; */
-  /* top: 0%; left: 0%;
-  height: 100%; width: 100%; */
-  /* top: -5%; left: -5%;
-  height: 110%; width: 110%; */
-  top: -15%; left: -15%;
-  height: 130%; width: 130%;
-  z-index: 0;
-  pointer-events: none;
-  background-color: var(--ground);
-  mask-image: var(--image);
-  -webkit-mask-image: var(--image);
-  mask-repeat: no-repeat;
-  -webkit-mask-repeat: no-repeat;
-  mask-origin: border-box;
-  -webkit-mask-origin: border-box;
-  mask-position: center center;
-  -webkit-mask-position: center center;
-  mask-size: 100% 100%;
-  -webkit-mask-size: 100% 100%;
   mix-blend-mode: multiply;
   overflow: visible;
 }
+
 .territory .placeholder {
   min-width: 70vw;
   min-height: 60vh;

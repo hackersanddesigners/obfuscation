@@ -1,4 +1,5 @@
 import axios from 'axios'
+// import moment from 'moment'
 
 
 const 
@@ -22,7 +23,10 @@ const api = {
       return new Promise ((resolve, reject) => {
         axios
           .get(URL + 'messages')
-          .then((response) => { resolve(response.data) })
+          .then((response) => { 
+            const messages = this.lastTwoDaysOnly(response.data)
+            resolve(messages) 
+          })
           .catch((error) => { reject(error) })
       })
     },
@@ -97,6 +101,20 @@ const api = {
           resolve(null)
         }
       })
+    },
+
+    lastTwoDaysOnly(messages) {
+      const 
+        now = (new Date()).getTime(),
+        twodays = 172800000
+      for (let m in messages) {
+        const message = messages[m]
+        if (message.time < now - twodays) {
+          // console.log(message.content)
+          // console.log(moment(message.time).fromNow())
+          delete messages[m]
+        }
+      }
     },
 
     correctDates(sessions) {

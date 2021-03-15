@@ -14,6 +14,13 @@
       '--image': shape,
     }"
   >
+    <svg 
+      class="shape" 
+      :viewBox="viewBox"
+      preserveAspectRatio="none"
+    >       
+     <path :fill="territory.color" :d="d"/>
+    </svg>
 
     <div class="background">
       <vue-markdown>
@@ -31,10 +38,25 @@ export default {
     'territory',
     'hovered'
   ], 
-  computed: {
-
-    shape() { return `url("${this.$apiURL}${this.territory.shape.url}#svgView(preserveAspectRatio(none))")` },
-
+  data() {
+    return {
+      d: null,
+      viewBox: null
+    }
+  },
+  created() {
+    this.$http
+      .get(`${this.$apiURL}${this.territory.shape.url}`)
+      .then((res) => {
+        this.d = res.data
+          .match(/ d="([\s\S]*?)"/g)[0]
+          .replace(' d="', '')
+          .replace('"', '')
+        this.viewBox = res.data
+          .match(/ viewBox="([\s\S]*?)"/g)[0]
+          .replace(' viewBox="', '')
+          .replace('"', '')
+      })
   },
 
   mounted() {
@@ -74,23 +96,13 @@ export default {
   overflow: visible;
 }
 
-.mini-territory::before {
+.mini-territory svg.shape {
   box-sizing: border-box;
   position: absolute;
-  content: '';
   top: -5%; left: -5%;
   height: 110%; width: 110%;
-  /* top: 0%; left: 0%;
-  height: 100%; width: 100%; */
   z-index: 0;
   pointer-events: none;
-  background-color: var(--ground);
-  mask-image: var(--image);
-  mask-size: 100% 100%;
-  mask-position: center center;
-  -webkit-mask-image: var(--image);
-  -webkit-mask-size: 100% 100%;
-  -webkit-mask-position: center center;
   mix-blend-mode: multiply;
   overflow: visible;
 }
