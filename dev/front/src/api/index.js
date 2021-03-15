@@ -24,7 +24,8 @@ const api = {
         axios
           .get(URL + 'messages')
           .then((response) => { 
-            const messages = this.lastTwoDaysOnly(response.data)
+            // const messages = this.lastTwoDaysOnly(response.data)
+            const messages = response.data
             resolve(messages) 
           })
           .catch((error) => { reject(error) })

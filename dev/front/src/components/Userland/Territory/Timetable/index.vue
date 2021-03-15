@@ -192,7 +192,7 @@ export default {
     calc(5 * var(--one))
     calc(10 * var(--one))
   ;
-  font-size: calc(3 * var(--one));
+  font-size: calc(2.8 * var(--one));
   /* font-family: sans-serif; */
   /* font-weight: lighter; */
 }
