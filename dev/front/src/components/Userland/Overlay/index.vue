@@ -27,9 +27,10 @@
     </div>
 
     <div 
+      v-if="content"
       ref="overlay"
       :class="[
-        'ui', 'overlay', content.slug
+        'ui', 'overlay', content.slug 
       ]"
     >
 
@@ -73,6 +74,8 @@
 <script>
 import smoothHeight from 'vue-smooth-height'
 import Section from './Section'
+
+
 
 export default {
 
@@ -118,7 +121,7 @@ export default {
   methods: {
 
     handleAanmelder() {
-      if (this.content.slug === 'register') {
+      if (this.content && this.content.slug === 'register') {
         this.isRegister = true
         let aanmelder = document.createElement('script')
         aanmelder.setAttribute('src', 
@@ -154,10 +157,12 @@ export default {
 .overlayContainer.visible {
   cursor: default;
   right: 0;
+  transition: all 0.2s ease;
 }
 .overlayContainer.hidden {
   right: -100vw;
   opacity: 0;
+  transition: all 0.2s ease;
 }
 
 #infoTitle {
@@ -183,6 +188,7 @@ export default {
 }
 .infoToggle.hidden {
   opacity: 0;
+  transition: all 0.2s ease;
 }
 
 .overlay {
@@ -222,7 +228,11 @@ export default {
 
 @media screen and (max-height: 730px) {
   .overlayContainer {
-    max-height: 90vh;
+    /* max-height: 90vh; */
+    max-height: calc(100vh - 25px);
+  }
+  .mobile .overlayContainer {
+
   }
 }
 

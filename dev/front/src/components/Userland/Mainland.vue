@@ -118,7 +118,6 @@
     />
 
     <Overlay
-      v-if="moreInformation"
       id="overlay"
       :dragging="dragging"
       :content="moreInformation"
@@ -131,8 +130,12 @@
   </main>
 </template>
 
+
+
 <script>
 import { mapState, mapGetters } from 'vuex'
+
+      // v-if="moreInformation"
 
 import NavHandle from './Nav/Handle'
 import Editor from './Options/Editor'
@@ -436,7 +439,12 @@ export default {
 
       if (this.isMobile) {
         this.desiresNav = false
-        this.desiresOverlay = false
+        if (page) {
+          this.desiresOverlay = true
+        } else {
+          this.desiresOverlay = false
+        }
+
       } else {
         if (name === 'general') {
           this.desiresOverlay = false
