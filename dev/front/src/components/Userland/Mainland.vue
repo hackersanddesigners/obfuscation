@@ -92,7 +92,7 @@
           v-for="territory in territories"
           :key='territory.slug'
           :territory='territory'
-          @moreInfo="route($event)"
+          @moreInfo="handleIslandClick($event)"
         />
 
         <Cursorr
@@ -449,7 +449,6 @@ export default {
 
     handleInput(e) {
       if (!this.editing && !this.isMobile) {
-        console.log('key')
         this.$refs.me[0].trackInput(e)
       }
     },
