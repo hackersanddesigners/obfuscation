@@ -78,8 +78,13 @@ low(adapter).then(db => {
 
     socket.on('message', (message) => {
       io.sockets.emit('message', message)
-      db.set(`messages[${message.uid}]`, message)
-        .write()
+      if (message.deleted) {
+        db.remove(`messages[${message.uid}]`)
+          .write()
+      } else {
+        db.set(`messages[${message.uid}]`, message)
+          .write()
+      }
     })
 
     socket.on('position', (position) => {

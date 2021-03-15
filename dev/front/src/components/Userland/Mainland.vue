@@ -457,6 +457,7 @@ export default {
 
     handleInput(e) {
       if (!this.editing && !this.isMobile) {
+        console.log('key')
         this.$refs.me[0].trackInput(e)
       }
     },
@@ -476,7 +477,7 @@ export default {
     // tells the cursor component to handle click.
 
     handleClick() {
-      if (!this.editing && !this.dragging && !this.isMobile) {
+      if (!this.editing && !this.isMobile) {
         this.$refs.me[0].sendMessage()
       }
     },
@@ -521,9 +522,9 @@ export default {
     },
 
     release() {
-      setTimeout(() => {
+      // setTimeout(() => {
         this.dragging = false
-      }, 0)
+      // }, 0)
     },
 
 
