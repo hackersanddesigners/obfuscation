@@ -60,6 +60,7 @@
       id="userlandContainer" 
       ref="userlandContainer"
       :class="[
+        'LIFECYCLE' + lifecycle,
         { dragging: dragging },
       ]"
       @keyup="handleInput($event)"
@@ -192,6 +193,8 @@ export default {
   computed: {
     ...mapState([
 
+      'lifecycle',      
+
       'registered',
       'visited',
       'blocked',
@@ -269,17 +272,6 @@ export default {
     if (this.isMobile) {
       this.$store.commit('setScale', 6)
       this.$store.commit('setWidthFactor', 4)
-      // for(let t in this.territories) {
-      //   const territory = this.territories[t]
-      //   this.$store.commit('setTerritoryBorders', {
-      //     slug: territory.slug,
-      //     x: territory.borders.x * this.widthFactor,
-      //     y: territory.borders.y,
-      //     w: territory.borders.w * this.widthFactor,
-      //     h: territory.borders.h,
-      //   })
-      //   console.log(territory.borders.x)
-      // }
     }
 
   },
@@ -298,25 +290,22 @@ export default {
     }
 
     
-    let buffer = 0
+    // let buffer = 0
 
     this.$el.addEventListener("wheel", (e) => {
       if (e.ctrlKey) {
-        if (buffer < 10) {
-          buffer++
-        } else {
-          buffer = 0
-          this.$store.commit('zoomOut')
-        }
+        // if (buffer < 10) {
+        //   buffer++
+        // } else {
+        //   buffer = 0
+        //   this.$store.commit('zoomOut')
+        // }
         e.preventDefault()
         e.stopPropagation()
       }
     })
 
     this.handleLinks('.message a')
-
-    // this.currentX = 0
-    // this.currentY = 0
 
     this.$refs.userlandContainer.addEventListener('scroll', (e) => {
       this.setViewerPosition(e)
@@ -750,12 +739,12 @@ main nav.hidden {
 }
 .island h1 { 
   margin: 0;
-  font-size: calc(3 * var(--one));
+  font-size: calc(2.5 * var(--one));
   line-height: 1.1;
 }
 .island h3 {
   margin: 0;
-  font-size: calc(2 * var(--one));
+  font-size: calc(1.8 * var(--one));
   line-height: 1.2;
 }
 

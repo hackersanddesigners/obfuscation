@@ -63,7 +63,7 @@
       >-</div>
 
       <div class="zero" 
-        @mousedown.stop="$store.commit('zero')"
+        @mousedown.stop="$store.commit('setScale', 10)"
         @mouseup.stop
       >○</div>
 

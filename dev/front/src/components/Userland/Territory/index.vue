@@ -120,7 +120,7 @@ export default {
     return {
     }
   },
-  computed: {
+  computed: { 
     slug() { return this.territory.slug },
     content() { return this.territory.content },
     src() { return `${this.$apiURL}${this.territory.shape.url}` },

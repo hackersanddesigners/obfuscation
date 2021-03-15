@@ -71,6 +71,7 @@ export default {
 
     ...mapState([
 
+      'lifecycle',
       'version',
       'blocked',
       'isMobile'
@@ -81,7 +82,8 @@ export default {
   created() {
 
 
-    console.log(`Version: ${ localStorage.version }`)
+    console.log(`VERSION: ${ localStorage.version }`)
+    console.log(`LIFECYCLE: ${ this.lifecycle }`)
 
     // delete everything if local storage version is older than this
     // version. This is to prevent older users' data strutures from

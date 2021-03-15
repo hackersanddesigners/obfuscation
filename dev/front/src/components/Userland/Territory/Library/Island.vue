@@ -81,4 +81,21 @@ export default {
   transform: translateX(calc(2 * var(--one)));
   box-shadow: var(--bevel);
 }
+
+.LIFECYCLE0 .island {
+  pointer-events: none;
+}
+.LIFECYCLE0 .island h3,
+.LIFECYCLE0 .island h1 {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.LIFECYCLE1 .island {
+  pointer-events: all;
+}
+.LIFECYCLE1 .island h3,
+.LIFECYCLE1 .island h1 {
+  visibility: visible;
+}
 </style>

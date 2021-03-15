@@ -133,4 +133,19 @@ export default {
 .island.break .body .BBB-container .BBB {
   /* margin-bottom: calc(1 * var(--one)); */
 }
+
+.LIFECYCLE0 .island {
+  pointer-events: none;
+}
+.LIFECYCLE0 .island h1 {
+  visibility: hidden;
+}
+
+.LIFECYCLE1 .island {
+  pointer-events: none;
+}
+.LIFECYCLE1 .island h1 {
+  visibility: hidden;
+}
+
 </style>

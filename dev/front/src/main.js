@@ -13,7 +13,8 @@ Vue.config.productionTip = false
 
 Vue.prototype.$http = Axios
 Vue.prototype.$apiURL = process.env.VUE_APP_API_URL
-Vue.prototype.$publicPath = '/'
+Vue.prototype.$LIFECYCLE = process.env.VUE_APP_LIFECYCLE || 0
+Vue.prototype.$publicPath = process.env.BASE_URL || '/'
 
 VueMarkdown.props.anchorAttributes.default = () => ({
   target: '_blank',
@@ -24,26 +25,9 @@ Vue.component('vue-markdown', VueMarkdown)
 
 smoothscroll.polyfill()
 
-
-// const socket = io('https://io.karls.computer')
-
-// Vue.use(VueSocketIOExt, socket, { store })
-
-
-// const url = 'https://io.karls.computer'
-// const url = 'localhost:3090'
-
-// const url = 
-//   window.location.hostname == 'localhost' ?
-//   'http://localhost:3090/' : 'https://obfuscation.karls.computer'
-
-const url = 'https://obfuscation.karls.computer'
-
-console.log(url)
-
 Vue.use(
   VueSocketIOExt, 
-  io(url),
+  io('https://obfuscation.karls.computer'),
   { store }
 )
 

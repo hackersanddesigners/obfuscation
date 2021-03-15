@@ -27,4 +27,18 @@ export default {
   justify-content: center;
 }
 
+
+.LIFECYCLE0 .island {
+  pointer-events: none;
+}
+.LIFECYCLE0 .island h1 {
+  visibility: hidden;
+}
+
+.LIFECYCLE1 .island {
+  pointer-events: all;
+}
+.LIFECYCLE1 .island h1 {
+  visibility: visible;
+}
 </style>

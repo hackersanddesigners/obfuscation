@@ -3,8 +3,6 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-
-
 const store = new Vuex.Store({
 
 
@@ -18,6 +16,7 @@ const store = new Vuex.Store({
     // initial values for application state.
 
     version: 3,
+    lifecycle: process.env.VUE_APP_LIFECYCLE || 0,
     save: true,
 
     uid: null,
@@ -80,6 +79,7 @@ const store = new Vuex.Store({
 
     // app state mutations.
 
+    setLifecycle: (state, lifecycle) => state.lifecycle = lifecycle,
     doNotSave: state => state.save = false,
     setUID: (state, uid) => state.uid = uid,
 
@@ -168,7 +168,6 @@ const store = new Vuex.Store({
 
     setScale: (state, scale) => state.scale = scale,
     setWidthFactor: (state, factor) => state.widthFactor = factor,
-    zero: state => state.scale = 10,
     zoomIn: state => state.scale < 20 ? state.scale += 0.25 : null,
     zoomOut: state  => state.scale > 1 ? state.scale -= 0.25 : null, 
 

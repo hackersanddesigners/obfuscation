@@ -161,11 +161,11 @@ export default {
 
 #timeZone {
   position: absolute;
-  top: calc(0 * var(--one));
-  left: calc(40 * var(--one));
+  top: calc(4 * var(--one));
+  left: calc(35 * var(--one));
 }
 #timeZone h3 {
-  font-size: calc(2 * var(--one));
+  font-size: calc(1.8 * var(--one));
   margin: 0;
 }
 #timeZone h3.toggle {
@@ -192,7 +192,7 @@ export default {
     calc(5 * var(--one))
     calc(10 * var(--one))
   ;
-  font-size: calc(4 * var(--one));
+  font-size: calc(3 * var(--one));
   /* font-family: sans-serif; */
   /* font-weight: lighter; */
 }
@@ -220,7 +220,7 @@ export default {
   top: calc(-2 * var(--one));
   height: 100%;
   display: flex;
-  font-size: calc(3 * var(--one));
+  font-size: calc(1.8 * var(--one));
   font-family: sans-serif;
   pointer-events: none;
 
@@ -232,6 +232,19 @@ export default {
 }
 .timetable .day .sessionsContainer .islandContainer:last-of-type .time .end {
   /* display: block; */
+}
+
+
+.LIFECYCLE0 #timeZone,
+.LIFECYCLE0 .date,
+.LIFECYCLE0 .time {
+  visibility: hidden;
+}
+
+.LIFECYCLE1 #timeZone,
+.LIFECYCLE1 .date,
+.LIFECYCLE1 .time {
+  visibility: hidden;
 }
 
 </style>
