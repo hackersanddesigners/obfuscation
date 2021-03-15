@@ -289,23 +289,15 @@ export default {
       this.$router.push('reception')
     }
 
+    this.handleLinks('.message a')
     
-    // let buffer = 0
 
     this.$el.addEventListener("wheel", (e) => {
       if (e.ctrlKey) {
-        // if (buffer < 10) {
-        //   buffer++
-        // } else {
-        //   buffer = 0
-        //   this.$store.commit('zoomOut')
-        // }
         e.preventDefault()
         e.stopPropagation()
       }
     })
-
-    this.handleLinks('.message a')
 
     this.$refs.userlandContainer.addEventListener('scroll', (e) => {
       this.setViewerPosition(e)
