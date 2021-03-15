@@ -206,11 +206,11 @@ export default {
           localStorage.uid = self.uid
           localStorage.color = self.color
 
-          if (this.isMobile) {
-            this.$store.commit('visit')
-            this.$store.commit('register')
-          }
+        }
 
+        if (this.isMobile) {
+          this.$store.commit('visit')
+          this.$store.commit('register')
         }
 
         
