@@ -149,6 +149,7 @@ export default {
   transition: all 0.2s ease;
   display: flex;
   flex-direction: column;
+  /* background: blue; */
 }
 .overlayContainer.visible {
   cursor: default;
@@ -166,6 +167,7 @@ export default {
   display: flex;
   align-items: stretch;
   justify-content: flex-end;
+  /* background: red; */
 }
 #infoTitle .infoToggle {
   display: flex;

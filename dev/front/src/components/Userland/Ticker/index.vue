@@ -95,6 +95,7 @@ export default {
   left: 0;
   width: 100%;
   height: 50px;
+  overflow: hidden;
   color: var(--ui-front);
   background: var(--ui-back);
   z-index: 2;

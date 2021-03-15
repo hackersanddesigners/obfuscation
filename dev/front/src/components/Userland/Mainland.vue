@@ -80,7 +80,7 @@
         ref="userland"
         :style="{
           height: `${ 100 * scale }%`,
-          width: `${ 100 * scale }%`,
+          width: `${ 100 * scale * widthFactor }%`,
         }"
         @mousedown.stop="dragging = true"
         @mousemove="drag($event)"
@@ -175,7 +175,7 @@ export default {
 
       desiresNav: true,
       desiresList: true, 
-      desiresOverlay: true,  
+      desiresOverlay: true, 
 
       editing: false,
       scrolling: false,
@@ -204,6 +204,7 @@ export default {
 
       'isMobile',
       'scale',
+      'widthFactor',
       'windowPos',
       'windowSize',
 
@@ -263,6 +264,22 @@ export default {
   },
 
   created() {   
+
+    if (this.isMobile) {
+      this.$store.commit('setScale', 6)
+      this.$store.commit('setWidthFactor', 4)
+      // for(let t in this.territories) {
+      //   const territory = this.territories[t]
+      //   this.$store.commit('setTerritoryBorders', {
+      //     slug: territory.slug,
+      //     x: territory.borders.x * this.widthFactor,
+      //     y: territory.borders.y,
+      //     w: territory.borders.w * this.widthFactor,
+      //     h: territory.borders.h,
+      //   })
+      //   console.log(territory.borders.x)
+      // }
+    }
 
   },
 
@@ -377,7 +394,13 @@ export default {
         if (!territory) {
           console.log('territory not found')
         } else {
-          position = this.centerOf(territory.borders)
+          position = this.centerOf({
+            x: territory.borders.x * this.widthFactor,
+            y: territory.borders.y,
+            w: territory.borders.w * this.widthFactor,
+            h: territory.borders.h,
+          })
+          // position = this.centerOf(territory.borders)
           content = territory
 
       
@@ -447,7 +470,7 @@ export default {
     // tells the cursor component to handle click.
 
     handleClick() {
-      if (!this.editing && !this.dragging) {
+      if (!this.editing && !this.dragging && !this.isMobile) {
         this.$refs.me[0].sendMessage()
       }
     },

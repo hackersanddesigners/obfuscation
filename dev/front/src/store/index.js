@@ -61,6 +61,7 @@ const store = new Vuex.Store({
     
     isMobile: false,
     scale: 10,
+    widthFactor: 1,
     grid: false,
     windowSize: {
       w: window.innerWidth,
@@ -145,9 +146,11 @@ const store = new Vuex.Store({
         Vue.set(state.territories, slug, regions[slug])
       }
     },
-    setTerritorySize: (state, terr) => {
-      Vue.set(state.territories[terr.slug].borders, 'w', terr.size.w)
-      Vue.set(state.territories[terr.slug].borders, 'h', terr.size.h)
+    setTerritoryBorders: (state, terr) => {
+      Vue.set(state.territories[terr.slug].borders, 'x', terr.x)
+      Vue.set(state.territories[terr.slug].borders, 'y', terr.y)
+      Vue.set(state.territories[terr.slug].borders, 'w', terr.w)
+      Vue.set(state.territories[terr.slug].borders, 'h', terr.h)
     },
     setLocation: (state, newLocation) => {
       state.location = newLocation
@@ -163,6 +166,8 @@ const store = new Vuex.Store({
 
     // app interface mutations.
 
+    setScale: (state, scale) => state.scale = scale,
+    setWidthFactor: (state, factor) => state.widthFactor = factor,
     zero: state => state.scale = 10,
     zoomIn: state => state.scale < 20 ? state.scale += 0.25 : null,
     zoomOut: state  => state.scale > 1 ? state.scale -= 0.25 : null, 
@@ -350,10 +355,16 @@ const store = new Vuex.Store({
         coords = getters.coordsFrom(pos),
         found = getters.territoriesArray.find((territory) => {
           const 
-            minX = territory.borders.x - diff,
-            minY = territory.borders.y - diff,
-            maxX = territory.borders.w + territory.borders.x - diff,
-            maxY = territory.borders.h + territory.borders.y - diff
+            borders = {
+              x: territory.borders.x * state.widthFactor,
+              y: territory.borders.y,
+              w: territory.borders.w * state.widthFactor,
+              h: territory.borders.h,
+            },
+            minX = borders.x - diff,
+            minY = borders.y - diff,
+            maxX = borders.w + borders.x - diff,
+            maxY = borders.h + borders.y - diff
 
           if ( coords.x > minX && coords.x < maxX
             && coords.y > minY && coords.y < maxY ) {
@@ -467,6 +478,7 @@ const store = new Vuex.Store({
           top = island.offsetTop + island.offsetParent.offsetTop,
           centerX = left - (state.windowSize.w - island.offsetWidth) / 2,
           centerY = top - (state.windowSize.h - island.offsetHeight) / 2 
+          // centerY = top - 200
         return {
           x: centerX,
           y: centerY

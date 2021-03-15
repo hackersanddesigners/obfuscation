@@ -11,7 +11,7 @@
 
     :style="{ 
       left: ( 100 * user.x -  0.1) + '%',
-      top: ( 100 * user.y - 0.1) + '%',
+      top: ( 100 * user.y - 0.15) + '%',
       '--scale': 15,
       '--userColor': `var(--${ user.uid })`,
     }"
