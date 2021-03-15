@@ -59,7 +59,7 @@ export default {
   methods: {
 
     checkIfMobile() {
-      return window.innerWidth < 700
+      return window.innerWidth < 750
     },
 
   }

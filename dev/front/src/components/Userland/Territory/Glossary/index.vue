@@ -5,7 +5,7 @@
       :key="section.slug"
       :id="section.slug + 'Island'"
       :section="section"
-      @mouseup.native="handleIslandClick(section)"
+      @click.native="$emit('moreInfo', `/glossary/${section.slug}`)"
     />
   </div>
 </template>
@@ -17,20 +17,6 @@ export default {
   name: 'Glossary',
   components: { Island },
   props: [ 'content' ],
-  methods: {
-
-    handleIslandClick(section) {
-      const current = this.$router.history.current.path
-      const next = `/glossary/${section.slug}`
-      
-      if (current === next) {
-        this.$emit('moreInfo', next)
-      } else {
-        this.$router.push(`${next}`)
-      }
-    }
-
-  }
 }
 </script>
 
@@ -38,8 +24,8 @@ export default {
 .glossary {
   box-sizing: border-box;
   max-height: 100%;
-  margin: auto;
-  /* margin-top: calc(10 * var(--one)); */
+  /* margin: auto; */
+  margin-top: calc(10 * var(--one));
   overflow: scroll;
   display: flex;
   flex-direction: column;

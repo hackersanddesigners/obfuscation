@@ -212,7 +212,7 @@ export default {
   min-width: 100vw;
   width: 100vw;
   max-width: 100vw;
-  max-height: calc(100vh - 25px);
+  max-height: calc(100% - 25px);
   /* max-height: 800px; */
 }
 
@@ -229,7 +229,7 @@ export default {
 @media screen and (max-height: 730px) {
   .overlayContainer {
     /* max-height: 90vh; */
-    max-height: calc(100vh - 25px);
+    max-height: calc(100% - 25px);
   }
   .mobile .overlayContainer {
 

@@ -5,7 +5,7 @@
       :key="section.slug"
       :id="section.slug + 'Island'"
       :section="section"
-      @mousedown.native.stop="handleIslandClick(section)"
+      @click.native="$emit('moreInfo', `/reception/${section.slug}`)"
     />
   </div>
 </template>
@@ -17,21 +17,6 @@ export default {
   name: 'Reception',
   components: { Island },
   props: [ 'content' ],
-  methods: {
-
-    handleIslandClick(section) {
-      const current = this.$router.history.current.path
-      const next = `/reception/${section.slug}`
-      
-      if (current === next) {
-        this.$emit('moreInfo', next)
-      } else {
-        this.$router.push(`${next}`)
-      }
-    }
-
-  }
-
 }
 </script>
 

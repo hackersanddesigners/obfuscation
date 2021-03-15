@@ -84,7 +84,7 @@
         }"
         @mousedown.stop="dragging = true"
         @mousemove="drag($event)"
-        @mouseup.stop="dragging = false"
+        @mouseup.stop="release"
       >
 
         <Territory
@@ -134,8 +134,6 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex'
-
-      // v-if="moreInformation"
 
 import NavHandle from './Nav/Handle'
 import Editor from './Options/Editor'
@@ -474,6 +472,17 @@ export default {
       }
     },
 
+    handleIslandClick(next) {
+      if (!this.dragging) {
+        const current = this.$router.history.current.path
+        if (current === next) {
+          this.route(next)
+        } else {
+          this.$router.push(`${next}`)
+        }
+      }
+    },
+
 
     // tells the cursor component to handle click.
 
@@ -511,18 +520,21 @@ export default {
           x: this.windowPos.x - e.movementX,
           y: this.windowPos.y - e.movementY
         }
-        if (
-          (e.clientX > 0 && e.clientX < this.windowSize.w) ||
-          (e.clientY > 0 && e.clientY < this.windowSize.h)
-        ) {
-        this.scrollTo(position)
+        if (e.clientX <= 10 || 
+            e.clientX >= this.windowSize.w - 20 ||
+            e.clientY <= 10 || 
+            e.clientY >= this.windowSize.h - 20) {
+          this.dragging = false  
         } else {
-          console.log('release')
-          this.dragging = false        
+          this.scrollTo(position)
         }
-
-
       }
+    },
+
+    release() {
+      setTimeout(() => {
+        this.dragging = false
+      }, 0)
     },
 
 

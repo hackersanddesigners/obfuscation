@@ -35,7 +35,7 @@
           </div>
           <Island
             :session="session"
-            @mouseup.native="handleIslandClick(session)"
+            @click.native="$emit('moreInfo', `/timetable/${session.slug}`)"
           />
         </div>
       </div>
@@ -69,18 +69,6 @@ export default {
     this.orderContentByDays()
   },
   methods: {
-
-    handleIslandClick(section) {
-      const current = this.$router.history.current.path
-      const next = `/timetable/${section.slug}`
-      
-      if (current === next) {
-        this.$emit('moreInfo', next)
-      } else {
-        this.$router.push(`${next}`)
-      }
-    },
-
     orderContentByDays() {
       const 
         contentByDays = {},

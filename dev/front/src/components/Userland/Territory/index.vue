@@ -9,6 +9,7 @@
       height: `${ territory.borders.h * 100 }%`,
       '--ground': territory.color,
       '--image': shape,
+      '--mobileImage': mobileShape,
 
     }"
   >
@@ -18,6 +19,11 @@
         {{ territory.name || territory.body }}
       </vue-markdown>
     </div> -->
+
+    <!-- <svg viewBox="0 0 100 100" class="shape" preserveAspectRatio="none">       
+     <image :xlink:href="src" />    
+    </svg> -->
+
 
     <Reception
       v-if="slug === 'reception'"
@@ -117,7 +123,9 @@ export default {
   computed: {
     slug() { return this.territory.slug },
     content() { return this.territory.content },
-    shape() { return `url("${this.$apiURL}${this.territory.shape.url}#svgView(preserveAspectRatio(none))")` }
+    src() { return `${this.$apiURL}${this.territory.shape.url}` },
+    shape() { return `url("${this.$apiURL}${this.territory.shape.url}#svgView(preserveAspectRatio(none))")` },
+    mobileShape() { return `url("${this.$apiURL}${this.territory.shape.url}")` }
   },
   created() {
   },
@@ -137,10 +145,21 @@ export default {
   display: flex;
   cursor: inherit;
 }
+
+/* .territory svg.shape {
+  box-sizing: border-box;
+  position: absolute;
+  top: -15%; left: -15%;
+  height: 130%; width: 130%;
+  z-index: 0;
+  pointer-events: none;
+  fill: var(--ground);
+} */
 .territory::before {
   box-sizing: border-box;
   position: absolute;
   content: '';
+  /* display: none; */
   /* top: 0%; left: 0%;
   height: 100%; width: 100%; */
   /* top: -5%; left: -5%;
@@ -151,11 +170,15 @@ export default {
   pointer-events: none;
   background-color: var(--ground);
   mask-image: var(--image);
-  mask-size: 100% 100%;
-  mask-position: center center;
   -webkit-mask-image: var(--image);
-  -webkit-mask-size: 100% 100%;
+  mask-repeat: no-repeat;
+  -webkit-mask-repeat: no-repeat;
+  mask-origin: border-box;
+  -webkit-mask-origin: border-box;
+  mask-position: center center;
   -webkit-mask-position: center center;
+  mask-size: 100% 100%;
+  -webkit-mask-size: 100% 100%;
   mix-blend-mode: multiply;
   overflow: visible;
 }
@@ -181,5 +204,12 @@ export default {
 }
 .territory .background div {
   /* max-width: 80%; */
+}
+
+.mobile .territory::before {
+  
+  mask-image: var(--mobileImage);
+  -webkit-mask-image: var(--mobileImage);
+
 }
 </style>
