@@ -24,7 +24,7 @@ export default {
 .glossary {
   box-sizing: border-box;
   max-height: 100%;
-  /* margin: auto; */
+  margin: auto;
   margin-top: calc(10 * var(--one));
   overflow: scroll;
   display: flex;
