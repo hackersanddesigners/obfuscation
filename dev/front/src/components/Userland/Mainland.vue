@@ -567,23 +567,25 @@ export default {
       this.$store.commit('viewerPosition', pos)
       this.$store.commit('setLocation', territory)
 
-      const 
-        deltaScrollX = pos.x - this.lastScrollX,
-        deltaScrollY = pos.y - this.lastScrollY,
-        currPos = {
-          x: this.me.x * this.windowSize.w * this.scale,
-          y: this.me.y * this.windowSize.h * this.scale
-        },
-        mePos = {
-          x: (currPos.x + deltaScrollX) / (this.windowSize.w * this.scale),
-          y:(currPos.y + deltaScrollY) / (this.windowSize.h * this.scale)
-        }
-      
-      
-      this.$store.dispatch('updatePosition', mePos)
+      if (!this.dragging) {
 
-      this.lastScrollX = pos.x
-      this.lastScrollY = pos.y
+        const 
+          deltaScrollX = pos.x - this.lastScrollX,
+          deltaScrollY = pos.y - this.lastScrollY,
+          currPos = {
+            x: this.me.x * this.windowSize.w * this.scale,
+            y: this.me.y * this.windowSize.h * this.scale
+          },
+          mePos = {
+            x: (currPos.x + deltaScrollX) / (this.windowSize.w * this.scale),
+            y:(currPos.y + deltaScrollY) / (this.windowSize.h * this.scale)
+          }
+        
+        this.$store.dispatch('updatePosition', mePos)
+
+        this.lastScrollX = pos.x
+        this.lastScrollY = pos.y
+      }
 
     },
 
