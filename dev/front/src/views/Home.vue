@@ -145,7 +145,7 @@ export default {
         messages = response
         this.$store.commit('setMessages', messages)
         this.messagesLoaded = true
-        this.loadingMessage = 'Building terrain...'
+        // this.loadingMessage = 'Building terrain...'
       })
       .catch((error) => { 
         console.log(error)

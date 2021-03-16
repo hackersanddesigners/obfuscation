@@ -462,10 +462,10 @@ const store = new Vuex.Store({
       obj = getters.pixelsFrom(obj)
       const 
         shiftX = 
-          ((state.windowSize.w - obj.w) / 2) >= 0 ? 
+          state.isMobile || ((state.windowSize.w - obj.w) / 2) >= 0 ? 
           ((state.windowSize.w - obj.w) / 2) : 0,
         shiftY = 
-          ((state.windowSize.h - obj.h) / 2) >= 0 ? 
+          state.isMobile || ((state.windowSize.h - obj.h) / 2) >= 0 ? 
           ((state.windowSize.h - obj.h) / 2) : 0,
         x = obj.x - shiftX,
         y = obj.y - shiftY
