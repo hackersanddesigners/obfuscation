@@ -42,11 +42,6 @@ export default {
     // window dimensions: important for positioning!
 
     window.addEventListener('resize', () => {
-      this.$store.commit('resize', {
-        w: window.innerWidth,
-        h: window.innerHeight,
-      })
-
       this.isMobile = this.checkIfMobile()
       if (this.isMobile) {
         this.$store.commit('makeMobile')  

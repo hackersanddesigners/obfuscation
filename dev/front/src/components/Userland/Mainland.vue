@@ -5,7 +5,9 @@
       regionColors,
       { '--scale': scale }
     ]"
-    :class="{ blur: !registered || editing }"
+    :class="{ 
+      blur: !registered || editing,
+    }"
   >
 
     <Editor
@@ -17,7 +19,7 @@
 
       <NavHandle
         :desiresNav="desiresNav"
-        @showNav="desiresNav = true"
+        @showNav="showNav"
         @hideNav="desiresNav = false"
         :desiresList="desiresList"
         @showList="desiresList = true"
@@ -127,7 +129,7 @@
       :content="moreInformation"
       :desiresOverlay="desiresOverlay"
       :isGeneral="location.slug === 'general'"
-      @showOverlay="desiresOverlay = true"
+      @showOverlay="showOverlay"
       @hideOverlay="handleOverlayClose"
     />
 
@@ -307,6 +309,18 @@ export default {
 
     this.$refs.userlandContainer.addEventListener('scroll', (e) => {
       this.setViewerPosition(e)
+    })
+
+    window.addEventListener('resize', () => {
+      this.$store.commit('resize', {
+        w: window.innerWidth,
+        h: window.innerHeight,
+      })
+      // this.triggerRepaint()
+      // this.scrollTo({
+      //   x: this.lastScrollX + 10,
+      //   y: this.lastScrollY + 10
+      // })
     })
 
 
@@ -602,6 +616,25 @@ export default {
           }
         })
       }, 1000)
+    },
+
+    showNav() {
+      if (this.isMobile) {
+        this.desiresOverlay = false
+      }
+      this.desiresNav = true
+    },
+
+    showOverlay() {
+      if (this.isMobile) {
+        this.desiresNav = false
+      }
+      this.desiresOverlay = true
+    },
+
+    triggerRepaint() {
+      this.visible = false
+      this.visible = true
     }
 
   },
@@ -613,6 +646,7 @@ export default {
 <style>
 
 main {
+  position: relative;
   height: 100%; width: 100%;
   overflow: hidden;
 
@@ -633,6 +667,7 @@ main {
 
 }
 
+
 main nav {
   position: absolute;
   box-sizing: border-box;
@@ -646,7 +681,8 @@ main nav {
 }
 
 main nav.hidden {
-  left: -50vw;
+  left: -100vw;
+  z-index: 5;
 }
 
 
@@ -778,16 +814,6 @@ main nav.hidden {
 
 
 
-
-main nav,
-main #location,
-main #overlay,
-main #tickerContainer,
-main #userlandContainer {
-  filter: blur(0px);
-  -webkit-filter: blur(0px);
-  opacity: 1;
-}
 
 main.blur nav,
 main.blur #location,

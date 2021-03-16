@@ -40,9 +40,7 @@
         { hidden: desiresNav }
       ]"
       @click.stop="$emit('showNav')"
-    > 
-        nav &gt; 
-    </span>
+    >nav &gt;</span>
   </div>
 </template>
 
@@ -78,6 +76,7 @@ export default {
   display: flex;
   align-items: center;
   margin-right: 1vh;
+  white-space: pre;
 }
 .navToggle.hide {
   z-index: 1;
@@ -86,6 +85,7 @@ export default {
 .navToggle.show {
   position: fixed;
   padding: 0.5vh 1vh;
+  /* left: calc(100vw + 1vh); */
   left: 1vh;
 }
 .navToggle.hidden {

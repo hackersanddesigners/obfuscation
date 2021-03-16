@@ -34,7 +34,7 @@
 
     </div>
 
-    <span class="goto"> {{ hovered ? '→' : ''  }}</span> 
+    <span class="goto"> {{ hovered ? '→' : ' '  }}</span> 
 
     <div v-if="moderating && messagesVisible" class="messageListContiner">
 
