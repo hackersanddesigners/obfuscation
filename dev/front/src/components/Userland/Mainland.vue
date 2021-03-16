@@ -785,7 +785,7 @@ main #tickerContainer,
 main #userlandContainer {
   filter: blur(0px);
   -webkit-filter: blur(0px);
-  opacity: 0.5;
+  opacity: 1;
 }
 
 main.blur nav,
