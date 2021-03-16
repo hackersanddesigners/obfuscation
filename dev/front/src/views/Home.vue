@@ -215,6 +215,7 @@ export default {
           this.$store.commit('register')
         }
 
+        this.selfEvaluated = true
         
         // update the app store with the UID and user.
 
@@ -225,7 +226,6 @@ export default {
         // announce existence to server and peers.
 
         this.$socket.client.emit('user', self)
-        this.selfEvaluated = true
         // this.loadingMessage = 'Ready.'
 
       })

@@ -41,7 +41,7 @@
 
     <ul>
       <Label
-        v-for="user in (moderator ? usersArray : connectedUsers)"
+        v-for="user in (moderator ? notDeletedUsers : connectedUsers)"
         :key="user.uid"
         :user="user"
         :isMe="user.uid === me.uid"
@@ -79,6 +79,7 @@ export default {
       'me',
       'usersArray',
       'connectedUsers',
+      'notDeletedUsers',
       'notDeletedMessages',
       'messagesByUser',
     ])
