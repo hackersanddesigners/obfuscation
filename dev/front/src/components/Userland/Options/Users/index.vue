@@ -41,7 +41,7 @@
 
     <ul>
       <Label
-        v-for="user in (moderator ? notDeletedUsers : connectedUsers)"
+        v-for="user in (moderating ? notDeletedUsers : connectedUsers)"
         :key="user.uid"
         :user="user"
         :isMe="user.uid === me.uid"
@@ -77,7 +77,6 @@ export default {
   computed: {
     ...mapGetters([
       'me',
-      'usersArray',
       'connectedUsers',
       'notDeletedUsers',
       'notDeletedMessages',

@@ -70,12 +70,11 @@ low(adapter).then(db => {
   io.on('connection', (socket) => {
     
     socket.on('user', (user) => {
-      console.log(`${user.uid} (${user.name})`)
-      // if (!user.name.includes(user.uid)) {
-        io.sockets.emit('user', user)
-      // } else {
-        // console.log('not registered')
-      // }     
+      const ip = 
+          socket.handshake.headers['x-forwarded-for'] || 
+          socket.handshake.address.address
+      console.log(`${user.uid} | (${user.name}) | ${ip}`)
+      io.sockets.emit('user', user)
       db.set(`users[${user.uid}]`, user)
         .write()
     })
