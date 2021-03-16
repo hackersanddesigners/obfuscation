@@ -71,7 +71,7 @@ low(adapter).then(db => {
     
     socket.on('user', (user) => {
       console.log(`${user.uid} (${user.name})`)
-      if (!user.name.includes(self.uid)) {
+      if (!user.name.includes(user.uid)) {
         io.sockets.emit('user', user)
       } else {
         console.log('not registered')
