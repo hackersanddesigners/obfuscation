@@ -198,6 +198,11 @@ export default {
   overflow: scroll;
 }
 
+.overlay section:first-of-type h1 {
+  margin-top: 0 !important;
+
+}
+
 #aanmelderContainer {
   border-top: 1px solid black;
 }

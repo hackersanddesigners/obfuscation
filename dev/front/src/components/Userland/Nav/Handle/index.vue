@@ -72,6 +72,7 @@ export default {
 
 #navHandle span {
   cursor: pointer;
+  font-size: 20pt;
 }
 
 .navToggle {

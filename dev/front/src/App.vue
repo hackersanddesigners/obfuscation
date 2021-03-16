@@ -46,6 +46,7 @@ export default {
         w: window.innerWidth,
         h: window.innerHeight,
       })
+
       this.isMobile = this.checkIfMobile()
       if (this.isMobile) {
         this.$store.commit('makeMobile')  
@@ -133,7 +134,8 @@ html, body {
   --ui-back: white;
   --ui-front: black;
   --ui-font-size: 10pt;
-  --ui-border: 1px solid grey;
+  --ui-font-size: 20pt;
+  --ui-border: 1px solid black;
   --ui-border-radius: 7.5px;
   --ui-box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.199);
 
@@ -153,7 +155,8 @@ h2 {
   font-weight: normal;
 }
 
-h3 { 
+h3,
+h4 { 
   font-size: 15pt;
   font-weight: normal;
 }

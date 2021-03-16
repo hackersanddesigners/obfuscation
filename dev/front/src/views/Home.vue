@@ -226,7 +226,7 @@ export default {
 
         this.$socket.client.emit('user', self)
         this.selfEvaluated = true
-        this.loadingMessage = 'Ready.'
+        // this.loadingMessage = 'Ready.'
 
       })
       .catch((error) => { 

@@ -24,17 +24,32 @@ export default {
   box-sizing: border-box;
   height: 100%;
   width: 100%;
-  margin: 
-    calc(2.5 * var(--one)) 
-  ;
-  display: flex;
-  flex-wrap: wrap;
-  /* justify-content: flex-start;
-  align-items: flex-start;
-  align-content: flex-start; */
-  justify-content: center;
-  align-items: center;
-  align-content: center;
+  /* margin: calc(2.5 * var(--one)); */
+}
+
+.exhibition .island:nth-last-of-type(1) {
+  top: 10%; left: 0%;
+}
+.exhibition .island:nth-last-of-type(2) {
+  top: 40%; left: 10%;
+}
+.exhibition .island:nth-last-of-type(3) {
+  top: 0%; left: 20%;
+}
+.exhibition .island:nth-last-of-type(4) {
+  top: 60%; left: 35%;
+}
+.exhibition .island:nth-last-of-type(5) {
+  top: 70%; left: 55%;
+}
+.exhibition .island:nth-last-of-type(6) {
+  top: 30%; left: 70%;
+}
+.exhibition .island:nth-last-of-type(7) {
+  top: 60%; left: 85%;
+}
+.exhibition .island:nth-last-of-type(8) {
+  top: 10%; left: 50%;
 }
 
 

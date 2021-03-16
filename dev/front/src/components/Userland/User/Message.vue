@@ -118,10 +118,10 @@ export default {
   border-color: transparent;
   line-height: calc(1.5 * var(--one));
   transition: all 0.2s ease;
-  filter: 
+  /* filter: 
     drop-shadow(0 0 
     calc(0.15 * var(--one))
-    rgba(0, 0, 0, 0.37));
+    rgba(0, 0, 0, 0.37)); */
 }
 .messageContainer .message p,
 .messageContainer .message * {

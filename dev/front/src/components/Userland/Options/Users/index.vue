@@ -120,7 +120,7 @@ export default {
   box-sizing: border-box;
   display: flex;
   align-items: stretch;
-  border-bottom: 1px solid grey;
+  border-bottom: var(--ui-border);
 }
 #userlist .title .hideParticipants {
   padding: 0.5vh;

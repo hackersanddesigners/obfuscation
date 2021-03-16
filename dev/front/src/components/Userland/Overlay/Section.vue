@@ -134,6 +134,7 @@ section .header {
 section .header h3 { 
 }
 section .header h1 {  
+  margin-top: 0;
 }
 section .body {
   font-size: 12.5pt;

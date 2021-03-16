@@ -205,7 +205,7 @@ export default {
 }
 #minimap .zoom div {
   box-sizing: border-box;
-  border-left: 1px solid grey;
-  border-bottom: 1px solid grey;
+  border-left: var(--ui-border);
+  border-bottom: var(--ui-border);
 }
 </style>

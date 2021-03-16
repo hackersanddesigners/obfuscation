@@ -476,8 +476,8 @@ const store = new Vuex.Store({
           left = island.offsetLeft + island.offsetParent.offsetLeft,
           top = island.offsetTop + island.offsetParent.offsetTop,
           centerX = left - (state.windowSize.w - island.offsetWidth) / 2,
-          centerY = top - (state.windowSize.h - island.offsetHeight) / 2 
-          // centerY = top - 200
+          // centerY = top - (state.windowSize.h - island.offsetHeight) / 2 
+          centerY = top - 100
         return {
           x: centerX,
           y: centerY

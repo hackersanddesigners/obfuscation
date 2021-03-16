@@ -26,24 +26,24 @@ export default {
   height: 100%; 
 }
 #aboutIsland {
-  top: 5%; left: 35%;
+  top: 3%; left: 35%;
 }
 #contactIsland {
-  top: 35%; left: 30%;
+  top: 30%; left: 30%;
 }
 #call-for-participationIsland {
-  top: 50%; left: 45%;
+  top: 40%; left: 45%;
 }
 #registerIsland {
-  top: 75%; left: 35%;
+  top: 55%; left: 35%;
 }
 #wo-2017Island {
-  top: 20%; left: 40%;
+  top: 15%; left: 40%;
 }
 #code-of-conductIsland {
-  top: 65%; left: 65%;
+  top: 60%; left: 65%;
 }
 #study-groupIsland {
-  top: 30%; left: 60%;
+  top: 20%; left: 60%;
 }
 </style>

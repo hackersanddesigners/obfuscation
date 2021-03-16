@@ -26,7 +26,6 @@
           :key="session.slug"
           :id="session.slug + 'Island'"
           :style="{
-            minHeight: sizeByDuration(session),
           }"
         >
           <div class="time">
@@ -53,8 +52,8 @@ export default {
   props: [ 'content' ],
   data() {
     return {
-      // defaultTimeZone: "Europe/Amsterdam",
-      defaultTimeZone: "Australia/Sydney",
+      defaultTimeZone: "Europe/Amsterdam",
+      // defaultTimeZone: "Australia/Sydney",
       ownTimeZone: moment.tz.guess(),
       desiresOwnTimezone: false,
       contentByDays: {}
@@ -144,7 +143,7 @@ export default {
 .timetable {
   box-sizing: border-box;
   padding: 
-    calc(5 * var(--one))
+    /* calc(5 * var(--one)) */
     /* calc(10 * var(--one)) */
   ;
   width: 100%;
@@ -161,11 +160,11 @@ export default {
 
 #timeZone {
   position: absolute;
-  top: calc(4 * var(--one));
+  top: calc(-4 * var(--one));
   left: calc(35 * var(--one));
 }
 #timeZone h3 {
-  font-size: calc(1.8 * var(--one));
+  font-size: calc(1.4 * var(--one));
   margin: 0;
 }
 #timeZone h3.toggle {
@@ -176,7 +175,7 @@ export default {
 .timetable .day  {
   /* max-width: 30%; */
   /* max-width: calc(60 * var(--one)); */
-  max-width: 30%;
+  max-width: 40%;
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
@@ -189,8 +188,10 @@ export default {
 .timetable .day .date {
   /* align-self: flex-start; */
   margin: 
-    calc(5 * var(--one))
-    calc(10 * var(--one))
+    calc(3 * var(--one))
+    calc(2 * var(--one))
+    calc(3 * var(--one))
+    calc(2 * var(--one))
   ;
   font-size: calc(2.8 * var(--one));
   /* font-family: sans-serif; */
@@ -208,7 +209,7 @@ export default {
 .timetable .day .sessionsContainer .islandContainer {
   box-sizing: border-box;
   position: relative;
-  margin: calc(1 * var(--one));
+  /* margin: calc(1 * var(--one)); */
   width: 100%;
   display: flex;
   justify-content: center;

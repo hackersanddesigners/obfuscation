@@ -75,10 +75,9 @@ export default {
 
 <style scoped>
 .island {
-  width: calc(4vw * var(--scale));
-  height: calc(4vh * var(--scale));
-  /* min-width: 15%; */
-  /* height; */
+  position: absolute;
+  min-width: calc(50 * var(--one));
+  height: calc(30 * var(--one));
   margin: calc(6 * var(--one));
   padding: 0;
   display: flex;

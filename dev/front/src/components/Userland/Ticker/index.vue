@@ -45,7 +45,7 @@ export default {
     content() {
       let content = ''
       for (let i = 0; i < 20; i++ ) {
-        content = content + this.phrase + ' || '
+        content = content + this.phrase + ' '
       }
       return content
     }
@@ -103,6 +103,8 @@ export default {
   font-size: 24pt;
   bottom: -25px;
   box-shadow: 0 0 30px 0 rgba(0, 0, 0, 0.534);
+  border-top: var(--ui-border);
+  box-shadow: var(--ui-box-shadow);
 }
 #tickerContainer.hover {
   bottom: -10px;

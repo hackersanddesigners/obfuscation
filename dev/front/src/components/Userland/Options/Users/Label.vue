@@ -6,7 +6,8 @@
     @mouseleave.stop="hovered=false"
   >
 
-    <span class="bullet"> ● </span>
+    <!-- <span class="bullet"> ● </span> -->
+    <!-- <span class="bullet"></span> -->
 
     <span class="name">
       {{ isMe ? "me" : user.name }} 
@@ -89,10 +90,17 @@ li {
 li span {
   margin-right: 0.5vh;
 }
+li .bullet {
+  height: 1vh; width: 1vh;
+  background: var(--userColor);
+  padding: 1px;
+  border-radius: 3px 5px 3px 5px;
+}
 li .name {
   width: 100%;
   max-width: 200px;
   cursor: pointer;
+  /* cursor: ne-resize; */
 }
 li .goto {
   margin-left: auto;

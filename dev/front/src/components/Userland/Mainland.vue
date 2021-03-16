@@ -68,10 +68,11 @@
     >
       
       <div id="location">
-        <div
-          @click="route(location.slug, false, false, true)"
+        <div 
+          class="ui"
+          @click="handleIslandClick('/' + location.slug)"
         > 
-          {{ location.slug }} 
+          #{{ location.slug }} 
         </div>
       </div>
 
@@ -133,8 +134,10 @@
 
 
 
+
 <script>
 import { mapState, mapGetters } from 'vuex'
+          // @click="route(location.slug, false, false, true)"
 
 import NavHandle from './Nav/Handle'
 import Editor from './Options/Editor'
@@ -445,22 +448,23 @@ export default {
     },
 
 
+    handleIslandClick(next) {
+      if (!this.dragging) {
+        const current = this.$router.history.current.path
+        if (current === next) {
+          this.route(next, false, false, true)
+        } else {
+          this.$router.push(`${next}`)
+        }
+      }
+    },
+
+
     // tells the cursor component to handle input.
 
     handleInput(e) {
       if (!this.editing && !this.isMobile) {
         this.$refs.me[0].trackInput(e)
-      }
-    },
-
-    handleIslandClick(next) {
-      if (!this.dragging) {
-        const current = this.$router.history.current.path
-        if (current === next) {
-          this.route(next)
-        } else {
-          this.$router.push(`${next}`)
-        }
       }
     },
 
@@ -657,15 +661,10 @@ main nav.hidden {
 }
 
 #location div {
-  box-sizing: border-box;
   margin: 1vh;
-  padding: 0.5vh;
-  padding: 0.5vh 0.75vh 0.6vh 0.75vh;
-  font-family: 'jet';
+  font-size: 20pt;
   color: var(--ui-back);
   background: var(--ui-front);
-  border-radius: var(--ui-border-radius);
-  box-shadow: var(--ui-box-shadow);
 }
 
 
