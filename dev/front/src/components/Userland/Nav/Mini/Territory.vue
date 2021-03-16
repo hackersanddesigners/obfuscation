@@ -11,7 +11,6 @@
       width: `${ territory.borders.w * 100 }%`,
       height: `${ territory.borders.h * 100 }%`,
       '--ground': territory.color,
-      '--image': shape,
     }"
   >
     <svg 

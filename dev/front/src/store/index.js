@@ -420,7 +420,7 @@ const store = new Vuex.Store({
     },
 
     connectedUsers: (state, getters) => {
-      return getters.notDeletedUsers.filter(u => u.connected === true)
+      return getters.notBlockedUsers.filter(u => u.connected === true)
     },
 
     connectedUsersFirst: (state, getters) => {

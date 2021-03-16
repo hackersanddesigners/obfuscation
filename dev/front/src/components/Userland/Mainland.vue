@@ -99,7 +99,7 @@
         />
 
         <Cursorr
-          v-for="user in notBlockedUsers"
+          v-for="user in connectedUsers"
           :key="user.uid"
           :ref="isMe(user) ? 'me' : 'Users'"
           :user="user"
@@ -229,7 +229,7 @@ export default {
 
       'regionColors',
       'userColors',
-      'notBlockedUsers',
+      'connectedUsers',
       'notDeletedMessages',
 
       'positionOf',

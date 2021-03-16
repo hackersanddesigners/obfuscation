@@ -119,7 +119,7 @@ export default {
     }),
     ...mapGetters({
 
-      users: 'notDeletedUsers',
+      users: 'connectedUsers',
       messages: 'notDeletedMessages',
 
     })

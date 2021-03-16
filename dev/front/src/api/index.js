@@ -24,8 +24,8 @@ const api = {
         axios
           .get(URL + 'messages')
           .then((response) => { 
-            // const messages = this.lastTwoDaysOnly(response.data)
-            const messages = response.data
+            const messages = this.lastTwoDaysOnly(response.data)
+            // const messages = response.data
             resolve(messages) 
           })
           .catch((error) => { reject(error) })
@@ -107,15 +107,15 @@ const api = {
     lastTwoDaysOnly(messages) {
       const 
         now = (new Date()).getTime(),
-        twodays = 172800000
+        twodays = 172800000 // two days
+        // twodays = 28800000 // 8 hours
       for (let m in messages) {
         const message = messages[m]
         if (message.time < now - twodays) {
-          // console.log(message.content)
-          // console.log(moment(message.time).fromNow())
           delete messages[m]
         }
       }
+      return messages
     },
 
     correctDates(sessions) {
