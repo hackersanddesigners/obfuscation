@@ -39,6 +39,11 @@ export default {
     this.slug = window.location.pathname
 
 
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+
+
     // window dimensions: important for positioning!
 
     window.addEventListener('resize', () => {
