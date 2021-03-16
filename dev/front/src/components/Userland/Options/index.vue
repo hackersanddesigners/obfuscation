@@ -92,6 +92,7 @@ export default {
   cursor: pointer;
 }
 .button {
+  padding: 0.5vh 1vh;
   margin-top: 1vh;
   outline: none;
   cursor: pointer;

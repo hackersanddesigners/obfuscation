@@ -171,6 +171,7 @@ h4 {
   border-radius: var(--ui-border-radius);
   box-shadow: var(--ui-box-shadow);
   transition: all 0.2s ease;
+  line-height: 1.2;
 }
 #app.mobile {
   --ui-font-size: 14pt;

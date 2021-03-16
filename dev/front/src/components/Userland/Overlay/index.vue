@@ -186,6 +186,9 @@ export default {
   right: 1vh;
   z-index: 0;
 }
+#infoTitle .infoToggle.hide {
+  padding: 0.5vh 1vh;
+}
 .infoToggle.hidden {
   opacity: 0;
   transition: all 0.2s ease;
