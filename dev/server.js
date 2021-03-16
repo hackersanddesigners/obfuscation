@@ -73,7 +73,7 @@ low(adapter).then(db => {
       const ip = 
           socket.handshake.headers['x-forwarded-for'] || 
           socket.handshake.address.address
-      console.log(`${user.uid} | ${ip} | (${user.name})`)
+      console.log(`${user.uid} | (${user.name}) | ${ip}`)
       io.sockets.emit('user', user)
       db.set(`users[${user.uid}]`, user)
         .write()
