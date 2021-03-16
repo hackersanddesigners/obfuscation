@@ -225,7 +225,9 @@ export default {
 
         // announce existence to server and peers.
 
-        this.$socket.client.emit('user', self)
+        if (!users[self.uid].name.includes(self.uid)) {
+          this.$socket.client.emit('user', self)
+        }
         // this.loadingMessage = 'Ready.'
 
       })
