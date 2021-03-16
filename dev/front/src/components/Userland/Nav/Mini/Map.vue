@@ -177,12 +177,14 @@ export default {
   width: 100%; height: 100%;
   cursor: inherit;
   filter: blur(1px);
+  -webkit-filter: blur(1px);
   opacity: 0.9;
   transition: all 0.2s ease;
   z-index: 4;
 }
 #minimap.hovered .messageContainer {
   filter: blur(0px);
+  -webkit-filter: blur(0px);
   opacity: 1;
   transition: all 0.2s ease;
 }

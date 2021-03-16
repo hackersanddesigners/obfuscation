@@ -101,6 +101,7 @@ export default {
   font-size: calc(1 * var(--one));
   color: var(--userColor);
   filter: var(--blur);
+  -webkit-filter: blur(0px);
   transition: filter 0.2s ease;
   display: flex;
   flex-direction: column;
@@ -156,6 +157,7 @@ export default {
 
 .messageContainer.hover {
   filter: blur(0px);
+  -webkit-filter: blur(0px);
 }
 .messageContainer.hover .details {
   opacity: 1;

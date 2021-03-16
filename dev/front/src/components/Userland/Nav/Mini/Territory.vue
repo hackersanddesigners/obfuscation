@@ -110,7 +110,6 @@ export default {
   max-width: 100%;
 }
 .mini-territory.hovered .background {
-  filter: blur(0px);
   opacity: 0.8;
 }
 </style>

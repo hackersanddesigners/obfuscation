@@ -778,7 +778,15 @@ main nav.hidden {
 
 
 
-
+main nav,
+main #location,
+main #overlay,
+main #tickerContainer,
+main #userlandContainer {
+  filter: blur(0px);
+  -webkit-filter: blur(0px);
+  opacity: 0.5;
+}
 
 main.blur nav,
 main.blur #location,
@@ -786,6 +794,7 @@ main.blur #overlay,
 main.blur #tickerContainer,
 main.blur #userlandContainer {
   filter: blur(10px);
+  -webkit-filter: blur(10px);
   opacity: 0.5;
 }
 

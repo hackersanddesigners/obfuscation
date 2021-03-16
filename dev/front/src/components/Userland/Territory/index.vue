@@ -185,7 +185,7 @@ export default {
   font-family: 'zxx-noise';
   font-size: calc(25pt * var(--scale));
   line-height: calc(21pt * var(--scale));
-  filter: blur(10px);
+  /* filter: blur(10px); */
   opacity: 0.5;
 }
 .territory .background div {
