@@ -95,7 +95,7 @@ export default {
   margin-top: 1vh;
   outline: none;
   cursor: pointer;
-  font-size:20pt;
+
 }
 
 </style>

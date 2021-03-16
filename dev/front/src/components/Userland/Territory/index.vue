@@ -17,13 +17,13 @@
       </vue-markdown>
     </div> -->
 
-    <svg 
+    <!-- <svg 
       class="shape" 
       :viewBox="viewBox"
       preserveAspectRatio="none"
     >       
      <path :fill="territory.color" :d="d"/>
-    </svg>
+    </svg> -->
 
     <Reception
       v-if="slug === 'reception'"

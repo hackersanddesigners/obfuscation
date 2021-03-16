@@ -98,8 +98,10 @@ li .bullet {
 }
 li .name {
   width: 100%;
-  max-width: 200px;
+  /* max-width: 200px; */
   cursor: pointer;
+  word-break: keep-all;
+  /* white-space: pre; */
   /* cursor: ne-resize; */
 }
 li .goto {

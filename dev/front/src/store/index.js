@@ -397,6 +397,15 @@ const store = new Vuex.Store({
       return userMessages
     },
 
+    regionColors: state => {
+      let regionColors = {}
+      for (let slug in state.territories) {
+        const terr = state.territories[slug]
+        regionColors[`--${slug}`] = terr.color
+      }
+      return regionColors
+    },
+
     userColors: state => {
       let userColors = {}
       for (let uid in state.users) {

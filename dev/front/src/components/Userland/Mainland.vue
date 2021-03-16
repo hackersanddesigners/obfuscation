@@ -2,6 +2,7 @@
   <main 
     :style="[
       userColors,
+      regionColors,
       { '--scale': scale }
     ]"
     :class="{ blur: !registered || editing }"
@@ -80,6 +81,7 @@
         v-if="true"
         id="userland" 
         ref="userland"
+        :class="location.slug"
         :style="{
           height: `${ 100 * scale }%`,
           width: `${ 100 * scale * widthFactor }%`,
@@ -225,6 +227,7 @@ export default {
       'territoryBySlug',
       'userByName',
 
+      'regionColors',
       'userColors',
       'notBlockedUsers',
       'notDeletedMessages',
@@ -687,6 +690,7 @@ main nav.hidden {
   color: var(--ui-front);
   background: var(--ui-back);
   overflow: hidden;
+  transition: background-color 0.2s ease;
 }
 #userland::before {
   content: '';
@@ -737,6 +741,38 @@ main nav.hidden {
   margin: 0;
   font-size: calc(1.8 * var(--one));
   line-height: 1.2;
+}
+
+
+#userland.reception {
+  background-color: var(--reception);
+}
+#userland.readme {
+  background-color: var(--readme);
+}
+#userland.hangout {
+  background-color: var(--hangout);
+}
+#userland.exhibition {
+  background-color: var(--exhibition);
+}
+#userland.livestream {
+  background-color: var(--livestream);
+}
+#userland.timetable {
+  background-color: var(--timetable);
+}
+#userland.contributors {
+  background-color: var(--contributors);
+}
+#userland.library {
+  background-color: var(--library);
+}
+#userland.study-room {
+  background-color: var(--study-room);
+}
+#userland.glossary {
+  background-color: var(--glossary);
 }
 
 

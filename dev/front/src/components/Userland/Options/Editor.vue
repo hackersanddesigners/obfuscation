@@ -199,11 +199,12 @@ export default {
 }
 
 #register {
-  width: 260px;
+  width: 360px;
   padding: 1vh;
 }
 #register h3 {
   margin-top: 0;
+  font-size: calc(1 * var(--ui-font-size));
 }
 #register .introText:last-of-type p:last-of-type {
   margin-bottom: 0;
@@ -227,9 +228,9 @@ input[type="button"] {
   cursor: pointer;
 }
 
-.error  {
+p.error  {
   margin: 5px;
-  font-size: 9pt;
+  font-size: calc(0.6 * var(--ui-font-size));
   color: red;
 }
 

@@ -25,8 +25,6 @@
           v-for="session in day.sessions"
           :key="session.slug"
           :id="session.slug + 'Island'"
-          :style="{
-          }"
         >
           <div class="time">
             <span class="start">{{ start(session) }}</span>

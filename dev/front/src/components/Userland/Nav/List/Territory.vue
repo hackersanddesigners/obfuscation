@@ -40,7 +40,7 @@ export default {
   list-style: none;
   margin: 0.5vh;
   margin-bottom: 0.3vh;
-  font-size: 20pt;
+  font-size: var(--ui-font-size)
 }
 .list-territory:last-of-type {
   /* margin-bottom: 0.5vh; */
