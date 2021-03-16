@@ -173,8 +173,8 @@ h4 {
   transition: all 0.2s ease;
 }
 #app.mobile {
-  --ui-font-size: 12pt;
-  font-size: 12pt;
+  --ui-font-size: 14pt;
+  font-size: 14pt;
 }
 
 </style>

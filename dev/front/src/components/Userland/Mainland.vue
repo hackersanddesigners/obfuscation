@@ -665,7 +665,7 @@ main nav.hidden {
 
 #location div {
   margin: 1vh;
-  font-size: 20pt;
+  font-size: var(--ui-font-size);
   color: var(--ui-back);
   background: var(--ui-front);
 }
@@ -798,7 +798,7 @@ main.blur #userlandContainer {
 
 
 .mobile #location div {
-  padding: 0.65vh 0.75vh 0.8vh 0.75vh;
+  /* padding: 0.65vh 0.75vh 0.8vh 0.75vh; */
 }
 
 .mobile nav {
