@@ -27,9 +27,11 @@ Vue.component('vue-markdown', VueMarkdown)
 
 smoothscroll.polyfill()
 
+const url = process.env.VUE_APP_SIO_URL
+
 Vue.use(
   VueSocketIOExt, 
-  io('https://obfuscation.karls.computer'),
+  io(url),
   { store }
 )
 
