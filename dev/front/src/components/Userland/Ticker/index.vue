@@ -60,9 +60,9 @@ export default {
     this.smarquee = new Smarquee({
       element: this.$refs.smarq,
       iterationCount: 'infinite',
-      onAnimationStart() { console.log('smarquee start') },
-      onAnimationIterate() { console.log('smarquee loop') },
-      onAnimationEnd() { console.log('smarquee stop') },
+      // onAnimationStart() { console.log('smarquee start') },
+      // onAnimationIterate() { console.log('smarquee loop') },
+      // onAnimationEnd() { console.log('smarquee stop') },
     })
     this.smarquee.init()
     this.handleSmarquee()

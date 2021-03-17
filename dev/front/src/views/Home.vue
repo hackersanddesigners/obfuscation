@@ -82,6 +82,7 @@ export default {
   created() {
 
 
+    // console.log(`ENVIRONMENT: ${ this.$env }`)
     console.log(`VERSION: ${ localStorage.version }`)
     console.log(`LIFECYCLE: ${ this.lifecycle }`)
 

@@ -13,8 +13,10 @@ Vue.config.productionTip = false
 
 Vue.prototype.$http = Axios
 Vue.prototype.$apiURL = process.env.VUE_APP_API_URL
-Vue.prototype.$LIFECYCLE = process.env.VUE_APP_LIFECYCLE || 0
 Vue.prototype.$publicPath = process.env.BASE_URL || '/'
+// Vue.prototype.$env = 
+//   window.location.host === "3rd.obfuscationworkshop.org" ?
+//   'production' : 'development'
 
 VueMarkdown.props.anchorAttributes.default = () => ({
   target: '_blank',

@@ -174,7 +174,7 @@ h4 {
   line-height: 1.2;
 }
 #app.mobile {
-  --ui-font-size: 14pt;
+  --ui-font-size: 16pt;
   font-size: 14pt;
 }
 

@@ -76,7 +76,7 @@ export default {
   display: flex;
   align-items: center;
   margin-right: 1vh;
-  white-space: pre;
+  /* white-space: pre; */
 }
 .navToggle.hide {
   z-index: 1;

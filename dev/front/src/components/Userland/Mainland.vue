@@ -279,7 +279,7 @@ export default {
 
     if (this.isMobile) {
       this.$store.commit('setScale', 6)
-      this.$store.commit('setWidthFactor', 3.5)
+      this.$store.commit('setWidthFactor', 3.3)
     }
 
   },
