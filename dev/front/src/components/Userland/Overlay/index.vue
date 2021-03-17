@@ -124,9 +124,7 @@ export default {
       if (this.content && this.content.slug === 'register') {
         this.isRegister = true
         let aanmelder = document.createElement('script')
-        aanmelder.setAttribute('src', 
-          'https://www.aanmelder.nl/115987/xsembed?auth=UB-PSIJLXsgRsW62W1FtPyhMMTE1OTg3TApWRU1CRURVUkxDSEVDSwpwMAp0cDEKLg..'
-        )
+        aanmelder.setAttribute('src', this.$aanURL)
         document.head.appendChild(aanmelder)
       } else {
         this.isRegister = false
