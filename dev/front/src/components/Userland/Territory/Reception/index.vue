@@ -46,4 +46,5 @@ export default {
 #study-groupIsland {
   top: 20%; left: 60%;
 }
+
 </style>

@@ -278,7 +278,7 @@ export default {
   created() {   
 
     if (this.isMobile) {
-      this.$store.commit('setScale', 6)
+      this.$store.commit('setScale', 8)
       this.$store.commit('setWidthFactor', 3.3)
     }
 
