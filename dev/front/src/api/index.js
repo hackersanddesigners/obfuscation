@@ -3,8 +3,8 @@ import axios from 'axios'
 
 
 const 
-  apiURL  = 'https://api.obfuscation.karls.computer/',
-  URL     = 'https://obfuscation.karls.computer/'
+  apiURL  = process.env.VUE_APP_API_URL + '/',
+  URL     = process.env.VUE_APP_URL + '/'
 
 const api = {
 

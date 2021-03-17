@@ -14,6 +14,7 @@ Vue.config.productionTip = false
 Vue.prototype.$http = Axios
 Vue.prototype.$apiURL = process.env.VUE_APP_API_URL
 Vue.prototype.$publicPath = process.env.BASE_URL || '/'
+Vue.prototype.$env = process.env.NODE_ENV
 // Vue.prototype.$env = 
 //   window.location.host === "3rd.obfuscationworkshop.org" ?
 //   'production' : 'development'
@@ -27,7 +28,7 @@ Vue.component('vue-markdown', VueMarkdown)
 
 smoothscroll.polyfill()
 
-const url = process.env.VUE_APP_SIO_URL
+const url = process.env.VUE_APP_URL
 
 Vue.use(
   VueSocketIOExt, 
