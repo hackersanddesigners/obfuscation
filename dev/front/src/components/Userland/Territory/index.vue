@@ -155,6 +155,7 @@ export default {
   position: absolute;
   display: flex;
   cursor: inherit;
+  /* z-index: 5; */
 }
 
 .territory svg.shape {

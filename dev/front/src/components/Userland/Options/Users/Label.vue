@@ -81,7 +81,7 @@ export default {
 <style scoped>
 li {
   padding: 0;
-  margin: 0.5vh;
+  margin: 0.5vh 1vh;
   display: flex;
   align-items: center;
   color: var(--userColor);

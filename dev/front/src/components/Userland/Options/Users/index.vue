@@ -41,7 +41,7 @@
 
     <ul>
       <Label
-        v-for="user in (moderating ? notDeletedUsers : connectedUsers)"
+        v-for="user in (moderating ? connectedUsersFirst : connectedUsers)"
         :key="user.uid"
         :user="user"
         :isMe="user.uid === me.uid"
@@ -78,6 +78,7 @@ export default {
     ...mapGetters([
       'me',
       'connectedUsers',
+      'connectedUsersFirst',
       'notDeletedUsers',
       'notDeletedMessages',
       'messagesByUser',
@@ -123,7 +124,7 @@ export default {
   border-bottom: var(--ui-border);
 }
 #userlist .title .hideParticipants {
-  padding: 0.5vh;
+  padding: 0.5vh 1vh;
   cursor: pointer;
 }
 #userlist .title #moderate {
@@ -131,7 +132,7 @@ export default {
   cursor: pointer;
   display: flex;
   align-items: center;
-  border-left: 1px solid grey;
+  border-left:  var(--ui-border);
 }
 #userlist .title #moderate .moderateButton,
 #userlist .title #moderate .moderateButton span {

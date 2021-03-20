@@ -285,7 +285,7 @@ export default {
   },
 
   mounted() {
-
+  
 
     // if there is a slug, navigate to it.
 
@@ -327,11 +327,13 @@ export default {
   },
 
   beforeDestroy() {
-
     if (this.registered && this.me) {
       this.$store.dispatch('disconnect')
+      if (this.isMobile) {
+        this.$store.dispatch('deleteUser', this.me)
+        localStorage.clear()
+      }
     }
-
   },
 
   sockets: {
@@ -570,7 +572,6 @@ export default {
     // left corner of the (larger) userland div. 
 
     setViewerPosition() {
-
       const
         viewerPos = {
           x: this.$refs.userlandContainer.scrollLeft,
@@ -581,7 +582,7 @@ export default {
         currPos = {
           x: this.me.x * this.windowSize.w * this.scale,
           y: this.me.y * this.windowSize.h * this.scale
-        },
+        },  
         mePos = {
           x: (currPos.x + deltaScrollX) / (this.windowSize.w * this.scale),
           y:(currPos.y + deltaScrollY) / (this.windowSize.h * this.scale)

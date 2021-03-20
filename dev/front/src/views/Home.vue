@@ -212,6 +212,7 @@ export default {
         }
 
         if (this.isMobile) {
+          self.isMobile = true
           this.$store.commit('visit')
           this.$store.commit('register')
         }

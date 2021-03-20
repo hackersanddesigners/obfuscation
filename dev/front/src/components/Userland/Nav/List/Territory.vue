@@ -62,4 +62,7 @@ export default {
 .list-territory.active .name {
   border-bottom: 1.5px solid;
 }
+.mobile .list-territory {
+  font-size: 20pt;
+}
 </style>

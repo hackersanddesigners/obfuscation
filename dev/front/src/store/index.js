@@ -420,7 +420,7 @@ const store = new Vuex.Store({
     },
 
     connectedUsers: (state, getters) => {
-      return getters.notBlockedUsers.filter(u => u.connected === true)
+      return getters.notBlockedUsers.filter(u => u.connected && !u.isMobile)
     },
 
     connectedUsersFirst: (state, getters) => {
