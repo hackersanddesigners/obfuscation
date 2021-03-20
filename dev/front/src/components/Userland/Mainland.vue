@@ -49,13 +49,22 @@
 
       <div
         v-else
-        id="joinChat"
-        class="ui"
+        class="ui compatibility"
       >
         <p>
           To join the discussion, please open this website on a larger screen.
         </p>
       </div>
+
+      <div
+        v-if="!isMobile && !isCompatible"
+        class="ui compatibility"
+      >
+        <p>
+          This platform works best on Chrome or Firefox.
+        </p>
+      </div>
+
 
     </nav>
 
@@ -194,6 +203,8 @@ export default {
       lastScrollX: 0,
       lastScrollY: 0,
 
+      isCompatible: true,
+
     }
   },
 
@@ -281,6 +292,8 @@ export default {
       this.$store.commit('setScale', 8)
       this.$store.commit('setWidthFactor', 3.3)
     }
+
+    this.checkCompatibility()
 
   },
 
@@ -633,6 +646,20 @@ export default {
       this.desiresOverlay = true
     },
 
+    checkCompatibility() {
+      let 
+        ua = navigator.userAgent,
+        chrome = ua.indexOf("Chrome") > -1,
+        firefox = ua.indexOf("Firefox") > -1,
+        safari = ua.indexOf("Safari") < -1
+      
+      if (chrome && safari) {
+        safari = false
+      }
+
+      this.isCompatible = chrome || firefox
+    },
+
     triggerRepaint() {
       this.visible = false
       this.visible = true
@@ -679,6 +706,16 @@ main nav {
   align-items: flex-start;
   z-index: 2;
   transition: all 0.2s ease;
+}
+
+main nav .compatibility {
+  max-width: 220px;
+  margin: 1vh 0 0 1vh;
+  font-size: 12pt;
+  padding: 1vh;
+}
+main nav .compatibility p {
+  margin: 0;
 }
 
 main nav.hidden {
@@ -844,16 +881,11 @@ main.blur #userlandContainer {
   padding-right: 1vh;
 }
 
+.mobile nav .compatibility {
+  max-width: 70vw;
+}
 .mobile nav.hidden {
   left: -100vw;
-}
-
-.mobile #joinChat {
-  margin: 1vh 0 0 1vh;
-  padding: 1vh;
-}
-.mobile #joinChat p {
-  margin: 0;
 }
 
 .mobile #userlandContainer {  

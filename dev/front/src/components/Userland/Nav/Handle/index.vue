@@ -62,6 +62,7 @@ export default {
 #navHandle {
   box-sizing: border-box;
   position: relative;
+  flex-shrink: 0;
   margin-top: 1vh;
   margin-left: 1vh;
   display: flex;

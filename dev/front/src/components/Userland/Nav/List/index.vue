@@ -40,6 +40,7 @@ export default {
 
 <style scoped>
 #list {
+  flex-shrink: 0;
   margin-top: 1vh;
   margin-left: 1vh;
   display: flex;

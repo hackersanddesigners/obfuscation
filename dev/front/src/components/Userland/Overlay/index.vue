@@ -164,6 +164,7 @@ export default {
 }
 
 #infoTitle {
+  flex-shrink: 0;
   box-sizing: border-box;
   position: relative;
   margin: 1vh;
