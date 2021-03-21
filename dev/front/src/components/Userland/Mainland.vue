@@ -196,9 +196,10 @@ export default {
       desiresOverlay: true, 
 
       editing: false,
-      scrolling: false,
       dragging: false,
       miniDragging: false,
+      scrolling: false,
+      scrollTimeout: null,
 
       lastScrollX: 0,
       lastScrollY: 0,
@@ -262,7 +263,9 @@ export default {
     location(newLocation, oldLocation) {
       if (newLocation.slug !== oldLocation.slug) {
         if (!this.secondPath) {
-          this.$router.push('/' + this.location.slug)
+          // if (!this.scrolling) {
+            this.$router.push('/' + this.location.slug)
+          // }
         }
       }
     },
@@ -278,11 +281,6 @@ export default {
       // }
     // },
 
-    me(newMe, oldMe) {
-      if (oldMe && newMe.uid !== oldMe.uid) {
-        console.log('you: ', newMe.uid)
-      }
-    }
 
   },
 
@@ -317,6 +315,16 @@ export default {
       if (e.ctrlKey) {
         e.preventDefault()
         e.stopPropagation()
+      }
+      const
+        viewerPos = {
+          x: this.$refs.userlandContainer.scrollLeft,
+          y: this.$refs.userlandContainer.scrollTop,
+        },
+        territory = this.territoryByBorders(viewerPos)
+
+      if (this.location.slug !== territory.slug) {
+        this.$store.commit('setLocation', territory)
       }
     })
 
@@ -419,6 +427,10 @@ export default {
           })
           // position = this.centerOf(territory.borders)
           content = territory
+
+          setTimeout(() => {
+            this.$store.commit('setLocation', territory)
+          }, 250)
 
       
           // routing to pages
@@ -585,6 +597,10 @@ export default {
     // left corner of the (larger) userland div. 
 
     setViewerPosition() {
+
+      clearTimeout(this.scrollTimeout)
+      this.scrolling = true
+
       const
         viewerPos = {
           x: this.$refs.userlandContainer.scrollLeft,
@@ -599,12 +615,12 @@ export default {
         mePos = {
           x: (currPos.x + deltaScrollX) / (this.windowSize.w * this.scale),
           y:(currPos.y + deltaScrollY) / (this.windowSize.h * this.scale)
-        },
-        territory = this.territoryByBorders(viewerPos)
+        }
+        // territory = this.territoryByBorders(viewerPos)
 
 
       this.$store.commit('viewerPosition', viewerPos)
-      this.$store.commit('setLocation', territory)
+      // this.$store.commit('setLocation', territory)
       
 
       if (!this.dragging) {
@@ -613,6 +629,10 @@ export default {
 
       this.lastScrollX = viewerPos.x
       this.lastScrollY = viewerPos.y
+
+      this.scrollTimeout = setTimeout(() => {
+        this.scrolling = false
+      }, 66)
 
     },
 
