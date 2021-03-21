@@ -264,7 +264,7 @@ export default {
       if (newLocation.slug !== oldLocation.slug) {
         if (!this.secondPath) {
           // if (!this.scrolling) {
-            this.$router.push('/' + this.location.slug)
+            // this.$router.push('/' + this.location.slug)
           // }
         }
       }
@@ -297,16 +297,24 @@ export default {
 
   mounted() {
   
+    // if(this.isChrome) {
+    //   this.scrollTo({
+    //     x: 0,
+    //     y: 0
+    //   })
+    // }
 
     // if there is a slug, navigate to it.
 
-    if ( this.wantsToView && 
-         this.wantsToView !== '/' &&
-         this.wantsToView !== '/general') {
-      this.route(this.wantsToView, 'smooth')
-    } else {
-      this.$router.push('reception')
-    }
+    setTimeout(() => {  
+      if ( this.wantsToView && 
+          this.wantsToView !== '/' &&
+          this.wantsToView !== '/general') {
+        this.route(this.wantsToView, 'smooth')
+      } else {
+        this.$router.push('reception')
+      }
+    }, 100)
 
     this.handleLinks('.message a')
     
@@ -337,11 +345,6 @@ export default {
         w: window.innerWidth,
         h: window.innerHeight,
       })
-      // this.triggerRepaint()
-      // this.scrollTo({
-      //   x: this.lastScrollX + 10,
-      //   y: this.lastScrollY + 10
-      // })
     })
 
 
@@ -429,7 +432,9 @@ export default {
           content = territory
 
           setTimeout(() => {
-            this.$store.commit('setLocation', territory)
+            // if (this.location.slug !== territory.slug) {
+              this.$store.commit('setLocation', territory)
+            // }
           }, 250)
 
       
@@ -452,7 +457,8 @@ export default {
       
       // scroll action
 
-      if (force || this.location.slug !== name || page) {
+      if (page || force || this.location.slug !== name) {
+        console.log('scrolling!')
         setTimeout(() => {
           this.scrollTo(position, behavior || 'smooth')
         }, pause || 0)
@@ -571,6 +577,8 @@ export default {
     // core of app navigation is this following:
 
     scrollTo(to, behavior) {
+          console.log(to.x)
+
       if (this.dragging) {
         // requestAnimationFrame(() => {
           this.$refs.userlandContainer.scroll({
@@ -615,12 +623,16 @@ export default {
         mePos = {
           x: (currPos.x + deltaScrollX) / (this.windowSize.w * this.scale),
           y:(currPos.y + deltaScrollY) / (this.windowSize.h * this.scale)
-        }
-        // territory = this.territoryByBorders(viewerPos)
+        },
+        territory = this.territoryByBorders(viewerPos)
 
 
       this.$store.commit('viewerPosition', viewerPos)
-      // this.$store.commit('setLocation', territory)
+      if (this.miniDragging) {
+        if (this.location.slug !== territory.slug) {
+          this.$store.commit('setLocation', territory)
+        }
+      }
       
 
       if (!this.dragging) {
@@ -677,13 +689,9 @@ export default {
         safari = false
       }
 
+      this.isChrome = chrome
       this.isCompatible = chrome || firefox
     },
-
-    triggerRepaint() {
-      this.visible = false
-      this.visible = true
-    }
 
   },
   
