@@ -199,6 +199,7 @@ export default {
       dragging: false,
       miniDragging: false,
       scrolling: false,
+      firstTime: true,
       scrollTimeout: null,
 
       lastScrollX: 0,
@@ -262,12 +263,17 @@ export default {
 
     location(newLocation, oldLocation) {
       if (newLocation.slug !== oldLocation.slug) {
-        if (!this.secondPath) {
-          if (!this.miniDragging) {
-            this.$router.push('/' + this.location.slug)
-          } else {
+        if (!this.firstTime) {
+          if (!this.secondPath) {
+            if (!this.miniDragging) {
+              console.log('pushign!')
+              this.$router.push('/' + this.location.slug)
+            } else {
             // this.route('/' + this.location.slug)
+            }
           }
+        } else {
+          this.firstTime = false
         }
       }
     },
@@ -308,15 +314,13 @@ export default {
 
     // if there is a slug, navigate to it.
 
-    setTimeout(() => {  
-      if ( this.wantsToView && 
-          this.wantsToView !== '/' &&
-          this.wantsToView !== '/general') {
-        this.route(this.wantsToView, 'smooth')
-      } else {
-        this.$router.push('reception')
-      }
-    }, 100)
+    if ( this.wantsToView && 
+        this.wantsToView !== '/' &&
+        this.wantsToView !== '/general') {
+      this.route(this.wantsToView, 'smooth')
+    } else {
+      this.$router.push('/reception')
+    }
 
     this.handleLinks('.message a')
     
@@ -434,9 +438,9 @@ export default {
           content = territory
 
           setTimeout(() => {
-            // if (this.location.slug !== territory.slug) {
+            if (this.location.slug !== territory.slug) {
               this.$store.commit('setLocation', territory)
-            // }
+            }
           }, 250)
 
       
@@ -460,7 +464,6 @@ export default {
       // scroll action
 
       if (page || force || this.location.slug !== name) {
-        console.log('scrolling!')
         setTimeout(() => {
           this.scrollTo(position, behavior || 'smooth')
         }, pause || 0)
@@ -579,8 +582,6 @@ export default {
     // core of app navigation is this following:
 
     scrollTo(to, behavior) {
-          console.log(to.x)
-
       if (this.dragging) {
         // requestAnimationFrame(() => {
           this.$refs.userlandContainer.scroll({
