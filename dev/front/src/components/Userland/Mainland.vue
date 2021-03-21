@@ -263,9 +263,11 @@ export default {
     location(newLocation, oldLocation) {
       if (newLocation.slug !== oldLocation.slug) {
         if (!this.secondPath) {
-          // if (!this.scrolling) {
-            // this.$router.push('/' + this.location.slug)
-          // }
+          if (!this.miniDragging) {
+            this.$router.push('/' + this.location.slug)
+          } else {
+            // this.route('/' + this.location.slug)
+          }
         }
       }
     },
