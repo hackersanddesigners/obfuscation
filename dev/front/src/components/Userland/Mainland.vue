@@ -264,6 +264,7 @@ export default {
       if (newLocation.slug !== oldLocation.slug) {
         if (!this.secondPath) {
           if (!this.firstScroll) {
+            console.log('push')
             this.$router.push('/' + this.location.slug)
           }
         }
@@ -305,16 +306,18 @@ export default {
 
     // if there is a slug, navigate to it.
 
-    if ( this.wantsToView && 
-         this.wantsToView !== '/' &&
-         this.wantsToView !== '/general') {
-      this.route(this.wantsToView, 'smooth')
-    } else {
-      this.$router.push('reception')
-    }
+    setTimeout(() => {
+      if ( this.wantsToView && 
+          this.wantsToView !== '/' &&
+          this.wantsToView !== '/general') {
+        this.route(this.wantsToView, 'smooth')
+      } else {
+        this.$router.push('reception')
+      }
+    }, 500)
     setTimeout(() => {
       this.firstScroll = false
-    }, 1000)
+    }, 1500)
 
     this.handleLinks('.message a')
     
@@ -448,6 +451,7 @@ export default {
 
       if (force || this.location.slug !== name || page) {
         setTimeout(() => {
+          console.log('scroll')
           this.scrollTo(position, behavior || 'smooth')
         }, pause || 0)
       }
