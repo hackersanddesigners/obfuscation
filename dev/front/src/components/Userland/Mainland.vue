@@ -193,14 +193,12 @@ export default {
 
       desiresNav: true,
       desiresList: true, 
-      desiresOverlay: true, 
+      desiresOverlay: false, 
 
       editing: false,
+      scrolling: false,
       dragging: false,
       miniDragging: false,
-      scrolling: false,
-      firstTime: true,
-      scrollTimeout: null,
 
       lastScrollX: 0,
       lastScrollY: 0,
@@ -263,17 +261,8 @@ export default {
 
     location(newLocation, oldLocation) {
       if (newLocation.slug !== oldLocation.slug) {
-        if (!this.firstTime) {
-          if (!this.secondPath) {
-            if (!this.miniDragging) {
-              console.log('pushign!')
-              this.$router.push('/' + this.location.slug)
-            } else {
-            // this.route('/' + this.location.slug)
-            }
-          }
-        } else {
-          this.firstTime = false
+        if (!this.secondPath) {
+          this.$router.push('/' + this.location.slug)
         }
       }
     },
@@ -289,6 +278,11 @@ export default {
       // }
     // },
 
+    me(newMe, oldMe) {
+      if (oldMe && newMe.uid !== oldMe.uid) {
+        console.log('you: ', newMe.uid)
+      }
+    }
 
   },
 
@@ -305,21 +299,15 @@ export default {
 
   mounted() {
   
-    // if(this.isChrome) {
-    //   this.scrollTo({
-    //     x: 0,
-    //     y: 0
-    //   })
-    // }
 
     // if there is a slug, navigate to it.
 
     if ( this.wantsToView && 
-        this.wantsToView !== '/' &&
-        this.wantsToView !== '/general') {
+         this.wantsToView !== '/' &&
+         this.wantsToView !== '/general') {
       this.route(this.wantsToView, 'smooth')
     } else {
-      this.$router.push('/reception')
+      this.$router.push('reception')
     }
 
     this.handleLinks('.message a')
@@ -329,16 +317,6 @@ export default {
       if (e.ctrlKey) {
         e.preventDefault()
         e.stopPropagation()
-      }
-      const
-        viewerPos = {
-          x: this.$refs.userlandContainer.scrollLeft,
-          y: this.$refs.userlandContainer.scrollTop,
-        },
-        territory = this.territoryByBorders(viewerPos)
-
-      if (this.location.slug !== territory.slug) {
-        this.$store.commit('setLocation', territory)
       }
     })
 
@@ -351,6 +329,11 @@ export default {
         w: window.innerWidth,
         h: window.innerHeight,
       })
+      // this.triggerRepaint()
+      // this.scrollTo({
+      //   x: this.lastScrollX + 10,
+      //   y: this.lastScrollY + 10
+      // })
     })
 
 
@@ -437,12 +420,6 @@ export default {
           // position = this.centerOf(territory.borders)
           content = territory
 
-          setTimeout(() => {
-            if (this.location.slug !== territory.slug) {
-              this.$store.commit('setLocation', territory)
-            }
-          }, 250)
-
       
           // routing to pages
 
@@ -463,7 +440,7 @@ export default {
       
       // scroll action
 
-      if (page || force || this.location.slug !== name) {
+      if (force || this.location.slug !== name || page) {
         setTimeout(() => {
           this.scrollTo(position, behavior || 'smooth')
         }, pause || 0)
@@ -472,7 +449,10 @@ export default {
       
       // setting overlay content
 
-      this.moreInformation = content
+      if (this.location.slug !== name) {
+        this.desiresOverlay = false      
+      }
+      pause = this.isMobile ? 0 : 150
 
       if (this.isMobile) {
         this.desiresNav = false
@@ -486,10 +466,14 @@ export default {
         if (name === 'general') {
           this.desiresOverlay = false
         } else {
-          this.desiresOverlay = true        
+          setTimeout(() => {
+            this.desiresOverlay = true        
+          }, pause + 150)
         }
       }
-
+      setTimeout(() => {
+        this.moreInformation = content
+      }, pause)
 
     },
 
@@ -608,10 +592,6 @@ export default {
     // left corner of the (larger) userland div. 
 
     setViewerPosition() {
-
-      clearTimeout(this.scrollTimeout)
-      this.scrolling = true
-
       const
         viewerPos = {
           x: this.$refs.userlandContainer.scrollLeft,
@@ -631,11 +611,10 @@ export default {
 
 
       this.$store.commit('viewerPosition', viewerPos)
-      if (this.miniDragging) {
-        if (this.location.slug !== territory.slug) {
-          this.$store.commit('setLocation', territory)
-        }
-      }
+
+      if (this.location.slug !== territory.slug) {
+        this.$store.commit('setLocation', territory)
+      }   
       
 
       if (!this.dragging) {
@@ -644,10 +623,6 @@ export default {
 
       this.lastScrollX = viewerPos.x
       this.lastScrollY = viewerPos.y
-
-      this.scrollTimeout = setTimeout(() => {
-        this.scrolling = false
-      }, 66)
 
     },
 
@@ -692,9 +667,13 @@ export default {
         safari = false
       }
 
-      this.isChrome = chrome
       this.isCompatible = chrome || firefox
     },
+
+    triggerRepaint() {
+      this.visible = false
+      this.visible = true
+    }
 
   },
   

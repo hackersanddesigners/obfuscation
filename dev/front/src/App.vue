@@ -40,7 +40,7 @@ export default {
 
 
     if ('scrollRestoration' in history) {
-      history.scrollRestoration = 'manual'
+      history.scrollRestoration = 'manual';
     }
 
 
