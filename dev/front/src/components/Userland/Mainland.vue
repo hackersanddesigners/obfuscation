@@ -306,15 +306,13 @@ export default {
 
     // if there is a slug, navigate to it.
 
-    setTimeout(() => {
-      if ( this.wantsToView && 
-          this.wantsToView !== '/' &&
-          this.wantsToView !== '/general') {
-        this.route(this.wantsToView, 'smooth')
-      } else {
-        this.$router.push('reception')
-      }
-    }, 500)
+    if ( this.wantsToView && 
+        this.wantsToView !== '/' &&
+        this.wantsToView !== '/general') {
+      this.route(this.wantsToView, 'smooth')
+    } else {
+      this.$router.push('reception')
+    }
     setTimeout(() => {
       this.firstScroll = false
     }, 1500)
@@ -448,6 +446,8 @@ export default {
       }        
       
       // scroll action
+
+      if (this.firstScroll) pause = 1000
 
       if (force || this.location.slug !== name || page) {
         setTimeout(() => {
