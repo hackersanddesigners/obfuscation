@@ -126,6 +126,7 @@ export default {
 section {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   margin: 2vh;
+  margin-top: 1.6vh;
 }
 section a {
 }

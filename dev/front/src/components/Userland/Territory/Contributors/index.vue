@@ -26,7 +26,7 @@ export default {
   max-height: 100%;
   margin: auto;
   margin-top: calc(10 * var(--one));
-  overflow: scroll;
+  overflow: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
