@@ -197,6 +197,7 @@ export default {
 
       editing: false,
       scrolling: false,
+      firstScroll: true,
       dragging: false,
       miniDragging: false,
 
@@ -262,7 +263,9 @@ export default {
     location(newLocation, oldLocation) {
       if (newLocation.slug !== oldLocation.slug) {
         if (!this.secondPath) {
-          this.$router.push('/' + this.location.slug)
+          if (!this.firstScroll) {
+            this.$router.push('/' + this.location.slug)
+          }
         }
       }
     },
@@ -309,6 +312,9 @@ export default {
     } else {
       this.$router.push('reception')
     }
+    setTimeout(() => {
+      this.firstScroll = false
+    }, 1000)
 
     this.handleLinks('.message a')
     
