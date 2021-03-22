@@ -569,7 +569,6 @@ export default {
     // core of app navigation is this following:
 
     scrollTo(to, behavior) {
-      console.log(to.x)
       if (this.dragging) {
         // requestAnimationFrame(() => {
           this.$refs.userlandContainer.scroll({
@@ -612,22 +611,25 @@ export default {
           y:(currPos.y + deltaScrollY) / (this.windowSize.h * this.scale)
         },
         territory = this.territoryByBorders(viewerPos)
+    
 
 
       this.$store.commit('viewerPosition', viewerPos)
 
       if (this.location.slug !== territory.slug) {
         this.$store.commit('setLocation', territory)
-      }   
-      
+      }  
 
-      if (!this.dragging) {
-        this.$store.dispatch('updatePosition', mePos)
+      if (!this.firstScroll) {
+    
+        if (!this.dragging) {
+          this.$store.dispatch('updatePosition', mePos)
+        }
+
+        this.lastScrollX = viewerPos.x
+        this.lastScrollY = viewerPos.y
+
       }
-
-      this.lastScrollX = viewerPos.x
-      this.lastScrollY = viewerPos.y
-
     },
 
     handleLinks(selector) {
