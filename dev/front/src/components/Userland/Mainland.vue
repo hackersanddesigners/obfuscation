@@ -264,7 +264,6 @@ export default {
       if (newLocation.slug !== oldLocation.slug) {
         if (!this.secondPath) {
           if (!this.firstScroll) {
-            console.log('push')
             this.$router.push('/' + this.location.slug)
           }
         }
@@ -281,12 +280,6 @@ export default {
         // console.log('change')
       // }
     // },
-
-    me(newMe, oldMe) {
-      if (oldMe && newMe.uid !== oldMe.uid) {
-        console.log('you: ', newMe.uid)
-      }
-    }
 
   },
 
@@ -447,11 +440,8 @@ export default {
       
       // scroll action
 
-      if (this.firstScroll) pause = 1000
-
       if (force || this.location.slug !== name || page) {
         setTimeout(() => {
-          console.log('scroll')
           this.scrollTo(position, behavior || 'smooth')
         }, pause || 0)
       }
@@ -476,9 +466,11 @@ export default {
         if (name === 'general') {
           this.desiresOverlay = false
         } else {
-          setTimeout(() => {
-            this.desiresOverlay = true        
-          }, pause + 150)
+          if (page || this.location.slug !== name || force) {
+            setTimeout(() => {
+              this.desiresOverlay = true        
+            }, pause + 150)
+          }
         }
       }
       setTimeout(() => {
@@ -488,12 +480,13 @@ export default {
     },
 
     handleOverlayClose() {
+      let pause = 10
       if (this.$router.history.current.path.split('/')[2]) {
         this.$router.push('/' + this.location.slug)
       }
       setTimeout(() => {
         this.desiresOverlay = false
-      }, 10)
+      }, pause)
     },
 
 
@@ -576,6 +569,7 @@ export default {
     // core of app navigation is this following:
 
     scrollTo(to, behavior) {
+      console.log(to.x)
       if (this.dragging) {
         // requestAnimationFrame(() => {
           this.$refs.userlandContainer.scroll({
