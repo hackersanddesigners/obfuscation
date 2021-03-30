@@ -114,6 +114,7 @@ const store = new Vuex.Store({
     setUserAppearance: (state, user) => {
       state.users[user.uid].name = user.name
       state.users[user.uid].color = user.color
+      state.users[user.uid].messageLifetime = user.messageLifetime
       state.users[user.uid].connected = true
     },
     setUserDisconnected: (state, uid) => {
@@ -226,9 +227,23 @@ const store = new Vuex.Store({
       }
     },
 
-    socket_appearance({ state, commit }, user) {
+    socket_appearance({ state, commit, dispatch }, user) {
       if (user.uid !== state.uid) {
         commit('setUserAppearance', user)
+      }
+      if (user.messageLifetime) {
+        const 
+          now = (new Date()).getTime(),
+          twodays = 172800000 // two days
+        for(let uid in state.messages) {
+          const message = state.messages[uid]
+          if (message.authorUID == user.uid) {
+            if (message.time < now - (user.messageLifetime || twodays)) {
+              console.log(message.content)
+              dispatch('deleteMessage', message)
+            } 
+          }
+        }
       }
     },
 

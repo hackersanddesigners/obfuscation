@@ -97,11 +97,7 @@ export default {
   src: url('./assets/fonts/jet/mono.ttf');
   font-weight: normal;
 }
-@font-face {
-  font-family: 'jet';
-  src: url('./assets/fonts/jet/medium.ttf');
-  font-weight: medium;
-}
+
 @font-face {
   font-family: 'jet';
   src: url('./assets/fonts/jet/bold.ttf');
@@ -160,6 +156,10 @@ h4 {
   font-size: 15pt;
   font-weight: normal;
 }
+pre, code {
+  font-family: 'jet';
+}
+
 .ui {
   box-sizing: border-box;
   position: relative;

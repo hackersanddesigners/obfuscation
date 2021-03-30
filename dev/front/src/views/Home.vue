@@ -198,8 +198,8 @@ export default {
           const id = uid()
           self = {
             uid: id,
-            connected: false,
             name: 'newUser-' + id,
+            connected: false,
             color: this.randomColor(),
             x: 0,
             y: 0,

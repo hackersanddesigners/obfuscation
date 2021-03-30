@@ -16,12 +16,15 @@
 
       <div class="form">
 
-          <input 
-            class="ui"
-            ref="name" 
-            type="text" 
-            placeholder="pick a display name"
-          >
+          <div class="name">
+            <span>Name: </span>
+            <input 
+              ref="name" 
+              class="ui"
+              type="text" 
+              placeholder="pick a display name"
+            />
+          </div>
 
           <p 
             class="error"
@@ -35,13 +38,26 @@
             }}
           </p>
 
-          <input 
-            class="ui"
-            ref="color" 
-            type="text" 
-            data-jscolor
-            @input="updateColor"
-          > 
+          <div class="color">
+            <span>Color: </span>
+            <input 
+              ref="color" 
+              class="ui"
+              type="text" 
+              data-jscolor
+              @input="updateColor"
+            /> 
+          </div>
+
+          <div class="messagesOptions">
+            <span>Message lifetime (days): </span>
+            <input
+              ref="messageLifetime" 
+              class="ui"
+              type="number"
+              placeholder="2"
+            />
+          </div>
 
           <input 
             class="ui"
@@ -59,6 +75,9 @@
         <p>The information you are entering is stored on our server and sent to all the other users.</p>  
       </div>
     </div>
+    <!-- <div id="jsonMe">
+      <vue-markdown :source="jsonMe" />
+    </div> -->
   </div>
 </template>
 
@@ -72,7 +91,6 @@ export default {
 
   data() {
     return {
-    
       invalid: false,
       tooshort: false,
       inuse: false,
@@ -88,6 +106,7 @@ export default {
         shadow: false
       },
 
+
     }
   },
 
@@ -98,27 +117,34 @@ export default {
     ...mapGetters([
       'me',
       'userNames',
-    ])
+    ]),
+    jsonMe() {
+      return "```json \n" + JSON.stringify(this.me, null, 2) + "\n```"
+    }
   },
 
   mounted() {
+
+    this.$refs.name.value = this.me.name
+    setTimeout(() => {
+      this.$refs.name.select()
+    }, 50)
 
     jscolor.presets.default = this.colorPickerOpts
     this.$refs.color.value = this.me.color
     new jscolor(this.$refs.color)  
     jscolor.init()
 
-    if (this.registered) { 
-      this.$refs.name.value = this.me.name
-      this.$refs.name.select()
-    }
-    
+    this.$refs.messageLifetime.value = this.me.messageLifetime / 86400000 || 2
+
   },
   methods: {
 
     save() {
-      const name = this.$refs.name.value
-      const color = this.$refs.color.value
+      const 
+        name = this.$refs.name.value,
+        color = this.$refs.color.value,
+        messageLifetime = this.$refs.messageLifetime.value * 86400000
 
       if (!this.validateChars(name)) {
         this.invalid = true
@@ -130,7 +156,7 @@ export default {
         this.inuse = true
 
       } else {
-        this.register(name, color)
+        this.register(name, color, messageLifetime)
 
       }
     },
@@ -139,10 +165,11 @@ export default {
       this.$emit('stopEdit')
     },
 
-    register(name, color) {
+    register(name, color, messageLifetime) {
       this.$store.dispatch('updateAppearance', {
         name: name,
         color: color,
+        messageLifetime: messageLifetime
       })
       this.$emit('stopEdit')
       this.$store.commit('register')
@@ -199,7 +226,7 @@ export default {
 }
 
 #register {
-  width: 360px;
+  width: 450px;
   padding: 1vh;
 }
 #register h3 {
@@ -215,16 +242,37 @@ export default {
   flex-direction: column;
 }
 
+.name,
+.color,
+.messagesOptions {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5vh;
+}
+
+.messagesOptions {
+  margin: 2vh 0vh;
+}
+.form .messagesOptions input {
+  max-width: 100px;
+  text-align: center;
+}
+
 input {
+  flex-shrink: 1;
+  width: 300px;
   outline: none;
   box-shadow: none;
   padding: 2px 10px;
-  margin-bottom: 0.5vh;
 }
-input:last-of-type {
-  margin-bottom: 0;
+.name input {
+  /* margin-bottom: 0.5vh; */
 }
+
 input[type="button"] {
+  width: 100%;
   cursor: pointer;
 }
 
@@ -232,6 +280,12 @@ p.error  {
   margin: 5px;
   font-size: calc(0.6 * var(--ui-font-size));
   color: red;
+}
+
+#jsonMe {
+  font-size: 15pt;
+  margin: 10vh;
+  /* font-family: 'jet' !important; */
 }
 
 </style>

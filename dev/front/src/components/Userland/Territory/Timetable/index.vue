@@ -179,10 +179,10 @@ export default {
 <style scoped>
 .timetable {
   box-sizing: border-box;
-  padding: 
+  /* padding:  */
     /* calc(5 * var(--one)) */
     /* calc(10 * var(--one)) */
-  ;
+  /* ; */
   padding-top: calc(10 * var(--one));
   width: 100%;
   height: 100%;

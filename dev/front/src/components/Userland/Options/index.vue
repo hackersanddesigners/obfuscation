@@ -29,7 +29,7 @@
         class="ui button"
         @click.stop="$emit('startEdit')"
       > 
-        edit appearance
+        options
       </div>
     </div>
 
