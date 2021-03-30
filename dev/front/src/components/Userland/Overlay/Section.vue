@@ -11,7 +11,7 @@
     </div>
 
     <div 
-      class="body people"
+      class="body"
       v-if="hosts && hosts.length > 0"
     >
       <span class="hosts">
@@ -51,6 +51,60 @@
         :source="body"
       />
     </div>
+
+    <div 
+      class="body"
+      v-if="hosting || moderating"
+    >
+      <span v-if="hosting.length > 0">
+        <span> Hosting </span>
+        <span
+          v-for="session in hosting"
+          :key="session.Title"
+        >
+          <a 
+            :href="`/timetable/${session.slug}`"
+            class="name"
+          >{{ session.Title }}</a>
+          <span>, </span>
+        </span>
+      </span>
+      <span v-if="moderating.length > 0">
+        <span> Moderating </span>
+        <span
+          v-for="session in moderating"
+          :key="session.Name"
+        >
+          <span v-if="moderating.length > 1 && isLast(session, moderating)">and </span>
+          <a 
+            :href="`/timetable/${session.slug}`"
+            class="name"
+          >{{ session.Title }}</a>
+          <span v-if="!isLast(session, moderating)">, </span>
+          <span v-else>. </span>
+        </span>
+      </span>
+    </div>
+
+     <div 
+      class="body"
+      v-if="resources"
+    >
+      <div v-if="resources.length > 0">
+        <p> References: </p>
+        <ul
+          v-for="resource in resources"
+          :key="resource.Name"
+        >
+          <li>
+            <a 
+              :href="`/library/${resource.slug}`"
+              class="name"
+            >{{ resource.Name }}</a>
+          </li>
+        </ul>
+      </div>
+    </div>
     
     <div class="footer">
       <vue-markdown
@@ -83,6 +137,9 @@ export default {
     source() { return this.getSource() },
     hosts() { return this.section.hosts },
     moderators() { return this.section.moderators },
+    hosting() { return this.section.hosting },
+    moderating() { return this.section.moderating },
+    resources() { return this.section.references }
 
   },
   watch: {
@@ -187,9 +244,6 @@ section .header h1 {
 section .body {
   font-size: 12.5pt;
 }
-/* section .body .people {
-  font-size: 12.5pt;
-} */
 section .footer {
   font-size: 10pt;
 }
