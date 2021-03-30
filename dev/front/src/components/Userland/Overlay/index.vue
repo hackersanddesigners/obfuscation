@@ -38,7 +38,19 @@
         v-if="!content.Sections"
         class="content"
       >
+        <div 
+          v-if="content.slug === 'upload'"
+        >
+        <Upload
+          ref="upload"
+          :sending="sending"
+          :sent="sent"
+          @sending="sending = !sending"
+          @sent="sent = !sent, sending = false"
+        />
+        </div>
         <Section
+          v-else
           :section="content"
         /> 
       </div>     
@@ -68,12 +80,27 @@
       </div>
 
     </div>
+
+    <div 
+      v-if="content && content.slug === 'upload'"
+      class="submitContainer"
+    >
+      <input 
+        v-if="!sending"
+        ref="submit" 
+        class="ui submit"
+        type="button" 
+        :value="sent ? 'submit another' : 'submit'"
+        @click.stop="$refs.upload.submit" 
+      >
+    </div>
   </div>
 </template>
 
 <script>
 import smoothHeight from 'vue-smooth-height'
 import Section from './Section'
+import Upload from './Upload'
 
 
 
@@ -81,7 +108,10 @@ export default {
 
   name: 'Overlay',
 
-  components: { Section },
+  components: { 
+    Section,
+    Upload 
+  },
 
   props: [
     'dragging',
@@ -95,6 +125,9 @@ export default {
   data() {
     return {
       isRegister: false,
+
+      sending: false,
+      sent: false,
     }
   },
 
@@ -203,6 +236,14 @@ export default {
 .overlay section:first-of-type h1 {
   margin-top: 0 !important;
 
+}
+.submitContainer {
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 1vh;
+}
+.submit {
+  cursor: pointer;
 }
 
 #aanmelderContainer {

@@ -427,7 +427,9 @@ export default {
           if (page) {
             this.secondPath = true
             position = this.positionOfIsland(page)
-            content = this.territories[name].content[page]
+            content = 
+              page === 'upload' ? { slug: page } :
+              this.territories[name].content[page]
 
             setTimeout(() => {
               this.secondPath = false

@@ -278,7 +278,7 @@ input[type="button"] {
 
 p.error  {
   margin: 5px;
-  font-size: calc(0.6 * var(--ui-font-size));
+  font-size: 12pt;
   color: red;
 }
 
