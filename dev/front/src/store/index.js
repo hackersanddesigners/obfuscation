@@ -112,10 +112,10 @@ const store = new Vuex.Store({
       state.users[color.uid].connected = true
     },
     setUserAppearance: (state, user) => {
+      state.users[user.uid].connected = true
       state.users[user.uid].name = user.name
       state.users[user.uid].color = user.color
       state.users[user.uid].messageLifetime = user.messageLifetime
-      state.users[user.uid].connected = true
     },
     setUserDisconnected: (state, uid) => {
       state.users[uid].connected = false
@@ -137,6 +137,7 @@ const store = new Vuex.Store({
     },
     setMessageDeleted: (state, message) => {
       state.messages[message.uid].deleted = true
+      // Vue.delete(state.messages, message.uid)
     },
     setMessageCensored: (state, message) => {
       state.messages[message.uid].censored = true

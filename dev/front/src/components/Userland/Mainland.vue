@@ -110,7 +110,7 @@
         />
 
         <Cursorr
-          v-for="user in connectedUsers"
+          v-for="user in notDeletedUsers"
           :key="user.uid"
           :ref="isMe(user) ? 'me' : 'Users'"
           :user="user"
@@ -244,6 +244,7 @@ export default {
       'regionColors',
       'userColors',
       'connectedUsers',
+      'notDeletedUsers',
       'notDeletedMessages',
 
       'positionOf',

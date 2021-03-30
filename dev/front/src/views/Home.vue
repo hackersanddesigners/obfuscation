@@ -199,11 +199,12 @@ export default {
           self = {
             uid: id,
             name: 'newUser-' + id,
-            connected: false,
+            connected: true,
             color: this.randomColor(),
             x: 0,
             y: 0,
             typing: null,
+            deleted: false,
             blocked: false,
           },
           localStorage.uid = self.uid

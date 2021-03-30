@@ -13,7 +13,9 @@ const api = {
       return new Promise ((resolve, reject) => {
         axios
           .get(URL + 'users')
-          .then((response) => { resolve(response.data) })
+          .then((response) => { 
+            resolve(this.filterDeleted(response.data)) 
+          })
           .catch((error) => { reject(error) })
       })
     },
@@ -24,8 +26,7 @@ const api = {
         axios
           .get(URL + 'messages')
           .then((response) => { 
-            const messages = this.lastTwoDaysOnly(response.data)
-            resolve(messages) 
+            resolve(this.filterDeleted(response.data)) 
           })
           .catch((error) => { reject(error) })
       })
@@ -103,18 +104,14 @@ const api = {
       })
     },
 
-    lastTwoDaysOnly(messages) {
-      // const 
-      //   now = (new Date()).getTime(),
-      //   twodays = 172800000 // two days
-      //   // twodays = 28800000 // 8 hours
-      // for (let m in messages) {
-      //   const message = messages[m]
-      //   if (message.time < now - twodays) {
-      //     delete messages[m]
-      //   }
-      // }
-      return messages
+    filterDeleted(array) {
+      for (let key in array) {
+        if (array[key].deleted === true) {
+          // console.log(array[key].uid)
+          delete array[key]
+        }
+      }
+      return array
     },
 
     correctDates(sessions) {
