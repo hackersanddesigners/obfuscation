@@ -15,39 +15,6 @@
         </h1>
       </div>
 
-      <!-- <h3 
-        class="body"
-        v-if="hosts.length > 0"
-      >
-
-        <span class="hosts">
-          <span> with </span>
-          <span
-            class="host"
-            v-for="host in hosts"
-            :key="host.Name"
-          >
-            <span class="name">{{ host.Name }}</span>
-            <span>, </span>
-          </span>
-        </span>
-
-        <span class="modertors">
-          <span
-            class="moderator"
-            v-for="moderator in moderators"
-            :key="moderator.Name"
-          >
-            <span v-if="isLast(moderator, moderators)">and </span>
-            <span class="name">{{ moderator.Name }}</span>
-            <span> (moderator)</span>
-            <span v-if="!isLast(moderator, moderators)">, </span>
-            <span v-else>. </span>
-          </span>
-        </span>
-
-      </h3> -->
-
     </div>
 
     <BBB-link
@@ -109,6 +76,8 @@ export default {
   padding: calc(3 * var(--one));
   border-radius: inherit;
   overflow: hidden;
+  text-align: center;
+
 }
 
 .island .body {
@@ -141,11 +110,11 @@ export default {
   visibility: hidden;
 }
 
-.LIFECYCLE1 .island {
+/* .LIFECYCLE1 .island {
   pointer-events: none;
 }
 .LIFECYCLE1 .island h1 {
   visibility: hidden;
-}
+} */
 
 </style>

@@ -13,27 +13,55 @@
         }}
       </h3>
     </div>
-    <div 
-      v-for="day in contentByDays"
-      :key="getDay(day.date)"
-      class="day"
-    >
-      <div class="date">{{ cuteDate(day.date) }}</div>
-      <div class="sessionsContainer">
-        <div 
-          class="islandContainer"
-          v-for="session in day.sessions"
-          :key="session.slug"
-          :id="session.slug + 'Island'"
-        >
-          <div class="time">
-            <span class="start">{{ start(session) }}</span>
-            <span class="end"> {{ end(session) }}</span>
+    <div class="parentDay">
+      <div 
+        v-for="day in firstDay"
+        :key="getDay(day.date)"
+        class="day"
+      >
+        <div class="date">{{ cuteDate(day.date) }}</div>
+        <div class="sessionsContainer">
+          <div 
+            class="islandContainer"
+            v-for="session in day.sessions"
+            :key="session.slug"
+            :id="session.slug + 'Island'"
+          >
+            <div class="time">
+              <span class="start">{{ start(session) }}</span>
+              <span class="end"> {{ end(session) }}</span>
+            </div>
+            <Island
+              :session="session"
+              @click.native="$emit('moreInfo', `/timetable/${session.slug}`)"
+            />
           </div>
-          <Island
-            :session="session"
-            @click.native="$emit('moreInfo', `/timetable/${session.slug}`)"
-          />
+        </div>
+      </div>
+    </div>
+    <div class="parentDay">
+      <div 
+        v-for="day in secondDay"
+        :key="getDay(day.date)"
+        class="day"
+      >
+        <div class="date">{{ cuteDate(day.date) }}</div>
+        <div class="sessionsContainer">
+          <div 
+            class="islandContainer"
+            v-for="session in day.sessions"
+            :key="session.slug"
+            :id="session.slug + 'Island'"
+          >
+            <div class="time">
+              <span class="start">{{ start(session) }}</span>
+              <span class="end"> {{ end(session) }}</span>
+            </div>
+            <Island
+              :session="session"
+              @click.native="$emit('moreInfo', `/timetable/${session.slug}`)"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -52,9 +80,11 @@ export default {
     return {
       defaultTimeZone: "Europe/Amsterdam",
       // defaultTimeZone: "Australia/Sydney",
+      // defaultTimeZone: "Pacific/Funafuti",
       ownTimeZone: moment.tz.guess(),
       desiresOwnTimezone: false,
-      contentByDays: {}
+      firstDay: {},
+      secondDay: {}
     }
   },
   computed: {
@@ -68,19 +98,28 @@ export default {
   methods: {
     orderContentByDays() {
       const 
-        contentByDays = {},
-        sessionsArray = Object.values(this.content),
+        firstDay = {}, secondDay = {},
+        sessionsArray = Object.values(this.content).sort((a, b) => new Date(a.Start) - new Date(b.Start)),
         dates = sessionsArray.map(session => this.getDay(session['Start'])),
         uniqueDates = Array.from(new Set(dates))
 
       uniqueDates.forEach(day => {
-        const sessionsInDay = sessionsArray.filter(s => this.sessionInDay(s, day))
-        contentByDays[day] = {
-          date: sessionsInDay[0].Start,
-          sessions: sessionsInDay
-        }
+        const 
+          sessionsInDay = sessionsArray.filter(s => this.sessionInDay(s, day)),
+          dayObject = {
+            date: sessionsInDay[0].Start,
+            sessions: sessionsInDay
+          },
+          parentDay = 
+            day == 3 || day == 4 || day == 5 ? firstDay :
+            day == 6 || day == 7 || day == 8 ? secondDay : 
+            null
+          
+          parentDay[day] = dayObject
       })
-      this.$set(this, 'contentByDays', contentByDays)
+
+      this.$set(this, 'firstDay', firstDay)
+      this.$set(this, 'secondDay', secondDay)
     },
 
     toggleTimezone() {
@@ -144,21 +183,22 @@ export default {
     /* calc(5 * var(--one)) */
     /* calc(10 * var(--one)) */
   ;
+  padding-top: calc(10 * var(--one));
   width: 100%;
   height: 100%;
   display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
+  /* flex-direction: column; */
+  /* flex-wrap: wrap; */
   /* justify-content: stretch; */
-  /* justify-content: center; */
-  align-items: center;
-  align-content: center;
+  justify-content: center;
+  /* align-items: center; */
+  /* align-content: dcenter; */
   /* align-content: flex-start; */
 }
 
 #timeZone {
   position: absolute;
-  top: calc(-4 * var(--one));
+  top: calc(6 * var(--one));
   left: calc(35 * var(--one));
 }
 #timeZone h3 {
@@ -170,21 +210,22 @@ export default {
   cursor: pointer;
 }
 
-.timetable .day  {
-  /* max-width: 30%; */
-  /* max-width: calc(60 * var(--one)); */
-  max-width: 40%;
+.timetable .parentDay  {
+  width: 40%;
   display: flex;
   flex-direction: column;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  align-items: center;
+  align-items: stretch;
+}
+.timetable .day  {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
   align-content: center;
   z-index: 1;
 }
 
 .timetable .day .date {
-  /* align-self: flex-start; */
+  text-align: center;
   margin: 
     calc(3 * var(--one))
     calc(2 * var(--one))
@@ -192,8 +233,6 @@ export default {
     calc(2 * var(--one))
   ;
   font-size: calc(2.8 * var(--one));
-  /* font-family: sans-serif; */
-  /* font-weight: lighter; */
 }
 
 .timetable .day .sessionsContainer {
@@ -202,7 +241,6 @@ export default {
   flex-direction: column;
   align-items: center;
   align-content: flex-start;
-  flex-wrap: wrap;
 }
 .timetable .day .sessionsContainer .islandContainer {
   box-sizing: border-box;
@@ -240,10 +278,10 @@ export default {
   visibility: hidden;
 }
 
-.LIFECYCLE1 #timeZone,
+/* .LIFECYCLE1 #timeZone,
 .LIFECYCLE1 .date,
 .LIFECYCLE1 .time {
   visibility: hidden;
-}
+} */
 
 </style>

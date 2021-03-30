@@ -14,7 +14,7 @@
     "Name": {
       "type": "string"
     },
-    "sessions": {
+    "hosting": {
       "collection": "sessions",
       "via": "hosts"
     },
