@@ -43,12 +43,18 @@
       <span 
         class="time"
         >, {{ fromNow(message.time) }}</span>
-      <span v-if="isMe"> ● </span>
+      <span v-if="isMe || moderator"> ● </span>
       <span 
-        v-if="isMe"
+        v-if="isMe || moderator"
         class="delete"
         @click.stop="deleteMessage(message)"
       >delete</span>
+      <span v-if="moderator"> ● </span>
+      <span 
+        v-if="moderator"
+        class="delete"
+        @click.stop="censorMessage(message)"
+      >{{ message.censored ? 'uncensor' : 'censor' }}</span>
     </div>
 
   </div>
@@ -73,11 +79,13 @@ export default {
       hovered: false
     }
   },
-  mounted() {
+  computed: {
+    moderator() { return this.$store.state.moderator }
   },
   methods: {
     ...mapActions([
-      'deleteMessage'
+      'deleteMessage',
+      'censorMessage'
     ]),
     fromNow(time) {
       return moment(time).fromNow()

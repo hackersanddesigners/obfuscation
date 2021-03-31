@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 
 import Label from './Label'
 
@@ -69,12 +69,14 @@ export default {
   ], 
   data() {
     return {
-      moderator: false,
       authenticating: false,
       moderating: false,
     }
   },
   computed: {
+    ...mapState([
+      'moderator'
+    ]),
     ...mapGetters([
       'me',
       'connectedUsers',
@@ -94,7 +96,7 @@ export default {
     authenticate() {
       const password = this.$refs.password.value
       if (password === '0000') {
-        this.moderator = true
+        this.$store.commit('moderate')
         this.authenticating = false
         this.moderating = true
       }

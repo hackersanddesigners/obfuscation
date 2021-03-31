@@ -25,13 +25,13 @@ const store = new Vuex.Store({
     visited: false,
     blocked: false,
 
+    moderator: false,
 
     // users and messages are populated by a combi-
     // nation of local storage and conflict-free data
     // replication with other peers over the socket.
 
     users: {},
-
     messages: {},
 
 
@@ -51,6 +51,9 @@ const store = new Vuex.Store({
       playbackId: null,
       status: null,
     },
+
+
+    // ticker
 
     ticker: {},
 
@@ -86,6 +89,8 @@ const store = new Vuex.Store({
     register: state => state.registered = true,
     visit: state => state.visited = true,
     block: state => state.blocked = true,
+
+    moderate: state => state.moderator = true,
 
 
     // app database mutations.
@@ -140,7 +145,7 @@ const store = new Vuex.Store({
       // Vue.delete(state.messages, message.uid)
     },
     setMessageCensored: (state, message) => {
-      state.messages[message.uid].censored = true
+      state.messages[message.uid].censored = !state.messages[message.uid].censored
     },
 
     setTerritories: (state, regions) => {

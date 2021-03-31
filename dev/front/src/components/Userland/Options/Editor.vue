@@ -72,7 +72,7 @@
         class="introText" 
         v-if="!registered"
       >
-        <p>The information you are entering is stored on our server and sent to all the other users.</p>  
+        <p>The messages you post will be visible to every other participant and remain available on the website.</p>  
       </div>
     </div>
     <!-- <div id="jsonMe">
