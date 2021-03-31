@@ -12,7 +12,7 @@
     :style="{ 
       left: `${ toNearestX(message.x, 0.2) }%`,
       top: `${ toNearestX(message.y, 0.2) }%`,
-      '--blur': `blur(${ (now - message.time) / 100000000 }px)`,
+      '--blur': isCompatible ? `blur(${ (now - message.time) / 50000000 }px)` : null,
       '--userColor': `var(--${ message.authorUID })`,
     }"
       @mouseover="hovered=true"
@@ -65,6 +65,7 @@ export default {
   props: [ 
     'isMe',
     'message',
+    'isCompatible'
   ], 
   data() {
     return {
@@ -100,7 +101,7 @@ export default {
   font-family: jet;
   font-size: calc(1 * var(--one));
   color: var(--userColor);
-  /* filter: var(--blur); */
+  filter: var(--blur);
   /* -webkit-filter: blur(0px); */
   transition: filter 0.2s ease;
   display: flex;

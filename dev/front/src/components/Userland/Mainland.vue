@@ -117,15 +117,14 @@
           :dragging="isMe(user) ? dragging : null"
         />
         
-        <!-- <div v-if="isCompatible"> -->
         <Message
           v-for="message in notDeletedMessages"
           :key="message.uid"
           :message="message"
+          :isCompatible="isCompatible"
           :isMe="message.authorUID === me.uid"
           @goTo="goTo(userByName($event))"
         />
-        <!-- </div> -->
         
       </div>
     </div>
