@@ -100,8 +100,8 @@ export default {
   font-family: jet;
   font-size: calc(1 * var(--one));
   color: var(--userColor);
-  filter: var(--blur);
-  -webkit-filter: blur(0px);
+  /* filter: var(--blur); */
+  /* -webkit-filter: blur(0px); */
   transition: filter 0.2s ease;
   display: flex;
   flex-direction: column;
