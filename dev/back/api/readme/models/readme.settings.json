@@ -1,0 +1,31 @@
+{
+  "kind": "collectionType",
+  "collectionName": "readmes",
+  "info": {
+    "name": "Readme",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "Title": {
+      "type": "string"
+    },
+    "Subtitle": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "Title"
+    },
+    "Sections": {
+      "type": "dynamiczone",
+      "components": [
+        "sections.section"
+      ]
+    }
+  }
+}
