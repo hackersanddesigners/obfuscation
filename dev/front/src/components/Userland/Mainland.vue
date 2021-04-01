@@ -2,7 +2,7 @@
   <main 
     :style="[
       userColors,
-      regionColors,
+      scale > 7 ? regionColors : '',
       { '--scale': scale }
     ]"
     :class="{ 
@@ -272,16 +272,11 @@ export default {
       }
     },
 
-    scale() {
-      // this.route('/~' + this.me.name, 'auto')    
-      this.goTo(this.me, 'auto')    
+    scale(newScale, oldScale) {  
+      if (newScale && oldScale) {
+        this.recenter(newScale, oldScale) 
+      }
     },
-
-    // users() {
-      // if(this.users['519a87e43c9']) {
-        // console.log('change')
-      // }
-    // },
 
   },
 
@@ -534,6 +529,20 @@ export default {
     },
 
 
+    // for scaling
+
+    recenter(newScale, oldScale) {
+      const 
+        ratio = newScale / oldScale,
+        diff = (oldScale - newScale) / (oldScale + newScale),
+        center = {
+          x: this.$refs.userlandContainer.scrollLeft * ratio - this.windowSize.w * diff,
+          y: this.$refs.userlandContainer.scrollTop * ratio - this.windowSize.h * diff,
+      }
+      this.scrollTo(center, 'auto')
+    },
+
+
     // go to zone (user, message, or territory).
 
     goTo(zone, behavior) {
@@ -563,9 +572,7 @@ export default {
     },
 
     release() {
-      // setTimeout(() => {
-        this.dragging = false
-      // }, 0)
+      this.dragging = false
     },
 
 
@@ -574,13 +581,11 @@ export default {
 
     scrollTo(to, behavior) {
       if (this.dragging) {
-        // requestAnimationFrame(() => {
-          this.$refs.userlandContainer.scroll({
-            left: to.x,
-            top: to.y,
-            behavior: behavior || 'auto'
-          })
-        // })
+        this.$refs.userlandContainer.scroll({
+          left: to.x,
+          top: to.y,
+          behavior: behavior || 'auto'
+        })
       } else {
         requestAnimationFrame(() => {
           this.$refs.userlandContainer.scroll({
@@ -679,11 +684,6 @@ export default {
 
       this.isCompatible = chrome || firefox
     },
-
-    triggerRepaint() {
-      this.visible = false
-      this.visible = true
-    }
 
   },
   
@@ -785,7 +785,11 @@ main nav.hidden {
   color: var(--ui-front);
   background: var(--ui-back);
   overflow: hidden;
-  transition: background-color 0.2s ease;
+  transition: 
+    background-color 0.2s ease,
+    /* height 0.2s ease,
+    width 0.2s ease, */
+  ;
 }
 #userland::before {
   content: '';

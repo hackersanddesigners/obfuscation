@@ -216,7 +216,7 @@ export default {
       // starting a message with ! will force all
       // users to navigate to it.
 
-      } else if (input.value == '!') {
+      } else if (input.value == '!!!') {
         this.announcement = true
 
 

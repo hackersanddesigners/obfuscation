@@ -17,13 +17,13 @@
       </vue-markdown>
     </div> -->
 
-    <!-- <svg 
+    <svg 
+      v-if="scale <= 7"
       class="shape" 
       :viewBox="viewBox"
       preserveAspectRatio="none"
-    >       
-     <path :fill="territory.color" :d="d"/>
-    </svg> -->
+    ><path :fill="territory.color" :d="d"/>
+    </svg>
 
     <Reception
       v-if="slug === 'reception'"
@@ -125,6 +125,7 @@ export default {
   computed: { 
     slug() { return this.territory.slug },
     content() { return this.territory.content },
+    scale() { return this.$store.state.scale }
   },
   created() {
     this.$http

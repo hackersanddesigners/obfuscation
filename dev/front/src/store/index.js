@@ -174,9 +174,9 @@ const store = new Vuex.Store({
     // app interface mutations.
 
     setScale: (state, scale) => state.scale = scale,
-    setWidthFactor: (state, factor) => state.widthFactor = factor,
     zoomIn: state => state.scale < 20 ? state.scale += 0.25 : null,
     zoomOut: state  => state.scale > 1 ? state.scale -= 0.25 : null, 
+    setWidthFactor: (state, factor) => state.widthFactor = factor,
 
     makeMobile: state => state.isMobile = true,
     makeDesktop: state => state.isMobile = false,
