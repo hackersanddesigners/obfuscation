@@ -75,7 +75,7 @@
         <p>The messages you post will be visible to every other participant and remain available on the website.</p>  
       </div>
     </div>
-    <div id="jsonMe">
+    <div v-if="false" id="jsonMe">
       <vue-markdown :source="jsonMe" />
     </div>
   </div>
