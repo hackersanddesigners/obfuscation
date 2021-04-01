@@ -19,7 +19,10 @@
         :key="getDay(day.date)"
         class="day"
       >
-        <div class="date">{{ cuteDate(day.date) }}</div>
+        <div class="date">
+          {{ cuteDate(day.date) }}
+          <br><em>Vernissage</em> 
+        </div>
         <div class="sessionsContainer">
           <div 
             class="islandContainer"
@@ -78,11 +81,12 @@ export default {
   props: [ 'content' ],
   data() {
     return {
-      defaultTimeZone: "Europe/Amsterdam",
+      defaultTimeZone: 'Etc/UTC',
+      // defaultTimeZone: "Europe/Amsterdam",
       // defaultTimeZone: "Australia/Sydney",
       // defaultTimeZone: "Pacific/Funafuti",
       ownTimeZone: moment.tz.guess(),
-      desiresOwnTimezone: false,
+      desiresOwnTimezone: true,
       firstDay: {},
       secondDay: {}
     }
@@ -92,7 +96,7 @@ export default {
     isInDefaultTimeZone() { return this.ownTimeZone === this.defaultTimeZone },
   },
   created() {
-    moment.tz.setDefault(this.defaultTimeZone)
+    moment.tz.setDefault(this.ownTimeZone)
     this.orderContentByDays()
   },
   methods: {
@@ -233,6 +237,10 @@ export default {
     calc(2 * var(--one))
   ;
   font-size: calc(2.8 * var(--one));
+}
+.timetable .day .date em {
+  margin-top: 0;
+  font-size: calc(2 * var(--one));
 }
 
 .timetable .day .sessionsContainer {
