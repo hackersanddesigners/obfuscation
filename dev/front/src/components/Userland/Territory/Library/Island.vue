@@ -82,7 +82,7 @@ export default {
   box-shadow: var(--bevel);
 }
 
-.LIFECYCLE0 .island {
+/* .LIFECYCLE0 .island {
   pointer-events: none;
 }
 .LIFECYCLE0 .island h3,
@@ -97,5 +97,5 @@ export default {
 .LIFECYCLE1 .island h3,
 .LIFECYCLE1 .island h1 {
   visibility: visible;
-}
+} */
 </style>

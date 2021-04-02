@@ -26,14 +26,14 @@
     </svg>
 
     <Reception
-      v-if="slug === 'reception'"
+      v-if="slug === 'reception' && lifecycle >= 0"
       :class="slug"
       :content="content"
       @moreInfo="$emit('moreInfo', $event)"
     />
 
     <Readme
-      v-if="slug === 'readme'"
+      v-if="slug === 'readme' && lifecycle >= 1"
       :class="slug"
       :content="content"
       @moreInfo="$emit('moreInfo', $event)"
@@ -47,42 +47,42 @@
     />
 
     <Timetable
-      v-else-if="slug === 'timetable'"
+      v-else-if="slug === 'timetable' && lifecycle >= 1"
       :class="slug"
       :content="content"
       @moreInfo="$emit('moreInfo', $event)"
     />
 
     <Contributors
-      v-else-if="slug === 'contributors'"
+      v-else-if="slug === 'contributors' && lifecycle >= 1"
       :class="slug"
       :content="content"
       @moreInfo="$emit('moreInfo', $event)"
     />
 
     <StudyRoom
-      v-else-if="slug === 'study-room'"
+      v-else-if="slug === 'study-room' && lifecycle >= 1"
       :class="slug"
       :content="content"
       @moreInfo="$emit('moreInfo', $event)"
     />
 
     <Library
-      v-else-if="slug === 'library'"
+      v-else-if="slug === 'library' && lifecycle >= 1"
       :class="slug"
       :content="content"
       @moreInfo="$emit('moreInfo', $event)"
     />
 
     <Glossary
-      v-else-if="slug === 'glossary'"
+      v-else-if="slug === 'glossary' && lifecycle >= 1"
       :class="slug"
       :content="content"
       @moreInfo="$emit('moreInfo', $event)"
     />
 
     <Hangout
-      v-else-if="slug === 'hangout'"
+      v-else-if="slug === 'hangout' && lifecycle >= 1"
       :class="slug"
       :content="content"
       @moreInfo="$emit('moreInfo', $event)"
@@ -141,9 +141,10 @@ export default {
     }
   },
   computed: { 
+    scale() { return this.$store.state.scale },
+    lifecycle() { return this.$store.state.lifecycle },
     slug() { return this.territory.slug },
     content() { return this.territory.content },
-    scale() { return this.$store.state.scale }
   },
   created() {
     this.$http

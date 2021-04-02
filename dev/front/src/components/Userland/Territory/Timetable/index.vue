@@ -280,11 +280,11 @@ export default {
 }
 
 
-.LIFECYCLE0 #timeZone,
+/* .LIFECYCLE0 #timeZone,
 .LIFECYCLE0 .date,
 .LIFECYCLE0 .time {
   visibility: hidden;
-}
+} */
 
 /* .LIFECYCLE1 #timeZone,
 .LIFECYCLE1 .date,

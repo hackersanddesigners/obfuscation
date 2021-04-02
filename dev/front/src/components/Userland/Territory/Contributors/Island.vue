@@ -28,7 +28,7 @@ export default {
 }
 
 
-.LIFECYCLE0 .island {
+/* .LIFECYCLE0 .island {
   pointer-events: none;
 }
 .LIFECYCLE0 .island h1 {
@@ -40,5 +40,5 @@ export default {
 }
 .LIFECYCLE1 .island h1 {
   visibility: visible;
-}
+} */
 </style>
