@@ -53,13 +53,6 @@
       @moreInfo="$emit('moreInfo', $event)"
     />
 
-    <Glossary
-      v-else-if="slug === 'glossary'"
-      :class="slug"
-      :content="content"
-      @moreInfo="$emit('moreInfo', $event)"
-    />
-
     <Contributors
       v-else-if="slug === 'contributors'"
       :class="slug"
@@ -67,8 +60,22 @@
       @moreInfo="$emit('moreInfo', $event)"
     />
 
+    <StudyRoom
+      v-else-if="slug === 'study-room'"
+      :class="slug"
+      :content="content"
+      @moreInfo="$emit('moreInfo', $event)"
+    />
+
     <Library
       v-else-if="slug === 'library'"
+      :class="slug"
+      :content="content"
+      @moreInfo="$emit('moreInfo', $event)"
+    />
+
+    <Glossary
+      v-else-if="slug === 'glossary'"
       :class="slug"
       :content="content"
       @moreInfo="$emit('moreInfo', $event)"
@@ -103,9 +110,10 @@ import Reception from './Reception'
 import Readme from './Readme'
 import Exhibition from './Exhibition'
 import Timetable from './Timetable'
-import Glossary from './Glossary'
 import Contributors from './Contributors'
+import StudyRoom from './StudyRoom'
 import Library from './Library'
+import Glossary from './Glossary'
 import Hangout from './Hangout'
 import Livestream from './Livestream'
 
@@ -116,9 +124,10 @@ export default {
     Readme,
     Exhibition,
     Timetable,
-    Glossary,
     Contributors,
+    StudyRoom,
     Library,
+    Glossary,
     Hangout,
     Livestream,
   },

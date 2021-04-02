@@ -46,6 +46,25 @@
       </span>
     </div>
 
+    <div 
+      class="body"
+      v-else-if="mentors && mentors.length > 0"
+    >
+      <span class="hosts">
+        <span> Mentor: </span>
+        <span
+          class="host"
+          v-for="mentor in mentors"
+          :key="mentor.Name"
+        >
+          <a 
+            :href="`/contributors/${mentor.slug}`"
+            class="name"
+          >{{ mentor.Name }}</a>
+        </span>
+      </span>
+    </div>
+
     <div class="body">
       <vue-markdown
         :source="body"
@@ -54,7 +73,7 @@
 
     <div 
       class="body"
-      v-if="hosting || moderating"
+      v-if="hosting || moderating || mentoring"
     >
       <span v-if="hosting.length > 0">
         <span> Hosting </span>
@@ -82,6 +101,18 @@
           >{{ session.Title }}</a>
           <span v-if="!isLast(session, moderating)">, </span>
           <span v-else>. </span>
+        </span>
+      </span>
+      <span v-if="mentoring.length > 0">
+        <span> Mentoring </span>
+        <span
+          v-for="session in mentoring"
+          :key="session.Title"
+        >
+          <a 
+            :href="`/study-room/${session.slug}`"
+            class="name"
+          >{{ session.Title }}</a>
         </span>
       </span>
     </div>
@@ -137,8 +168,10 @@ export default {
     source() { return this.getSource() },
     hosts() { return this.section.hosts },
     moderators() { return this.section.moderators },
+    mentors() { return this.section.Mentors },
     hosting() { return this.section.hosting },
     moderating() { return this.section.moderating },
+    mentoring() { return this.section.Mentoring },
     resources() { return this.section.references }
 
   },

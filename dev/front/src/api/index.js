@@ -136,8 +136,9 @@ const api = {
         slug === 'exhibition' ? 'videos' :
         slug === 'timetable' ? 'sessions' :
         slug === 'contributors' ? 'hosts' :
-        slug === 'glossary' ? 'glossaries' :
+        slug === 'study-room' ? 'study-sessions' : 
         slug === 'library' ? 'libraries' : 
+        slug === 'glossary' ? 'glossaries' :
         null
       )
     } 
