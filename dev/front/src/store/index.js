@@ -462,15 +462,22 @@ const store = new Vuex.Store({
       return getters.notBlockedUsers
         .filter(u => u.connected && !u.isMobile)
         .sort((a, b) => (
-          b.moderator - a.moderator
+          ( a.moderator || b.moderator ) ?
+          ( 
+            !a.moderator ? 1 : b.moderator ? -1 :
+            b.moderator - a.moderator
+          ) : 0
         ))
     },
 
     connectedUsersFirst: (state, getters) => {
       return getters.notBlockedUsers.sort((a, b) => (
         b.connected - a.connected ||
-        b.moderator - a.moderator 
-        // a.connected === b.connected ? 0 : a.connected ? -1 : 1
+        ( a.moderator || b.moderator ) ?
+        ( 
+          !a.moderator ? 1 : b.moderator ? -1 :
+          b.moderator - a.moderator
+        ) : 0
       ))
     },
 
