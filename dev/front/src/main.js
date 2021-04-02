@@ -3,6 +3,8 @@ import Axios from 'axios'
 import VueMarkdown from '@adapttive/vue-markdown'
 import VueSocketIOExt from 'vue-socket.io-extended'
 import { io } from 'socket.io-client'
+import VueTour from 'vue-tour'
+
 import smoothscroll from 'smoothscroll-polyfill'
 
 import App from './App'
@@ -34,6 +36,8 @@ Vue.use(
   { store }
 )
 
+require('vue-tour/dist/vue-tour.css')
+Vue.use(VueTour)
 
 
 new Vue({

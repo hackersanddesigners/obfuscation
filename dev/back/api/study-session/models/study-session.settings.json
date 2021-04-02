@@ -1,0 +1,36 @@
+{
+  "kind": "collectionType",
+  "collectionName": "study_sessions",
+  "info": {
+    "name": "StudySession",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "Title": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "Title"
+    },
+    "Description": {
+      "type": "richtext"
+    },
+    "Start": {
+      "type": "datetime"
+    },
+    "End": {
+      "type": "datetime"
+    },
+    "Mentors": {
+      "collection": "hosts",
+      "via": "Mentoring",
+      "dominant": true
+    }
+  }
+}

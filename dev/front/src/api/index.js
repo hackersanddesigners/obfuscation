@@ -132,6 +132,7 @@ const api = {
     resolveQueryFromRegion(slug) {
       return (
         slug === 'reception' ? 'statics' :
+        slug === 'readme' ? 'readmes' :
         slug === 'exhibition' ? 'videos' :
         slug === 'timetable' ? 'sessions' :
         slug === 'contributors' ? 'hosts' :

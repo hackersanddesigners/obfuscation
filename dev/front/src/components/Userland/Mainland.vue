@@ -141,6 +141,11 @@
       :isGeneral="location.slug === 'general'"
       @showOverlay="showOverlay"
       @hideOverlay="handleOverlayClose"
+      @startTour="startTour"
+    />
+    
+    <Tour
+      v-if="touring"
     />
 
   </main>
@@ -155,6 +160,7 @@ import { mapState, mapGetters } from 'vuex'
 
 import NavHandle from './Nav/Handle'
 import Editor from './Options/Editor'
+import Tour from './Tour'
 import Minimap from './Nav/Mini/Map'
 import Options from './Options'
 import Cursorr from './User/Cursorr'
@@ -172,6 +178,7 @@ export default {
   components: {
     NavHandle,
     Editor,
+    Tour,
     Minimap,
     Minilist,
     Options,
@@ -206,6 +213,8 @@ export default {
       lastScrollY: 0,
 
       isCompatible: true,
+
+      touring: false,
 
     }
   },
@@ -526,6 +535,12 @@ export default {
         position, 
         this.miniDragging ? 'auto' : 'smooth'
       )
+    },
+
+
+    startTour() {
+      console.log('tour started')
+      this.touring = true
     },
 
 

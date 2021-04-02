@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import BBBLink from './BBBLink'
+import BBBLink from '../BBBLink'
 
 export default {
   name: 'Island',

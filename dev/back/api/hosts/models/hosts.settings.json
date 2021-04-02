@@ -34,6 +34,10 @@
     },
     "link": {
       "type": "string"
+    },
+    "Mentoring": {
+      "via": "Mentors",
+      "collection": "study-session"
     }
   }
 }

@@ -32,6 +32,13 @@
       @moreInfo="$emit('moreInfo', $event)"
     />
 
+    <Readme
+      v-if="slug === 'readme'"
+      :class="slug"
+      :content="content"
+      @moreInfo="$emit('moreInfo', $event)"
+    />
+
     <Exhibition
       v-else-if="slug === 'exhibition'"
       :class="slug"
@@ -93,6 +100,7 @@
 
 <script>
 import Reception from './Reception'
+import Readme from './Readme'
 import Exhibition from './Exhibition'
 import Timetable from './Timetable'
 import Glossary from './Glossary'
@@ -105,6 +113,7 @@ export default {
   name: 'Territory',
   components: {
     Reception,
+    Readme,
     Exhibition,
     Timetable,
     Glossary,

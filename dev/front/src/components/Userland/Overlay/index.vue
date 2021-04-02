@@ -38,21 +38,21 @@
         v-if="!content.Sections"
         class="content"
       >
-        <div 
-          v-if="content.slug === 'upload'"
-        >
+
         <Upload
+          v-if="content.slug === 'upload'"
           ref="upload"
           :sending="sending"
           :sent="sent"
           @sending="sending = !sending"
           @sent="sent = !sent, sending = false"
         />
-        </div>
+
         <Section
           v-else
           :section="content"
         /> 
+
       </div>     
 
       <div
@@ -64,16 +64,13 @@
           :key="section.id"
           :section="section"
         />
+
         <div 
           v-if="isRegister"
           id="aanmelderContainer"
-        >
-          <a 
-            id="backupLink"
+        ><a id="backupLink"
             href="https://www.aanmelder.nl/wo2021/subscribe"
-          >
-            Register online for the event.
-          </a>
+          >Register online for the event.</a>
           <div id="AanmelderRootDiv"></div>
         </div>
         
@@ -94,6 +91,19 @@
         @click.stop="$refs.upload.submit" 
       >
     </div>
+
+    <div 
+      v-if="content && content.slug === 'tour'"
+      class="submitContainer"
+    >
+      <input 
+        ref="startTour" 
+        class="ui submit"
+        type="button" 
+        value="Start Guided Tour"
+        @click.stop="$emit('startTour')" 
+      >
+    </div>
   </div>
 </template>
 
@@ -101,7 +111,6 @@
 import smoothHeight from 'vue-smooth-height'
 import Section from './Section'
 import Upload from './Upload'
-
 
 
 export default {

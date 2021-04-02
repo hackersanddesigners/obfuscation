@@ -29,6 +29,7 @@
     "vue-router": "^3.4.9",
     "vue-smooth-height": "^1.6.4",
     "vue-socket.io-extended": "^4.0.6",
+    "vue-tour": "^2.0.0",
     "vuex": "^3.6.2",
     "vuex-strong-cache": "^0.1.1"
   },
