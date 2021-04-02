@@ -89,7 +89,7 @@ export default {
           timeSent = this.message.time,
           timeElapsed = now - timeSent,
           blurString = `blur(${ 25 * timeElapsed / lifetime }px)` 
-          console.log(lifetime)
+          // console.log(blurString)
         return blurString
       } else {
         return null
