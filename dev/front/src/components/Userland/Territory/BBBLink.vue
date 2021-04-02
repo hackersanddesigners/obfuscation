@@ -36,8 +36,8 @@ export default {
 <style scoped>
 .BBB-container {
   box-sizing: border-box;
-  margin: 1vh;
-  padding: 2vh;
+  margin: calc(1 * var(--one));
+  padding: calc(2 * var(--one));
   color: inherit;
   outline: none;
   display: flex;
@@ -66,7 +66,7 @@ export default {
 
 .BBB {
   margin: auto;
-  font-size: 11pt;
+  font-size: calc(1.3 * var(--one));
   text-align: center;
   max-width: 10vh;
 
