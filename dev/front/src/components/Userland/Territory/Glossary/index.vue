@@ -47,7 +47,7 @@ export default {
   align-items: center;
 }
 .submit {
-  margin-top: 3vh;
+  margin-top: calc(3 * var(--one));
 }
 
 </style>
