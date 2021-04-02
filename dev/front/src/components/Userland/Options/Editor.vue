@@ -135,7 +135,7 @@ export default {
     new jscolor(this.$refs.color)  
     jscolor.init()
 
-    this.$refs.messageLifetime.value = this.me.messageLifetime / 86400000 || 2
+    this.$refs.messageLifetime.value = (this.me.messageLifetime / 86400000) || 30
 
   },
   methods: {

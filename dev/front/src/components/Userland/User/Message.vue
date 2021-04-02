@@ -12,7 +12,7 @@
     :style="{ 
       left: `${ toNearestX(message.x, 0.2) }%`,
       top: `${ toNearestX(message.y, 0.2) }%`,
-      '--blur': isCompatible ? `blur(${ (now - message.time) / 50000000 }px)` : null,
+      '--blur': blur,
       '--userColor': `var(--${ message.authorUID })`,
     }"
       @mouseover="hovered=true"
@@ -75,12 +75,31 @@ export default {
   ], 
   data() {
     return {
+      hovered: false,
       now: (new Date()).getTime(),
-      hovered: false
     }
   },
   computed: {
-    moderator() { return this.$store.getters.me.moderator }
+    moderator() { return this.$store.getters.me.moderator }, 
+    blur() {
+      if (this.isCompatible) {
+        const
+          now = this.now,
+          lifetime = this.$store.state.users[this.message.authorUID].messageLifetime,
+          timeSent = this.message.time,
+          timeElapsed = now - timeSent,
+          blurString = `blur(${ 25 * timeElapsed / lifetime }px)` 
+          console.log(lifetime)
+        return blurString
+      } else {
+        return null
+      }
+    }
+  },
+  created() {
+    setInterval(() => {
+      this.now = (new Date()).getTime()
+    }, 60000)
   },
   methods: {
     ...mapActions([
@@ -91,10 +110,6 @@ export default {
       return moment(time).fromNow()
     },
     toNearestX(num, X) {
-      // return Math.floor(100 * (num) / X) * X
-      // console.log((100*num).toFixed(2))
-      // return Math.floor(100*num)
-      // return (100*num).toFixed(2)
       return Math.floor(100 * (num) / X) * X
     }
   }

@@ -23,7 +23,7 @@
         v-for="notification in notifications"
         :key="notification.uid"
         :notification="notification"
-        @dismiss="notifications = []"
+        @dismiss="notifications.splice(notifications.indexOf(notification), 1)"
         @goTo="handleNotificationClick($event)"
       />
     </div>
