@@ -204,6 +204,7 @@ export default {
             x: 0,
             y: 0,
             typing: null,
+            moderator: false,
             deleted: false,
             blocked: false,
           },

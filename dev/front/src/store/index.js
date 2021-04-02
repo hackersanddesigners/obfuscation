@@ -131,6 +131,10 @@ const store = new Vuex.Store({
     setUserDeleted: (state, user) => {
       state.users[user.uid].deleted = true
     },
+    setUserModerator: (state, user) => {
+      state.users[user.uid].moderator = user.moderator
+    },
+
 
     setMessages: (state, messages) => {
       for (let uid in messages) {
@@ -233,6 +237,12 @@ const store = new Vuex.Store({
       }
     },
 
+    socket_moderator({ state, commit }, user) {
+      if (user.uid !== state.uid) {
+        commit('setUserModerator', user)
+      }
+    },
+
     socket_appearance({ state, commit, dispatch }, user) {
       if (user.uid !== state.uid) {
         commit('setUserAppearance', user)
@@ -295,6 +305,17 @@ const store = new Vuex.Store({
         'appearance', user
       )
     },
+
+
+    updateModerator({ state, commit }, moderator) {
+      moderator.uid = state.uid
+      commit('moderate')
+      commit('setUserModerator', moderator)
+      this._vm.$socket.client.emit(
+        'moderator', moderator
+      )
+    },
+
 
     disconnect({ state, commit }) {
       commit('setUserDisconnected', state.uid)

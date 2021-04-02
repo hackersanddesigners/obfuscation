@@ -116,6 +116,13 @@ low(adapter).then(db => {
         .write()
     })
 
+    socket.on('moderator', (user) => {
+      io.sockets.emit('moderator', user)
+      db.set(`users[${user.uid}].moderator`, true)
+        .write()
+    })
+
+
 
   })
 

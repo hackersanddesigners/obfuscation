@@ -96,7 +96,9 @@ export default {
     authenticate() {
       const password = this.$refs.password.value
       if (password === '0000') {
-        this.$store.commit('moderate')
+        this.$store.dispatch('updateModerator', {
+          moderator: true
+        })
         this.authenticating = false
         this.moderating = true
       }
