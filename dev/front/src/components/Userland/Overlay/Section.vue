@@ -195,7 +195,7 @@ export default {
         this.section.Institution ? 
           this.section.Institution :
         this.section.Start ? 
-          moment(this.section.Start).format('dddd, MMMM Do [at] HH:mm') : ''
+          moment(this.section.Start).format('dddd, MMMM Do [at] HH:mm z') : ''
       )
     },
 

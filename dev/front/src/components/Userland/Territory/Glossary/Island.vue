@@ -17,7 +17,7 @@ export default {
 
 <style scoped>
 .island {
-  margin-bottom: calc(2.5 * var(--one));
+  /* margin-bottom: calc(2.5 * var(--one)); */
   padding: 
     calc(1 * var(--one)) 
     calc(2 * var(--one)) 

@@ -1,39 +1,48 @@
 <template>
   <div class="studyRoom">
-    <div id="timeZone">
-      <h3>Sessions are displayed in {{ timeZone }} time.</h3>
-      <h3
-        v-if="!isInDefaultTimeZone"
-        class="toggle"
-        @click.stop="toggleTimezone"
-      > {{ 
-            desiresOwnTimezone ?
-            `View sessions in ${ defaultTimeZone } time.` :
-            `View sessions in ${ ownTimeZone } time.`
-        }}
-      </h3>
-    </div>
-    <div 
-      v-for="day in sessionsByDay"
-      :key="getDay(day.date)"
-      class="day"
-    >
+    <div class="schedule">
+      <div id="timeZone">
+        <h3>Sessions are displayed in {{ timeZone }} time.</h3>
+        <h3
+          v-if="!isInDefaultTimeZone"
+          class="toggle"
+          @click.stop="toggleTimezone"
+        > {{ 
+              desiresOwnTimezone ?
+              `View sessions in ${ defaultTimeZone } time.` :
+              `View sessions in ${ ownTimeZone } time.`
+          }}
+        </h3>
+      </div>
       <div 
-        class="islandContainer"
-        v-for="session in day.sessions"
-        :key="session.slug"
-        :id="session.slug + 'Island'"
+        v-for="day in sessionsByDay"
+        :key="getDay(day.date)"
+        class="day"
       >
-        <div class="date">
-          {{ cuteDate(day.date) }}
+        <div 
+          class="islandContainer"
+          v-for="session in day.sessions"
+          :key="session.slug"
+          :id="session.slug + 'Island'"
+        >
+          <div class="date">
+            {{ cuteDate(day.date) }}
+          </div>
+          <div class="time">
+            <span class="start">{{ start(session) }}</span>
+            <span class="end"> {{ end(session) }}</span>
+          </div>
+          <Island
+            :session="session"
+            @click.native="$emit('moreInfo', `/study-room/${session.slug}`)"
+          />
         </div>
-        <div class="time">
-          <span class="start">{{ start(session) }}</span>
-          <span class="end"> {{ end(session) }}</span>
-        </div>
-        <Island
-          :session="session"
-          @click.native="$emit('moreInfo', `/study-room/${session.slug}`)"
+      </div>
+    </div>
+    <div class="room">
+      <div class="island">
+        <BBBLink
+          :room="bbbRoom"
         />
       </div>
     </div>
@@ -43,10 +52,14 @@
 <script>
 import moment from 'moment-timezone'
 import Island from './Island'
+import BBBLink from '../BBBLink'
 
 export default {
   name: 'StudyRoom',
-  components: { Island },
+  components: { 
+    Island ,
+    BBBLink
+  },
   props: [ 'content' ],
   data() {
     return {
@@ -57,6 +70,11 @@ export default {
       ownTimeZone: moment.tz.guess(),
       desiresOwnTimezone: true,
       sessionsByDay: {},
+
+      bbbRoom: {
+        name: 'Study Room',
+        url: ''
+      }
     }
   },
   computed: {
@@ -82,7 +100,7 @@ export default {
             date: sessionsInDay[0].Start,
             sessions: sessionsInDay
           }
-          sessionsByDay[day] = dayObject
+          sessionsByDay[dayObject.date] = dayObject
       })
 
       this.$set(this, 'sessionsByDay', sessionsByDay)
@@ -154,6 +172,12 @@ export default {
   width: 100%;
   height: 100%;
   display: flex;
+  align-items: flex-start;
+}
+
+.schedule {
+  flex-basis: 40%;
+  display: flex;
   flex-direction: column;
 }
 
@@ -169,7 +193,7 @@ export default {
   cursor: pointer;
 }
 .studyRoom .day  {
-  width: 40%;
+  /* width: 40%; */
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -218,6 +242,13 @@ export default {
 }
 .studyRoom .day .islandContainer:last-of-type .time .end {
   /* display: block; */
+}
+
+.room {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20%;
 }
 
 
