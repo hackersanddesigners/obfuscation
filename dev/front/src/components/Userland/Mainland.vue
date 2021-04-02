@@ -6,7 +6,7 @@
       { '--scale': scale }
     ]"
     :class="{ 
-      blur: !registered || editing || notification,
+      blur: !registered || editing || notifications.length > 0,
     }"
   >
 
@@ -15,12 +15,18 @@
       @stopEdit="editing = false"
     />
 
-    <Notification
-      v-if="notification"
-      :notification="notification"
-      @dismiss="notification = null"
-      @goTo="handleNotificationClick($event)"
-    />
+    <div 
+      v-if="notifications.length > 0"
+      id="notificationContainer"
+    >
+      <Notification
+        v-for="notification in notifications"
+        :key="notification.uid"
+        :notification="notification"
+        @dismiss="notifications = []"
+        @goTo="handleNotificationClick($event)"
+      />
+    </div>
 
     <nav :class="{ hidden: !desiresNav }">
 
@@ -217,7 +223,7 @@ export default {
       firstScroll: true,
       dragging: false,
       miniDragging: false,
-      notification: null,
+      notifications: [],
 
       lastScrollX: 0,
       lastScrollY: 0,
@@ -376,11 +382,11 @@ export default {
         this.handleLinks(`.message${message.uid} a`)
 
         if (message.announcement) {
-          this.notification = message
+          this.notifications.push(message)
 
         } else if (message.mentions) {
           if (message.mentions.find(m => m === this.me.name)) {
-            this.notification = message
+            this.notifications.push(message)
           }
 
 
@@ -556,7 +562,7 @@ export default {
     // notifications
 
     handleNotificationClick(notification) {
-      this.notification = null
+      this.notifications = []
       this.scrollTo(
         this.positionOf(notification), 
       'smooth')
@@ -882,6 +888,19 @@ main nav.hidden {
   line-height: 1.2;
 }
 
+
+#notificationContainer {
+  position: absolute;
+  box-sizing: border-box;
+  top: 0; left: 0;
+  height: 100%; width: 100%;
+  display: flex;
+  overflow: scroll;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
 
 #userland.reception {
   background-color: var(--reception);

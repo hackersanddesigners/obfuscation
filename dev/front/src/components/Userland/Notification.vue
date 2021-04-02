@@ -1,5 +1,5 @@
 <template>
-  <div id="notificationContainer">
+  <!-- <div id="notificationContainer"> -->
     <div 
       id="notification" 
       class="ui"
@@ -13,22 +13,22 @@
       <vue-markdown class="body"> 
         {{ notification.content }} 
       </vue-markdown>
+      <div id="notiButtons">
+        <input 
+          class="ui button"
+          type="button" 
+          value="dismiss"
+          @click.stop="$emit('dismiss')" 
+        >
+        <input 
+          class="ui button"
+          type="button" 
+          value="view"
+          @click.stop="$emit('goTo', notification)" 
+        >
+      </div>
     </div>
-    <div id="notiButtons">
-      <input 
-        class="ui button"
-        type="button" 
-        value="dismiss"
-        @click.stop="$emit('dismiss')" 
-      >
-      <input 
-        class="ui button"
-        type="button" 
-        value="view"
-        @click.stop="$emit('goTo', notification)" 
-      >
-    </div>
-  </div>
+  <!-- </div> -->
 </template>
 
 <script>
@@ -60,7 +60,7 @@ export default {
 </script>
 <style scoped>
 
-#notificationContainer {
+/* #notificationContainer {
   position: absolute;
   top: 0; left: 0;
   height: 100%; width: 100%;
@@ -69,10 +69,14 @@ export default {
   justify-content: center;
   align-items: center;
   z-index: 100;
-}
+} */
 #notification {
+  margin-bottom: 1vh;
   padding: 1vh;
-  max-width: 450px;
+  width: 450px;
+}
+#notification:last-of-type {
+  margin-bottom: 0;
 }
 #notification p {
   margin: 0;
@@ -91,12 +95,16 @@ export default {
 }
 
 #notiButtons {
+  width: 100%;
   margin-top: 1vh;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .button {
   cursor: pointer;
   margin-right: 1vh;
+  box-shadow: unset;
 }
 .button:last-of-type {
   margin-right: 0;

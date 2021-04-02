@@ -80,7 +80,7 @@ export default {
     }
   },
   computed: {
-    moderator() { return this.$store.state.moderator }
+    moderator() { return this.$store.getters.me.moderator }
   },
   methods: {
     ...mapActions([
