@@ -9,9 +9,17 @@
     <!-- <span class="bullet"> ● </span> -->
     <!-- <span class="bullet"></span> -->
 
-    <span class="name">
+    <span 
+      :class="[
+        'name',
+         { moderator: user.moderator }
+      ]"
+      
+    >
       {{ isMe ? "me" : user.name }} 
     </span>
+
+    <span v-if="moderating" class="goto"> {{ hovered ? '→' : ' '  }}</span> 
 
     <div
       v-if="moderating"
@@ -34,7 +42,7 @@
 
     </div>
 
-    <span class="goto"> {{ hovered ? '→' : ' '  }}</span> 
+    <span v-if="!moderating" class="goto"> {{ hovered ? '→' : ' '  }}</span> 
 
     <div v-if="moderating && messagesVisible" class="messageListContiner">
 
@@ -46,7 +54,7 @@
           @click.native.stop="$emit('goTo', message)"
         />
       </ul>
-      <p v-else>This user has no messaages.</p>
+      <p v-else class="empty">This user has no messaages.</p>
       
     </div>
   </li>
@@ -80,15 +88,17 @@ export default {
 </script>
 <style scoped>
 li {
+  box-sizing: border-box;
   padding: 0;
-  margin: 0.5vh 1vh;
+  margin: 0.5vh 0vh;
   display: flex;
   align-items: center;
   color: var(--userColor);
+  cursor: pointer;
 }
 
 li span {
-  margin-right: 0.5vh;
+  padding-right: 0.5vh;
 }
 li .bullet {
   height: 1vh; width: 1vh;
@@ -97,21 +107,31 @@ li .bullet {
   border-radius: 3px 5px 3px 5px;
 }
 li .name {
-  width: 100%;
+  padding: 0 0.5vh;
+  margin: 0 0.5vh;
   /* max-width: 200px; */
   cursor: pointer;
   word-break: keep-all;
   /* white-space: pre; */
   /* cursor: ne-resize; */
 }
+
+li .name.moderator {
+  border: 2px dashed;
+  border-radius: var(--ui-border-radius);
+}
+
 li .goto {
   margin-left: auto;
-  width: 1.5vh;
+  margin-right: 0.5vh;
+  min-width: 2.5vh;
   cursor: pointer;
 }
 
 li .moderatorOptions {
+  box-sizing: border-box;
   display: flex;
+  padding-right: 0.5vh;
 }
 li .moderatorOptions .button {
   padding: 0.2vh 0.5vh;
@@ -124,7 +144,7 @@ li .moderatorOptions .button {
 }
 
 .moderating li {
-  width: 450px;
+  width: 500px;
   flex-wrap: wrap;
   cursor: auto;
 }
@@ -136,6 +156,14 @@ li .moderatorOptions .button {
   border-bottom: 0.5px solid lightgrey;
   margin-top: 5px;
   width: 100%;
-  padding:5px 0px;
+  padding:0px 0px;
+}
+.moderating li .empty {
+  margin: 10px 0 0 5px;
+  font-size: 10pt;
+}
+
+.moderating li .goto {
+  /* display: none; */
 }
 </style>

@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 
 import Label from './Label'
 
@@ -74,9 +74,7 @@ export default {
     }
   },
   computed: {
-    ...mapState([
-      'moderator'
-    ]),
+    moderator() { return this.$store.getters.me.moderator },
     ...mapGetters([
       'me',
       'connectedUsers',

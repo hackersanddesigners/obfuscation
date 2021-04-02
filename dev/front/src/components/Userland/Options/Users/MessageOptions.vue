@@ -9,6 +9,7 @@
   >
     <span class="message"> {{ message.content }} </span>
     <span class="time"> {{ format(message.time) }} </span>
+    <span class="goto"> {{ hovered ? '→' : ''  }}</span> 
     <span 
       class="delete"
       @click.stop="deleteMessage(message)"
@@ -23,7 +24,6 @@
       class="delete"
       @click.stop="censorMessage(message)"
       >censor</span>
-    <span class="goto"> {{ hovered ? '→' : ''  }}</span> 
   </div>
 </template>
 
@@ -95,9 +95,9 @@ export default {
   cursor: pointer;
 }
 .miniMessageContainer .goto {
-  margin-left: auto;
-  margin-right: 5px;
-  width: 1.5vh;
+  /* margin-left: auto; */
+  /* margin-right: 5px; */
+  min-width: 2.5vh;
   cursor: pointer;
 }
 .miniMessageContainer .delete:hover {

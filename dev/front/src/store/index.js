@@ -90,9 +90,6 @@ const store = new Vuex.Store({
     visit: state => state.visited = true,
     block: state => state.blocked = true,
 
-    moderate: state => state.moderator = true,
-
-
     // app database mutations.
 
     setUsers: (state, users) => { 
@@ -238,6 +235,7 @@ const store = new Vuex.Store({
     },
 
     socket_moderator({ state, commit }, user) {
+      console.log(user.uid)
       if (user.uid !== state.uid) {
         commit('setUserModerator', user)
       }
@@ -309,7 +307,6 @@ const store = new Vuex.Store({
 
     updateModerator({ state, commit }, moderator) {
       moderator.uid = state.uid
-      commit('moderate')
       commit('setUserModerator', moderator)
       this._vm.$socket.client.emit(
         'moderator', moderator
@@ -462,12 +459,18 @@ const store = new Vuex.Store({
     },
 
     connectedUsers: (state, getters) => {
-      return getters.notBlockedUsers.filter(u => u.connected && !u.isMobile)
+      return getters.notBlockedUsers
+        .filter(u => u.connected && !u.isMobile)
+        .sort((a, b) => (
+          b.moderator - a.moderator
+        ))
     },
 
     connectedUsersFirst: (state, getters) => {
       return getters.notBlockedUsers.sort((a, b) => (
-        a.connected === b.connected ? 0 : a.connected ? -1 : 1
+        b.connected - a.connected ||
+        b.moderator - a.moderator 
+        // a.connected === b.connected ? 0 : a.connected ? -1 : 1
       ))
     },
 
