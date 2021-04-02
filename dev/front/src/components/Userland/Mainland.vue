@@ -6,13 +6,20 @@
       { '--scale': scale }
     ]"
     :class="{ 
-      blur: !registered || editing,
+      blur: !registered || editing || notification,
     }"
   >
 
     <Editor
       v-if="!registered || editing" 
       @stopEdit="editing = false"
+    />
+
+    <Notification
+      v-if="notification"
+      :notification="notification"
+      @dismiss="notification = null"
+      @goTo="handleNotificationClick($event)"
     />
 
     <nav :class="{ hidden: !desiresNav }">
@@ -160,7 +167,7 @@ import { mapState, mapGetters } from 'vuex'
 
 import NavHandle from './Nav/Handle'
 import Editor from './Options/Editor'
-import Tour from './Tour'
+import Notification from './Notification'
 import Minimap from './Nav/Mini/Map'
 import Options from './Options'
 import Cursorr from './User/Cursorr'
@@ -169,6 +176,7 @@ import Territory from './Territory'
 import Minilist from './Nav/List/'
 import Ticker from './Ticker/'
 import Overlay from './Overlay/'
+import Tour from './Tour'
 
 export default {
 
@@ -178,7 +186,7 @@ export default {
   components: {
     NavHandle,
     Editor,
-    Tour,
+    Notification,
     Minimap,
     Minilist,
     Options,
@@ -187,6 +195,7 @@ export default {
     Territory,
     Ticker,
     Overlay,
+    Tour,
   },
 
   props: {
@@ -208,6 +217,7 @@ export default {
       firstScroll: true,
       dragging: false,
       miniDragging: false,
+      notification: null,
 
       lastScrollX: 0,
       lastScrollY: 0,
@@ -362,17 +372,22 @@ export default {
     // an announcement.
 
     message(message) {
+      if (!message.deleted) {
+        this.handleLinks(`.message${message.uid} a`)
 
-      this.handleLinks(`.message${message.uid} a`)
+        if (message.announcement) {
+          this.notification = message
 
-      if (message.announcement) {
-        this.scrollTo(
-          this.positionOf(message), 
-        'smooth')
+        } else if (message.mentions) {
+          if (message.mentions.find(m => m === this.me.name)) {
+            this.notification = message
+          }
 
-      } else if (message.stream) {
-        this.$store.commit('setStream', 
-          message.content.replace('/stream ', ''))
+
+        } else if (message.stream) {
+          this.$store.commit('setStream', 
+            message.content.replace('/stream ', ''))
+        }
       }
     },
 
@@ -535,6 +550,16 @@ export default {
         position, 
         this.miniDragging ? 'auto' : 'smooth'
       )
+    },
+
+
+    // notifications
+
+    handleNotificationClick(notification) {
+      this.notification = null
+      this.scrollTo(
+        this.positionOf(notification), 
+      'smooth')
     },
 
 

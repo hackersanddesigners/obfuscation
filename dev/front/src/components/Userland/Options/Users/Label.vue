@@ -16,7 +16,7 @@
       ]"
       
     >
-      {{ isMe ? "me" : user.name }} 
+      {{ isMe ? user.name + " (you)" : user.name }} 
     </span>
 
     <span v-if="moderating" class="goto"> {{ hovered ? '→' : ' '  }}</span> 

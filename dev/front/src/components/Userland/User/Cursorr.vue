@@ -71,6 +71,7 @@ export default {
       current: String,
       navigation: false,
       announcement: false,
+      mention: false,
       locationTimer: 0,
     }
   },
@@ -123,6 +124,21 @@ export default {
 
       }
 
+      if (this.announcement) {
+        message.content = message.content.replace('!!!', '')
+      }
+
+      if (this.mention) {
+        let mentions = message.content.match(/@[a-zA-Z0-9_-]*/g)
+        for (let m = 0; m < mentions.length; m++) {
+          mentions[m] = mentions[m].replace('@', '')
+          if (mentions[m] == "") {
+            mentions.splice(m, 1)
+          }
+        }
+        message.mentions = mentions
+      }
+
 
       // sanitize and send through $socket:
 
@@ -135,6 +151,7 @@ export default {
 
       this.announcement = false
       this.navigation = false
+      this.mention = false
       this.stream = false
       this.current = null
       input.value = ''
@@ -216,9 +233,12 @@ export default {
       // starting a message with ! will force all
       // users to navigate to it.
 
-      } else if (input.value == '!!!') {
+      } else if (input.value.startsWith('!!!')) {
         this.announcement = true
 
+
+      } else if (input.value.includes('@')) {
+        this.mention = true
 
       // set the stream playbackID for everyone
 
