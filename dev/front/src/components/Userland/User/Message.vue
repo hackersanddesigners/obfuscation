@@ -88,8 +88,7 @@ export default {
           lifetime = this.$store.state.users[this.message.authorUID].messageLifetime,
           timeSent = this.message.time,
           timeElapsed = now - timeSent,
-          blurString = `blur(${ 25 * timeElapsed / lifetime }px)` 
-          // console.log(blurString)
+          blurString = `blur(${ 5 * timeElapsed / lifetime }px)` 
         return blurString
       } else {
         return null

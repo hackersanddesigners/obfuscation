@@ -25,26 +25,26 @@ export default {
   width: 100%;
   height: 100%; 
 }
-#backgroundIsland {
+.island:nth-of-type(1) {
   top: 10%; left: 35%;
 }
-#tourIsland {
+.island:nth-of-type(2) {
   top: 30%; left: 50%;
 }
-#care-riderIsland {
+.island:nth-of-type(3) {
   top: 40%; left: 40%;
 }
-#layersIsland {
+.island:nth-of-type(4) {
   top: 55%; left: 45%;
 }
-#wo-2017Island {
-  top: 15%; left: 40%;
+.island:nth-of-type(5) {
+  top: 65%; left: 20%;
 }
-#code-of-conductIsland {
-  top: 60%; left: 65%;
+.island:nth-of-type(6) {
+  top: 70%; left: 65%;
 }
-#study-groupIsland {
-  top: 20%; left: 60%;
+.island:nth-of-type(7) {
+  top: 80%; left: 60%;
 }
 
 </style>

@@ -1,7 +1,8 @@
 <template>
   <a 
     target="_blank"
-    :href="room.url"
+    :class="{ disabled: !room.url ? true : false }"
+    :href="room.url ? room.url : null"
     class="BBB-container"
   >
     <h3 class="BBB">
@@ -58,6 +59,10 @@ export default {
   border-top-right-radius:inherit;
   border-bottom-left-radius: inherit;
   overflow: hidden;
+}
+
+.BBB-container.disabled {
+  opacity: 0.2;
 }
 
 .island:hover .BBB-container {
