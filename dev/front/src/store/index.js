@@ -535,8 +535,16 @@ const store = new Vuex.Store({
 
       if (island) {
         const 
-          left = island.offsetLeft + island.offsetParent.offsetLeft,
-          top = island.offsetTop + island.offsetParent.offsetTop,
+          parent = island.offsetParent,
+          grandparent = parent.offsetParent,
+          left = 
+            island.offsetLeft > 0 ?
+            island.offsetLeft + parent.offsetLeft :
+            parent.offsetLeft + grandparent.offsetLeft,
+          top = 
+            island.offsetTop > 0 ?
+            island.offsetTop + parent.offsetTop : 
+            parent.offsetTop + grandparent.offsetTop,
           centerX = left - (state.windowSize.w - island.offsetWidth) / 2,
           // centerY = top - (state.windowSize.h - island.offsetHeight) / 2 
           centerY = state.isMobile ? top - 100 : top - 100

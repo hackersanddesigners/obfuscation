@@ -60,24 +60,39 @@ export default {
 <style scoped>
 .island {
   height: 100%;
-  max-width: 90%;
+  /* width: 100%; */
+  /* max-width: 90%; */
+  max-width: 100%;
   display: flex;
   /* align-items: center; */
+  border-radius: 
+    calc(3 * var(--one))
+    calc(7 * var(--one))
+    calc(3 * var(--one))
+    calc(7 * var(--one))
+  ;
+  /* background-color: var(--ground); */
 }
 
 .island:hover {
   border-radius: calc(12 * var(--one));
   border-top-left-radius: calc(2 * var(--one));
+  /* background-color: var(--ground); */
 }
 
 .island .info {
   flex: 1 0 50%;
   box-sizing: border-box;
-  padding: calc(3 * var(--one));
+  padding: 
+    calc(2 * var(--one))
+    calc(4 * var(--one))
+    calc(4 * var(--one))
+    calc(2 * var(--one))
+  ;
   border-radius: inherit;
   overflow: hidden;
-  text-align: center;
-
+  /* text-align: center; */
+  text-align: left;
 }
 
 .island .body {
