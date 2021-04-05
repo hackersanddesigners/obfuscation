@@ -194,6 +194,7 @@ export default {
 }
 .studyRoom .day  {
   /* width: 40%; */
+  margin-bottom: calc(5 * var(--one));
   display: flex;
   flex-direction: column;
   align-items: stretch;

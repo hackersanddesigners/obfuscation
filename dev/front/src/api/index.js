@@ -50,12 +50,12 @@ const api = {
             const regions = {
               'reception': {},
               'readme': {},
-              'hangout': {},
+              'schedule': {},
               'exhibition': {},
               'livestream': {},
-              'timetable': {},
-              'contributors': {},
+              'hangout': {},
               'study-room': {},
+              'contributors': {},
               'library': {},
               'glossary': {},
             }
@@ -84,7 +84,7 @@ const api = {
       return new Promise ((resolve, reject) => {
         const query = this.resolveQueryFromRegion(slug)
         if (query) {
-          const content = {}
+          let content = {}
           axios
             .get(apiURL + query)
             .then((response) => { 
@@ -92,8 +92,12 @@ const api = {
                 const page = response.data[c]
                 content[page.slug] = page
               }
-              if (slug === 'timetable') {
+              if (slug === 'schedule') {
                 this.correctDates(content)
+              } else if (slug === 'contributors') {
+                content = this.sortNamesAlphabetically(content)
+              } else if (slug === 'glossary') {
+                content = this.sortTermsAlphabetically(content)
               }
               resolve(content) 
             })
@@ -112,6 +116,33 @@ const api = {
         }
       }
       return array
+    },
+
+    sortNamesAlphabetically(names) {
+      const 
+        newNamesObj = {},
+        namesArray = Object.values(names).sort((a, b) => {
+          const 
+            aLastName = a.Name.split(' ')[a.Name.split(' ').length - 1],
+            bLastName = b.Name.split(' ')[b.Name.split(' ').length - 1]
+          return aLastName.localeCompare(bLastName)
+        })
+      for (let n = 0; n < namesArray.length; n++) {
+        newNamesObj[namesArray[n].slug] = namesArray[n]
+      }
+      return newNamesObj
+    },
+
+    sortTermsAlphabetically(terms) {
+      const 
+        newTermsObj = {},
+        termsArray = Object.values(terms).sort((a, b) => {
+          return a.Term.localeCompare(b.Term)
+        })
+      for (let n = 0; n < termsArray.length; n++) {
+        newTermsObj[termsArray[n].slug] = termsArray[n]
+      }
+      return newTermsObj
     },
 
     correctDates(sessions) {
@@ -134,7 +165,7 @@ const api = {
         slug === 'reception' ? 'statics' :
         slug === 'readme' ? 'readmes' :
         slug === 'exhibition' ? 'videos' :
-        slug === 'timetable' ? 'sessions' :
+        slug === 'schedule' ? 'sessions' :
         slug === 'contributors' ? 'hosts' :
         slug === 'study-room' ? 'study-sessions' : 
         slug === 'library' ? 'libraries' : 

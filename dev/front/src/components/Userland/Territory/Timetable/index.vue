@@ -43,7 +43,7 @@
               v-if="session.Start"
               :id="session.slug + 'Island'"
               :session="session"
-              @click.native="$emit('moreInfo', `/timetable/${session.slug}`)"
+              @click.native="$emit('moreInfo', `/schedule/${session.slug}`)"
             />
             <div v-else class="staggered">
               <Island
@@ -52,7 +52,7 @@
                 :key="stagSession.slug"
                 :id="stagSession.slug + 'Island'"
                 :session="stagSession"
-                @click.native="$emit('moreInfo', `/timetable/${stagSession.slug}`)"
+                @click.native="$emit('moreInfo', `/schedule/${stagSession.slug}`)"
               />
             </div>
           </div>
@@ -203,7 +203,7 @@ export default {
 </script>
 
 <style scoped>
-.timetable {
+.schedule {
   box-sizing: border-box;
   /* padding:  */
     /* calc(5 * var(--one)) */
@@ -236,17 +236,17 @@ export default {
   cursor: pointer;
 }
 
-.timetable .parentDay  {
+.schedule .parentDay  {
   width: 40%;
   max-width: calc(55 * var(--one));
   display: flex;
   flex-direction: column;
   align-items: stretch;
 }
-.timetable .parentDay:last-of-type  {
+.schedule .parentDay:last-of-type  {
   margin-left: calc(4 * var(--one));
 }
-.timetable .day  {
+.schedule .day  {
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -254,7 +254,7 @@ export default {
   z-index: 1;
 }
 
-.timetable .day .date {
+.schedule .day .date {
   text-align: center;
   margin: 
     calc(3 * var(--one))
@@ -264,19 +264,19 @@ export default {
   ;
   font-size: calc(2.8 * var(--one));
 }
-.timetable .day .date em {
+.schedule .day .date em {
   margin-top: 0;
   font-size: calc(2 * var(--one));
 }
 
-.timetable .day .sessionsContainer {
+.schedule .day .sessionsContainer {
   margin: 0 calc(4 * var(--one));
   display: flex;
   flex-direction: column;
   align-items: center;
   align-content: flex-start;
 }
-.timetable .day .sessionsContainer .islandContainer {
+.schedule .day .sessionsContainer .islandContainer {
   box-sizing: border-box;
   position: relative;
   /* margin: calc(1 * var(--one)); */
@@ -285,7 +285,7 @@ export default {
   justify-content: flex-start;
   align-items: center;
 }
-.timetable .day .sessionsContainer .islandContainer .staggered {
+.schedule .day .sessionsContainer .islandContainer .staggered {
   display: flex;
 }
 

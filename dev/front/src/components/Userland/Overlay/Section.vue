@@ -1,69 +1,51 @@
 <template>
  <section>
-    <div class="header">
-      <h3 class="subtitle"> 
-        {{ subtitle }}
-      </h3>
-
-      <h1 class="title"> 
-        {{ title }} 
-      </h1>
+    <div v-if="titleGoesFirst" class="header">
+      <h1 class="title">{{ title }}</h1>
+      <h3 class="subtitle">{{ subtitle }}</h3>
+    </div>
+    <div v-else class="header">
+      <h3 class="subtitle">{{ subtitle }}</h3>
+      <h1 class="title">{{ title }}</h1>
     </div>
 
-    <div 
-      class="body"
+    <SemanticList
       v-if="hosts && hosts.length > 0"
-    >
-      <span class="hosts">
-        <span> with </span>
-        <span
-          class="host"
-          v-for="host in hosts"
-          :key="host.Name"
-        >
-          <a 
-            :href="`/contributors/${host.slug}`"
-            class="name"
-          >{{ host.Name }}</a>
-          <span>, </span>
-        </span>
-      </span>
-      <span class="modertors">
-        <span
-          class="moderator"
-          v-for="moderator in moderators"
-          :key="moderator.Name"
-        >
-          <span v-if="isLast(moderator, moderators)">and </span>
-          <a 
-            :href="`/contributors/${moderator.slug}`"
-            class="name"
-          >{{ moderator.Name }}</a>
-          <span> (moderator)</span>
-          <span v-if="!isLast(moderator, moderators)">, </span>
-          <span v-else>. </span>
-        </span>
-      </span>
-    </div>
+      :list="hosts"
+      :collection="'contributors'"
+      :name="'Host'"
+    />
+    <SemanticList
+      v-if="moderators && moderators.length > 0"
+      :list="moderators"
+      :collection="'contributors'"
+      :name="'Moderator'"
+    />
+    <SemanticList
+      v-if="mentors && mentors.length > 0"
+      :collection="'contributors'"
+      :list="mentors"
+      :name="'Mentor'"
+    />
 
-    <div 
-      class="body"
-      v-else-if="mentors && mentors.length > 0"
-    >
-      <span class="hosts">
-        <span> Mentor: </span>
-        <span
-          class="host"
-          v-for="mentor in mentors"
-          :key="mentor.Name"
-        >
-          <a 
-            :href="`/contributors/${mentor.slug}`"
-            class="name"
-          >{{ mentor.Name }}</a>
-        </span>
-      </span>
-    </div>
+    <SemanticList
+      v-if="hosting && hosting.length > 0"
+      :collection="'schedule'"
+      :list="hosting"
+      :name="'Hosting'"
+    />
+    <SemanticList
+      v-if="moderating && moderating.length > 0"
+      :collection="'schedule'"
+      :list="moderating"
+      :name="'Moderating'"
+    />
+    <SemanticList
+      v-if="mentoring && mentoring.length > 0"
+      :collection="'study-room'"
+      :list="mentoring"
+      :name="'Mentoring'"
+    />
 
     <div class="body">
       <vue-markdown
@@ -71,53 +53,8 @@
       />
     </div>
 
-    <div 
-      class="body"
-      v-if="hosting || moderating || mentoring"
-    >
-      <span v-if="hosting.length > 0">
-        <span> Hosting </span>
-        <span
-          v-for="session in hosting"
-          :key="session.Title"
-        >
-          <a 
-            :href="`/timetable/${session.slug}`"
-            class="name"
-          >{{ session.Title }}</a>
-          <span>, </span>
-        </span>
-      </span>
-      <span v-if="moderating.length > 0">
-        <span> Moderating </span>
-        <span
-          v-for="session in moderating"
-          :key="session.Name"
-        >
-          <span v-if="moderating.length > 1 && isLast(session, moderating)">and </span>
-          <a 
-            :href="`/timetable/${session.slug}`"
-            class="name"
-          >{{ session.Title }}</a>
-          <span v-if="!isLast(session, moderating)">, </span>
-          <span v-else>. </span>
-        </span>
-      </span>
-      <span v-if="mentoring.length > 0">
-        <span> Mentoring </span>
-        <span
-          v-for="session in mentoring"
-          :key="session.Title"
-        >
-          <a 
-            :href="`/study-room/${session.slug}`"
-            class="name"
-          >{{ session.Title }}</a>
-        </span>
-      </span>
-    </div>
 
-     <div 
+    <div 
       class="body"
       v-if="resources"
     >
@@ -148,9 +85,11 @@
 
 <script>
 import moment from 'moment'
+import SemanticList from './SemanticList.vue'
 
 
 export default {
+  components: { SemanticList },
   name: 'Section',
   props: [
     'section',
@@ -172,8 +111,9 @@ export default {
     hosting() { return this.section.hosting },
     moderating() { return this.section.moderating },
     mentoring() { return this.section.Mentoring },
-    resources() { return this.section.references }
+    resources() { return this.section.references },
 
+    titleGoesFirst() { return this.section.Name }
   },
   watch: {
     body() {
@@ -237,7 +177,14 @@ export default {
     },
 
     isLast(item, array) {
-      return array.lastIndexOf(item) === 0
+      return array.indexOf(item) === array.length - 1
+    },
+    isBeforeLast(item, array) {
+      return array.indexOf(item) === array.length - 2
+    },
+
+    alphabetical(array) {
+      return array.sort((a, b) => a.Name.length - b.Name.length)
     },
 
     handleLinks() {

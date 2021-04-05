@@ -959,8 +959,8 @@ main nav.hidden {
 #userland.livestream {
   background-color: var(--livestream);
 }
-#userland.timetable {
-  background-color: var(--timetable);
+#userland.schedule {
+  background-color: var(--schedule);
 }
 #userland.contributors {
   background-color: var(--contributors);

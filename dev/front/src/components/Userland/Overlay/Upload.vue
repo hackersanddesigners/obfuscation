@@ -98,12 +98,12 @@ export default {
         this.bodyShort = true
         return
       } 
-      if (source.length == 0) {
-        this.sourceShort = true
-        return
-      }
+      // if (source.length == 0) {
+      //   this.sourceShort = true
+      //   return
+      // }
       
-      if (!this.titleShort && !this.bodyShort && !this.sourceShort) {
+      if (!this.titleShort && !this.bodyShort) {
         this.send(title, body, source)
       }
 

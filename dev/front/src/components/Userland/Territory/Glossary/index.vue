@@ -27,7 +27,7 @@ export default {
   data() {
     return {
       uploadSection: {
-        Term: 'SUBMIT',
+        Term: 'Submit a glossary term',
         slug: 'upload'
       }
     }

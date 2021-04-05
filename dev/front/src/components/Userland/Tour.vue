@@ -114,7 +114,7 @@ export default {
           // before: async() => { await this.wait('500') },
           before: () => new Promise(res => {
             setTimeout(() => { 
-              if (this.$store.state.location.slug === 'timetable')
+              if (this.$store.state.location.slug === 'schedule')
               res('1') 
             }, 1000)
           })
@@ -150,7 +150,7 @@ export default {
             placement: 'left'
           },
           before: () => new Promise(res => {
-            this.$emit('goTo', '/timetable')
+            this.$emit('goTo', '/schedule')
             this.$emit('focusOverlay')
             setTimeout(() => {
               res('1') 
@@ -333,7 +333,7 @@ export default {
         },
         {
           target: '#location div',
-          content: "You're ready to go! <br><br> Don't forget to read our Code of Conduct and check out If you have any questions please call on a moderator by mentioning them in a message or /contact the organization/",
+          content: "You're ready to go! <br><br> Don't forget to read our Code of Conduct. If you have any questions please call on a moderator by mentioning them in a message or /contact the organization/",
           params: {
             enableScrolling: false,
             placement: 'bottom',
@@ -345,7 +345,7 @@ export default {
             setTimeout(() => {
               this.$emit('showNav')
               res('1')            
-            }, 700)
+            }, 400)
           })
         },
 
@@ -426,9 +426,9 @@ export default {
       this.$emit('unfocusIsland')
       this.$emit('unfocusLocation')
       this.$emit('unfocusBBB')
+      this.$emit('end')
       document.removeEventListener('click', this.validate)
       console.log('end tour')
-      this.$emit('end')
     }
   }
 }

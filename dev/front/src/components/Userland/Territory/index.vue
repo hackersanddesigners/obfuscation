@@ -47,7 +47,7 @@
     />
 
     <Timetable
-      v-else-if="slug === 'timetable' && lifecycle >= 1"
+      v-else-if="slug === 'schedule' && lifecycle >= 1"
       :class="slug"
       :content="content"
       @moreInfo="$emit('moreInfo', $event)"
