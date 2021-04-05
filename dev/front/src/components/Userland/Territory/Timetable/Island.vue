@@ -5,9 +5,9 @@
     ]"
   >
     <div class="time">
-      <span class="start">{{ start }}</span>
+      <span class="start">{{ HumanStart }}</span>
       <span class="bar"> | </span>
-      <span class="end"> {{ end }}</span>
+      <span class="end"> {{ HumanEnd }}</span>
     </div>
     <div class="info">
       <div class="header">
@@ -35,14 +35,20 @@ import moment from 'moment-timezone'
 export default {
   name: 'Island',
   components: { BBBLink },
-  props: [ 'session' ],
+  props: [ 'session', 'timeZone' ],
+  watch: {
+    timeZone() {
+      this.HumanStart = this.getHumanTime(this.session.Start)
+      this.HumanEnd = this.getHumanTime(this.session.End)
+    }
+  },
   data() {
     return {
+      HumanStart: this.getHumanTime(this.session.Start),
+      HumanEnd: this.getHumanTime(this.session.End)
     }
   },
   computed: {
-    start() { return this.getHumanTime(this.session.Start) },
-    end() { return this.getHumanTime(this.session.End) },
     soon() { return false },  
   },
   created() {

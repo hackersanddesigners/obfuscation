@@ -42,6 +42,7 @@
             <Island
               v-if="session.Start"
               :id="session.slug + 'Island'"
+              :timeZone="timeZone"
               :session="session"
               @click.native="$emit('moreInfo', `/schedule/${session.slug}`)"
             />
@@ -79,7 +80,7 @@ export default {
       // defaultTimeZone: "Australia/Sydney",
       // defaultTimeZone: "Pacific/Funafuti",
       // defaultTimeZone: "Australia/Adelaide",
-      defaultTimeZone: 'Etc/UTC',
+      defaultTimeZone: "Etc/UTC",
       ownTimeZone: moment.tz.guess(),
       desiresOwnTimezone: true,
       parentDays: {}
@@ -110,6 +111,7 @@ export default {
             previous = sessionsInDay[s-1],
             current = sessionsInDay[s],
             next = sessionsInDay[s+1]
+  
           if (current && previous && next &&
             ((this.getUnixTime(current.Start) - this.getUnixTime(previous.Start)) <= fifteen)) {
               sessionsInDay[s-1].buffer = true
@@ -190,7 +192,6 @@ export default {
         size = `calc(${ factor } * var(--one))`
       return size
     },
-
 
     isBreak: session => session.Title === 'Break',
     getHumanTime: date => moment(date).format('HH:mm'),
@@ -287,6 +288,28 @@ export default {
 }
 .schedule .day .sessionsContainer .islandContainer .staggered {
   display: flex;
+}
+
+.schedule .time  {
+  position: absolute;
+  left: calc(-6 * var(--one));
+  top: calc(0.5 * var(--one));
+  height: 100%;
+  display: flex;
+  font-size: calc(1.8 * var(--one));
+  font-family: sans-serif;
+  pointer-events: none;
+
+}
+.schedule .time .bar {
+  position: absolute;
+  top: calc(4 * var(--one));
+  left: calc(2 * var(--one));
+  display: none;
+}
+.schedule .time .end {
+  position: absolute;
+  bottom: calc(1 * var(--one));
 }
 
 .break {

@@ -98,6 +98,8 @@ const api = {
                 content = this.sortNamesAlphabetically(content)
               } else if (slug === 'glossary') {
                 content = this.sortTermsAlphabetically(content)
+              } else if (slug === 'readme') {
+                content = this.sortNumeric(content)
               }
               resolve(content) 
             })
@@ -143,6 +145,18 @@ const api = {
         newTermsObj[termsArray[n].slug] = termsArray[n]
       }
       return newTermsObj
+    },
+
+    sortNumeric(titles) {
+      const 
+        newTitlesObj = {},
+        titlesArray = Object.values(titles).sort((a, b) => {
+          return a.Title.localeCompare(b.Title)
+        })
+      for (let n = 0; n < titlesArray.length; n++) {
+        newTitlesObj[titlesArray[n].slug] = titlesArray[n]
+      }
+      return newTitlesObj
     },
 
     correctDates(sessions) {
