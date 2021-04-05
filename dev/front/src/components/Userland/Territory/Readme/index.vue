@@ -26,25 +26,25 @@ export default {
   height: 100%; 
 }
 .island:nth-of-type(1) {
-  top: 10%; left: 35%;
+  top: 5%; left: 25%;
 }
 .island:nth-of-type(2) {
-  top: 30%; left: 50%;
+  top: 15%; left: 40%;
 }
 .island:nth-of-type(3) {
-  top: 40%; left: 40%;
+  top: 22%; left: 30%;
 }
 .island:nth-of-type(4) {
-  top: 55%; left: 45%;
+  top: 37%; left: 45%;
 }
 .island:nth-of-type(5) {
-  top: 65%; left: 20%;
+  top: 45%; left: 20%;
 }
 .island:nth-of-type(6) {
-  top: 70%; left: 65%;
+  top: 60%; left: 65%;
 }
 .island:nth-of-type(7) {
-  top: 80%; left: 60%;
+  top: 70%; left: 60%;
 }
 
 </style>
