@@ -20,12 +20,10 @@
   >
 
     <vue-markdown 
-      inline
       v-if="!message.censored" 
       class="message"
-    > 
-      {{ message.content }} 
-    </vue-markdown>
+      :source="message.content"
+    ></vue-markdown>
 
     <div 
       v-else

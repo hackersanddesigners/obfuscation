@@ -6,7 +6,7 @@
       { '--scale': scale }
     ]"
     :class="{ 
-      blur: !registered || editing || notifications.length > 0,
+      blur: notfound || !registered || editing || notifications.length > 0,
       touring: touring,
       tourIsAtOverlay: tourIsAtOverlay,
       tourIsAtLocation: tourIsAtLocation,
@@ -15,6 +15,8 @@
       tourIsAtBBB: tourIsAtBBB,
     }"
   >
+
+    <Notfound v-if="notfound" />
 
     <Editor
       v-if="!registered || editing" 
@@ -201,6 +203,7 @@ import { mapState, mapGetters } from 'vuex'
           // @click="route(location.slug, false, false, true)"
 
 import NavHandle from './Nav/Handle'
+import Notfound from './Notfound'
 import Editor from './Options/Editor'
 import Notification from './Notification'
 import Minimap from './Nav/Mini/Map'
@@ -220,6 +223,7 @@ export default {
 
   components: {
     NavHandle,
+    Notfound,
     Editor,
     Notification,
     Minimap,
@@ -240,6 +244,7 @@ export default {
   data () {
     return { 
       
+      notfound: false,
       moreInformation: {},
       secondPath: false,
 
@@ -460,6 +465,7 @@ export default {
         const user = this.userByName(name.replace('~',''))
         if (!user) {
           console.log('user not found')
+          this.notfound = true
         } else {
           position = this.positionOf(user)
         }
@@ -470,7 +476,10 @@ export default {
       } else {
         const territory = this.territories[name]
         if (!territory) {
-          console.log('territory not found')
+          if (name !== 'general') {
+            console.log('territory not found')
+            this.notfound = true
+          }
         } else {
           position = this.centerOf({
             x: territory.borders.x * this.widthFactor,
@@ -485,60 +494,82 @@ export default {
           // routing to pages
 
           if (page) {
+            console.log("going to page", page)
             this.secondPath = true
             position = this.positionOfIsland(page)
-            content = 
-              page === 'upload' ? { slug: page } :
-              this.territories[name].content[page]
 
-            setTimeout(() => {
-              this.secondPath = false
-            }, 1000)
+            if (position) {
+              content = 
+                page === 'upload' ? { slug: page } :
+                this.territories[name].content[page]
+
+              setTimeout(() => {
+                this.secondPath = false
+              }, 1000)
+
+            } else {
+              this.notfound = true
+
+            }
 
           }
 
         }
 
-      }        
+      }      
       
       // scroll action
 
-      if (force || this.location.slug !== name || page) {
-        setTimeout(() => {
-          this.scrollTo(position, behavior || 'smooth')
-        }, pause || 0)
-      }
-
-      
-      // setting overlay content
-
-      if (this.location.slug !== name) {
-        this.desiresOverlay = false      
-      }
-      pause = this.isMobile ? 0 : 150
-
-      if (this.isMobile) {
-        this.desiresNav = false
-        if (page) {
-          this.desiresOverlay = true
-        } else {
-          this.desiresOverlay = false
+      if (!this.notfound) {
+        if (force || this.location.slug !== name || page) {
+          setTimeout(() => {
+            this.scrollTo(position, behavior || 'smooth')
+          }, pause || 0)
         }
 
-      } else {
-        if (name === 'general') {
-          this.desiresOverlay = false
+        
+        // setting overlay content
+
+        if (this.location.slug !== name) {
+          this.desiresOverlay = false      
+        }
+        pause = this.isMobile ? 0 : 150
+
+        if (this.isMobile) {
+          this.desiresNav = false
+          if (page) {
+            this.desiresOverlay = true
+          } else {
+            this.desiresOverlay = false
+          }
+
         } else {
-          if (page || this.location.slug !== name || force) {
-            setTimeout(() => {
-              this.desiresOverlay = true        
-            }, pause + 150)
+          if (name === 'general') {
+            this.desiresOverlay = false
+          } else {
+            if (page || this.location.slug !== name || force) {
+              setTimeout(() => {
+                this.desiresOverlay = true        
+              }, pause + 150)
+            }
           }
         }
+        setTimeout(() => {
+          this.moreInformation = content
+        }, pause)
+
+      } else {
+          setTimeout(() => {
+            // if (this.$router.history.current.path !== 'reception') {
+            //   this.$router.push('/reception')
+            // } else {
+            //   this.route('/reception', false, false, true)
+            // }
+            this.$router.go(-1)
+            this.notfound = false
+          }, 1000)
+
       }
-      setTimeout(() => {
-        this.moreInformation = content
-      }, pause)
 
     },
 

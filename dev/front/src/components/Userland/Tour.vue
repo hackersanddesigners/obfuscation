@@ -90,7 +90,7 @@ export default {
       steps: [
         {
           target: '#list',
-          content: 'This website is spacially organized and divided into so-called regions.',
+          content: 'This website is spacially organised and divided into so-called regions.',
           params: {
             enableScrolling: false,
             placement: 'right-start',
@@ -144,7 +144,7 @@ export default {
         },
         {
           target: '#overlay .overlay',
-          content: 'Navigating to a region, a pop-up appears providing more information and region-specific instructions.',
+          content: 'When arriving to a region, a pop-up appears providing more information and region-specific instructions.',
           params: {
             enableScrolling: false,
             placement: 'left'
@@ -159,7 +159,7 @@ export default {
         },
         {
           target: '#overlay .hide',
-          content: 'You can hide this pop-up.',
+          content: 'You can hide it using the "hide" button.',
           params: {
             enableScrolling: false,
             placement: 'bottom'
@@ -180,7 +180,7 @@ export default {
         },
         {
           target: '#openingIsland',
-          content: 'Regions come with blocks that represent a session, glossary term, article or video. Clicking on these blocks reveals a second-level information in the pop-up.',
+          content: 'Regions come with blocks that represent a second layer of information, such as a session, glossary term, article or video. Clicking on the block reveals its contents in the pop-up.',
           params: {
             enableScrolling: false,
             placement: 'top'
@@ -196,7 +196,7 @@ export default {
         },
         {
           target: '#addressBar',
-          content: 'You can share the URL to every region or block from the address bar.',
+          content: 'You can share the URL to any region or block from the address bar.',
           params: {
             enableScrolling: false,
             placement: 'bottom'
@@ -224,7 +224,7 @@ export default {
         },
         {
           target: '#participantsIndicator',
-          content: 'The platform displays participants and their messages in real time.',
+          content: 'This platform displays participants and their messages in real time.',
           params: {
             enableScrolling: false,
             placement: 'top',
@@ -248,7 +248,7 @@ export default {
         },
         {
           target: '#register',
-          content: 'Here, you can change your user name, color and set a duration after which your messages will self-destruct.',
+          content: 'Here, you can change your user name and color and set a duration after which your messages will self-destruct.',
           params: {
             enableScrolling: false,
             placement: 'top',
@@ -260,7 +260,7 @@ export default {
         },
         {
           target: '#jsonMe',
-          content: 'The information you add in the dialogue box is stored on our server and shared with all other participants. <br><br> Click save to leave the dialogue box.',
+          content: 'The information you enter is stored on our server and shared with all other participants. <br><br> Click the "save" button to leave the dialogue box.',
           params: {
             enableScrolling: false,
             placement: 'top',
@@ -270,7 +270,7 @@ export default {
         },
         {
           target: '#options .storage .button',
-          content: '<strong>Important!</strong> You always have the right to disappear. If you want to delete your user profile and all your messages, you can click this button. <br><br>(If you do this now the page will refresh and the tour will end.) :-)',
+          content: '<strong>Important!</strong> You always have the right to disappear. If you want to delete your user profile and all your messages, you can click this button. <br><br>If you do this now the page will refresh and the tour will end. :-)',
           params: {
             enableScrolling: false,
             placement: 'right'
@@ -299,7 +299,7 @@ export default {
         },
         {
           target: '#BBBIndicator',
-          content: 'If you are registered as participant of the study group or the conference , you will be joining video calls on Big Blue Button, which are accessible in the respective regions.',
+          content: 'If you are registered as participant of the study group or the conference, you will be joining video calls via Big Blue Button, which are accessible in their respective regions.',
           params: {
             enableScrolling: false,
             placement: 'left',
@@ -333,7 +333,7 @@ export default {
         },
         {
           target: '#location div',
-          content: "You're ready to go! <br><br> Don't forget to read our Code of Conduct. If you have any questions please call on a moderator by mentioning them in a message or /contact the organization/",
+          content: "You're ready to go! <br><br> Don't forget to read our Code of Conduct. If you have any questions please call on a moderator by mentioning them in a message or contact us.",
           params: {
             enableScrolling: false,
             placement: 'bottom',
@@ -443,7 +443,7 @@ export default {
   background: var(--ui-back) !important;
   color: var(--ui-front) !important;
   font-size: 15pt !important;
-  max-width: 26vh !important;
+  max-width: 30vh !important;
   border: var(--ui-border) !important;
   border-radius: var(--ui-border-radius) !important;
   box-shadow: var(--ui-box-shadow) !important;
