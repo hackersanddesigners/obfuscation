@@ -22,10 +22,11 @@ export default {
   data() {
     return {
       controls: false,
+      playbackId: 'oliver'
     }
   },
   computed: {
-    playbackId() { return this.$store.state.stream.playbackId }
+    // playbackId() { return this.$store.state.stream.playbackId }
   },
   watch: {
     playbackId() {
@@ -85,7 +86,7 @@ export default {
     }
 
     if (this.playbackId)  {
-      this.updateVideo()
+      // this.updateVideo()
     }
 
     const prefixes = ["", "webkit", "moz", "ms"]
@@ -109,7 +110,10 @@ export default {
   methods: {
 
     // src: playbackId  => `https://bbb.tbm.tudelft.nl/hls/${playbackId}.m3u8`,
-    src: playbackId => `https://stream.mux.com/${playbackId}.m3u8`,
+    // src: playbackId => `https://stream.mux.com/${playbackId}.m3u8`,
+    // src: playbackId => `http://localhost:8000/live/${playbackId}/index.m3u8`,
+    src: playbackId => `http://localhost:8000/media/live/${playbackId}/index.m3u8`,
+    
     // poster: playbackId => `https://image.mux.com/${playbackId}/thumbnail.jpg?time=15`,
 
 

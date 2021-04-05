@@ -39,16 +39,22 @@
             }]"
             :style="{ height: sizeByDuration(session) }"
           >
-            <div class="time">
-              <span class="start">{{ start(session) }}</span>
-              <span class="bar"> | </span>
-              <span class="end"> {{ end(session) }}</span>
-            </div>
             <Island
+              v-if="session.Start"
               :id="session.slug + 'Island'"
               :session="session"
               @click.native="$emit('moreInfo', `/timetable/${session.slug}`)"
             />
+            <div v-else class="staggered">
+              <Island
+                class="buffer"
+                v-for="stagSession in session"
+                :key="stagSession.slug"
+                :id="stagSession.slug + 'Island'"
+                :session="stagSession"
+                @click.native="$emit('moreInfo', `/timetable/${stagSession.slug}`)"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -93,23 +99,58 @@ export default {
         parentDays = { 'firstDay': {}, 'secondDay': {}, },
         sessionsArray = Object.values(this.content).sort((a, b) => new Date(a.Start) - new Date(b.Start)),
         dates = sessionsArray.map(session => this.getDay(session['Start'])),
-        uniqueDates = Array.from(new Set(dates))
+        uniqueDates = Array.from(new Set(dates)),
+        fifteen = 15 * 60000
 
       uniqueDates.forEach(day => {
-        let 
-          sessionsInDay = sessionsArray.filter(s => this.sessionInDay(s, day))
+        let sessionsInDay = sessionsArray.filter(s => this.sessionInDay(s, day))
+
         for (let s = 0; s < sessionsInDay.length; s++) {
-          const fifteen = 15 * 60000
           let 
             previous = sessionsInDay[s-1],
             current = sessionsInDay[s],
             next = sessionsInDay[s+1]
           if (current && previous && next &&
-             ((this.getUnixTime(current.Start) - this.getUnixTime(previous.Start)) <= fifteen)) {
+            ((this.getUnixTime(current.Start) - this.getUnixTime(previous.Start)) <= fifteen)) {
               sessionsInDay[s-1].buffer = true
               sessionsInDay[s].buffer = true
-            }
+          }
         }
+
+        // let staggeredArr = sessionsInDay.filter(s => s.buffer)
+
+        // if (staggeredArr.length > 0) {
+        //   let 
+        //     staggered = {},
+        //     workingStartTime = this.getUnixTime(staggeredArr[0].Start)
+
+        //   for (let s = 0; s < staggeredArr.length;) {
+        //     if(!staggered[workingStartTime]) {
+        //       staggered[workingStartTime] = []
+        //     } 
+        //     const currentStartTime = this.getUnixTime(staggeredArr[s].Start)
+        //     if ((currentStartTime - workingStartTime) <= (4 * fifteen)) {
+        //       staggered[workingStartTime].push(staggeredArr[s])
+        //       s++
+        //     } else {
+        //       workingStartTime = currentStartTime
+        //     }
+        //   }
+
+        //   for (let startTime in staggered) {
+        //     const 
+        //       firstSessionToGo = sessionsInDay.find(s => this.getUnixTime(s.Start) === startTime),
+        //       indexOfFirstSessionToGo = sessionsInDay.indexOf(firstSessionToGo),
+        //       substituteSessions = staggered[startTime],
+        //       numberOfSessionsToSplice = Object.values(substituteSessions).length
+
+        //     sessionsInDay[indexOfFirstSessionToGo] = substituteSessions
+        //     sessionsInDay.splice(indexOfFirstSessionToGo + 1, numberOfSessionsToSplice - 1)
+        //   }
+
+
+        // }
+
 
         const
           dayObject = {
@@ -139,19 +180,18 @@ export default {
 
     sizeByDuration(session) {
       const 
-        UnixStart = this.getUnixTime(session.Start),
-        UnixEnd = this.getUnixTime(session.End),
+        length = session.length,
+        start = length ? session[0].Start : session.Start,
+        end = length ? session[length-1].End : session.End,
+        UnixStart = this.getUnixTime(start),
+        UnixEnd = this.getUnixTime(end),
         duration = UnixEnd - UnixStart,
-        // factor = this.isBreak(session) ? 8 : duration / 200000,
         factor = duration / 250000,
         size = `calc(${ factor } * var(--one))`
       return size
     },
 
-    start(session) { return this.getHumanTime(session.Start) },
-    end(session) { return this.getHumanTime(session.End) },
 
-    // isBreak: session => !session.Description || session.Description.length === 0,
     isBreak: session => session.Title === 'Break',
     getHumanTime: date => moment(date).format('HH:mm'),
     getUnixTime: date => moment(date).format('x'),
@@ -230,7 +270,6 @@ export default {
 }
 
 .timetable .day .sessionsContainer {
-  /* position: relative; */
   margin: 0 calc(4 * var(--one));
   display: flex;
   flex-direction: column;
@@ -246,30 +285,8 @@ export default {
   justify-content: flex-start;
   align-items: center;
 }
-.timetable .day .sessionsContainer .islandContainer .time  {
-  position: absolute;
-  left: calc(-6 * var(--one));
-  top: calc(0.5 * var(--one));
-  height: 100%;
+.timetable .day .sessionsContainer .islandContainer .staggered {
   display: flex;
-  font-size: calc(1.8 * var(--one));
-  font-family: sans-serif;
-  pointer-events: none;
-
-}
-.timetable .day .sessionsContainer .islandContainer .time .bar {
-  position: absolute;
-  top: calc(4 * var(--one));
-  left: calc(2 * var(--one));
-  display: none;
-}
-.timetable .day .sessionsContainer .islandContainer .time .end {
-  position: absolute;
-  bottom: calc(1 * var(--one));
-  /* display: none; */
-}
-.timetable .day .sessionsContainer .islandContainer:last-of-type .time .end {
-  /* display: block; */
 }
 
 .break {

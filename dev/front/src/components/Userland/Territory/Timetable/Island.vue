@@ -2,19 +2,19 @@
   <div 
     :class="[
       'island',
-      { break: isBreak }
     ]"
   >
+    <div class="time">
+      <span class="start">{{ start }}</span>
+      <span class="bar"> | </span>
+      <span class="end"> {{ end }}</span>
+    </div>
     <div class="info">
-    
       <div class="header">
-        <h1
-          class="title"
-        > 
+        <h1 class="title" > 
           {{ session.Title }} 
         </h1>
       </div>
-
     </div>
 
     <BBB-link
@@ -30,6 +30,7 @@
 
 <script>
 import BBBLink from '../BBBLink'
+import moment from 'moment-timezone'
 
 export default {
   name: 'Island',
@@ -40,18 +41,14 @@ export default {
     }
   },
   computed: {
-    // soon() { return this.getUnixTime(this.session.Start) - new Date() < 90000 },
+    start() { return this.getHumanTime(this.session.Start) },
+    end() { return this.getHumanTime(this.session.End) },
     soon() { return false },  
-    hosts() { return this.session.hosts },
-    moderators() { return this.session.moderators },
-    isBreak() {
-      // return this.session.Title.toLowerCase().includes('break')
-      return !this.session.Description || this.session.Description.length === 0
-    }
   },
   created() {
   },
   methods: {
+    getHumanTime: date => moment(date).format('HH:mm'),
   }
 
 }
@@ -71,13 +68,32 @@ export default {
     calc(3 * var(--one))
     calc(7 * var(--one))
   ;
-  /* background-color: var(--ground); */
 }
 
 .island:hover {
   border-radius: calc(12 * var(--one));
   border-top-left-radius: calc(2 * var(--one));
-  /* background-color: var(--ground); */
+}
+.island .time  {
+  position: absolute;
+  left: calc(-6 * var(--one));
+  top: calc(0.5 * var(--one));
+  height: 100%;
+  display: flex;
+  font-size: calc(1.8 * var(--one));
+  font-family: sans-serif;
+  pointer-events: none;
+
+}
+.island .time .bar {
+  position: absolute;
+  top: calc(4 * var(--one));
+  left: calc(2 * var(--one));
+  display: none;
+}
+.island .time .end {
+  position: absolute;
+  bottom: calc(1 * var(--one));
 }
 
 .island .info {
@@ -95,28 +111,6 @@ export default {
   text-align: left;
 }
 
-.island .body {
-  margin-top: unset;
-  /* max-width: calc(35 * var(--one)); */
-}
-.island .body .host .name,
-.island .body .moderator .name {
-  text-decoration: underline;
-}
-.island.break {
-}
-.island.break .info {
-  /* position: absolute;
-  padding: 
-    calc(3 * var(--one))
-    calc(5 * var(--one))
-    calc(3 * var(--one))
-    calc(3 * var(--one))
-  ; */
-}
-.island.break .body .BBB-container .BBB {
-  /* margin-bottom: calc(1 * var(--one)); */
-}
 /* 
 .LIFECYCLE0 .island {
   pointer-events: none;

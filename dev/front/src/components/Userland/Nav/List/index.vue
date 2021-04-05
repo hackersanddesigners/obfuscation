@@ -5,7 +5,7 @@
       v-for="territory in territories"
       :key='territory.slug'
       :territory='territory'
-      @click.native.stop="handleTerritoryClick(territory)"
+      @click.native="handleTerritoryClick(territory)"
     />
 
   </div>

@@ -460,13 +460,16 @@ const store = new Vuex.Store({
 
     connectedUsers: (state, getters) => {
       return getters.notBlockedUsers
-        .filter(u => u.connected && !u.isMobile)
+        .filter(u => (
+          ( u.connected === true ) &&
+          ( u.isMobile ? u.isMobile === false : true )
+        ))
         .sort((a, b) => (
           ( a.moderator || b.moderator ) ?
           ( 
             !a.moderator ? 1 : b.moderator ? -1 :
             b.moderator - a.moderator
-          ) : 0
+          ) : -1
         ))
     },
 

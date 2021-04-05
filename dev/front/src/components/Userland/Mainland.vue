@@ -7,11 +7,18 @@
     ]"
     :class="{ 
       blur: !registered || editing || notifications.length > 0,
+      touring: touring,
+      tourIsAtOverlay: tourIsAtOverlay,
+      tourIsAtLocation: tourIsAtLocation,
+      tourIsAtIsland: tourIsAtIsland,
+      tourIsAtAddressBar: tourIsAtAddressBar,
+      tourIsAtBBB: tourIsAtBBB,
     }"
   >
 
     <Editor
       v-if="!registered || editing" 
+      :touring="touring"
       @stopEdit="editing = false"
     />
 
@@ -28,59 +35,6 @@
       />
     </div>
 
-    <nav :class="{ hidden: !desiresNav }">
-
-      <NavHandle
-        :desiresNav="desiresNav"
-        @showNav="showNav"
-        @hideNav="desiresNav = false"
-        :desiresList="desiresList"
-        @showList="desiresList = true"
-        @showMap="desiresList = false"
-        :isMobile="isMobile"
-      />
-
-      <Minilist 
-        v-if="desiresList"
-        @goTo="route($event, false, false, true)"
-      />
-
-      <Minimap 
-        v-else
-        :dragging="dragging"
-        :miniDragging="miniDragging"
-        @startedDrag="miniDragging = true"
-        @stoppedDrag="miniDragging = false"
-        @newPosition="handleMini($event)"
-      />
-
-      <Options
-        v-if="!isMobile"
-        @startEdit="editing = true"
-        @goTo="goTo($event)"
-      />
-
-      <div
-        v-else
-        class="ui compatibility"
-      >
-        <p>
-          To join the discussion, please open this website on a larger screen.
-        </p>
-      </div>
-
-      <div
-        v-if="!isMobile && !isCompatible"
-        class="ui compatibility"
-      >
-        <p>
-          This platform works best on Chrome or Firefox.
-        </p>
-      </div>
-
-
-    </nav>
-
     <div 
       id="userlandContainer" 
       ref="userlandContainer"
@@ -92,15 +46,6 @@
       @click="handleClick($event)"
     >
       
-      <div id="location">
-        <div 
-          class="ui"
-          @click="handleIslandClick('/' + location.slug)"
-        > 
-          #{{ location.slug }} 
-        </div>
-      </div>
-
       <div 
         v-if="true"
         id="userland" 
@@ -140,7 +85,72 @@
         />
         
       </div>
+
+       <div id="location">
+        <div 
+          class="ui tag"
+          @click="handleIslandClick('/' + location.slug)"
+        > 
+          #{{ location.slug }} 
+        </div>
+      </div>
+
     </div>
+
+    <nav :class="{ hidden: !desiresNav }">
+
+      <NavHandle
+        :desiresNav="desiresNav"
+        @showNav="showNav"
+        @hideNav="desiresNav = false"
+        :desiresList="desiresList"
+        @showList="desiresList = true"
+        @showMap="desiresList = false"
+        :isMobile="isMobile"
+      />
+
+      <Minilist 
+        v-if="desiresList"
+        @goTo="route($event, false, false, true)"
+      />
+
+      <Minimap 
+        v-else
+        :dragging="dragging"
+        :miniDragging="miniDragging"
+        :touring="touring"
+        @startedDrag="miniDragging = true"
+        @stoppedDrag="miniDragging = false"
+        @newPosition="handleMini($event)"
+      />
+
+      <Options
+        v-if="!isMobile"
+        ref="options"
+        @startEdit="editing = true"
+        @goTo="goTo($event)"
+      />
+
+      <div
+        v-else
+        class="ui compatibility"
+      >
+        <p>
+          To join the discussion, please open this website on a larger screen.
+        </p>
+      </div>
+
+      <div
+        v-if="!isMobile && !isCompatible"
+        class="ui compatibility"
+      >
+        <p>
+          This platform works best on Chrome or Firefox.
+        </p>
+      </div>
+
+
+    </nav>
 
     <Ticker
      :marquee="isMobile"
@@ -152,6 +162,7 @@
       :content="moreInformation"
       :desiresOverlay="desiresOverlay"
       :isGeneral="location.slug === 'general'"
+      :touring="touring"
       @showOverlay="showOverlay"
       @hideOverlay="handleOverlayClose"
       @startTour="startTour"
@@ -159,7 +170,25 @@
     
     <Tour
       v-if="touring"
+      :editing="editing"
+      @end="touring = false"
+      @goTo="handleIslandClick($event)"
+      @hideOverlay="desiresOverlay = false"
+      @hideNav="desiresNav = false"
+      @showNav="showNav"
+      @focusOverlay="tourIsAtOverlay = true"
+      @unfocusOverlay="tourIsAtOverlay = false"
+      @focusLocation="tourIsAtLocation = true"
+      @unfocusLocation="tourIsAtLocation = false"
+      @focusIsland="tourIsAtIsland = true"
+      @unfocusIsland="tourIsAtIsland = false"
+      @focusAddressBar="tourIsAtAddressBar = true"
+      @unfocusAddressBar="tourIsAtAddressBar = false"
+      @focusBBB="tourIsAtBBB = true"
+      @unfocusBBB="tourIsAtBBB = false"
     />
+
+    <div v-if="touring" id="addressBar"></div>
 
   </main>
 </template>
@@ -231,6 +260,11 @@ export default {
       isCompatible: true,
 
       touring: false,
+      tourIsAtOverlay: false,
+      tourIsAtLocation: false,
+      tourIsAtIsland: false,
+      tourIsAtAddressBar: false,
+      tourIsAtBBB: false,
 
     }
   },
@@ -571,6 +605,9 @@ export default {
 
     startTour() {
       console.log('tour started')
+      this.desiresList = true
+      this.$refs.options.showParticipants = false
+      this.desiresOverlay = false
       this.touring = true
     },
 
@@ -707,6 +744,10 @@ export default {
       if (this.isMobile) {
         this.desiresOverlay = false
       }
+      if (this.touring) {
+        this.desiresList = true
+        this.$refs.options.showParticipants = false
+      }
       this.desiresNav = true
     },
 
@@ -770,7 +811,7 @@ main nav {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  z-index: 2;
+  z-index: 1;
   transition: all 0.2s ease;
 }
 
@@ -786,7 +827,7 @@ main nav .compatibility p {
 
 main nav.hidden {
   left: -100vw;
-  z-index: 5;
+  /* z-index: 5; */
 }
 
 
@@ -821,6 +862,7 @@ main nav.hidden {
   cursor: none;
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
+  z-index: 0;
 }
 #userlandContainer::-webkit-scrollbar {
   display: none;
@@ -945,6 +987,44 @@ main.blur #userlandContainer {
   -webkit-filter: blur(10px);
   opacity: 0.5;
 }
+
+main.touring #location,
+main.touring .overlayContainer,
+main.touring #tickerContainer {
+  z-index: 0;
+  overflow: visible;
+}
+main.touring.tourIsAtOverlay .overlayContainer {
+  z-index: 4;
+}
+main.touring.tourIsAtLocation #location {
+  z-index: 2;
+}
+main.touring.tourIsAtLocation #userlandContainer {
+  z-index: unset;
+}
+
+main.touring.tourIsAtIsland nav {
+  z-index: 0;
+}
+main.touring.tourIsAtIsland #userlandContainer {
+  z-index: unset;
+}
+
+main.touring.tourIsAtBBB nav,
+main.touring.tourIsAtBBB .overlayContainer {
+  z-index: 0;
+}
+main.touring.tourIsAtBBB #userlandContainer {
+  z-index: unset;
+}
+
+#addressBar {
+  position: absolute;
+  top: 0; left: 30%;
+}
+
+
 
 #userlandContainer.dragging {
   user-select: none;

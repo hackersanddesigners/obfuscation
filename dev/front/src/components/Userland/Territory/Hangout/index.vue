@@ -1,14 +1,16 @@
 <template>
   <div>
     <div 
-      class="island"
-      v-for="room in rooms"
-      :key="room.name"
+      v-for="(room, name) in rooms"
+      :key="name"
+      :class="['island', `BBBisland${name}`]"
     >
       <BBBLink 
         :room="room" 
       />
     </div>
+    <div id="participantsIndicator"></div>
+    <div id="BBBIndicator"></div>
   </div>
 </template>
 
@@ -47,7 +49,9 @@ export default {
   width: 100%;
 }
 
-.hangout .island {
+.hangout .island,
+#participantsIndicator,
+#BBBIndicator {
   position: absolute;
 }
 
@@ -59,6 +63,14 @@ export default {
 }
 .hangout .island:nth-of-type(3) {
   top: 70%; left: 70%;
+}
+
+#participantsIndicator {
+  top: 50%; left: 50%;
+}
+#BBBIndicator {
+  height: 5%;
+  top: 20%; left: 45%;
 }
 
 

@@ -3,7 +3,7 @@
     id="minimap"
     :class="[
       'ui',
-      { hovered: hovered || dragging }
+      { hovered: (!touring && hovered) || dragging }
     ]"
     :style="{
       minHeight: `${ height }px`,
@@ -95,7 +95,8 @@ export default {
 
   props: [ 
     'dragging',
-    'miniDragging'
+    'miniDragging',
+    'touring'
   ], 
 
   data() {
@@ -171,6 +172,7 @@ export default {
   cursor: pointer;
   overflow: hidden;
   user-select: none;
+  /* z-index: 1; */
 }
 
 #minimap .messageContainer {
@@ -180,11 +182,10 @@ export default {
   -webkit-filter: blur(1px);
   opacity: 0.9;
   transition: all 0.2s ease;
-  z-index: 4;
+  z-index: 1;
 }
-#minimap.hovered .messageContainer {
+:not(.touring) #minimap.hovered .messageContainer {
   filter: blur(0px);
-  -webkit-filter: blur(0px);
   opacity: 1;
   transition: all 0.2s ease;
 }

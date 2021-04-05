@@ -5,7 +5,7 @@
         'ui', 'navToggle', 'hide',
         { hidden: !desiresNav }
       ]"
-      @click.stop="$emit('hideNav')"
+      @click="$emit('hideNav')"
     > 
       {{ isMobile ? '&lt; nav' : '&lt;' }}
     </span>
@@ -19,7 +19,7 @@
           'map',
           { selected: !desiresList }
         ]"
-        @click.stop="$emit('showMap')"
+        @click="$emit('showMap')"
       > 
         map 
       </span>
@@ -28,7 +28,7 @@
           'list',
           { selected: desiresList }
         ]"
-        @click.stop="$emit('showList')"
+        @click="$emit('showList')"
       > 
         list 
       </span>
@@ -39,7 +39,7 @@
         'ui', 'navToggle', 'show',
         { hidden: desiresNav }
       ]"
-      @click.stop="$emit('showNav')"
+      @click="$emit('showNav')"
     >nav &gt;</span>
   </div>
 </template>
@@ -96,14 +96,15 @@ export default {
 .navType {
   display: flex;
   align-items: center;
-  padding: 0vh 0.5vh;
+  padding: 0vh 0vh;
   z-index: 1;
 }
 .navType span {
-  padding: 0.5vh;
+  padding: 0.5vh 1vh;
 }
 .navType span.map {
   border-right: 1px solid grey;
+  padding-left: 1vh;
 }
 .navType span.selected {
   text-decoration: line-through;

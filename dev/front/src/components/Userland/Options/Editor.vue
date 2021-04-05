@@ -60,11 +60,11 @@
           </div>
 
           <input 
-            class="ui"
+            class="ui save"
             ref="submit" 
             type="button" 
             value="save"
-            @click.stop="save" 
+            @click="save" 
           >
 
       </div>
@@ -75,7 +75,7 @@
         <p>The messages you post will be visible to every other participant and remain available on the website.</p>  
       </div>
     </div>
-    <div v-if="false" id="jsonMe">
+    <div v-if="touring" id="jsonMe">
       <vue-markdown :source="jsonMe" />
     </div>
   </div>
@@ -88,7 +88,7 @@ import { mapGetters, mapState } from 'vuex'
 export default {
 
   name: 'Editor',
-
+  props: ['touring'],
   data() {
     return {
       invalid: false,

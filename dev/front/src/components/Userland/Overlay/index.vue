@@ -3,7 +3,7 @@
     :class="[
       'overlayContainer',
       { visible: desiresOverlay },
-      { hidden: isGeneral }
+      { hidden: isGeneral },
     ]"
   >
 
@@ -13,14 +13,14 @@
           'ui', 'infoToggle', 'hide',
           { hidden: !desiresOverlay }
         ]"
-        @click.stop="$emit('hideOverlay')"
+        @click="$emit('hideOverlay')"
       > hide &gt; </span>
       <span 
         :class="[
           'ui', 'infoToggle', 'show',
           { hidden: desiresOverlay }
         ]"
-        @click.stop="!dragging ? $emit('showOverlay') : null"
+        @click="!dragging ? $emit('showOverlay') : null"
       > 
         &lt; info
       </span>
@@ -93,7 +93,7 @@
     </div>
 
     <div 
-      v-if="content && content.slug === 'tour'"
+      v-if="content && content.slug === 'tour' && !isMobile && !touring"
       class="submitContainer"
     >
       <input 
@@ -126,7 +126,8 @@ export default {
     'dragging',
     'content',
     'isGeneral',
-    'desiresOverlay'
+    'desiresOverlay',
+    'touring'
   ],
 
   mixins:[ smoothHeight ],
@@ -141,6 +142,7 @@ export default {
   },
 
   computed: {
+    isMobile() { return this.$store.state.isMobile }
   },
 
   watch: {
@@ -194,6 +196,7 @@ export default {
   flex-direction: column;
   /* background: blue; */
 }
+
 .overlayContainer.visible {
   cursor: default;
   right: 0;

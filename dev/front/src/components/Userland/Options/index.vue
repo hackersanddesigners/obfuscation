@@ -27,7 +27,7 @@
     <div class="edituser">
       <div
         class="ui button"
-        @click.stop="$emit('startEdit')"
+        @click="$emit('startEdit')"
       > 
         options
       </div>
@@ -36,7 +36,7 @@
     <div class="storage">
       <div
         class="ui button"
-        @click.stop="$store.dispatch('deleteUser', me)"
+        @click="$store.dispatch('deleteUser', me)"
       >
         delete self
       </div>
