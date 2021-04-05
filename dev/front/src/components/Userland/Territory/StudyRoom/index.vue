@@ -2,15 +2,15 @@
   <div class="studyRoom">
     <div class="schedule">
       <div id="timeZone">
-        <h3>Sessions are displayed in {{ timeZone }} time.</h3>
+        <h3>Sessions are displayed in {{ notEtc(timeZone) }} time.</h3>
         <h3
           v-if="!isInDefaultTimeZone"
           class="toggle"
           @click.stop="toggleTimezone"
         > {{ 
               desiresOwnTimezone ?
-              `View sessions in ${ defaultTimeZone } time.` :
-              `View sessions in ${ ownTimeZone } time.`
+              `View sessions in ${ notEtc(defaultTimeZone) } time.` :
+              `View sessions in ${ notEtc(ownTimeZone) } time.`
           }}
         </h3>
       </div>
@@ -29,8 +29,8 @@
             {{ cuteDate(day.date) }}
           </div>
           <div class="time">
-            <span class="start">{{ start(session) }}</span>
-            <span class="end"> {{ end(session) }}</span>
+            <span class="start">{{ getHumanTime(session.Start) }}</span>
+            <span class="end"> {{ getHumanTime(session.End) }}</span>
           </div>
           <Island
             :session="session"
@@ -127,33 +127,12 @@ export default {
       return size
     },
 
-    start(session) { 
-      return this.getHumanTime(session.Start) 
-    },
-    end(session) { 
-      return this.getHumanTime(session.End) 
-    },
-
-    isBreak(session) {
-      // return this.session.Title.toLowerCase().includes('break')
-      return !session.Description || session.Description.length === 0
-    },
-
-    getHumanTime(date) { 
-      return moment(date).format('HH:mm')
-    },
-
-     getUnixTime(date) { 
-      return moment(date).format('x')
-    },
-
-    getDay(date) { 
-      return moment(date).format('D')
-    },
-
-    cuteDate(date) {
-      return moment(date).format('dddd, MMMM Do')
-    }
+    notEtc: string => string === 'Etc/UTC' ? 'UTC' : string,
+    isBreak: session => session.Title === 'Break',
+    getHumanTime: date => moment(date).format('HH:mm'),
+    getUnixTime: date => moment(date).format('x'),
+    getDay: date => moment(date).format('D'),
+    cuteDate: date => moment(date).format('dddd, MMMM Do'),
 
   }
 
