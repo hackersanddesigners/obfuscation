@@ -106,6 +106,8 @@ low(adapter).then(db => {
       io.sockets.emit('appearance', user)
       db.set(`users[${user.uid}].name`, user.name)
         .set(`users[${user.uid}].color`, user.color)
+        .set(`users[${user.uid}].x`, user.x)
+        .set(`users[${user.uid}].y`, user.y)
         .set(`users[${user.uid}].messageLifetime`, user.messageLifetime)
         .write()
     })

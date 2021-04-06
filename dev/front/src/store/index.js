@@ -117,6 +117,8 @@ const store = new Vuex.Store({
       state.users[user.uid].connected = true
       state.users[user.uid].name = user.name
       state.users[user.uid].color = user.color
+      state.users[user.uid].x = user.x
+      state.users[user.uid].y = user.y
       state.users[user.uid].messageLifetime = user.messageLifetime
     },
     setUserDisconnected: (state, uid) => {

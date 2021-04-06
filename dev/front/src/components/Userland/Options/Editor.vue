@@ -169,6 +169,8 @@ export default {
       this.$store.dispatch('updateAppearance', {
         name: name,
         color: color,
+        x: this.me.x,
+        y: this.me.y,
         messageLifetime: messageLifetime
       })
       this.$emit('stopEdit')
