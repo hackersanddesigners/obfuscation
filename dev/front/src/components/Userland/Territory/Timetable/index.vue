@@ -220,6 +220,7 @@ export default {
   /* justify-content: stretch; */
   justify-content: center;
   /* align-items: center; */
+  align-items: flex-start;
   /* align-content: dcenter; */
   /* align-content: flex-start; */
 }
@@ -243,7 +244,7 @@ export default {
   max-width: calc(55 * var(--one));
   display: flex;
   flex-direction: column;
-  align-items: stretch;
+  /* align-items: stretch; */
 }
 .schedule .parentDay:last-of-type  {
   margin-left: calc(4 * var(--one));
@@ -251,8 +252,8 @@ export default {
 .schedule .day  {
   display: flex;
   flex-direction: column;
-  align-items: stretch;
-  align-content: center;
+  /* align-items: stretch; */
+  /* align-content: center; */
   z-index: 1;
 }
 
@@ -278,9 +279,11 @@ export default {
   align-items: center;
   align-content: flex-start;
 }
+
 .schedule .day .sessionsContainer .islandContainer {
   box-sizing: border-box;
   position: relative;
+  min-height: calc(8 * var(--one));
   /* margin: calc(1 * var(--one)); */
   width: 100%;
   display: flex;
