@@ -274,6 +274,7 @@ export default {
   max-width: 100vw;
   max-height: calc(100% - 25px);
   /* max-height: 800px; */
+  /* z-index: 2; */
 }
 
 .mobile .overlayContainer.visible {
@@ -284,6 +285,8 @@ export default {
 .mobile #infoTitle .infoToggle.show {
   /* position: fixed;
   right: 0; */
+}
+.mobile #infoTitle .infoToggle.hide {
 }
 
 @media screen and (max-height: 730px) {

@@ -9,6 +9,15 @@
       />
     </div> -->
 
+    <div class="registerAgain">
+      <div
+        class="ui button"
+        @click="$emit('moreInfo', `/reception/register`)"
+      >
+         register
+      </div>
+    </div>
+
     <div class="participants">
       <div
         v-if="!showParticipants"

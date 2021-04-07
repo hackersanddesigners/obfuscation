@@ -155,7 +155,7 @@ export default {
 }
 
 .schedule {
-  flex-basis: 40%;
+  flex-basis: 50%;
   display: flex;
   flex-direction: column;
 }

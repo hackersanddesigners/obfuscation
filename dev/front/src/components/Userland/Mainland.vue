@@ -131,6 +131,7 @@
         ref="options"
         @startEdit="editing = true"
         @goTo="goTo($event)"
+        @moreInfo="handleIslandClick($event)"
       />
 
       <div
@@ -348,7 +349,7 @@ export default {
 
     if (this.isMobile) {
       this.$store.commit('setScale', 8)
-      this.$store.commit('setWidthFactor', 3.3)
+      this.$store.commit('setWidthFactor', 3.4)
     }
 
     this.checkCompatibility()
@@ -390,11 +391,6 @@ export default {
         w: window.innerWidth,
         h: window.innerHeight,
       })
-      // this.triggerRepaint()
-      // this.scrollTo({
-      //   x: this.lastScrollX + 10,
-      //   y: this.lastScrollY + 10
-      // })
     })
 
 
@@ -1080,6 +1076,9 @@ main.touring.tourIsAtBBB #userlandContainer {
 }
 .mobile nav.hidden {
   left: -100vw;
+  z-index: 3;
+}
+.mobile nav {
 }
 
 .mobile #userlandContainer {  

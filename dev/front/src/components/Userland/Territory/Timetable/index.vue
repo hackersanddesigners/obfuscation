@@ -89,6 +89,7 @@ export default {
   computed: {
     timeZone() { return this.desiresOwnTimezone ? this.ownTimeZone : this.defaultTimeZone },
     isInDefaultTimeZone() { return this.ownTimeZone === this.defaultTimeZone },
+    isMobile() { return this.$store.state.isMobile }
   },
   created() {
     moment.tz.setDefault(this.ownTimeZone)
@@ -189,7 +190,8 @@ export default {
         UnixEnd = this.getUnixTime(end),
         duration = UnixEnd - UnixStart,
         factor = duration / 250000,
-        size = `calc(${ factor } * var(--one))`
+        mobileFactor = this.isMobile ? 0.6 : 1,
+        size = `calc(${ factor * mobileFactor } * var(--one))`
       return size
     },
 
@@ -212,19 +214,19 @@ export default {
     /* calc(10 * var(--one)) */
   /* ; */
   padding-top: calc(10 * var(--one));
+  padding-left: calc(25 * var(--one));
   width: 100%;
   height: 100%;
   display: flex;
-  /* flex-direction: column; */
-  /* flex-wrap: wrap; */
-  /* justify-content: stretch; */
-  justify-content: center;
-  /* align-items: center; */
+  /* justify-content: center; */
+  justify-content: flex-start;
   align-items: flex-start;
-  /* align-content: dcenter; */
-  /* align-content: flex-start; */
+  flex-wrap: wrap;
 }
-
+.mobile .schedule {
+  /* padding-top: calc(5 * var(--one));
+  padding-left: calc(10 * var(--one)); */
+}
 #timeZone {
   position: absolute;
   top: calc(6 * var(--one));
@@ -292,6 +294,10 @@ export default {
 }
 .schedule .day .sessionsContainer .islandContainer .staggered {
   display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: auto;
+  flex-wrap: wrap;
 }
 
 .schedule .time  {

@@ -302,7 +302,8 @@ export default {
       // announce every key press to your peers.
 
       this.$store.dispatch('updateTyping', {
-        typing: input.value
+        // typing: input.value
+        typing: key == 27 || input.value == '' ? '' : "typing..."
       })
 
     }, 

@@ -13,7 +13,7 @@
       v-if="hosts && hosts.length > 0"
       :list="hosts"
       :collection="'contributors'"
-      :name="'Host'"
+      :name="'Speaker'"
     />
     <SemanticList
       v-if="moderators && moderators.length > 0"
