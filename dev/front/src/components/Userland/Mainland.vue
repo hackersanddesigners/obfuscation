@@ -16,26 +16,32 @@
     }"
   >
 
-    <Notfound v-if="notfound" />
+    <transition name="fade">
+      <Notfound v-if="notfound" />
+    </transition>
 
-    <Editor
-      v-if="!registered || editing" 
-      :touring="touring"
-      @stopEdit="editing = false"
-    />
-
-    <div 
-      v-if="notifications.length > 0"
-      id="notificationContainer"
-    >
-      <Notification
-        v-for="notification in notifications"
-        :key="notification.uid"
-        :notification="notification"
-        @dismiss="notifications.splice(notifications.indexOf(notification), 1)"
-        @goTo="handleNotificationClick($event)"
+    <transition name="fade">
+      <Editor
+        v-if="!registered || editing" 
+        :touring="touring"
+        @stopEdit="editing = false"
       />
-    </div>
+    </transition>
+
+    <transition name="fade">
+      <div 
+        v-if="notifications.length > 0"
+        id="notificationContainer"
+      >
+        <Notification
+          v-for="notification in notifications"
+          :key="notification.uid"
+          :notification="notification"
+          @dismiss="notifications.splice(notifications.indexOf(notification), 1)"
+          @goTo="handleNotificationClick($event)"
+        />
+      </div>
+    </transition>
 
     <div 
       id="userlandContainer" 
@@ -490,7 +496,7 @@ export default {
           // routing to pages
 
           if (page) {
-            console.log("going to page", page)
+            // console.log("going to page", page)
             this.secondPath = true
             position = this.positionOfIsland(page)
 
@@ -969,6 +975,7 @@ main nav.hidden {
   justify-content: center;
   align-items: center;
   z-index: 100;
+  background-color: var(--half-white);
 }
 
 #userland.reception {
@@ -1012,7 +1019,7 @@ main.blur #tickerContainer,
 main.blur #userlandContainer {
   filter: blur(10px);
   -webkit-filter: blur(10px);
-  opacity: 0.5;
+  /* opacity: 0.5; */
 }
 
 main.touring #location,
@@ -1057,7 +1064,13 @@ main.touring.tourIsAtBBB #userlandContainer {
   user-select: none;
 }
 
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .3s ease;
+}
 
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
 
 
 

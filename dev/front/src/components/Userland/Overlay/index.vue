@@ -28,10 +28,10 @@
 
     <div 
       v-if="content"
-      ref="overlay"
       :class="[
         'ui', 'overlay', content.slug 
       ]"
+      ref="overlay"
     >
 
       <div 
@@ -147,6 +147,7 @@ export default {
 
   watch: {
     content() {
+      this.scrollTop()
       this.handleAanmelder()
     }
   },
@@ -154,15 +155,27 @@ export default {
   mounted() {
 
     this.$smoothElement({
-      el: this.$refs.overlay,
+      el: this.$el,
       hideOverflow: true,
-      transition: 'height 0.2s ease'
+      transition: 'all 0.2s ease'
     })
 
+    this.scrollTop()
     this.handleAanmelder()
   },
 
   methods: {
+
+    scrollTop() {
+      // if (this.$refs.overlay.scrollTop !== 0) {
+      //   setTimeout(() => {
+      //     this.$refs.overlay.scroll({
+      //       top: 0,
+      //       behavior: 'smooth'
+      //     })
+      //   }, 200)
+      // }
+    },
 
     handleAanmelder() {
       if (this.content && this.content.slug === 'register') {

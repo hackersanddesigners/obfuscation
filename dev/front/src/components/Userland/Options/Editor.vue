@@ -225,6 +225,7 @@ export default {
   justify-content: center;
   align-items: center;
   z-index: 3;
+  background-color: var(--half-white);
 }
 
 #register {

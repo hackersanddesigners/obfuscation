@@ -22,6 +22,7 @@ export default {
   justify-content: center;
   align-items: center;
   z-index: 100;
+  background-color: var(--half-white);
 }
 #notfound {
   padding: 1vh;

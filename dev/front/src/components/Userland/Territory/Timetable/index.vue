@@ -296,8 +296,13 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
-  width: auto;
+  /* width: auto; */
   flex-wrap: wrap;
+  min-height: calc(50*var(--one));
+}
+.schedule .day .sessionsContainer .islandContainer .staggered .island {
+  max-width: 50%;
+
 }
 
 .schedule .time  {

@@ -124,6 +124,8 @@ html, body {
   overflow: hidden;
 
   --disconnected: rgb(119, 119, 119);
+  --half-white: rgba(255, 255, 255, 0.5);
+
 
   /* --ui-border-radius: 4px 7.5px 4px 7.5px; */
   --ui-padding: 0.5vh;
