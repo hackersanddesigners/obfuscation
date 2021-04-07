@@ -167,14 +167,14 @@ export default {
   methods: {
 
     scrollTop() {
-      // if (this.$refs.overlay.scrollTop !== 0) {
-      //   setTimeout(() => {
-      //     this.$refs.overlay.scroll({
-      //       top: 0,
-      //       behavior: 'smooth'
-      //     })
-      //   }, 200)
-      // }
+      if (this.$refs.overlay && this.$refs.overlay.scrollTop !== 0) {
+        setTimeout(() => {
+          this.$refs.overlay.scroll({
+            top: 0,
+            behavior: 'smooth'
+          })
+        }, 200)
+      }
     },
 
     handleAanmelder() {
