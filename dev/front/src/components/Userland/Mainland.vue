@@ -403,7 +403,7 @@ export default {
   },
 
   beforeDestroy() {
-    if (this.registered && this.me) {
+    if (this.me) {
       // this.$store.dispatch('disconnect')
       this.$store.dispatch('updatePosition', {
         x: this.me.x,

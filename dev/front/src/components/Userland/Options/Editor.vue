@@ -125,7 +125,9 @@ export default {
 
   mounted() {
 
-    this.$refs.name.value = this.me.name
+    if (this.registered) {
+      this.$refs.name.value = this.me.name
+    }
     setTimeout(() => {
       this.$refs.name.select()
     }, 50)

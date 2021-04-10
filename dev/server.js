@@ -87,6 +87,9 @@ low(adapter).then(db => {
 
     socket.on('position', (position) => {
       io.sockets.emit('position', position)
+      if (position.connected === false) {
+        console.log(position.uid, ' diconnected')
+      }
       db.set(`users[${position.uid}].x`, position.x)
         .set(`users[${position.uid}].y`, position.y)
         .set(`users[${position.uid}].connected`, position.connected)

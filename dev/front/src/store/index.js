@@ -107,7 +107,7 @@ const store = new Vuex.Store({
     },
     setUserTyping: (state, text) => {
       state.users[text.uid].typing = text.typing
-      state.users[text.uid].connected = true
+      // state.users[text.uid].connected = true
     },
     setUserColor: (state, color) => {
       state.users[color.uid].color = color.color
