@@ -43,7 +43,7 @@
       >
         {{ 
           isMe(user) ? "me" : 
-          user.connected ? user.name : 
+          user.connected === true ? user.name : 
           user.name + ' (offline)' 
         }}
       </span>
@@ -73,6 +73,7 @@ export default {
       announcement: false,
       mention: false,
       locationTimer: 0,
+      timeoutID: null,
     }
   },
 
@@ -100,6 +101,9 @@ export default {
 
     if (this.isMe && !this.isMobile) {
       this.trackCursor()
+      this.timeoutID = setTimeout(() => {
+        this.disconnect()
+      }, 4000)
     }
 
   },
@@ -184,16 +188,35 @@ export default {
         return message
     },
 
+    resetTimer() {
+      clearTimeout(this.timeoutID)
+      this.timeoutID = setTimeout(() => { 
+        this.disconnect()
+      }, 4000) 
+    },
+
+    disconnect() {
+      console.log('disconnect')
+      this.$store.dispatch('updatePosition', {
+        x: this.me.x,
+        y: this.me.y,
+        connected: false,
+      })
+    },
+
 
     // send cursor position live through $store.
 
     trackCursor() {
       document.addEventListener('mousemove', (e) => {
+        
+        this.resetTimer()
 
         if(!this.dragging) {
             const pos = {
               x: (this.windowPos.x + e.clientX) / (this.windowSize.w * this.scale),
               y: (this.windowPos.y + e.clientY) / (this.windowSize.h * this.scale),
+              connected: true,
             }
             
             this.$store.dispatch('updatePosition', pos)

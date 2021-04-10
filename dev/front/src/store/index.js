@@ -103,7 +103,7 @@ const store = new Vuex.Store({
     setUserPosition: (state, position) => {
       state.users[position.uid].x = position.x
       state.users[position.uid].y = position.y
-      state.users[position.uid].connected = true
+      state.users[position.uid].connected = position.connected
     },
     setUserTyping: (state, text) => {
       state.users[text.uid].typing = text.typing
@@ -263,8 +263,8 @@ const store = new Vuex.Store({
       }
     },
 
-    socket_disconnect({ state, dispatch }) { 
-      dispatch('disconnect')
+    socket_disconnect({ state }) { 
+      // dispatch('disconnect')
       if (state.save) {
         if (state.registered) {
           // localStorage.me = JSON.stringify(state.users[state.uid])

@@ -404,7 +404,12 @@ export default {
 
   beforeDestroy() {
     if (this.registered && this.me) {
-      this.$store.dispatch('disconnect')
+      // this.$store.dispatch('disconnect')
+      this.$store.dispatch('updatePosition', {
+        x: this.me.x,
+        y: this.me.y,
+        connected: false,
+      })
       if (this.isMobile) {
         this.$store.dispatch('deleteUser', this.me)
         localStorage.clear()
