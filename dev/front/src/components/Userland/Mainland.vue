@@ -399,22 +399,41 @@ export default {
       })
     })
 
+    window.onbeforeunload = () => {
+      if (this.me) {
+        console.log('disconnecting')
+        this.$store.dispatch('updatePosition', {
+          x: this.me.x,
+          y: this.me.y,
+          connected: false,
+        })
+        this.$store.dispatch('updateTyping', {
+          typing: null,
+        })
+        if (this.isMobile) {
+          this.$store.dispatch('deleteUser', this.me)
+          localStorage.clear()
+        }
+      }
+    }
+
 
   },
 
   beforeDestroy() {
-    if (this.me) {
-      // this.$store.dispatch('disconnect')
-      this.$store.dispatch('updatePosition', {
-        x: this.me.x,
-        y: this.me.y,
-        connected: false,
-      })
-      if (this.isMobile) {
-        this.$store.dispatch('deleteUser', this.me)
-        localStorage.clear()
-      }
-    }
+    // if (this.me) {
+    //   console.log('disconnecting')
+    //   // this.$store.dispatch('disconnect')
+    //   this.$store.dispatch('updatePosition', {
+    //     x: this.me.x,
+    //     y: this.me.y,
+    //     connected: false,
+    //   })
+    //   if (this.isMobile) {
+    //     this.$store.dispatch('deleteUser', this.me)
+    //     localStorage.clear()
+    //   }
+    // }
   },
 
   sockets: {

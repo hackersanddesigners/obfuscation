@@ -194,7 +194,6 @@ export default {
     },
 
     disconnect() {
-      console.log('disconnect')
       this.$store.dispatch('updatePosition', {
         x: this.me.x,
         y: this.me.y,
