@@ -101,9 +101,7 @@ export default {
 
     if (this.isMe && !this.isMobile) {
       this.trackCursor()
-      this.timeoutID = setTimeout(() => {
-        this.disconnect()
-      }, 4000)
+      this.resetTimer()
     }
 
   },
@@ -192,7 +190,7 @@ export default {
       clearTimeout(this.timeoutID)
       this.timeoutID = setTimeout(() => { 
         this.disconnect()
-      }, 4000) 
+      }, 60000) 
     },
 
     disconnect() {
@@ -201,6 +199,9 @@ export default {
         x: this.me.x,
         y: this.me.y,
         connected: false,
+      })
+      this.$store.dispatch('updateTyping', {
+        typing: null
       })
     },
 

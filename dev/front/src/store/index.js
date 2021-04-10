@@ -451,7 +451,7 @@ const store = new Vuex.Store({
       let userColors = {}
       for (let uid in state.users) {
         const user = state.users[uid]
-        userColors[`--${uid}`] = user.connected ? user.color : 'var(--disconnected)'
+        userColors[`--${uid}`] = user.connected === true ? user.color : 'var(--disconnected)'
       }
       return userColors
     },
