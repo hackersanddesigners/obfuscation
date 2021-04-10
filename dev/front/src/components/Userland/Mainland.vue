@@ -420,22 +420,6 @@ export default {
 
   },
 
-  beforeDestroy() {
-    // if (this.me) {
-    //   console.log('disconnecting')
-    //   // this.$store.dispatch('disconnect')
-    //   this.$store.dispatch('updatePosition', {
-    //     x: this.me.x,
-    //     y: this.me.y,
-    //     connected: false,
-    //   })
-    //   if (this.isMobile) {
-    //     this.$store.dispatch('deleteUser', this.me)
-    //     localStorage.clear()
-    //   }
-    // }
-  },
-
   sockets: {
 
 
@@ -757,7 +741,8 @@ export default {
         },  
         mePos = {
           x: (currPos.x + deltaScrollX) / (this.windowSize.w * this.scale),
-          y:(currPos.y + deltaScrollY) / (this.windowSize.h * this.scale)
+          y:(currPos.y + deltaScrollY) / (this.windowSize.h * this.scale),
+          connected: true,
         },
         territory = this.territoryByBorders(viewerPos)
     
