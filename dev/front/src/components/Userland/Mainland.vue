@@ -417,6 +417,12 @@ export default {
       }
     }
 
+    if (this.isMobile) {
+      setTimeout(() => {
+        console.log(document.activeElement)
+      }, 1000)
+    }
+
 
   },
 

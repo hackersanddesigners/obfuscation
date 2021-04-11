@@ -199,9 +199,7 @@ export default {
         duration = UnixEnd - UnixStart,
         factor = duration / 250000,
         mobileFactor = this.isMobile ? 0.6 : 1,
-        // size = length ? 'auto' : `calc(${ factor * mobileFactor } * var(--one))`
         size = `calc(${ factor * mobileFactor } * var(--one))`
-        if (length) console.log(size)
       return size
     },
 
@@ -276,7 +274,7 @@ export default {
     calc(3 * var(--one))
     calc(2 * var(--one))
   ;
-  
+
   font-size: calc(2.8 * var(--one));
 }
 .schedule .day .date em {

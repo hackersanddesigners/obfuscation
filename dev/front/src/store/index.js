@@ -491,7 +491,7 @@ const store = new Vuex.Store({
     },
 
     notDeletedUsers: (state, getters) => {
-      return getters.usersArray.filter(u => !u.deleted)
+      return getters.usersArray.filter(u => !u.deleted && !u.isMobile)
     },
 
     notDeletedMessages: (state, getters) => {
