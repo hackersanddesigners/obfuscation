@@ -545,16 +545,19 @@ const store = new Vuex.Store({
         const 
           parent = island.offsetParent,
           grandparent = parent.offsetParent,
+          greatgrandparent = grandparent.offsetParent,
+          ancestor = greatgrandparent.offsetParent,
+          ancestor2 = ancestor.offsetParent,
+          buffer = parent.classList.contains('staggered') ? 2000 : 50,
           left = 
-            island.offsetLeft > 0 ?
-            island.offsetLeft + parent.offsetLeft :
-            parent.offsetLeft + grandparent.offsetLeft,
+            island.offsetLeft <= buffer ?
+            island.offsetLeft + parent.offsetLeft + grandparent.offsetLeft + greatgrandparent.offsetLeft + ancestor.offsetLeft + ancestor2.offsetLeft :
+            island.offsetLeft + parent.offsetLeft,
           top = 
-            island.offsetTop > 0 ?
-            island.offsetTop + parent.offsetTop : 
-            parent.offsetTop + grandparent.offsetTop,
+            island.offsetTop <= buffer ?
+            island.offsetTop + parent.offsetTop + grandparent.offsetTop + greatgrandparent.offsetTop + ancestor.offsetTop + ancestor2.offsetTop:
+            island.offsetTop + parent.offsetTop,
           centerX = left - (state.windowSize.w - island.offsetWidth) / 2,
-          // centerY = top - (state.windowSize.h - island.offsetHeight) / 2 
           centerY = state.isMobile ? top - 100 : top - 100
         return {
           x: centerX,

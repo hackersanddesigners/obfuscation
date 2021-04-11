@@ -63,7 +63,7 @@ export default {
 <style scoped>
 .island {
   height: 100%;
-  /* width: 100%; */
+  width: 100%;
   /* max-width: 90%; */
   max-width: 100%;
   display: flex;
@@ -83,7 +83,8 @@ export default {
 .island .time  {
   position: absolute;
   left: calc(-6 * var(--one));
-  top: calc(0.5 * var(--one));
+  /* top: calc(0.5 * var(--one)); */
+  top: calc(0 * var(--one));
   height: 100%;
   display: flex;
   font-size: calc(1.8 * var(--one));
@@ -100,6 +101,18 @@ export default {
 .island .time .end {
   position: absolute;
   bottom: calc(1 * var(--one));
+  display: none;
+}
+
+.staggered .island .time  {
+  width: 100%;
+  left: calc(2 * var(--one));
+  top: calc(-2 * var(--one));
+}
+.staggered .island .time .end {
+  right: calc(5 * var(--one));
+  top: calc(0 * var(--one));
+  display: block;
 }
 
 .island .info {

@@ -35,7 +35,8 @@
             :key="session.slug"
             :class="['islandContainer', { 
               buffer: session.buffer,
-              break: isBreak(session)
+              break: isBreak(session),
+              island: !session.Start
             }]"
             :style="{ height: sizeByDuration(session) }"
           >
@@ -47,11 +48,17 @@
               @click.native="$emit('moreInfo', `/schedule/${session.slug}`)"
             />
             <div v-else class="staggered">
+              <div class="time">
+                <span class="start">{{ getHumanTime(session[0].Start) }}</span>
+                <span class="bar"> | </span>
+                <span class="end"> {{ getHumanTime(session[session.length-1].End) }}</span>
+              </div>
               <Island
                 class="buffer"
                 v-for="stagSession in session"
                 :key="stagSession.slug"
                 :id="stagSession.slug + 'Island'"
+                :timeZone="timeZone"
                 :session="stagSession"
                 @click.native="$emit('moreInfo', `/schedule/${stagSession.slug}`)"
               />
@@ -120,39 +127,40 @@ export default {
           }
         }
 
-        // let staggeredArr = sessionsInDay.filter(s => s.buffer)
+        let staggeredArr = sessionsInDay.filter(s => s.buffer)
 
-        // if (staggeredArr.length > 0) {
-        //   let 
-        //     staggered = {},
-        //     workingStartTime = this.getUnixTime(staggeredArr[0].Start)
+        if (staggeredArr.length > 0) {
+          let 
+            staggered = {},
+            workingStartTime = this.getUnixTime(staggeredArr[0].Start)
 
-        //   for (let s = 0; s < staggeredArr.length;) {
-        //     if(!staggered[workingStartTime]) {
-        //       staggered[workingStartTime] = []
-        //     } 
-        //     const currentStartTime = this.getUnixTime(staggeredArr[s].Start)
-        //     if ((currentStartTime - workingStartTime) <= (4 * fifteen)) {
-        //       staggered[workingStartTime].push(staggeredArr[s])
-        //       s++
-        //     } else {
-        //       workingStartTime = currentStartTime
-        //     }
-        //   }
+          for (let s = 0; s < staggeredArr.length;) {
+            if(!staggered[workingStartTime]) {
+              staggered[workingStartTime] = []
+            } 
+            const currentStartTime = this.getUnixTime(staggeredArr[s].Start)
+            if ((currentStartTime - workingStartTime) <= (4 * fifteen)) {
+              staggered[workingStartTime].push(staggeredArr[s])
+              s++
+            } else {
+              workingStartTime = currentStartTime
+            }
+          }
 
-        //   for (let startTime in staggered) {
-        //     const 
-        //       firstSessionToGo = sessionsInDay.find(s => this.getUnixTime(s.Start) === startTime),
-        //       indexOfFirstSessionToGo = sessionsInDay.indexOf(firstSessionToGo),
-        //       substituteSessions = staggered[startTime],
-        //       numberOfSessionsToSplice = Object.values(substituteSessions).length
+          for (let startTime in staggered) {
+            const 
+              firstSessionToGo = sessionsInDay.find(s => this.getUnixTime(s.Start) === startTime),
+              indexOfFirstSessionToGo = sessionsInDay.indexOf(firstSessionToGo),
+              substituteSessions = staggered[startTime],
+              numberOfSessionsToSplice = Object.values(substituteSessions).length
 
-        //     sessionsInDay[indexOfFirstSessionToGo] = substituteSessions
-        //     sessionsInDay.splice(indexOfFirstSessionToGo + 1, numberOfSessionsToSplice - 1)
-        //   }
+            sessionsInDay[indexOfFirstSessionToGo] = substituteSessions
+            // this.$set(sessionsInDay, indexOfFirstSessionToGo, substituteSessions)
+            sessionsInDay.splice(indexOfFirstSessionToGo + 1, numberOfSessionsToSplice - 1)
+          }
 
 
-        // }
+        }
 
 
         const
@@ -185,13 +193,15 @@ export default {
       const 
         length = session.length,
         start = length ? session[0].Start : session.Start,
-        end = length ? session[length-1].End : session.End,
+        end = length ? 2 * session[length-1].End : session.End,
         UnixStart = this.getUnixTime(start),
         UnixEnd = this.getUnixTime(end),
         duration = UnixEnd - UnixStart,
         factor = duration / 250000,
         mobileFactor = this.isMobile ? 0.6 : 1,
+        // size = length ? 'auto' : `calc(${ factor * mobileFactor } * var(--one))`
         size = `calc(${ factor * mobileFactor } * var(--one))`
+        if (length) console.log(size)
       return size
     },
 
@@ -208,7 +218,6 @@ export default {
 
 <style scoped>
 .schedule {
-  box-sizing: border-box;
   /* padding:  */
     /* calc(5 * var(--one)) */
     /* calc(10 * var(--one)) */
@@ -242,7 +251,7 @@ export default {
 }
 
 .schedule .parentDay  {
-  width: 40%;
+  /* width: 40%; */
   max-width: calc(55 * var(--one));
   display: flex;
   flex-direction: column;
@@ -267,6 +276,7 @@ export default {
     calc(3 * var(--one))
     calc(2 * var(--one))
   ;
+  
   font-size: calc(2.8 * var(--one));
 }
 .schedule .day .date em {
@@ -292,18 +302,35 @@ export default {
   justify-content: flex-start;
   align-items: center;
 }
-.schedule .day .sessionsContainer .islandContainer .staggered {
-  display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
-  /* width: auto; */
-  flex-wrap: wrap;
-  min-height: calc(50*var(--one));
-}
-.schedule .day .sessionsContainer .islandContainer .staggered .island {
-  max-width: 50%;
+.schedule .day .sessionsContainer .islandContainer.island {
+  min-width: calc(75 * var(--one));
+  align-self: flex-start;
 
 }
+.schedule .day .sessionsContainer .islandContainer .staggered { 
+  position: relative;
+  padding-right: calc(3 * var(--one));
+  padding-bottom: calc(3 * var(--one));
+  box-sizing: border-box;
+  flex-shrink: 1;
+  display: flex;
+  min-width: calc(75 * var(--one));
+  justify-content: flex-start;
+  align-items: flex-start;
+  align-content: center;
+  /* width: auto; */
+  flex-wrap: wrap;
+  /* min-height: calc(50*var(--one)); */
+}
+.schedule .day .sessionsContainer .islandContainer .staggered .island {
+  /* max-width: 50%; */
+  flex-basis: 45%;
+  flex-shrink: 0;
+  flex-grow: 0;
+  margin-top: calc(4.5 * var(--one));
+  margin-left: calc(3 * var(--one));
+}
+
 
 .schedule .time  {
   position: absolute;
@@ -331,6 +358,12 @@ export default {
   min-height: calc(6 * var(--one));
 }
 
+.staggered .buffer,
+.staggered .buffer + .buffer,
+.staggered .buffer + .buffer + .buffer,
+.staggered .buffer + .buffer + .buffer + .buffer {
+  margin-right: unset;
+}
 .buffer {
   --buffer: -15;
   margin-right: calc(1 * var(--buffer) * var(--one));
