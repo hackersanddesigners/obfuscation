@@ -90,6 +90,9 @@
               @click="$store.commit('toggleContrast')"
             />
           </div>
+      <div class="introText" v-if="!registered">
+        <p>The messages you post will be visible to every other participant and remain available on the website.</p>  
+      </div>
 
           <input 
             class="ui save"
@@ -100,12 +103,6 @@
             tabindex="0"
           >
 
-      </div>
-      <div 
-        class="introText" 
-        v-if="!registered"
-      >
-        <p>The messages you post will be visible to every other participant and remain available on the website.</p>  
       </div>
     </div>
     <div v-if="touring" id="jsonMe">
@@ -316,6 +313,7 @@ export default {
   max-width: 2vh;
 }
 
+
 input {
   flex-shrink: 1;
   width: 300px;
@@ -330,6 +328,7 @@ input {
 input[type="button"] {
   width: 100%;
   cursor: pointer;
+  margin-top: 2vh;
 }
 input[type="checkbox"] {
   margin-left: auto;
