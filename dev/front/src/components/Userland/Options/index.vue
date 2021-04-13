@@ -13,6 +13,7 @@
       <div
         class="ui button"
         @click="$emit('moreInfo', `/reception/register`)"
+        tabindex="0"
       >
          register
       </div>
@@ -23,6 +24,7 @@
         v-if="!showParticipants"
         class="ui button showParticipants"
         @click="showParticipants = true"
+        tabindex="0"
       >
         participants
       </div>
@@ -30,6 +32,7 @@
         v-else
         @goTo="$emit('goTo', $event)"
         @hide="showParticipants = false"
+        tabindex="0"
       />
     </div>
 
@@ -37,6 +40,7 @@
       <div
         class="ui button"
         @click="$emit('startEdit')"
+        tabindex="0"
       > 
         options
       </div>
@@ -46,6 +50,7 @@
       <div
         class="ui button"
         @click="$store.dispatch('deleteUser', me)"
+        tabindex="0"
       >
         delete self
       </div>
@@ -105,7 +110,11 @@ export default {
   margin-top: 1vh;
   outline: none;
   cursor: pointer;
-
+}
+.button:focus {
+  box-shadow: 0 0 10px 0 var(--back);
+  outline: 2px solid blue;
+  /* background: green; */
 }
 
 </style>

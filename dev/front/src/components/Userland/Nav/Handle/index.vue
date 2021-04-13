@@ -6,6 +6,7 @@
         { hidden: !desiresNav }
       ]"
       @click="$emit('hideNav')"
+      tabindex="0"
     > 
       {{ isMobile ? '&lt; nav' : '&lt;' }}
     </span>
@@ -20,6 +21,7 @@
           { selected: !desiresList }
         ]"
         @click="$emit('showMap')"
+        tabindex="0"
       > 
         map 
       </span>
@@ -29,6 +31,7 @@
           { selected: desiresList }
         ]"
         @click="$emit('showList')"
+        tabindex="0"
       > 
         list 
       </span>
@@ -39,6 +42,7 @@
         'ui', 'navToggle', 'show',
         { hidden: desiresNav }
       ]"
+      tabindex="0"
       @click="$emit('showNav')"
     >nav &gt;</span>
   </div>
@@ -71,6 +75,12 @@ export default {
 
 #navHandle span {
   cursor: pointer;
+}
+
+span:focus {
+  box-shadow: 0 0 10px 0 var(--back);
+  outline: 2px solid blue;
+  /* background: green; */
 }
 
 .navToggle {

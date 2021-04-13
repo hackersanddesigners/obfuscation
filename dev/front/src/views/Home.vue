@@ -216,9 +216,9 @@ export default {
         if (this.isMobile) {
           self.isMobile = true
           this.$store.commit('visit')
-          this.$store.commit('register')
         }
 
+        this.$store.commit('register')
         
         // update the app store with the UID and user.
 

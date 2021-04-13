@@ -22,6 +22,7 @@
     <input 
       v-if="isMe(user)" 
       ref="input"
+      tabindex="-1"
       class="input"
       type="text" 
       placeholder="type message & press enter"
@@ -229,21 +230,19 @@ export default {
 
     // handle user input, triggered from parent.
 
-    trackInput(e) {
-      let 
-        input = this.$refs.input,
-        key = e.which || e.keyCode
+    trackInput(key) {
+      let input = this.$refs.input
 
 
       // focus input element on any key press.
 
-      if (input !== document.activeElement) {
-        input.focus()
-        if (key >= 48 && key <= 90) {
-          const char = String.fromCharCode(key)
-          input.value = char              
-        }
-      }
+      // if (input !== document.activeElement) {
+        // input.focus()
+      //   if (key >= 48 && key <= 90) {
+      //     const char = String.fromCharCode(key)
+      //     input.value = char              
+      //   }
+      // }
 
 
       // starting a messge with '~' will navigate 
@@ -311,7 +310,11 @@ export default {
       // the "send" action.
 
       } else if (key == 13) {
-        this.sendMessage()
+        if (msgs.length == 0) {
+          this.$store.commit('deregister')
+        } else {
+          this.sendMessage()
+        }
 
 
       //  ESAAPE KEY: clear and exit input.

@@ -87,6 +87,7 @@ const store = new Vuex.Store({
     setUID: (state, uid) => state.uid = uid,
 
     register: state => state.registered = true,
+    deregister: state => state.registered = false,
     visit: state => state.visited = true,
     block: state => state.blocked = true,
 

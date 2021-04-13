@@ -14,6 +14,7 @@
           { hidden: !desiresOverlay }
         ]"
         @click="$emit('hideOverlay')"
+        :tabindex="desiresOverlay ? 0 : -1"
       > hide &gt; </span>
       <span 
         :class="[
@@ -21,6 +22,7 @@
           { hidden: desiresOverlay }
         ]"
         @click="!dragging ? $emit('showOverlay') : null"
+        :tabindex="desiresOverlay ? -1 : 0"
       > 
         &lt; info
       </span>
@@ -32,6 +34,7 @@
         'ui', 'overlay', content.slug 
       ]"
       ref="overlay"
+      tabindex="-1"
     >
 
       <div 
@@ -219,6 +222,12 @@ export default {
   right: -100vw;
   opacity: 0;
   transition: all 0.2s ease;
+}
+
+span:focus {
+  box-shadow: 0 0 10px 0 var(--back);
+  outline: 2px solid blue;
+  /* background: green; */
 }
 
 #infoTitle {

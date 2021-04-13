@@ -9,6 +9,7 @@
       '--ground': territory.color,
       '--image': shape,
     }"
+    tabindex="0"
   >
     <span class="name">{{ territory.name }}</span>
     <span class="goto"> → </span>
@@ -37,10 +38,14 @@ export default {
 <style>
 
 .list-territory {
+  box-sizing: border-box;
   list-style: none;
-  margin: 0.5vh;
-  margin-bottom: 0.3vh;
-  font-size: var(--ui-font-size)
+  /* margin: 0.3vh 0.5vh; */
+  padding: 0.3vh 0.5vh;
+  margin-bottom: 0vh;
+  font-size: var(--ui-font-size);
+  border: 2px solid transparent;
+  border-radius: var(--ui-border-radius);
 }
 .list-territory:last-of-type {
   /* margin-bottom: 0.5vh; */
@@ -53,9 +58,14 @@ export default {
   border-bottom: 0px solid;
   transition: all 0.2s ease;
 }
+.list-territory:focus .name,
 .list-territory:hover .name {
   color: var(--ground);
 }
+/* .list-territory:focus {
+  border: 2px solid var(--ground);
+  outline: none;
+} */
 .list-territory.active {
   color: var(--ground);
 }

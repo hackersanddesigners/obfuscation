@@ -3,6 +3,7 @@
     muted
     :controls="controls"
     autoplay
+    tabindex="-1"
   >
   </video>
 </template>

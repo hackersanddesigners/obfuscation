@@ -46,11 +46,11 @@
     <div 
       id="userlandContainer" 
       ref="userlandContainer"
+      tabindex="-1"
       :class="[
         'LIFECYCLE' + lifecycle,
         { dragging: dragging },
       ]"
-      @keyup="handleInput($event)"
       @click="handleClick($event)"
     >
       
@@ -58,6 +58,7 @@
         v-if="true"
         id="userland" 
         ref="userland"
+        tabindex="-1"
         :class="location.slug"
         :style="{
           height: `${ 100 * scale }%`,
@@ -98,6 +99,7 @@
         <div 
           class="ui tag"
           @click="handleIslandClick('/' + location.slug)"
+          tabindex="0"
         > 
           #{{ location.slug }} 
         </div>
@@ -392,6 +394,10 @@ export default {
       this.setViewerPosition(e)
     })
 
+    document.addEventListener('keyup', (e) => {
+      this.handleInput(e)
+    })
+
     window.addEventListener('resize', () => {
       this.$store.commit('resize', {
         w: window.innerWidth,
@@ -416,13 +422,6 @@ export default {
         }
       }
     }
-
-    if (this.isMobile) {
-      setTimeout(() => {
-        console.log(document.activeElement)
-      }, 1000)
-    }
-
 
   },
 
@@ -575,15 +574,18 @@ export default {
         }, pause)
 
       } else {
+        if (this.firstScroll) {
           setTimeout(() => {
-            // if (this.$router.history.current.path !== 'reception') {
-            //   this.$router.push('/reception')
-            // } else {
-            //   this.route('/reception', false, false, true)
-            // }
+            const position = this.centerOf(this.territories['reception'].borders)
+            this.scrollTo(position, 'smooth')
+            this.notfound = false
+          }, 1000)  
+        } else {
+          setTimeout(() => {
             this.$router.go(-1)
             this.notfound = false
           }, 1000)
+        }
 
       }
 
@@ -616,7 +618,16 @@ export default {
 
     handleInput(e) {
       if (!this.editing && !this.isMobile) {
-        this.$refs.me[0].trackInput(e)
+        const key = e.which || e.keyCode
+        if (!document.activeElement.classList.contains('input')) {
+          if (key == 9) {
+            console.log(document.activeElement)
+          } else if (key == 13) {
+            document.activeElement.click()
+          }
+        } else {
+          this.$refs.me[0].trackInput(key)
+        }
       }
     },
 
@@ -898,6 +909,11 @@ main nav.hidden {
   font-size: var(--ui-font-size);
   color: var(--ui-back);
   background: var(--ui-front);
+}
+#location div:focus {
+  box-shadow: 0 0 10px 0 var(--back);
+  outline: 2px solid blue;
+  /* background: green; */
 }
 
 
