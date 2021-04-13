@@ -1,7 +1,9 @@
 <template>
   <div class="island">
     <div class="header">
-      <h1> {{ section.Title }} </h1>
+      <h1 :class="{ zxx: $store.state.desiresTexture }"> 
+        {{ section.Title }} 
+      </h1>
     </div>
   </div>
 </template>

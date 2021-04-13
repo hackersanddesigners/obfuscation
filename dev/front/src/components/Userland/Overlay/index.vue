@@ -37,7 +37,7 @@
       tabindex="-1"
     >
 
-      <div 
+      <article 
         v-if="!content.Sections"
         class="content"
       >
@@ -56,9 +56,9 @@
           :section="content"
         /> 
 
-      </div>     
+      </article>     
 
-      <div
+      <article
         v-else-if="content.Sections"
         class="content"
       >
@@ -77,7 +77,7 @@
           <div id="AanmelderRootDiv"></div>
         </div>
         
-      </div>
+      </article>
 
     </div>
 

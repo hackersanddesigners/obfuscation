@@ -8,6 +8,7 @@
     :class="{ 
       blur: notfound || !registered || editing || notifications.length > 0,
       touring: touring,
+      obfuscated: $store.state.desiresTexture,
       tourIsAtOverlay: tourIsAtOverlay,
       tourIsAtLocation: tourIsAtLocation,
       tourIsAtIsland: tourIsAtIsland,
@@ -851,8 +852,8 @@ main {
     url("../../assets/textures/1.png") repeat calc(20px * var(--scale))
   , url("../../assets/textures/2.png") repeat calc(20px * var(--scale))
   ;
-  --island-curve: calc(10 * var(--one));
-  --small-island-curve: calc(5 * var(--one));
+  --island-curve: calc(7 * var(--one));
+  --small-island-curve: calc(3 * var(--one));
   --island-shadow: 
       inset 0 0 
       calc(1 * var(--one))
@@ -924,9 +925,9 @@ main nav.hidden {
   overflow: scroll;
   transition: filter 0.3s ease;
   cursor: none;
+  z-index: 0;
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
-  z-index: 0;
 }
 #userlandContainer::-webkit-scrollbar {
   display: none;
@@ -948,10 +949,6 @@ main nav.hidden {
   position: absolute;
   top: 0; left: 0;
   width: 100%; height: 100%;
-  background: 
-    url("../../assets/textures/1.png") repeat calc(200px * var(--scale))
-  , url("../../assets/textures/2.png") repeat calc(400px * var(--scale))
-  ;
   overflow: hidden;
   opacity: 0.3;
 }
@@ -962,12 +959,7 @@ main nav.hidden {
   box-sizing: border-box;
   background-color: var(--island-back-color);
   box-shadow: var(--island-shadow);
-  border-radius: 
-    var(--small-island-curve)
-    var(--island-curve)
-    var(--small-island-curve)
-    var(--island-curve)
-  ;
+  border-radius: var(--small-island-curve);
   transition: all 0.2s ease;
 }
 .island::before {
@@ -975,7 +967,6 @@ main nav.hidden {
   position: absolute;
   top: 0; left: 0;
   width: 100%; height: 100%;
-  background: var(--island-back);
   border-radius: inherit;
   overflow: hidden;
   opacity: 0.5;
@@ -1042,6 +1033,23 @@ main nav.hidden {
 
 
 
+main.obfuscated #userland::before {
+  background: 
+    url("../../assets/textures/1.png") repeat calc(200px * var(--scale))
+  , url("../../assets/textures/2.png") repeat calc(400px * var(--scale))
+  ;
+}
+main.obfuscated .island {
+  border-radius: 
+    var(--small-island-curve)
+    var(--island-curve)
+    var(--small-island-curve)
+    var(--island-curve)
+  ;
+}
+main.obfuscated .island::before {
+  background: var(--island-back);
+}
 
 main.blur nav,
 main.blur #location,

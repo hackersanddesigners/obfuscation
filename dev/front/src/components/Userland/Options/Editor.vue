@@ -17,12 +17,14 @@
       <div class="form">
 
           <div class="name">
-            <span>Name: </span>
+            <label for="name">Name: </label>
             <input 
               ref="name" 
+              name="name"
               class="ui"
               type="text" 
               placeholder="pick a display name"
+              tabindex="0"
             />
           </div>
 
@@ -39,23 +41,53 @@
           </p>
 
           <div class="color">
-            <span>Color: </span>
+            <label for="color">Color: </label>
             <input 
               ref="color" 
+              name="color"
               class="ui"
               type="text" 
               data-jscolor
               @input="updateColor"
+              tabindex="0"
             /> 
           </div>
 
           <div class="messagesOptions">
-            <span>Message lifetime (days): </span>
+            <label for="lifetime">Message lifetime (days): </label>
             <input
               ref="messageLifetime" 
+              name="lifetime"
               class="ui"
               type="number"
-              placeholder="2"
+              placeholder="30"
+              tabindex="0"
+            />
+          </div>
+
+          <div class="texture">
+            <label for="texture">Obfuscated texture: </label>
+            <input
+              ref="texture" 
+              name="texture"
+              class="ui"
+              type="checkbox"
+              tabindex="0"
+              :checked="desiresTexture"
+              @click="$store.commit('toggleTexture')"
+            />
+          </div>
+
+          <div class="contrast">
+            <label for="contrast">Higher contrast: </label>
+            <input
+              ref="contrast" 
+              name="contrast"
+              class="ui"
+              type="checkbox"
+              tabindex="0"
+              :checked="desiresContrast"
+              @click="$store.commit('toggleContrast')"
             />
           </div>
 
@@ -65,6 +97,7 @@
             type="button" 
             value="save"
             @click="save" 
+            tabindex="0"
           >
 
       </div>
@@ -112,7 +145,9 @@ export default {
 
   computed: {
     ...mapState([
-      'registered'
+      'registered',
+      'desiresTexture',
+      'desiresContrast',
     ]),
     ...mapGetters([
       'me',
@@ -246,10 +281,15 @@ export default {
   display: flex;
   flex-direction: column;
 }
+.form label {
+  flex-shrink: 0;
+}
 
 .name,
 .color,
-.messagesOptions {
+.messagesOptions,
+.texture,
+.contrast {
   width: 100%;
   display: flex;
   align-items: center;
@@ -258,11 +298,22 @@ export default {
 }
 
 .messagesOptions {
-  margin: 2vh 0vh;
+  margin-top: 2vh;
 }
 .form .messagesOptions input {
   max-width: 100px;
   text-align: center;
+}
+
+.form .texture,
+.form .contrast {
+  justify-content: space-between;
+} 
+
+.form .texture input,
+.form .contrast input {
+  flex-shrink: 1;
+  max-width: 2vh;
 }
 
 input {
@@ -279,6 +330,12 @@ input {
 input[type="button"] {
   width: 100%;
   cursor: pointer;
+}
+input[type="checkbox"] {
+  margin-left: auto;
+  height: 2vh;
+  border: var(--ui-border);
+  border-radius: var(--ui-border-radius);
 }
 
 p.error  {

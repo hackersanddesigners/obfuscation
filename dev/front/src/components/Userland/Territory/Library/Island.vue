@@ -1,5 +1,5 @@
 <template>
-  <div class="island">
+  <div class="island resource">
     <a
       class="header"
       :href="src"
@@ -28,7 +28,7 @@ export default {
 </script>
 
 <style scoped>
-.island {
+.island.resource {
   --bevel:
     inset 0 
     calc(-0.7 * var(--one)) 
@@ -51,33 +51,33 @@ export default {
   border-radius: calc(1 * var(--one));
   transition: all 0.2s ease;
 }
-.island .header {
+.island.resource .header {
   text-decoration: none;
   cursor: none;
   z-index: 1;
   color: var(--ui-front);
   text-align: center;
 }
-.island .header h1 { 
+.island.resource .header h1 { 
   font-family: serif;
 }
-.island .header h3 {
+.island.resource .header h3 {
   font-family: sans-serif;
   font-weight: lighter;
 }
-.island:before {
+.island.resource:before {
   background: none;
 }
-.island:nth-of-type(1n) {
+.island.resource:nth-of-type(1n) {
   background: rgb(179,198,186);
 }
-.island:nth-of-type(2n) {
+.island.resource:nth-of-type(2n) {
   background: rgb(189,179,174);
 }
-.island:nth-of-type(3n) {
+.island.resource:nth-of-type(3n) {
   background: rgb(138,121,111);
 }
-.island:hover {
+.island.resource:hover {
   transform: translateX(calc(2 * var(--one)));
   box-shadow: var(--bevel);
 }

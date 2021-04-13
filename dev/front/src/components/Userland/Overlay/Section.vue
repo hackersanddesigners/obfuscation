@@ -1,12 +1,12 @@
 <template>
  <section>
     <div v-if="titleGoesFirst" class="header">
-      <h1 class="title">{{ title }}</h1>
-      <h3 class="subtitle">{{ subtitle }}</h3>
+      <h1 class="title" :class="{ zxx: $store.state.desiresTexture }">{{ title }}</h1>
+      <h3 class="byline subtitle">{{ subtitle }}</h3>
     </div>
     <div v-else class="header">
-      <h3 class="subtitle">{{ subtitle }}</h3>
-      <h1 class="title">{{ title }}</h1>
+      <h3 class="byline subtitle">{{ subtitle }}</h3>
+      <h1 class="title" :class="{ zxx: $store.state.desiresTexture }">{{ title }}</h1>
     </div>
 
     <SemanticList

@@ -65,6 +65,12 @@ const store = new Vuex.Store({
     scale: 10,
     widthFactor: 1,
     grid: false,
+    desiresTexture: 
+      localStorage.desiresTexture ? 
+      JSON.parse(localStorage.desiresTexture) : true,
+    desiresContrast: 
+      localStorage.desiresContrast ? 
+      JSON.parse(localStorage.desiresTexture) : false,
     windowSize: {
       w: window.innerWidth,
       h: window.innerHeight,
@@ -176,6 +182,15 @@ const store = new Vuex.Store({
     },
 
     // app interface mutations.
+
+    toggleTexture: state => {
+      state.desiresTexture = !state.desiresTexture
+      localStorage.desiresTexture = state.desiresTexture
+    },
+    toggleContrast: state => {
+      state.desiresContrast = !state.desiresContrast
+      localStorage.desiresContrast = state.desiresContrast
+    },
 
     setScale: (state, scale) => state.scale = scale,
     zoomIn: state => state.scale < 20 ? state.scale += 0.25 : null,
@@ -452,7 +467,9 @@ const store = new Vuex.Store({
       let userColors = {}
       for (let uid in state.users) {
         const user = state.users[uid]
-        userColors[`--${uid}`] = user.connected === true ? user.color : 'var(--disconnected)'
+        userColors[`--${uid}`] = 
+          state.desiresContrast ? 'black' : 
+          user.connected === true ? user.color : 'var(--disconnected)'
       }
       return userColors
     },

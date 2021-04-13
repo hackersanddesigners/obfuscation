@@ -1,7 +1,7 @@
 <template>
   <div 
     id="app"
-    :class="{ mobile: isMobile }"    
+    :class="{ mobile: isMobile }"  
   >
     <Home 
       :slug="slug"
@@ -145,8 +145,11 @@ a, a:hover, a:active, a:visited {
 
 h1 {
   font-size: 25pt;
-  font-family: 'zxx-noise';
   font-weight: normal;
+}
+
+.zxx {
+  font-family: 'zxx-noise';
 }
 
 h2 {
@@ -154,6 +157,7 @@ h2 {
 }
 
 h3,
+time,
 h4 { 
   font-size: 15pt;
   font-weight: normal;

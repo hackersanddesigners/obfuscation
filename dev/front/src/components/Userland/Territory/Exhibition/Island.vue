@@ -9,6 +9,7 @@
     <!-- <div class="header">
       <h1
         class="title"
+        :class="{ zxx: $store.state.desiresTexture }"
         @mousedown.stop="$router.push(`/exhibition/${ section.slug }`)"
       > 
         {{ section.Name }} 
@@ -107,7 +108,6 @@ export default {
 }
 .island .header h1 { 
   font-size: calc(3 * var(--one));
-  font-family: 'zxx-noise';
   font-weight: normal;
   text-align: center;
   cursor: pointer;

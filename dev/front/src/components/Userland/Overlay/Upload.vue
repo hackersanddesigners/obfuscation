@@ -12,7 +12,8 @@
       ref="title" 
       :class="[
         'ui', 'title',
-        { invalid: titleShort }
+        { invalid: titleShort,
+          zxx: $store.state.desiresTexture }
       ]"
       type="text" 
       required
@@ -160,7 +161,6 @@ section .status {
 }
 section .title {  
   font-size: 25pt;
-  font-family: 'zxx-noise';
   font-weight: normal;
   padding: 2px 10px;
   margin-top: 0.6vh;
