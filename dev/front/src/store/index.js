@@ -70,7 +70,7 @@ const store = new Vuex.Store({
       JSON.parse(localStorage.desiresTexture) : true,
     desiresContrast: 
       localStorage.desiresContrast ? 
-      JSON.parse(localStorage.desiresTexture) : false,
+      JSON.parse(localStorage.desiresContrast) : false,
     windowSize: {
       w: window.innerWidth,
       h: window.innerHeight,
