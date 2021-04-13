@@ -51,12 +51,14 @@ low(adapter).then(db => {
   // REQUESTS
 
   app.get('/users', async (req, res) => {
-    const users = db.get('users').filter(u => !u.deleted)
+    const users = db.get('users')
+    // .filter(u => !u.deleted)
     res.send(users)
   })
 
   app.get('/messages', async (req, res) => {
-    const messages = db.get('messages').filter(m => m.deleted === false)
+    const messages = db.get('messages')
+    // .filter(m => m.deleted === false)
     res.send(messages)
   })
 
