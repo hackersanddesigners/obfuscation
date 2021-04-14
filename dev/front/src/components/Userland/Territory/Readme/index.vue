@@ -32,19 +32,19 @@ export default {
   top: 15%; left: 40%;
 }
 .island:nth-of-type(3) {
-  top: 30%; left: 30%;
+  top: 20%; left: 30%;
 }
 .island:nth-of-type(4) {
-  top: 37%; left: 45%;
+  top: 30%; left: 45%;
 }
 .island:nth-of-type(5) {
-  top: 45%; left: 20%;
+  top: 35%; left: 20%;
 }
 .island:nth-of-type(6) {
-  top: 50%; left: 55%;
+  top: 40%; left: 55%;
 }
 .island:nth-of-type(7) {
-  top: 70%; left: 60%;
+  top: 50%; left: 40%;
 }
 
 </style>
