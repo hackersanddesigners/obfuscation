@@ -15,7 +15,7 @@ const store = new Vuex.Store({
 
     // initial values for application state.
 
-    version: 6,
+    version: 7,
     lifecycle: process.env.VUE_APP_LIFECYCLE || 0,
     save: true,
 
