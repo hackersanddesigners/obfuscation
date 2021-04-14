@@ -144,7 +144,7 @@ li .moderatorOptions .button {
 }
 
 .moderating li {
-  width: 500px;
+  width: 530px;
   flex-wrap: wrap;
   cursor: auto;
 }
