@@ -47,4 +47,8 @@ export default {
   top: 20%; left: 60%;
 }
 
+#privacy-policyIsland {
+  top: 52%; left: 50%;
+}
+
 </style>
