@@ -107,10 +107,14 @@ low(adapter).then(db => {
 
     socket.on('appearance', (user) => {
       io.sockets.emit('appearance', user)
+      if (user.connected == false) {
+        console.log(user.uid, 'disconnected')
+      }
       db.set(`users[${user.uid}].name`, user.name)
         .set(`users[${user.uid}].color`, user.color)
         .set(`users[${user.uid}].x`, user.x)
         .set(`users[${user.uid}].y`, user.y)
+        .set(`users[${user.uid}].connected`, user.connected ? user.connected : false)
         .set(`users[${user.uid}].messageLifetime`, user.messageLifetime)
         .write()
     })
