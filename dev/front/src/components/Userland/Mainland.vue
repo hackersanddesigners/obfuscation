@@ -409,9 +409,12 @@ export default {
     window.onbeforeunload = () => {
       if (this.me) {
         console.log('disconnecting')
-        this.$store.dispatch('updatePosition', {
+        this.$store.dispatch('updateAppearance', {
+          name: this.me.name,
+          color: this.me.color,
           x: this.me.x,
           y: this.me.y,
+          messageLifetime: this.me.messageLifetime,
           connected: false,
         })
         this.$store.dispatch('updateTyping', {

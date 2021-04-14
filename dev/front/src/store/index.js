@@ -121,7 +121,7 @@ const store = new Vuex.Store({
       state.users[color.uid].connected = true
     },
     setUserAppearance: (state, user) => {
-      state.users[user.uid].connected = true
+      state.users[user.uid].connected = user.connected ? user.connected : true
       state.users[user.uid].name = user.name
       state.users[user.uid].color = user.color
       state.users[user.uid].x = user.x
