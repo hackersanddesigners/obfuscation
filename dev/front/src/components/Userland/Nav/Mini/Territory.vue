@@ -21,11 +21,11 @@
      <path :fill="territory.color" :d="d"/>
     </svg>
 
-    <div class="background">
+    <!-- <div class="background">
       <vue-markdown>
         {{ territory.name }}
       </vue-markdown>
-    </div>
+    </div> -->
 
   </div>
 </template>
