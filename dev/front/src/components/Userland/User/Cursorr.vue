@@ -114,8 +114,10 @@ export default {
     // the $socket.
 
     sendMessage() {
-      const input = this.$refs.input
-      const message = this.constructMessage(input.value)
+      const 
+        input = this.$refs.input,
+        message = this.constructMessage(input.value),
+        msgs = this.messagesByUser(this.me)
 
       input.focus()
 
@@ -124,7 +126,6 @@ export default {
 
       if (this.navigation) {
         this.$router.push(input.value)
-
       }
 
       if (this.announcement) {
@@ -143,23 +144,27 @@ export default {
       }
 
 
-      // sanitize and send through $socket:
+        // sxanitize and send through $socket:
 
       if (message.content && message.content != ' ') {
-        this.$socket.client.emit('message', message)
+        if (msgs.length == 0 && (this.me.name.includes(this.me.uid))) {
+          this.$store.commit('deregister')
+        } else {
+          this.$socket.client.emit('message', message)
+        }
       }
+        
+
+        // clear variables for next event.
+
+        this.announcement = false
+        this.navigation = false
+        this.mention = false
+        this.stream = false
+        this.current = null
+        input.value = ''
+        input.placeholder = ''
       
-
-      // clear variables for next event.
-
-      this.announcement = false
-      this.navigation = false
-      this.mention = false
-      this.stream = false
-      this.current = null
-      input.value = ''
-      input.placeholder = ''
-    
     },
 
 
@@ -310,11 +315,7 @@ export default {
       // the "send" action.
 
       } else if (key == 13) {
-        if (msgs.length == 0) {
-          this.$store.commit('deregister')
-        } else {
-          this.sendMessage()
-        }
+        this.sendMessage()
 
 
       //  ESAAPE KEY: clear and exit input.
