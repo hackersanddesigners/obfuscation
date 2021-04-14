@@ -236,7 +236,7 @@ const store = new Vuex.Store({
 
     socket_position({ state, commit }, position) {
       if (position.uid !== state.uid) {
-        if (state.user[position.uid]) {
+        if (state.users[position.uid]) {
           commit('setUserPosition', position)
         } else {
           console.log(position.name, " not found.")
@@ -246,7 +246,7 @@ const store = new Vuex.Store({
 
     socket_typing({ state, commit }, text) {
       if (text.uid !== state.uid) {
-        if (state.user[text.uid]) {
+        if (state.users[text.uid]) {
           commit('setUserTyping', text)
         } else {
           console.log(text.name, " not found.")
