@@ -239,7 +239,7 @@ const store = new Vuex.Store({
         if (state.users[position.uid]) {
           commit('setUserPosition', position)
         } else {
-          console.log(position.name, " not found.")
+          console.log(position.uid, " not found.")
         }
       }
     },
@@ -249,7 +249,7 @@ const store = new Vuex.Store({
         if (state.users[text.uid]) {
           commit('setUserTyping', text)
         } else {
-          console.log(text.name, " not found.")
+          console.log(text.uid, " not found.")
         }
       }
     },
