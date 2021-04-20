@@ -91,7 +91,7 @@
           :message="message"
           :isCompatible="isCompatible"
           :isMe="message.authorUID === me.uid"
-          @goTo="goTo(userByName($event))"
+          @goTo="goTo(users[$event])"
         />
         
       </div>

@@ -36,7 +36,7 @@
       <span> — </span>
       <span 
         class="author"
-        @click.stop="$emit('goTo', message.author)"
+        @click.stop="$emit('goTo', message.authorUID)"
         >{{ message.author }}</span>
       <span 
         class="time"

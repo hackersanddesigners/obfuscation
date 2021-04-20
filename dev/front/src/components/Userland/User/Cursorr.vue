@@ -75,6 +75,11 @@ export default {
       mention: false,
       locationTimer: 0,
       timeoutID: null,
+      badWords: [
+        '<img',
+        '<video',
+        '<audio'
+      ]
     }
   },
 
@@ -146,7 +151,11 @@ export default {
 
         // sxanitize and send through $socket:
 
-      if (message.content && message.content != ' ') {
+      if (
+        message.content && 
+        message.content != ' ' &&
+        !this.badWords.some(v => message.content.includes(v))
+      ) {
         if (msgs.length == 0 && (this.me.name.includes(this.me.uid))) {
           this.$store.commit('deregister')
         } else {

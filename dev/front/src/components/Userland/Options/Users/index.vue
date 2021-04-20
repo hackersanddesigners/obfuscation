@@ -93,7 +93,7 @@ export default {
 
     authenticate() {
       const password = this.$refs.password.value
-      if (password === '0000') {
+      if (password === 'yellowsubmarine') {
         this.$store.dispatch('updateModerator', {
           moderator: true
         })
