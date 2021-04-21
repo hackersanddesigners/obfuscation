@@ -43,10 +43,11 @@
       >
 
         <Upload
-          v-if="content.slug === 'upload'"
+          v-if="isUpload"
           ref="upload"
           :sending="sending"
           :sent="sent"
+          :collection="content.collection"
           @sending="sending = !sending"
           @sent="sent = !sent, sending = false"
         />
@@ -82,7 +83,7 @@
     </div>
 
     <div 
-      v-if="content && content.slug === 'upload'"
+      v-if="content && isUpload"
       class="submitContainer"
     >
       <input 
@@ -90,6 +91,7 @@
         ref="submit" 
         class="ui submit"
         type="button" 
+        :collection="content.type"
         :value="sent ? 'submit another' : 'submit'"
         @click.stop="$refs.upload.submit" 
       >
@@ -145,7 +147,8 @@ export default {
   },
 
   computed: {
-    isMobile() { return this.$store.state.isMobile }
+    isMobile() { return this.$store.state.isMobile },
+    isUpload() { return this.content.slug === 'upload' || this.content.slug === 'submit' }
   },
 
   watch: {

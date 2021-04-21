@@ -1,5 +1,5 @@
 <template>
- <section>
+ <section :class="{ isLibrary: !isGlossary }">
    <div v-if="sent" class="status">
     <p>Post received!</p>
     <p>A moderator will review your submission before publishing it.</p>
@@ -9,26 +9,42 @@
   </div>
   <form v-else>
     <input 
-      ref="title" 
+      v-if="!isGlossary"
+      ref="author" 
       :class="[
-        'ui', 'title',
-        { invalid: titleShort,
-          zxx: $store.state.desiresTexture }
+        'ui', 'authors',
       ]"
       type="text" 
       required
-      placeholder="Enter term"
+      placeholder="Author(s)"
+      @input="bodyShort = false"
+    /> 
+    <p v-if="bodyShort" class="error">This field is required</p>
+
+    <input 
+      ref="title" 
+      :class="[
+        'ui', 'title',
+        { 
+          invalid: titleShort,
+          zxx: $store.state.desiresTexture,
+        }
+      ]"
+      type="text" 
+      required
+      :placeholder="titlePlaceholder"
       @input="titleShort = false"
     /> 
     <p v-if="titleShort" class="error">This field is required</p>
 
     <textarea 
+      v-if="isGlossary"
       ref="body" 
       :class="[
         'ui', 'body',
         { invalid: bodyShort }
       ]"
-      placeholder="Enter definition"
+      :placeholder="bodyPlaceholder"
       required
       @input="adjustHeight"
     /> 
@@ -41,11 +57,24 @@
         { invalid: sourceShort }
       ]"
       type="url" 
-      required
       placeholder="Enter source URL"
       @input="sourceShort = false"
     /> 
     <p v-if="sourceShort" class="error">This field is required</p>
+    <div 
+      v-if="!isGlossary"
+      class="fileupload"
+    >
+      <span>Or upload a file:</span>
+      <input 
+        ref="file" 
+        :class="['ui', 'footer']"
+        type="file" 
+        placeholder=""
+        @input="handleFile"
+      />
+    </div>
+    <p v-if="tooBig" class="error">File must be smaller than 20MB.</p>
   </form>
  </section>
 </template>
@@ -55,18 +84,22 @@ export default {
   name: 'Upload',
   props: [
     'sending',
-    'sent'
+    'sent',
+    'collection'
   ],
   data() {
     return {
       titleShort: false,
       bodyShort: false,
       sourceShort: false,
+      tooBig: false,
     }
   },
 
   computed: {
-
+    isGlossary() { return this.collection === 'glossary' },
+    titlePlaceholder() { return this.isGlossary ? 'Enter Term' : 'Title to display' },
+    bodyPlaceholder() { return this.isGlossary ? 'Enter definition' : 'Author(s)' }
   },
   watch: {
   },
@@ -74,13 +107,25 @@ export default {
   },
   mounted() {
 
-    this.$refs.title.focus()
+    if (this.isGlossary) {
+      this.$refs.title.focus()
+    } else {
+      this.$refs.author.focus()
+    }
 
 
   },
   methods: {
 
     submit() {
+      if (this.isGlossary) {
+        this.submitTerm()
+      } else {
+        this.submitResource()
+      }
+    },
+
+    submitTerm() {
       if (this.sent) {
         this.$emit('sent')
         return
@@ -99,18 +144,14 @@ export default {
         this.bodyShort = true
         return
       } 
-      // if (source.length == 0) {
-      //   this.sourceShort = true
-      //   return
-      // }
       
       if (!this.titleShort && !this.bodyShort) {
-        this.send(title, body, source)
+        this.sendTerm(title, body, source)
       }
 
     },
 
-    send(title, body, source) {
+    sendTerm(title, body, source) {
       this.$emit('sending')
 
       const 
@@ -133,6 +174,64 @@ export default {
           this.$emit('sent')
         })
         .catch(err => { console.log(err) })
+    },
+
+    submitResource() {
+      if (this.sent) {
+        this.$emit('sent')
+        return
+      }
+
+      const 
+        author = this.$refs.author.value,
+        name = this.$refs.title.value,
+        source = this.$refs.source.value,
+        file = this.$refs.file.files[0]
+
+      if (name.length == 0) {
+        this.titleShort = true
+        return
+      } 
+      if (author.length == 0) {
+        this.bodyShort = true
+        return
+      } 
+      
+      if (!this.titleShort && !this.bodyShort && !this.tooBig) {
+        this.sendResource(author, name, source, file)
+      }
+
+    },
+
+    sendResource(author, name, source, file) {
+      this.$emit('sending')
+
+      const 
+        collection = 'libraries',
+        data = {
+          Name: name,
+          author: author,
+          URL: source,
+          published_at: null
+        },
+        formData = new FormData()
+
+      formData.append('data', JSON.stringify(data))
+      if (file) {
+        formData.append('files.File', file, file.name)
+      }
+
+      this.$http
+        .post(`${ this.$apiURL }/${ collection }`, formData)
+        .then(res => { 
+          console.log(res.status) 
+          this.$emit('sent')
+        })
+        .catch(err => { console.log(err) })
+    },
+
+    handleFile(e) {
+      this.tooBig = (e.currentTarget.files[0].size > 20971520) // 20MB
     },
 
     adjustHeight() {
@@ -165,6 +264,11 @@ section .title {
   padding: 2px 10px;
   margin-top: 0.6vh;
 }
+section.isLibrary .title { 
+  font-family: 'Times New Roman', Times, serif;
+  padding: 2px 6px;
+} 
+
 section .body {
   box-sizing: border-box;
   margin-top: 1vh;
@@ -179,7 +283,17 @@ section .body {
 }
 section .footer {
   margin-top: 1vh;
-  font-size: 10pt;
+  font-size: 12.5pt;
+}
+section .fileupload {
+  display: flex;
+  align-items: center;
+}
+section .fileupload span {
+  margin-top: 1.5vh;
+  margin-right: 1vh;
+  flex-shrink: 0;
+  font-size: 12.5pt;
 }
 input,
 textarea {

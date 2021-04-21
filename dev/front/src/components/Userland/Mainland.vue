@@ -519,8 +519,10 @@ export default {
 
             if (position) {
               content = 
-                page === 'upload' ? { slug: page } :
-                this.territories[name].content[page]
+                page === 'upload' || page === 'submit' ? { 
+                  slug: page, 
+                  collection: name
+                } : this.territories[name].content[page]
 
               setTimeout(() => {
                 this.secondPath = false

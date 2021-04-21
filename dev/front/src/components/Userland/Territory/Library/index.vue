@@ -7,6 +7,13 @@
       :key="section.slug"
       :section="section"
     />
+    <Island
+      ref="upload"
+      class="submit"
+      :section="uploadSection"
+      :id="uploadSection.slug + 'Island'"
+      @click.native="$emit('moreInfo', `/library/${uploadSection.slug}`)"
+    />
   </div>
 </template>
 
@@ -17,6 +24,14 @@ export default {
   name: 'Library',
   components: { Island },
   props: [ 'content' ],
+  data() {
+    return {
+      uploadSection: {
+        Name: 'Submit a resource',
+        slug: 'upload'
+      }
+    }
+  }
 }
 </script>
 
@@ -29,7 +44,9 @@ export default {
   overflow: auto;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  
+  align-items: center; 
+}
+.submit {
+  margin-top: calc(3 * var(--one));
 }
 </style>
