@@ -224,8 +224,11 @@ const store = new Vuex.Store({
         }
         if (user.deleted) {
           commit('doNotSave')
-          localStorage.clear()
-          window.location.reload(true)
+          console.log("you're deleted")
+          setTimeout(() => {
+            localStorage.clear()
+            window.location.reload(true)
+          }, 2000)
         }
       }
     },
