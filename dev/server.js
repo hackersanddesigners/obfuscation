@@ -52,7 +52,7 @@ low(adapter).then(db => {
 
   app.get('/users', async (req, res) => {
     let users = db.get('users')
-    users = users.filter(u => u.deleted ? u.deleted === false : true)
+    users = users.filter(u => !u.deleted)
     res.send(users)
   })
 
