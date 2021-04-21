@@ -627,7 +627,7 @@ export default {
         const key = e.which || e.keyCode
         if (!document.activeElement.classList.contains('input')) {
           if (key == 9) {
-            console.log(document.activeElement)
+            // console.log(document.activeElement)
           } else if (key == 13) {
             document.activeElement.click()
           }

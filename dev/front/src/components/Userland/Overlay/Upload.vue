@@ -70,11 +70,23 @@
         ref="file" 
         :class="['ui', 'footer']"
         type="file" 
-        placeholder=""
         @input="handleFile"
       />
     </div>
     <p v-if="tooBig" class="error">File must be smaller than 20MB.</p>
+
+    <div 
+      v-if="!isGlossary"
+      class="postertoggle"
+    >
+      <span>Poster: </span>
+      <input 
+        ref="poster" 
+        :class="['ui', 'footer']"
+        type="checkbox" 
+        @input="isPoster != isPoster"
+      />
+    </div>
   </form>
  </section>
 </template>
@@ -93,6 +105,7 @@ export default {
       bodyShort: false,
       sourceShort: false,
       tooBig: false,
+      isPoster: false
     }
   },
 
@@ -186,7 +199,8 @@ export default {
         author = this.$refs.author.value,
         name = this.$refs.title.value,
         source = this.$refs.source.value,
-        file = this.$refs.file.files[0]
+        file = this.$refs.file.files[0],
+        isPoster = this.$refs.poster.checked
 
       if (name.length == 0) {
         this.titleShort = true
@@ -198,12 +212,12 @@ export default {
       } 
       
       if (!this.titleShort && !this.bodyShort && !this.tooBig) {
-        this.sendResource(author, name, source, file)
+        this.sendResource(author, name, source, file, isPoster)
       }
 
     },
 
-    sendResource(author, name, source, file) {
+    sendResource(author, name, source, file, isPoster) {
       this.$emit('sending')
 
       const 
@@ -212,9 +226,12 @@ export default {
           Name: name,
           author: author,
           URL: source,
-          published_at: null
+          published_at: null,
+          Poster: isPoster
         },
         formData = new FormData()
+
+        console.log(data)
 
       formData.append('data', JSON.stringify(data))
       if (file) {
@@ -285,15 +302,25 @@ section .footer {
   margin-top: 1vh;
   font-size: 12.5pt;
 }
-section .fileupload {
+section .fileupload,
+section .postertoggle {
   display: flex;
+  justify-content: flex-start;
   align-items: center;
 }
-section .fileupload span {
+section .fileupload span,
+section .postertoggle span {
   margin-top: 1.5vh;
   margin-right: 1vh;
+  margin-left: 0.5vh;
   flex-shrink: 0;
   font-size: 12.5pt;
+}
+section .postertoggle span {
+  margin-top: 1vh;
+}
+section .postertoggle input[type="checkbox"] {
+  width: auto;
 }
 input,
 textarea {

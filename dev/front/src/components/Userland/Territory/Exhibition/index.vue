@@ -5,6 +5,7 @@
       :id="section.slug + 'Island'"
       :key="section.slug"
       :section="section"
+      @moreInfo="$emit('moreInfo', `/exhibition/${section.slug}`)"
     />
   </div>
 </template>

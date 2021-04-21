@@ -27,8 +27,8 @@
       "required": false
     },
     "videos": {
-      "collection": "videos",
       "via": "sessions",
+      "collection": "videos",
       "dominant": true
     },
     "references": {

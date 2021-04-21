@@ -2,7 +2,8 @@
   "kind": "collectionType",
   "collectionName": "videos",
   "info": {
-    "name": "Videos"
+    "name": "Videos",
+    "description": ""
   },
   "options": {
     "increments": true,
@@ -29,8 +30,17 @@
       "targetField": "Name"
     },
     "sessions": {
-      "via": "videos",
-      "collection": "sessions"
+      "collection": "sessions",
+      "via": "videos"
+    },
+    "Track": {
+      "model": "file",
+      "via": "related",
+      "allowedTypes": [
+        "files"
+      ],
+      "plugin": "upload",
+      "required": false
     }
   }
 }

@@ -6,11 +6,11 @@
     ]"
   >
     
-    <!-- <div class="header">
+    <div class="header">
       <h1
         class="title"
         :class="{ zxx: $store.state.desiresTexture }"
-        @mousedown.stop="$router.push(`/exhibition/${ section.slug }`)"
+        @mousedown.stop="$emit('moreInfo', `/exhibition/${section.slug}`)"
       > 
         {{ section.Name }} 
       </h1>
@@ -29,9 +29,10 @@
         @mouseover.stop
         @mouseleave.stop
       >
-        <source :src="src" type="video/mp4">
+        <source :src="videoSrc" type="video/mp4">
+        <!-- <track :src="trackSrc" srclang="en" label="English" kind="subtitles" default> -->
       </video>
-    </div> -->
+    </div>
 
 
   </div>
@@ -51,9 +52,9 @@ export default {
     }
   },
   computed: {
-    src() {
-      return this.$apiURL + this.section.File.url
-    }
+    videoSrc() { return this.$apiURL + this.section.File.url },
+    // trackSrc() { return this.$apiURL + this.section.Track.url },
+    
   },
   created() {
   },
