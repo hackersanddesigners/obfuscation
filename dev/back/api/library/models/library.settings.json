@@ -39,6 +39,9 @@
     },
     "author": {
       "type": "richtext"
+    },
+    "Poster": {
+      "type": "boolean"
     }
   }
 }
