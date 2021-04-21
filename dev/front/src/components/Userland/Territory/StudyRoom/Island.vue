@@ -8,9 +8,7 @@
     <div class="info">
     
       <div class="header">
-        <h1
-          class="title"
-        > 
+        <h1 class="title" :class="{ zxx: $store.state.desiresTexture }"> 
           {{ session.Title }} 
         </h1>
       </div>
