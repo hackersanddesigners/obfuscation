@@ -6,7 +6,7 @@
     ]"
   >
     
-    <div class="header">
+    <!-- <div class="header">
       <h1
         class="title"
         :class="{ zxx: $store.state.desiresTexture }"
@@ -32,7 +32,7 @@
         <source :src="videoUrl" type="video/mp4">
         <track :src="trackUrl" srclang="en" label="English" kind="subtitles" default>
       </video>
-    </div>
+    </div> -->
 
 
   </div>
@@ -93,7 +93,7 @@ export default {
 <style scoped>
 .island {
   position: absolute;
-  max-width: calc(50 * var(--one));
+  width: calc(50 * var(--one));
   height: calc(30 * var(--one));
   margin: calc(6 * var(--one));
   padding: 0;
