@@ -24,13 +24,13 @@
     <div class="body">
       <video 
         ref="player"
-        :controls="active"
         :loop="active"
         @mouseover.stop
         @mouseleave.stop
+        crossorigin="anonymous"
       >
-        <source :src="videoSrc" type="video/mp4">
-        <!-- <track :src="trackSrc" srclang="en" label="English" kind="subtitles" default> -->
+        <source :src="videoUrl" type="video/mp4">
+        <track :src="trackUrl" srclang="en" label="English" kind="subtitles" default>
       </video>
     </div>
 
@@ -48,15 +48,30 @@ export default {
   ],
   data() {
     return {
-      active: false
+      active: false,
+      trackSrc: null,
     }
   },
   computed: {
-    videoSrc() { return this.$apiURL + this.section.File.url },
-    // trackSrc() { return this.$apiURL + this.section.Track.url },
+    videoUrl() { return this.$apiURL + this.section.File.url },
+    trackUrl() { 
+      return this.section.Track ? 
+        this.$apiURL + this.section.Track.url : null
+    },
     
   },
   created() {
+    // if (this.section.Track) {
+    //   this.$http
+    //     .get(this.trackUrl)
+    //     .then(response => {
+    //       console.log(response.data)
+    //       const blob = new Blob([response.data], { type: 'text/vtt' })
+    //       this.trackSrc = URL.createObjectURL(blob)
+    //       // track.setAttribute("src", URL.createObjectURL(blob));
+    //     })
+    //     .catch(error => console.log(error))
+    // }
   },
   methods: {
     play() {
@@ -139,11 +154,18 @@ export default {
   max-height: 100%;
 }
 
+.island .body video::cue {
+  /* background: red; */
+  padding-bottom: 1vh !important;
+}
 
 .island.active .header {
   height: 150%;
-  top: -25%;
+  top: -30%;
   background-color: transparent;
   justify-content: space-between;
+}
+.island.active .body video {
+  z-index: 1;
 }
 </style>
