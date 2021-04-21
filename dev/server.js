@@ -77,9 +77,6 @@ low(adapter).then(db => {
           socket.handshake.address.address
       console.log(`${user.uid} | (${user.name}) | ${ip} | ${user.deleted}`)
       io.sockets.emit('user', user)
-      db.get('users')
-        // .find({ uid: user.uid })
-        // .assign(user)
       db.set(`users[${user.uid}]`, user)
         .write()
     })
