@@ -51,7 +51,7 @@ low(adapter).then(db => {
   // REQUESTS
 
   app.get('/users', async (req, res) => {
-    const users = db.get('users')
+    let users = db.get('users')
     users = users.filter(u => u.deleted ? u.deleted === false : true)
     res.send(users)
   })
