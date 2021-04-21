@@ -350,9 +350,7 @@ const store = new Vuex.Store({
 
     blockUser({ state, commit, dispatch }, user ) {
       commit('setUserBlocked', user)
-      this._vm.$socket.client.emit(
-        'user', user
-      )
+      this._vm.$socket.client.emit('user', user)
 
       for(let uid in state.messages) {
         const message = state.messages[uid]
@@ -364,9 +362,8 @@ const store = new Vuex.Store({
 
     deleteUser({ state, commit, dispatch }, user ) {
       commit('setUserDeleted', user)
-      this._vm.$socket.client.emit(
-        'user', user
-      )
+      console.log(state.users[user.uid].deleted)
+      this._vm.$socket.client.emit('user', user)
 
       for(let uid in state.messages) {
         const message = state.messages[uid]
