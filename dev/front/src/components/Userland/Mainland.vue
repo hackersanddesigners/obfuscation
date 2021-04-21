@@ -420,7 +420,7 @@ export default {
         this.$store.dispatch('updateTyping', {
           typing: null,
         })
-        if (this.isMobile) {
+        if (this.isMobile || this.me.name.includes(this.me.uid)) {
           this.$store.dispatch('deleteUser', this.me)
           localStorage.clear()
         }

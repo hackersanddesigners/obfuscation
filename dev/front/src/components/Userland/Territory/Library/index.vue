@@ -1,12 +1,25 @@
 <template>
   <div>
-    <Island
-      v-for="section in content"
-      :id="section.slug + 'Island'"
-      :ref="section.slug"
-      :key="section.slug"
-      :section="section"
-    />
+    <div class="posterListContainer">
+      <div class="nonposters">
+        <Island
+          v-for="section in nonposters"
+          :id="section.slug + 'Island'"
+          :ref="section.slug"
+          :key="section.slug"
+          :section="section"
+        />
+      </div>
+      <div class="posters">
+        <Island
+          v-for="section in posters"
+          :id="section.slug + 'Island'"
+          :ref="section.slug"
+          :key="section.slug"
+          :section="section"
+        />
+      </div>
+    </div>
     <Island
       ref="upload"
       class="submit"
@@ -24,6 +37,11 @@ export default {
   name: 'Library',
   components: { Island },
   props: [ 'content' ],
+  computed: {
+    nonposters() { return Object.values(this.content).filter(l => l.Poster !== true) },
+    posters() { return Object.values(this.content).filter(l => l.Poster === true) },
+    
+  },
   data() {
     return {
       uploadSection: {
@@ -39,9 +57,24 @@ export default {
 .library {
   box-sizing: border-box;
   max-height: 100%;
-  margin: auto;
+  width: 100%;
+  margin: calc(20 * var(--one));;
   margin-top: calc(10 * var(--one));
   overflow: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+}
+.posterListContainer {
+  width: 100%;
+  display: flex;
+  align-items: flex-start; 
+}
+.posters,
+.nonposters {
+  flex-basis: 50%;
+  box-sizing: border-box;
+  max-height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center; 
