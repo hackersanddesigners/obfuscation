@@ -14,7 +14,7 @@ const api = {
         axios
           .get(URL + 'users')
           .then((response) => { 
-            resolve(this.filterDeleted(response.data)) 
+            resolve(this.buildObject(response.data)) 
           })
           .catch((error) => { reject(error) })
       })
@@ -26,7 +26,7 @@ const api = {
         axios
           .get(URL + 'messages')
           .then((response) => { 
-            resolve(this.filterDeleted(response.data)) 
+            resolve(this.buildObject(response.data)) 
           })
           .catch((error) => { reject(error) })
       })
@@ -110,10 +110,18 @@ const api = {
       })
     },
 
+    buildObject(arr) {
+      const obj = {}
+      for (let i = 0; i < arr.length; i++) {
+        obj[arr[i].uid] = arr[i]
+      }
+      return obj
+    },
+
     filterDeleted(array) {
       for (let key in array) {
         if (array[key].deleted === true) {
-          // console.log(array[key].uid)
+          console.log(array[key].uid)
           delete array[key]
         }
       }

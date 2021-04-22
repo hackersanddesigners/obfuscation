@@ -10,6 +10,7 @@
 </template>
 <script>
 import Hls from 'hls.js'
+// import videoJS from 'video.js'
 
 export default {
   name: 'Video',
@@ -88,7 +89,7 @@ export default {
     }
 
     if (this.playbackId)  {
-      // this.updateVideo()
+      this.updateVideo()
     }
 
     const prefixes = ["", "webkit", "moz", "ms"]
@@ -122,6 +123,8 @@ export default {
       const sourceUrl = this.src(playbackId)
       const video = this.$el
 
+      console.log("src:", sourceUrl)
+
       // If HLS.js is supported on this platform
 
       if (Hls.isSupported()) {
@@ -141,6 +144,12 @@ export default {
           video.play()
         })
       }
+
+      // let myVideo = videoJS(video)
+      // myVideo.src([{
+      //   type: "application/x-mpegURL", src: sourceUrl
+      // }])
+      // myVideo.fluid(true)
 
     }
   }

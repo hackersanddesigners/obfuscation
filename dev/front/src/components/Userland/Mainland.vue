@@ -363,6 +363,8 @@ export default {
 
     this.checkCompatibility()
 
+    console.log(this.users)
+
   },
 
   mounted() {
