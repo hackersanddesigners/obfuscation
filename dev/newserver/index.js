@@ -22,7 +22,7 @@ mongoose.Promise = require("bluebird")
 dotenv.config()
 
 const 
-  root = path.resolve(__dirname, 'front/dist'),
+  root = path.resolve(__dirname, '../front/dist'),
   port = process.env.PORT || 3090
 
 
