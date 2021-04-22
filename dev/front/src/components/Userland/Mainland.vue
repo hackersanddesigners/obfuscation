@@ -449,6 +449,7 @@ export default {
 
 
         } else if (message.stream) {
+          console.log(message.content)
           this.$store.commit('setStream', 
             message.content.replace('/stream ', ''))
         }

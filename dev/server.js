@@ -144,7 +144,6 @@ low(adapter).then(db => {
         delete o['users'][uid]
       }
     }
-    db.set('users', o['users'])
     for (let uid in o['messages']) {
       const message = o['messages'][uid]
       if (message.deleted === true) {
@@ -152,6 +151,7 @@ low(adapter).then(db => {
         delete o['messages'][uid]
       }
     }
+    db.set('users', o['users'])
     db.set('messages', o['messages'])
     console.log(o)
   }
