@@ -24,7 +24,7 @@
             authenticating = true
           "
         >
-          <span v-if="moderating">—</span>
+          <span v-if="moderating"> — </span>
           <span v-else>M</span>
         </span>
         <input 
@@ -40,6 +40,15 @@
     </div>
 
     <ul>
+      <li 
+        v-if="moderating"
+        class="deleteUnamed"
+      >
+        <span 
+          class="ui button delete"
+          @click.stop="$store.dispatch('deleteAllUnamed')"
+        >delete all unnamed users</span>
+      </li>
       <Label
         v-for="user in (moderating ? connectedUsersFirst : connectedUsers)"
         :key="user.uid"
@@ -151,5 +160,22 @@ export default {
   margin: 0;
   padding: 0;
   overflow: scroll;
+}
+
+li.deleteUnamed {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+li.deleteUnamed .button {
+  cursor: pointer;
+  box-shadow: none;
+  color: red;
+  font-size: 14pt;
+  margin: 0.5vh;
+  border: 1.5px solid red;
+  padding: 5px 15px;
+  border-radius: 20px;
+
 }
 </style>

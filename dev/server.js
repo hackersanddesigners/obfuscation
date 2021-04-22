@@ -64,8 +64,26 @@ low(adapter).then(db => {
 
   app.use(fallback('index.html', { root }))
 
+  // deleteing users 
 
-
+  let o = db.getState()
+  for (let uid in o['users']) {
+    const user = o['users'][uid]
+    if (user.deleted === true) {
+      console.log(user.uid , 'deleted')
+      delete o['users'][uid]
+    }
+  }
+  db.set('users', o['users'])
+  for (let uid in o['messages']) {
+    const message = o['messages'][uid]
+    if (message.deleted === true) {
+      console.log(message.uid, 'deleted')
+      delete o['messages'][uid]
+    }
+  }
+  db.set('messages', o['messages'])
+  console.log(o)
 
   // SOCKETS
 

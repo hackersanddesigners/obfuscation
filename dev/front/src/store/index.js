@@ -387,6 +387,16 @@ const store = new Vuex.Store({
       )
     },
 
+    deleteAllUnamed({ state, dispatch }) {
+      for (let uid in state.users) {
+        const user = state.users[uid] 
+        if (user && user.name && user.name.includes(user.uid) && user.connected == false) {
+          console.log('deleting ', user.name)
+          dispatch('deleteUser', user)
+        } 
+      }
+    }
+
 
   },
 
