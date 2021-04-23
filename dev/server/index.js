@@ -24,7 +24,8 @@ dotenv.config()
 
 const 
   root = path.resolve(__dirname, '../front/dist'),
-  port = process.env.PORT || 3090
+  port = process.env.PORT || 3090,
+  room = 'obfuscation'
 
 
 // EXPRESS CONFIGURATION
@@ -127,7 +128,9 @@ mongoose.connection.once('open', () => {
 
   io.on('connection', socket => {
 
-    // console.log(io.sockets.clients())
+    // socket.join(room)
+
+    // console.log(io.sockets.adapter.rooms.get(room))
     
     socket.on('user', user => {
       io.sockets.emit('user', user)
@@ -165,16 +168,18 @@ mongoose.connection.once('open', () => {
     })
 
     socket.on('message', message => {
-      console.log('received message, relaying')
       io.sockets.emit('message', message)
-      console.log('messaged relayed, updating mongo')
       message.deleted == true ?
         findMessageAndDelete(message) :
         findMessageAndUpdate(message)
     })
 
     socket.on('disconnect', reason => {
-      console.log('socket disconnect:', reason)
+      console.log('socket disconnect:', socket.rooms, reason)
+    })
+    
+    socket.on('reconnect_attempt', () => {
+      console.log(socket.id, 'recconnect attempt')
     })
 
 
