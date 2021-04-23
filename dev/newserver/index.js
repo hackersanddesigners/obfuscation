@@ -73,8 +73,7 @@ const
     const conditions = { uid: user.uid }
     User.findOneAndDelete(conditions, (err, res) => {
       if (err) console.log(err)
-      console.log('deleted user', user.uid)
-      // console.log(`${res.uid} | (${res.name}) | deleted`) 
+      console.log(`${res.uid} | (${res.name}) | deleted`) 
     })
   },
 
@@ -82,8 +81,7 @@ const
     const conditions = { uid: message.uid }
     Message.findOneAndDelete(conditions, (err, res) => {
       if (err) console.log(err)
-      console.log('deleted message', message.uid)
-      // console.log(`${res.uid} | ${res.author}: ${res.content} | deleted`) 
+      console.log(`${res.uid} | ${res.author}: ${res.content} | deleted`) 
     })
   }
 
