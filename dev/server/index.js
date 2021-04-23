@@ -126,6 +126,8 @@ mongoose.connection.once('open', () => {
   // SOCKETS
 
   io.on('connection', socket => {
+
+    // console.log(io.sockets.clients())
     
     socket.on('user', user => {
       io.sockets.emit('user', user)
@@ -167,6 +169,10 @@ mongoose.connection.once('open', () => {
       message.deleted == true ?
         findMessageAndDelete(message) :
         findMessageAndUpdate(message)
+    })
+
+    socket.on('disconnect', reason => {
+      console.log('socket disconnect:', reason)
     })
 
 
