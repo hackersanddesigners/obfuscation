@@ -97,17 +97,6 @@ mongoose.connection.on('error', () => {
 mongoose.connection.once('open', () => {
   console.log('Connected to MongoDB')
 
-    const 
-    axios = require('axios'),
-    importURL = process.env.IMPORTURL,
-    oldUsersCollection = 'users',
-    oldMessagesCollection = 'messages'
-
-  if (importURL) {
-    importOldUsers(importURL, oldUsersCollection)
-    importOldMessages(importURL, oldMessagesCollection)
-    
-  } else {
 
   // REQUESTS
 
@@ -184,52 +173,61 @@ mongoose.connection.once('open', () => {
 
   })
 
-}
 
 
 
 
+  //   const 
+  //   axios = require('axios'),
+  //   importURL = process.env.IMPORTURL,
+  //   oldUsersCollection = 'users',
+  //   oldMessagesCollection = 'messages'
+
+  // if (importURL) {
+  //   importOldUsers(importURL, oldUsersCollection)
+  //   importOldMessages(importURL, oldMessagesCollection)
+  // }
   
-  function importOldUsers( oldURL, oldCollection ) {
-    axios
-      .get(importURL + oldCollection)
-      .then(result => {
-        const users = result.data
-        for (let uid in users) {
-          const user = users[uid]
-          if (
-            (user.uid) && 
-            !(user.deleted == true) &&
-            !(user.name.includes(user.uid))
-          ) {
-            findUserAndUpdate(user, 'imported')
-          } else {
-            findUserAndDelete(user)
-          }
-        }
-      })
-      .catch(error => console.log(error))
-  }
+  // function importOldUsers( oldURL, oldCollection ) {
+  //   axios
+  //     .get(importURL + oldCollection)
+  //     .then(result => {
+  //       const users = result.data
+  //       for (let uid in users) {
+  //         const user = users[uid]
+  //         if (
+  //           (user.uid) && 
+  //           !(user.deleted == true) &&
+  //           !(user.name.includes(user.uid))
+  //         ) {
+  //           findUserAndUpdate(user, 'imported')
+  //         } else {
+  //           findUserAndDelete(user)
+  //         }
+  //       }
+  //     })
+  //     .catch(error => console.log(error))
+  // }
 
-  function importOldMessages( oldURL, oldCollection ) {
-    axios
-      .get(importURL + oldCollection)
-      .then(result => {
-        const messages = result.data
-        for (let uid in messages) {
-          const message = messages[uid]
-          if (
-            (message.uid) && 
-            !(message.deleted == true)
-          ) {
-            findMessageAndUpdate(message)
-          } else {
-            findMessageAndDelete(message)
-          }
-        }
-      })
-      .catch(error => console.log(error))
-  }
+  // function importOldMessages( oldURL, oldCollection ) {
+  //   axios
+  //     .get(importURL + oldCollection)
+  //     .then(result => {
+  //       const messages = result.data
+  //       for (let uid in messages) {
+  //         const message = messages[uid]
+  //         if (
+  //           (message.uid) && 
+  //           !(message.deleted == true)
+  //         ) {
+  //           findMessageAndUpdate(message)
+  //         } else {
+  //           findMessageAndDelete(message)
+  //         }
+  //       }
+  //     })
+  //     .catch(error => console.log(error))
+  // }
 
 
 
