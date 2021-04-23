@@ -175,9 +175,9 @@ mongoose.connection.once('open', () => {
     })
 
     socket.on('disconnect', reason => {
-      console.log('socket disconnect:', socket.rooms, reason)
+      console.log(socket.id, 'disconnect:', reason)
     })
-    
+
     socket.on('reconnect_attempt', () => {
       console.log(socket.id, 'recconnect attempt')
     })
