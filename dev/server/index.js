@@ -11,7 +11,8 @@ const io = require('socket.io')(http, {
     methods: ["GET", "POST"],
     credentials: false
   },
-  serveClient: false
+  serveClient: false,
+  perMessageDeflate: false,
 })
 const mongoose = require("mongoose")
 mongoose.Promise = require("bluebird")
