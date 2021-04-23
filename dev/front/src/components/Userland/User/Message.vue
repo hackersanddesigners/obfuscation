@@ -80,7 +80,6 @@ export default {
   computed: {
     moderator() { return this.$store.getters.me.moderator }, 
     blur() {
-      console.log(this.message.authorUID)
       if (this.isCompatible) {
         const
           now = this.now,

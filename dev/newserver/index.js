@@ -41,7 +41,7 @@ app.use('/', express.static(root))
 // MONGOOSE CONFIGURATION & FUNCTIONS
 
 const
-  mURL = "mongodb://localhost:27018/",
+  mURL = "mongodb://localhost",
   mPort = process.env.MONGOPORT || 27018,
   mOptions = { useNewUrlParser: true, useUnifiedTopology: true },
   User = require("./models/User"),
@@ -176,12 +176,14 @@ mongoose.connection.once('open', () => {
 
   const 
     axios = require('axios'),
-    importURL = 'https://3rd.obfuscationworkshop.org/',
+    importURL = process.env.IMPORTURL,
     oldUsersCollection = 'users',
     oldMessagesCollection = 'messages'
 
-  importOldUsers(importURL, oldUsersCollection)
-  importOldMessages(importURL, oldMessagesCollection)
+  if (importURL) {
+    importOldUsers(importURL, oldUsersCollection)
+    importOldMessages(importURL, oldMessagesCollection)
+  }
 
 
   function importOldUsers( oldURL, oldCollection ) {
