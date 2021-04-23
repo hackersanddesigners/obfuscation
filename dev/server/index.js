@@ -13,6 +13,7 @@ const io = require('socket.io')(http, {
   },
   serveClient: false,
   perMessageDeflate: false,
+  transports: ['websocket'],
 })
 const mongoose = require("mongoose")
 mongoose.Promise = require("bluebird")

@@ -33,7 +33,7 @@ const url = process.env.VUE_APP_URL
 
 Vue.use(
   VueSocketIOExt, 
-  io(url),
+  io(url, { transports: ['websocket'] }),
   { store }
 )
 
