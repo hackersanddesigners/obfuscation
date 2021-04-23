@@ -165,7 +165,9 @@ mongoose.connection.once('open', () => {
     })
 
     socket.on('message', message => {
+      console.log('received message, relaying')
       io.sockets.emit('message', message)
+      console.log('messaged relayed, updating mongo')
       message.deleted == true ?
         findMessageAndDelete(message) :
         findMessageAndUpdate(message)
