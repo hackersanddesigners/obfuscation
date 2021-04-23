@@ -15,6 +15,7 @@ Vue.config.productionTip = false
 
 Vue.prototype.$http = Axios
 Vue.prototype.$apiURL = process.env.VUE_APP_API_URL
+Vue.prototype.$sokURL = process.env.VUE_APP_URL
 Vue.prototype.$aanURL = process.env.VUE_APP_AAN_URL
 Vue.prototype.$publicPath = process.env.BASE_URL || '/'
 Vue.prototype.$env = process.env.NODE_ENV
