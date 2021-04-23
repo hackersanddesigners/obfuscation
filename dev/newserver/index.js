@@ -97,6 +97,18 @@ mongoose.connection.on('error', () => {
 mongoose.connection.once('open', () => {
   console.log('Connected to MongoDB')
 
+    const 
+    axios = require('axios'),
+    importURL = process.env.IMPORTURL,
+    oldUsersCollection = 'users',
+    oldMessagesCollection = 'messages'
+
+  if (importURL) {
+    importOldUsers(importURL, oldUsersCollection)
+    importOldMessages(importURL, oldMessagesCollection)
+    
+  } else {
+
   // REQUESTS
 
   app.get('/users', async (req, res) => {
@@ -172,20 +184,12 @@ mongoose.connection.once('open', () => {
 
   })
 
+}
 
 
-  const 
-    axios = require('axios'),
-    importURL = process.env.IMPORTURL,
-    oldUsersCollection = 'users',
-    oldMessagesCollection = 'messages'
-
-  if (importURL) {
-    importOldUsers(importURL, oldUsersCollection)
-    importOldMessages(importURL, oldMessagesCollection)
-  }
 
 
+  
   function importOldUsers( oldURL, oldCollection ) {
     axios
       .get(importURL + oldCollection)
