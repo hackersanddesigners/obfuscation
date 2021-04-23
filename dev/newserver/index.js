@@ -42,6 +42,7 @@ app.use('/', express.static(root))
 
 const
   mURL = "mongodb://localhost:27018/",
+  mPort = process.env.MONGOPORT || 27018,
   mOptions = { useNewUrlParser: true, useUnifiedTopology: true },
   User = require("./models/User"),
   Message = require("./models/Message"),
@@ -72,7 +73,8 @@ const
     const conditions = { uid: user.uid }
     User.findOneAndDelete(conditions, (err, res) => {
       if (err) console.log(err)
-      console.log(`${res.uid} | (${res.name}) | deleted`) 
+      console.log('deleted user', user.uid)
+      // console.log(`${res.uid} | (${res.name}) | deleted`) 
     })
   },
 
@@ -80,12 +82,13 @@ const
     const conditions = { uid: message.uid }
     Message.findOneAndDelete(conditions, (err, res) => {
       if (err) console.log(err)
-      console.log(`${res.uid} | ${res.author}: ${res.content} | deleted`) 
+      console.log('deleted message', message.uid)
+      // console.log(`${res.uid} | ${res.author}: ${res.content} | deleted`) 
     })
   }
 
 
-mongoose.connect(mURL, mOptions)
+mongoose.connect(`${mURL}:${mPort}`, mOptions)
 
 mongoose.connection.on('error', () => {
   console.log('Connection to MongoDB failed.')
@@ -122,44 +125,44 @@ mongoose.connection.once('open', () => {
 
   // SOCKETS
 
-  io.on('connection', (socket) => {
+  io.on('connection', socket => {
     
-    socket.on('user', (user) => {
+    socket.on('user', user => {
       io.sockets.emit('user', user)
       user.deleted == true ?
         findUserAndDelete(user) :
         findUserAndUpdate(user, 'connected')
     })
 
-    socket.on('appearance', (user) => {
+    socket.on('appearance', user => {
       io.sockets.emit('appearance', user)
       const status = user.connected == false ? 'disconnected' : 'appearance'
       findUserAndUpdate(user, status)
     })
 
-    socket.on('block', (user) => {
+    socket.on('block', user => {
       io.sockets.emit('block', user)
       findUserAndUpdate(user, 'blocked')
     })
 
-    socket.on('moderator', (user) => {
+    socket.on('moderator', user => {
       io.sockets.emit('moderator', user)
       findUserAndUpdate(user, 'moderator')
     })
     
-    socket.on('position', (position) => {
+    socket.on('position', position => {
       io.sockets.emit('position', position)
     })
 
-    socket.on('typing', (text) => {
+    socket.on('typing', text => {
       io.sockets.emit('typing', text)
     })
 
-    socket.on('color', (color) => {
+    socket.on('color', color => {
       io.sockets.emit('color', color)
     })
 
-    socket.on('message', (message) => {
+    socket.on('message', message => {
       io.sockets.emit('message', message)
       message.deleted == true ?
         findMessageAndDelete(message) :
@@ -168,6 +171,61 @@ mongoose.connection.once('open', () => {
 
 
   })
+
+
+
+  const 
+    axios = require('axios'),
+    importURL = 'https://3rd.obfuscationworkshop.org/',
+    oldUsersCollection = 'users',
+    oldMessagesCollection = 'messages'
+
+  importOldUsers(importURL, oldUsersCollection)
+  importOldMessages(importURL, oldMessagesCollection)
+
+
+  function importOldUsers( oldURL, oldCollection ) {
+    axios
+      .get(importURL + oldCollection)
+      .then(result => {
+        const users = result.data
+        for (let uid in users) {
+          const user = users[uid]
+          if (
+            (user.uid) && 
+            !(user.deleted == true) &&
+            !(user.name.includes(user.uid))
+          ) {
+            findUserAndUpdate(user, 'imported')
+          } else {
+            findUserAndDelete(user)
+          }
+        }
+      })
+      .catch(error => console.log(error))
+  }
+
+  function importOldMessages( oldURL, oldCollection ) {
+    axios
+      .get(importURL + oldCollection)
+      .then(result => {
+        const messages = result.data
+        for (let uid in messages) {
+          const message = messages[uid]
+          if (
+            (message.uid) && 
+            !(message.deleted == true)
+          ) {
+            findMessageAndUpdate(message)
+          } else {
+            findMessageAndDelete(message)
+          }
+        }
+      })
+      .catch(error => console.log(error))
+  }
+
+
 
 
   // HTTP SERVER

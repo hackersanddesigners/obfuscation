@@ -532,6 +532,7 @@ const store = new Vuex.Store({
 
     notDeletedMessages: (state, getters) => {
       return getters.messagesArray.filter(m => (
+        state.users[m.authorUID] &&
         m.uid && 
         !m.deleted && 
         !m.navigation &&
