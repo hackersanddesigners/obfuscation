@@ -130,9 +130,10 @@ mongoose.connection.once('open', () => {
 
   io.on('connection', socket => {
 
-    // socket.join(room)
+    socket.join(room)
 
-    // console.log(io.sockets.adapter.rooms.get(room))
+    const count = Array.from(io.sockets.adapter.rooms.get(room)).length
+    console.log(socket.id, 'connected, total:', count)
     
     socket.on('user', user => {
       io.sockets.emit('user', user)
@@ -180,7 +181,7 @@ mongoose.connection.once('open', () => {
     })
 
     socket.on('disconnect', reason => {
-      console.log(socket.id, 'disconnect:', reason)
+      console.log(socket.id, 'disconnect:', reason, 'total:', count)
     })
 
     socket.on('reconnect_attempt', () => {
