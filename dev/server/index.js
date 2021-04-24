@@ -12,6 +12,7 @@ const io = require('socket.io')(http, {
     credentials: false
   },
   serveClient: false,
+  // connectTimeout: 45000,
   perMessageDeflate: false,
   transports: ['websocket'],
 })
@@ -157,15 +158,18 @@ mongoose.connection.once('open', () => {
     })
     
     socket.on('position', position => {
-      io.sockets.emit('position', position)
+      // io.sockets.emit('position', position)
+      socket.broadcast.emit('position', position)
     })
 
     socket.on('typing', text => {
-      io.sockets.emit('typing', text)
+      // io.sockets.emit('typing', text)
+      socket.broadcast.emit('typing', text)
     })
 
     socket.on('color', color => {
-      io.sockets.emit('color', color)
+      // io.sockets.emit('color', color)
+      socket.broadcast.emit('color', color)
     })
 
     socket.on('message', message => {
