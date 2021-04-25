@@ -16,11 +16,14 @@ const io = require('socket.io')(http, {
   perMessageDeflate: false,
   transports: ['websocket'],
 })
+const redis = require('socket.io-redis')
 const mongoose = require("mongoose")
 mongoose.Promise = require("bluebird")
 
 
 // DEFAULTS
+
+// :6379
 
 dotenv.config()
 
@@ -126,6 +129,9 @@ mongoose.connection.once('open', () => {
   app.use(fallback('index.html', { root }))
 
 
+  const bindListeners = io => {
+  
+
   // SOCKETS
 
   io.on('connection', socket => {
@@ -190,6 +196,13 @@ mongoose.connection.once('open', () => {
 
 
   })
+
+  }
+
+  // Add redis adapter
+
+  io.adapter(redis({ host: '127.0.0.1', port: 6379 }))
+  bindListeners(io)
 
 
   // HTTP SERVER

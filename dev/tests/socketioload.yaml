@@ -1,5 +1,6 @@
 config:
-  target: "https://obfuscation.karls.computer"
+  # target: "https://obfuscation.karls.computer"
+  target: "https://3rd.obfuscationworkshop.org"
   socketio:
     transports: ["websocket"]
   engines:
