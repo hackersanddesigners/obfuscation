@@ -30,8 +30,8 @@
       "targetField": "Name"
     },
     "sessions": {
-      "collection": "sessions",
-      "via": "videos"
+      "via": "videos",
+      "collection": "sessions"
     },
     "Track": {
       "model": "file",

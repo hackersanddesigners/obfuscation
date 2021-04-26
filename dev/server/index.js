@@ -12,7 +12,6 @@ const io = require('socket.io')(http, {
     credentials: false
   },
   serveClient: false,
-  // connectTimeout: 45000,
   perMessageDeflate: false,
   transports: ['websocket'],
 })
@@ -27,7 +26,14 @@ dotenv.config()
 const 
   root = path.resolve(__dirname, '../front/dist'),
   port = process.env.PORT || 3090,
-  room = 'obfuscation'
+  room = 'obfuscation',
+  maxLiveCount = 100,
+  getCount = () => (
+    io.sockets.adapter.rooms.get(room) ?
+    Array.from(io.sockets.adapter.rooms.get(room)).length : 0
+  )
+
+let count = getCount()
 
 
 // EXPRESS CONFIGURATION
@@ -91,11 +97,9 @@ const
 
 
 mongoose.connect(`${mURL}:${mPort}`, mOptions)
-
-mongoose.connection.on('error', () => {
-  console.log('Connection to MongoDB failed.')
+mongoose.connection.on('error', () => { 
+  console.log('Failed to connect to MongoDB') 
 })
-
 mongoose.connection.once('open', () => {
   console.log('Connected to MongoDB')
 
@@ -106,7 +110,6 @@ mongoose.connection.once('open', () => {
     User
       .find({})
       .then(users  =>  {
-        // console.log(users)
         res.json(users)
       })
   })
@@ -115,7 +118,6 @@ mongoose.connection.once('open', () => {
     Message
       .find({})
       .then(messages  =>  {
-        // console.log(messages)
         res.json(messages)
       })
   })
@@ -125,15 +127,6 @@ mongoose.connection.once('open', () => {
 
   app.use(fallback('index.html', { root }))
 
-
-  const getCount = () => (
-    io.sockets.adapter.rooms.get(room) ?
-    Array.from(io.sockets.adapter.rooms.get(room)).length : 0
-  )   
-
-  let 
-    count = getCount(),
-    maxLiveCount = 100
 
   // SOCKETS
 

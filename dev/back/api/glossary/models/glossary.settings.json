@@ -22,8 +22,8 @@
       "type": "richtext"
     },
     "sessions": {
-      "collection": "sessions",
       "via": "glossaries",
+      "collection": "sessions",
       "dominant": true
     },
     "Source": {

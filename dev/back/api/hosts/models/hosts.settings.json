@@ -15,8 +15,8 @@
       "type": "string"
     },
     "hosting": {
-      "collection": "sessions",
-      "via": "hosts"
+      "via": "hosts",
+      "collection": "sessions"
     },
     "slug": {
       "type": "uid",
@@ -26,8 +26,8 @@
       "type": "string"
     },
     "moderating": {
-      "collection": "sessions",
-      "via": "moderators"
+      "via": "moderators",
+      "collection": "sessions"
     },
     "Bio": {
       "type": "richtext"
@@ -38,6 +38,14 @@
     "Mentoring": {
       "via": "Mentors",
       "collection": "study-session"
+    },
+    "chairing": {
+      "via": "chairs",
+      "collection": "sessions"
+    },
+    "notetaking": {
+      "via": "notetakers",
+      "collection": "sessions"
     }
   }
 }

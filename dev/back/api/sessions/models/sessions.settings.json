@@ -27,13 +27,13 @@
       "required": false
     },
     "videos": {
-      "via": "sessions",
       "collection": "videos",
+      "via": "sessions",
       "dominant": true
     },
     "references": {
-      "via": "sessions",
       "collection": "library",
+      "via": "sessions",
       "dominant": true
     },
     "slug": {
@@ -44,17 +44,27 @@
       "type": "datetime"
     },
     "moderators": {
-      "via": "moderating",
       "collection": "hosts",
+      "via": "moderating",
       "dominant": true
     },
     "glossaries": {
-      "via": "sessions",
-      "collection": "glossary"
+      "collection": "glossary",
+      "via": "sessions"
     },
     "hosts": {
-      "via": "hosting",
       "collection": "hosts",
+      "via": "hosting",
+      "dominant": true
+    },
+    "chairs": {
+      "collection": "hosts",
+      "via": "chairing",
+      "dominant": true
+    },
+    "notetakers": {
+      "collection": "hosts",
+      "via": "notetaking",
       "dominant": true
     }
   }
