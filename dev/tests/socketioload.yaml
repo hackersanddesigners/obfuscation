@@ -1,14 +1,14 @@
 config:
   # target: "http://localhost:3070"
-  # target: "https://obfuscation.karls.computer"
-  target: "https://3rd.obfuscationworkshop.org"
+  target: "https://obfuscation.karls.computer"
+  # target: "https://3rd.obfuscationworkshop.org"
   socketio:
     transports: ["websocket"]
   engines:
    socketio-v3: {}
   phases:
-    - duration: 120 # Run scenario for 30 seconds
-      arrivalCount: 500 # Create 400 virtual users per scenario
+    - duration: 60 # Run scenario for 30 seconds
+      arrivalCount: 100 # Create 400 virtual users per scenario
       name: Warm up
 scenarios:
   # - engine: "socketio"
