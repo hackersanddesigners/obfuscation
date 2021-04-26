@@ -36,8 +36,7 @@ const store = new Vuex.Store({
     messages: {},
 
     connectedCount: 1,
-    maxLiveCount: 20,
-    emitsPerSecond: 5,
+    maxLiveCount: 50,
     wait: false,
 
 
@@ -237,10 +236,8 @@ const store = new Vuex.Store({
         if (user.deleted) {
           commit('doNotSave')
           console.log("you're deleted")
-          // setTimeout(() => {
-            localStorage.clear()
-            window.location.reload(true)
-          // }, 2000)
+          localStorage.clear()
+          window.location.reload(true)
         }
       }
     },
@@ -320,8 +317,7 @@ const store = new Vuex.Store({
     updatePosition({ state, getters, commit, dispatch }, position) {
       position.uid = state.uid
       commit('setUserPosition', position)
-      if (getters) {
-      // if (!getters.networkConservationMode) {
+      if (!getters.networkConservationMode) {
         if (!state.wait) {
           this._vm.$socket.client.emit('position', position) 
           dispatch('resetWait')
@@ -332,8 +328,7 @@ const store = new Vuex.Store({
     updateTyping({ state, getters, commit, dispatch }, text) {
       text.uid = state.uid
       commit('setUserTyping', text)
-      if (getters) {
-      // if (!getters.networkConservationMode) {
+      if (!getters.networkConservationMode) {
         if (!state.wait) {
           this._vm.$socket.client.emit('typing', text)
           dispatch('resetWait')
@@ -344,8 +339,7 @@ const store = new Vuex.Store({
     updateColor({ state, getters, commit, dispatch }, color) {
       color.uid = state.uid
       commit('setUserColor', color)
-      if (getters) {
-      // if (!getters.networkConservationMode) {
+      if (!getters.networkConservationMode) {
         if (!state.wait) {
           this._vm.$socket.client.emit('color', color)
           dispatch('resetWait')
