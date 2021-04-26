@@ -168,7 +168,7 @@ mongoose.connection.once('open', () => {
       findUserAndUpdate(user, 'moderator')
     })
     
-    if (count < maxLiveCount) {
+    // if (count < maxLiveCount) {
       socket.on('position', position => {
         io.sockets.emit('position', position)
       })
@@ -178,7 +178,7 @@ mongoose.connection.once('open', () => {
       socket.on('color', color => {
         io.sockets.emit('color', color)
       })
-    }
+    // }
 
     socket.on('message', message => {
       io.sockets.emit('message', message)

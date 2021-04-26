@@ -256,18 +256,6 @@ export default {
     trackInput(key) {
       let input = this.$refs.input
 
-
-      // focus input element on any key press.
-
-      // if (input !== document.activeElement) {
-        // input.focus()
-      //   if (key >= 48 && key <= 90) {
-      //     const char = String.fromCharCode(key)
-      //     input.value = char              
-      //   }
-      // }
-
-
       // starting a messge with '~' will navigate 
       // to a user instead of sending the message.
 

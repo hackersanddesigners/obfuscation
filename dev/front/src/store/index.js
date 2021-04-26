@@ -37,6 +37,8 @@ const store = new Vuex.Store({
 
     connectedCount: 1,
     maxLiveCount: 20,
+    emitsPerSecond: 5,
+    wait: false,
 
 
     // territories are defined in Strapi.
@@ -148,6 +150,7 @@ const store = new Vuex.Store({
     setConnectedCount: (state, count) => {
       state.connectedCount = count
     },
+    setWait: (state, wait) => { state.wait = wait },
 
 
     setMessages: (state, messages) => {
@@ -314,27 +317,39 @@ const store = new Vuex.Store({
       commit('setConnectedCount', count)
     },
 
-    updatePosition({ state, getters, commit }, position) {
+    updatePosition({ state, getters, commit, dispatch }, position) {
       position.uid = state.uid
       commit('setUserPosition', position)
-      if (!getters.networkConservationMode) {
-        this._vm.$socket.client.emit('position', position) 
+      if (getters) {
+      // if (!getters.networkConservationMode) {
+        if (!state.wait) {
+          this._vm.$socket.client.emit('position', position) 
+          dispatch('resetWait')
+        }
       }
     },
 
-    updateTyping({ state, getters, commit }, text) {
+    updateTyping({ state, getters, commit, dispatch }, text) {
       text.uid = state.uid
       commit('setUserTyping', text)
-      if (!getters.networkConservationMode) {
-        this._vm.$socket.client.emit('typing', text)
+      if (getters) {
+      // if (!getters.networkConservationMode) {
+        if (!state.wait) {
+          this._vm.$socket.client.emit('typing', text)
+          dispatch('resetWait')
+        }
       }
     },
 
-    updateColor({ state, getters, commit }, color) {
+    updateColor({ state, getters, commit, dispatch }, color) {
       color.uid = state.uid
       commit('setUserColor', color)
-      if (!getters.networkConservationMode) {
-        this._vm.$socket.client.emit('color', color)
+      if (getters) {
+      // if (!getters.networkConservationMode) {
+        if (!state.wait) {
+          this._vm.$socket.client.emit('color', color)
+          dispatch('resetWait')
+        }
       }
     },
 
@@ -417,6 +432,13 @@ const store = new Vuex.Store({
           dispatch('deleteUser', user)
         } 
       }
+    },
+
+    resetWait({ commit, getters }) {
+      commit('setWait', true)
+      setTimeout(() => {
+        commit('setWait', false)
+      }, 1000 / getters.emitsPerSecond)
     }
 
 
@@ -426,10 +448,9 @@ const store = new Vuex.Store({
   getters: {
 
     me: state => state.users[state.uid],
-
     isMe: state => user => user.uid === state.uid,
-
     networkConservationMode: state => state.connectedCount > state.maxLiveCount,
+    emitsPerSecond: state => 2 * state.maxLiveCount / state.connectedCount,
 
     userByName: (state, getters) => (name) => {
       const found = getters.usersArray.find(u => u.name == name) 

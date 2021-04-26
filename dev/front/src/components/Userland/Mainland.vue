@@ -311,6 +311,7 @@ export default {
 
       'me',
       'isMe',
+      'networkConservationMode',
 
       'territoryByBorders',
       'territoryBySlug',
@@ -351,6 +352,24 @@ export default {
         this.recenter(newScale, oldScale) 
       }
     },
+
+    networkConservationMode(newState, oldState) {
+      if (newState > oldState) {
+        console.log('network conservation mode enabled')
+        this.notifications.push({
+          time: ((new Date).getTime()),
+          author: 'Server',
+          content: "The platframe is currently experiencing a high number of concurrent visitors. To remain functional, it will stop displaying the correct positions of participants' cursors. You can still send and receive messages."
+        })
+      } else {
+        console.log('network conservation mode disabled')
+        this.notifications.forEach(n => {
+          if (n.author == 'Server') {
+            this.notifications.splice(this.notifications.indexOf(n), 1)
+          }
+        })
+      }
+    }
 
   },
 

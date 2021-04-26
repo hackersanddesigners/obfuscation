@@ -21,6 +21,7 @@
           @click.stop="$emit('dismiss')" 
         >
         <input 
+          v-if="notification.authorUID"
           class="ui button"
           type="button" 
           value="view"
@@ -47,7 +48,9 @@ export default {
 
   computed: {
     time() { return moment(this.notification.time).format('dddd, MMMM Do [at] HH:mm') },
-    color() { return this.$store.state.users[this.notification.authorUID].color }
+    color() { return this.notification.authorUID ? 
+      this.$store.state.users[this.notification.authorUID].color : 'black' 
+    }
   },
 
   mounted() {
