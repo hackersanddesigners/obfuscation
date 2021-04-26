@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+// import _ from 'lodash'
 
 Vue.use(Vuex)
 
@@ -33,6 +34,9 @@ const store = new Vuex.Store({
 
     users: {},
     messages: {},
+
+    connectedCount: 1,
+    maxLiveCount: 20,
 
 
     // territories are defined in Strapi.
@@ -126,6 +130,7 @@ const store = new Vuex.Store({
       state.users[user.uid].color = user.color
       state.users[user.uid].x = user.x
       state.users[user.uid].y = user.y
+      state.users[user.uid].typing = user.typing || ''
       state.users[user.uid].messageLifetime = user.messageLifetime
     },
     setUserDisconnected: (state, uid) => {
@@ -139,6 +144,9 @@ const store = new Vuex.Store({
     },
     setUserModerator: (state, user) => {
       state.users[user.uid].moderator = user.moderator
+    },
+    setConnectedCount: (state, count) => {
+      state.connectedCount = count
     },
 
 
@@ -218,6 +226,7 @@ const store = new Vuex.Store({
 
     socket_user({ state, commit }, user) {
       commit('setUser', user)
+      console.log('user', user.name, 'connected')
       if (user.uid === state.uid) {
         if (user.blocked) {
           commit('block')
@@ -264,15 +273,18 @@ const store = new Vuex.Store({
     },
 
     socket_moderator({ state, commit }, user) {
-      console.log(user.uid)
       if (user.uid !== state.uid) {
         commit('setUserModerator', user)
+        console.log('user', user.name, 'upgraded to moderator')
       }
     },
 
     socket_appearance({ state, commit, dispatch }, user) {
       if (user.uid !== state.uid) {
         commit('setUserAppearance', user)
+      }
+      if (user.connected === false) {
+        console.log('user', user.name, 'disconnected')
       }
       if (user.messageLifetime) {
         const 
@@ -291,38 +303,39 @@ const store = new Vuex.Store({
     },
 
     socket_disconnect({ state }) { 
-      // dispatch('disconnect')
       if (state.save) {
-        if (state.registered) {
-          // localStorage.me = JSON.stringify(state.users[state.uid])
-        } else {
+        if (!state.registered) {
           localStorage.uid = state.uid      
         }
       }
     },
 
-    updatePosition({ state, commit }, position) {
+    socket_count({ commit }, count) {
+      commit('setConnectedCount', count)
+    },
+
+    updatePosition({ state, getters, commit }, position) {
       position.uid = state.uid
       commit('setUserPosition', position)
-      this._vm.$socket.client.emit(
-        'position', position
-      )
+      if (!getters.networkConservationMode) {
+        this._vm.$socket.client.emit('position', position) 
+      }
     },
 
-    updateTyping({ state, commit }, text) {
+    updateTyping({ state, getters, commit }, text) {
       text.uid = state.uid
       commit('setUserTyping', text)
-      this._vm.$socket.client.emit(
-        'typing', text
-      )
+      if (!getters.networkConservationMode) {
+        this._vm.$socket.client.emit('typing', text)
+      }
     },
 
-    updateColor({ state, commit }, color) {
+    updateColor({ state, getters, commit }, color) {
       color.uid = state.uid
       commit('setUserColor', color)
-      this._vm.$socket.client.emit(
-        'color', color
-      )
+      if (!getters.networkConservationMode) {
+        this._vm.$socket.client.emit('color', color)
+      }
     },
 
     updateAppearance({ state, commit }, user) {
@@ -343,9 +356,19 @@ const store = new Vuex.Store({
     },
 
 
-    disconnect({ state, commit }) {
+    disconnect({ state, commit, dispatch }) {
+      console.log('disconnecting')
       commit('setUserDisconnected', state.uid)
-      this._vm.$socket.client.emit('user', state.users[state.uid])
+      const me = state.users[state.uid]
+      dispatch('updateAppearance', {
+        name: me.name,
+        color: me.color,
+        x: me.x,
+        y: me.y,
+        messageLifetime: me.messageLifetime,
+        connected: false,
+        typing: null,
+      })
     },
 
     blockUser({ state, commit, dispatch }, user ) {
@@ -362,7 +385,6 @@ const store = new Vuex.Store({
 
     deleteUser({ state, commit, dispatch }, user ) {
       commit('setUserDeleted', user)
-      console.log(state.users[user.uid].deleted)
       this._vm.$socket.client.emit('user', user)
 
       for(let uid in state.messages) {
@@ -406,6 +428,8 @@ const store = new Vuex.Store({
     me: state => state.users[state.uid],
 
     isMe: state => user => user.uid === state.uid,
+
+    networkConservationMode: state => state.connectedCount > state.maxLiveCount,
 
     userByName: (state, getters) => (name) => {
       const found = getters.usersArray.find(u => u.name == name) 

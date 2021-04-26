@@ -1,13 +1,14 @@
 config:
-  target: "https://obfuscation.karls.computer"
+  target: "http://localhost:3070"
+  # target: "https://obfuscation.karls.computer"
   # target: "https://3rd.obfuscationworkshop.org"
   socketio:
     transports: ["websocket"]
   engines:
    socketio-v3: {}
   phases:
-    - duration: 600 # Run scenario for 10 seconds
-      arrivalCount: 400 # Create 400 virtual users per scenario
+    - duration: 60 # Run scenario for 10 seconds
+      arrivalCount: 40 # Create 400 virtual users per scenario
       name: Warm up
 scenarios:
   # - engine: "socketio"
@@ -28,9 +29,9 @@ scenarios:
       - emit:
           channel: "echo"
           data: "ping"
-      - emit:
-          channel: "position"
-          data: '{"x":0.5850520833333334,"y":0.24128440366972478,"connected":true,"uid":"f3706935e29"}'
+      # - emit:
+      #     channel: "position"
+      #     data: '{"x":0.5850520833333334,"y":0.24128440366972478,"connected":true,"uid":"f3706935e29"}'
       # - emit:
       #     channel: "position"
       #     data: "{\"x\":0.5850520833333334,\"y\":0.24128440366972478,\"connected\":true,\"uid\":\"f3706935e29\"}"

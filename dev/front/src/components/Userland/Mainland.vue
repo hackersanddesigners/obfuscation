@@ -363,8 +363,6 @@ export default {
 
     this.checkCompatibility()
 
-    console.log(this.users)
-
   },
 
   mounted() {
@@ -410,21 +408,9 @@ export default {
 
     window.onbeforeunload = () => {
       if (this.me) {
-        console.log('disconnecting')
-        this.$store.dispatch('updateAppearance', {
-          name: this.me.name,
-          color: this.me.color,
-          x: this.me.x,
-          y: this.me.y,
-          messageLifetime: this.me.messageLifetime,
-          connected: false,
-        })
-        this.$store.dispatch('updateTyping', {
-          typing: null,
-        })
+        this.$store.dispatch('disconnect')
         if (this.isMobile || this.me.name.includes(this.me.uid)) {
           this.$store.dispatch('deleteUser', this.me)
-          // localStorage.clear()
         }
       }
     }

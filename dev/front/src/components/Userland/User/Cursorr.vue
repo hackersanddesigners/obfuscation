@@ -55,6 +55,7 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex'
+// import _ from 'lodash'
 
 
 export default {
@@ -73,8 +74,9 @@ export default {
       navigation: false,
       announcement: false,
       mention: false,
+      pos: null,
       locationTimer: 0,
-      timeoutID: null,
+      disconnectTimeoutID: null,
       badWords: [
         '<img',
         '<video',
@@ -82,7 +84,6 @@ export default {
       ]
     }
   },
-
 
   computed: {
     ...mapState([
@@ -97,6 +98,7 @@ export default {
 
       'me',
       'isMe',
+      'networkConservationMode',
       'messagesByUser',
       'territoryByBorders',
 
@@ -106,9 +108,11 @@ export default {
   mounted() {
 
     if (this.isMe && !this.isMobile) {
-      this.trackCursor()
-      this.resetTimer()
+      document.addEventListener('mousemove', this.trackCursor)
+      // document.addEventListener('mousemove', this.throttled)
+      this.resetDisconnectTimer()
     }
+
 
   },
   
@@ -117,7 +121,7 @@ export default {
 
     // construct, sanitize and send the message through
     // the $socket.
-
+  
     sendMessage() {
       const 
         input = this.$refs.input,
@@ -149,7 +153,7 @@ export default {
       }
 
 
-        // sxanitize and send through $socket:
+      // sanitize and send through $socket:
 
       if (
         message.content && 
@@ -160,6 +164,9 @@ export default {
           this.$store.commit('deregister')
         } else {
           this.$socket.client.emit('message', message)
+          if (this.networkConservationMode) {
+            this.$socket.client.emit('position', this.pos)
+          }
         }
       }
         
@@ -201,9 +208,9 @@ export default {
         return message
     },
 
-    resetTimer() {
-      clearTimeout(this.timeoutID)
-      this.timeoutID = setTimeout(() => { 
+    resetDisconnectTimer() {
+      clearTimeout(this.disconnectTimeoutID)
+      this.disconnectTimeoutID = setTimeout(() => { 
         this.disconnect()
       }, 60000) 
     },
@@ -222,25 +229,27 @@ export default {
 
     // send cursor position live through $store.
 
-    trackCursor() {
-      document.addEventListener('mousemove', (e) => {
-        
-        this.resetTimer()
+    trackCursor(e) {
+      this.resetDisconnectTimer()
 
-        if(!this.dragging) {
-            const pos = {
-              x: (this.windowPos.x + e.clientX) / (this.windowSize.w * this.scale),
-              y: (this.windowPos.y + e.clientY) / (this.windowSize.h * this.scale),
-              connected: true,
-            }
-            
-            this.$store.dispatch('updatePosition', pos)
-          e.preventDefault()
+      if(!this.dragging) {
+        const pos = {
+          uid: this.me.uid,
+          x: (this.windowPos.x + e.clientX) / (this.windowSize.w * this.scale),
+          y: (this.windowPos.y + e.clientY) / (this.windowSize.h * this.scale),
+          connected: true,
         }
+        this.$store.dispatch('updatePosition', pos)
+        this.pos = pos
+        e.preventDefault()
+      }
         
-      })
     },
 
+    emitPos() {
+      console.log('emit')
+      this.$socket.client.emit('position', this.pos)
+    },
 
     // handle user input, triggered from parent.
 
@@ -339,6 +348,7 @@ export default {
 
       this.$store.dispatch('updateTyping', {
         // typing: input.value
+        uid: this.me.uid,
         typing: key == 27 || input.value == '' ? '' : "typing..."
       })
 

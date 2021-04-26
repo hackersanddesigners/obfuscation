@@ -16,7 +16,6 @@ const io = require('socket.io')(http, {
   perMessageDeflate: false,
   transports: ['websocket'],
 })
-// const redis = require('socket.io-redis')
 const mongoose = require("mongoose")
 mongoose.Promise = require("bluebird")
 
@@ -127,8 +126,14 @@ mongoose.connection.once('open', () => {
   app.use(fallback('index.html', { root }))
 
 
-  // const bindListeners = io => {
-  
+  const getCount = () => (
+    io.sockets.adapter.rooms.get(room) ?
+    Array.from(io.sockets.adapter.rooms.get(room)).length : 0
+  )   
+
+  let 
+    count = getCount(),
+    maxLiveCount = 20
 
   // SOCKETS
 
@@ -136,8 +141,9 @@ mongoose.connection.once('open', () => {
 
     socket.join(room)
 
-    const count = Array.from(io.sockets.adapter.rooms.get(room)).length
+    count = getCount()
     console.log(socket.id, 'connected, total:', count)
+    io.sockets.emit('count', count)
     
     socket.on('user', user => {
       io.sockets.emit('user', user)
@@ -163,18 +169,21 @@ mongoose.connection.once('open', () => {
     })
     
     socket.on('position', position => {
-      // io.sockets.emit('position', position)
-      socket.broadcast.emit('position', position)
+      if (count < maxLiveCount) {
+        io.sockets.emit('position', position)
+      }
     })
 
     socket.on('typing', text => {
-      // io.sockets.emit('typing', text)
-      socket.broadcast.emit('typing', text)
+      if (count < maxLiveCount) {
+        io.sockets.emit('typing', text)
+      }
     })
 
     socket.on('color', color => {
-      // io.sockets.emit('color', color)
-      socket.broadcast.emit('color', color)
+      if (count < maxLiveCount) {
+        io.sockets.emit('color', color)
+      }
     })
 
     socket.on('message', message => {
@@ -185,7 +194,10 @@ mongoose.connection.once('open', () => {
     })
 
     socket.on('disconnect', reason => {
+      count = getCount()
       console.log(socket.id, 'disconnect:', reason, 'total:', count)
+      io.sockets.emit('count', count)
+
     })
 
     socket.on('reconnect_attempt', () => {
@@ -195,12 +207,6 @@ mongoose.connection.once('open', () => {
 
   })
 
-  // }
-
-  // Add redis adapter
-
-  // io.adapter(redis({ host: '127.0.0.1', port: 6379 }))
-  // bindListeners(io)
 
 
   // HTTP SERVER
