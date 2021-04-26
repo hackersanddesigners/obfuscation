@@ -36,7 +36,7 @@ const store = new Vuex.Store({
     messages: {},
 
     connectedCount: 1,
-    maxLiveCount: 50,
+    maxLiveCount: 100,
     wait: false,
 
 
