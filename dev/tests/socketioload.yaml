@@ -7,8 +7,8 @@ config:
   engines:
    socketio-v3: {}
   phases:
-    - duration: 30 # Run scenario for 30 seconds
-      arrivalCount: 100 # Create 400 virtual users per scenario
+    - duration: 60 # Run scenario for 30 seconds
+      arrivalCount: 500 # Create 400 virtual users per scenario
       name: Warm up
 scenarios:
   # - engine: "socketio"
