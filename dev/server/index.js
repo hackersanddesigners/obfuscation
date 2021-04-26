@@ -168,23 +168,17 @@ mongoose.connection.once('open', () => {
       findUserAndUpdate(user, 'moderator')
     })
     
-    socket.on('position', position => {
-      if (count < maxLiveCount) {
+    if (count < maxLiveCount) {
+      socket.on('position', position => {
         io.sockets.emit('position', position)
-      }
-    })
-
-    socket.on('typing', text => {
-      if (count < maxLiveCount) {
+      })
+      socket.on('typing', text => {
         io.sockets.emit('typing', text)
-      }
-    })
-
-    socket.on('color', color => {
-      if (count < maxLiveCount) {
+      })
+      socket.on('color', color => {
         io.sockets.emit('color', color)
-      }
-    })
+      })
+    }
 
     socket.on('message', message => {
       io.sockets.emit('message', message)
