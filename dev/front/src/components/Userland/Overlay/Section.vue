@@ -10,6 +10,12 @@
     </div>
 
     <SemanticList
+      v-if="chairs && chairs.length > 0"
+      :collection="'contributors'"
+      :list="chairs"
+      :name="'Chair'"
+    />
+    <SemanticList
       v-if="hosts && hosts.length > 0"
       :list="hosts"
       :collection="'contributors'"
@@ -22,12 +28,24 @@
       :name="'Moderator'"
     />
     <SemanticList
+      v-if="notetakers && notetakers.length > 0"
+      :list="notetakers"
+      :collection="'contributors'"
+      :name="'Note-taker'"
+    />
+    <SemanticList
       v-if="mentors && mentors.length > 0"
       :collection="'contributors'"
       :list="mentors"
       :name="'Mentor'"
     />
 
+    <SemanticList
+      v-if="chairing && chairing.length > 0"
+      :collection="'schedule'"
+      :list="chairing"
+      :name="'Chairing'"
+    />
     <SemanticList
       v-if="hosting && hosting.length > 0"
       :collection="'schedule'"
@@ -39,6 +57,12 @@
       :collection="'schedule'"
       :list="moderating"
       :name="'Moderating'"
+    />
+    <SemanticList
+      v-if="notetaking && notetaking.length > 0"
+      :collection="'schedule'"
+      :list="notetaking"
+      :name="'Note-taking'"
     />
     <SemanticList
       v-if="mentoring && mentoring.length > 0"
@@ -105,14 +129,17 @@ export default {
     title() { return this.getTitle() },
     body() { return this.getBody() },
     source() { return this.getSource() },
+    chairs() { return this.section.chairs },
     hosts() { return this.section.hosts },
     moderators() { return this.section.moderators },
+    notetakers() { return this.section.notetakers },
     mentors() { return this.section.Mentors },
+    chairing() { return this.section.chairing },
     hosting() { return this.section.hosting },
     moderating() { return this.section.moderating },
+    notetaking() { return this.section.notetaking },
     mentoring() { return this.section.Mentoring },
     resources() { return this.section.references },
-
     titleGoesFirst() { return this.section.Name }
   },
   watch: {
