@@ -226,7 +226,12 @@ export default {
     },
 
     existingUser(string) {
-      return (this.userNames.indexOf(string) > -1 && string !== this.me.name)
+      const 
+        existing = this.userNames.find(n => (
+          n.toLowerCase() === string.toLowerCase()
+        )),
+        isMe = string => string.toLowerCase() === this.me.name.toLowerCase()
+      return (existing && !isMe(string))
     },
 
     toSlug(str) {
