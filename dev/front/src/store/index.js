@@ -233,7 +233,11 @@ const store = new Vuex.Store({
 
     socket_user({ state, commit }, user) {
       commit('setUser', user)
-      console.log('user', user.name, 'connected')
+      const status = 
+        user.deleted === true ? 'deleted' :
+        user.blocked === true ? 'blocked' :
+        'connected'
+      console.log('user', user.name, status)
       if (user.uid === state.uid) {
         if (user.blocked) {
           commit('block')
