@@ -136,6 +136,7 @@ mongoose.connection.once('open', () => {
 
     count = getCount()
     console.log(socket.id, 'connected, total:', count)
+
     if (count < maxLiveCount + 10) {
       io.sockets.emit('count', count)
     }
@@ -163,17 +164,21 @@ mongoose.connection.once('open', () => {
       findUserAndUpdate(user, 'moderator')
     })
     
-    if (count < maxLiveCount) {
-      socket.on('position', position => {
+    socket.on('position', position => {
+      if (getCount() < maxLiveCount) {
         io.sockets.emit('position', position)
-      })
-      socket.on('typing', text => {
+      }
+    })
+    socket.on('typing', text => {
+      if (getCount() < maxLiveCount) {
         io.sockets.emit('typing', text)
-      })
-      socket.on('color', color => {
+      }
+    })
+    socket.on('color', color => {
+      if (getCount() < maxLiveCount) {
         io.sockets.emit('color', color)
-      })
-    }
+      }
+    })
 
     socket.on('message', message => {
       io.sockets.emit('message', message)
