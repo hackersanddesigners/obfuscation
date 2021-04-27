@@ -84,7 +84,8 @@ export default {
       defaultTimeZone: "Etc/UTC",
       ownTimeZone: moment.tz.guess(),
       desiresOwnTimezone: true,
-      parentDays: {}
+      sessionsArray: [],
+      parentDays: {},
     }
   },
   computed: {
@@ -95,6 +96,10 @@ export default {
   created() {
     moment.tz.setDefault(this.ownTimeZone)
     this.orderContentByDays()
+    this.getNextEvent()
+    setInterval(() => {
+      this.getNextEvent()
+    }, 60000) // every minute
   },
   methods: {
     orderContentByDays() {
@@ -169,8 +174,23 @@ export default {
             
           parentDays[parentDay][day] = dayObject
       })
-
+      this.$set(this, 'sessionsArray', sessionsArray)
       this.$set(this, 'parentDays', parentDays)
+    },
+
+    getNextEvent() {
+      const 
+        buffer = 2 * 86400000, // 5 days
+        fifteen = 15 * 60000, // 15 minutes
+        now = (new Date).getTime() + buffer,
+        pastSessions = this.sessionsArray.filter(s => this.getUnixTime(s.Start) < now),
+        futureSessions = this.sessionsArray.filter(s => this.getUnixTime(s.Start) > now),
+        next = futureSessions.find(s => this.getUnixTime(s.Start) < now + fifteen)
+
+      console.log('past sessions:', pastSessions)
+      console.log('future sessions:', futureSessions)
+      console.log('next session:', next)
+
     },
 
     sessionInDay(session, day) {
@@ -181,6 +201,7 @@ export default {
       this.desiresOwnTimezone = !this.desiresOwnTimezone
       moment.tz.setDefault(this.timeZone)
       this.orderContentByDays()
+      this.getNextEvent()
     },
 
     sizeByDuration(session) {

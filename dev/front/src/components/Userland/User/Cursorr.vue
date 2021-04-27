@@ -5,7 +5,8 @@
       {
         hovered: user.typing || hovered,
         dragging: dragging,
-        me: isMe(user)
+        me: isMe(user),
+        moderator: user.moderator == true,
       }
     ]"
 
@@ -369,6 +370,7 @@ export default {
 
 
 .cursorContainer .cursor {
+  position: relative;
   min-width: calc(0.07vh * var(--scale));
   max-width: calc(0.07vh * var(--scale));
   height: calc(0.1vh * var(--scale));
@@ -441,6 +443,19 @@ export default {
   padding: 1px 0px;
   border-radius: 12px;
   box-shadow: none;
+}
+
+.cursorContainer.moderator .cursor {
+  overflow: visible;
+}
+.cursorContainer.moderator .cursor:before {
+  content: '';
+  box-sizing: border-box;
+  position: absolute;
+  height: 130%; width: 130%;
+  top: -15%; left: -15%;
+  border-radius: inherit;
+  border: 3px dashed var(--userColor);
 }
 
 </style>
