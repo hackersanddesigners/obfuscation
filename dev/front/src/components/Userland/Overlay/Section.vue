@@ -220,9 +220,10 @@ export default {
         .from(document.querySelectorAll(`section a`))
         .forEach(a => {
           const href = a.attributes.href.value 
-          if (href && href.startsWith('/')) {
+          if (href && (href.startsWith('/') || href.startsWith(this.$sokURL))) {
             a.addEventListener('click', (e) => {
-              this.$router.push(href)
+              const newhref = href.replace(this.$sokURL, '/')
+              this.$router.push(newhref)
               e.preventDefault()
             })
           }

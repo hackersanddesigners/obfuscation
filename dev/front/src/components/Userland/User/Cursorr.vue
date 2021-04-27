@@ -109,7 +109,6 @@ export default {
 
     if (this.isMe && !this.isMobile) {
       document.addEventListener('mousemove', this.trackCursor)
-      // document.addEventListener('mousemove', this.throttled)
       this.resetDisconnectTimer()
     }
 
@@ -160,7 +159,7 @@ export default {
         message.content != ' ' &&
         !this.badWords.some(v => message.content.includes(v))
       ) {
-        if ((msgs && msgs.length == 0) || (this.me.name.includes(this.me.uid))) {
+        if ((msgs && msgs.length == 0) && (this.me.name.includes(this.me.uid))) {
           this.$store.commit('deregister')
         } else {
           this.$socket.client.emit('message', message)
@@ -297,24 +296,27 @@ export default {
 
       if (key == 38) {
 
-        if (!this.current) {
-          this.current = last
-        } else if (previous) {
-          this.current = previous
-        } else {
-          this.current = first
-        } 
-
-        input.value = this.current.content
-        input.select()
+        if (msgs && msgs.length > 0) {
+          if (!this.current) {
+            this.current = last
+          } else if (previous) {
+            this.current = previous
+          } else {
+            this.current = first
+          } 
+          input.value = this.current.content
+          input.select()
+        }
 
       } else if (key == 40) {
 
-        if (this.current && next) {
-          this.current = next
+        if (msgs && msgs.length > 0) {
+          if (this.current && next) {
+            this.current = next
+          }
+          input.value = this.current.content
+          input.select()
         }
-        input.value = this.current.content
-        input.select()
 
 
       // ENTER KEY: construct message and handle
