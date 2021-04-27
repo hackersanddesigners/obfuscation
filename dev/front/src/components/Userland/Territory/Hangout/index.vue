@@ -25,15 +25,15 @@ export default {
       rooms: {
         '1': {
           name: 'Room 1',
-          url: ''        
+          url: 'https://bbb.tbm.tudelft.nl/b/3rd-yns-svo-fbn'        
         },
         '2': {
           name: 'Room 2',
-          url: ''        
+          url: 'https://bbb.tbm.tudelft.nl/b/3rd-qmb-3gn-3ql'        
         },
         '3': {
           name: 'Room 3',
-          url: ''        
+          url: 'https://bbb.tbm.tudelft.nl/b/3rd-scf-jhq-5qv'        
         },
       
       }
@@ -63,6 +63,9 @@ export default {
 }
 .hangout .island:nth-of-type(3) {
   top: 70%; left: 70%;
+}
+
+.hangout .island {
 }
 
 #participantsIndicator {
