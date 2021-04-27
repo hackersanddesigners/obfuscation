@@ -3,6 +3,7 @@ import axios from 'axios'
 
 
 const 
+  env     = process.env.NODE_ENV || 'development',
   apiURL  = process.env.VUE_APP_API_URL + '/',
   URL     = process.env.VUE_APP_URL + '/'
 
@@ -177,6 +178,11 @@ const api = {
     },
 
     correctTimeZone(datestring) {
+      if (env === 'development') {
+        datestring = datestring
+          .replace('-05-04T', '-04-29T')
+          .replace('-05-07T', '-05-02T')
+      }
       // datestring = datestring.replace('Z', '+01:00')
       // datestring = datestring.replace('Z', '+02:00')
       return datestring

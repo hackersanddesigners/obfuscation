@@ -136,7 +136,9 @@ mongoose.connection.once('open', () => {
 
     count = getCount()
     console.log(socket.id, 'connected, total:', count)
-    io.sockets.emit('count', count)
+    if (count < maxLiveCount + 10) {
+      io.sockets.emit('count', count)
+    }
     
     socket.on('user', user => {
       io.sockets.emit('user', user)

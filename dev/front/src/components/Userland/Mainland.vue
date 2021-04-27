@@ -210,7 +210,6 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex'
-          // @click="route(location.slug, false, false, true)"
 
 import NavHandle from './Nav/Handle'
 import Notfound from './Notfound'
@@ -296,6 +295,8 @@ export default {
       'users',
       'messages',
 
+      'highCPUNotifiction',
+
       'territories',
       'location',
       'general',
@@ -356,11 +357,7 @@ export default {
     networkConservationMode(newState, oldState) {
       if (newState > oldState) {
         console.log('network conservation mode enabled')
-        this.notifications.push({
-          time: ((new Date).getTime()),
-          author: 'Server',
-          content: "The platframe is currently experiencing a high number of concurrent visitors. To remain functional, it will stop displaying the correct positions of participants' cursors. You can still send and receive messages."
-        })
+        this.notifications.push(this.highCPUNotifiction)
       } else {
         console.log('network conservation mode disabled')
         this.notifications.forEach(n => {
@@ -675,12 +672,24 @@ export default {
     },
 
 
+    // tour
+
+
     startTour() {
       console.log('tour started')
       this.desiresList = true
       this.$refs.options.showParticipants = false
       this.desiresOverlay = false
       this.touring = true
+    },
+
+
+    // go to zone (user, message, or territory).
+
+    goTo(zone, behavior) {
+      this.scrollTo(
+        this.centerOf(zone), 
+      behavior || 'smooth')
     },
 
 
@@ -696,16 +705,6 @@ export default {
       }
       this.scrollTo(center, 'auto')
     },
-
-
-    // go to zone (user, message, or territory).
-
-    goTo(zone, behavior) {
-      this.scrollTo(
-        this.centerOf(zone), 
-      behavior || 'smooth')
-    },
-
 
     // drag the userland div to scroll it.
 

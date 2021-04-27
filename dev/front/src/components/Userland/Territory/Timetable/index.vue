@@ -74,18 +74,12 @@
 import moment from 'moment-timezone'
 import Island from './Island'
 
-  // marginRight: session.buffer ? `calc(${session.buffer * -12} * var(--one))` : null
-  // marginRight: session.buffer ? `calc(${session.buffer * -12} * var(--one))` : null
-
 export default {
   name: 'Timetable',
   components: { Island },
   props: [ 'content' ],
   data() {
     return {
-      // defaultTimeZone: "Europe/Amsterdam",
-      // defaultTimeZone: "Australia/Sydney",
-      // defaultTimeZone: "Pacific/Funafuti",
       // defaultTimeZone: "Australia/Adelaide",
       defaultTimeZone: "Etc/UTC",
       ownTimeZone: moment.tz.guess(),
@@ -155,13 +149,10 @@ export default {
               numberOfSessionsToSplice = Object.values(substituteSessions).length
 
             sessionsInDay[indexOfFirstSessionToGo] = substituteSessions
-            // this.$set(sessionsInDay, indexOfFirstSessionToGo, substituteSessions)
             sessionsInDay.splice(indexOfFirstSessionToGo + 1, numberOfSessionsToSplice - 1)
           }
 
-
         }
-
 
         const
           dayObject = {
@@ -169,10 +160,13 @@ export default {
             sessions: sessionsInDay
           },
           parentDay = 
-            day == 3 || day == 4 || day == 5 ? 'firstDay' :
-            day == 6 || day == 7 || day == 8 ? 'secondDay' : 
-            null
-          
+            this.$env === 'production' ?
+              day == 3 || day == 4 || day == 5 ? 'firstDay' :
+              day == 6 || day == 7 || day == 8 ? 'secondDay' : null
+            :
+              day == 28 || day == 29 || day == 30 ? 'firstDay' :
+              day == 1 || day == 2 || day == 3 ? 'secondDay' : null
+            
           parentDays[parentDay][day] = dayObject
       })
 

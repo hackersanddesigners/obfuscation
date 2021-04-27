@@ -38,8 +38,16 @@ export default {
   components: { Island },
   props: [ 'content' ],
   computed: {
-    nonposters() { return Object.values(this.content).filter(l => l.Poster !== true) },
-    posters() { return Object.values(this.content).filter(l => l.Poster === true) },
+    nonposters() { return Object
+      .values(this.content)
+      .filter(l => l.Poster !== true) 
+      .sort((a, b) => (new Date(b.updated_at)) - (new Date(a.updated_at)))
+    },
+    posters() { return Object
+      .values(this.content)
+      .filter(l => l.Poster === true) 
+      .sort((a, b) => (new Date(b.updated_at)) - (new Date(a.updated_at)))
+    },
     
   },
   data() {

@@ -38,6 +38,11 @@ const store = new Vuex.Store({
     connectedCount: 1,
     maxLiveCount: 100,
     wait: false,
+    highCPUNotifiction: {
+      time: ((new Date).getTime()),
+      author: 'Server',
+      content: "The platframe is currently experiencing a high number of concurrent visitors. To remain functional, it will stop displaying the correct positions of participants' cursors. You can still send and receive messages."
+    },
 
 
     // territories are defined in Strapi.
@@ -551,13 +556,12 @@ const store = new Vuex.Store({
     },
 
     connectedUsersFirst: (state, getters) => {
-      return getters.notBlockedUsers.sort((a, b) => (
-        b.connected - a.connected ||
+      return getters.notDeletedUsers.sort((a, b) => (
         ( a.moderator || b.moderator ) ?
         ( 
           !a.moderator ? 1 : b.moderator ? -1 :
           b.moderator - a.moderator
-        ) : 0
+        ) : b.connected - a.connected
       ))
     },
 

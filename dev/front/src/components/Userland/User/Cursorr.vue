@@ -160,7 +160,7 @@ export default {
         message.content != ' ' &&
         !this.badWords.some(v => message.content.includes(v))
       ) {
-        if (msgs.length == 0 && (this.me.name.includes(this.me.uid))) {
+        if ((msgs && msgs.length == 0) || (this.me.name.includes(this.me.uid))) {
           this.$store.commit('deregister')
         } else {
           this.$socket.client.emit('message', message)
