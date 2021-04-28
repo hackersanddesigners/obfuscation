@@ -212,7 +212,7 @@ export default {
       clearTimeout(this.disconnectTimeoutID)
       this.disconnectTimeoutID = setTimeout(() => { 
         this.disconnect()
-      }, 60000) 
+      }, 5 * 60000) 
     },
 
     disconnect() {
@@ -425,6 +425,11 @@ export default {
   max-width: 450px;
   transition: all 0.2s ease;
 }
+.cursorContainer.moderator.hovered .cursor:before {
+  width: 110%;
+  left: -5%;
+}
+
 .cursorContainer.hovered .cursor .name {
   max-width: 450px;
   opacity: 1;
@@ -456,6 +461,7 @@ export default {
   top: -15%; left: -15%;
   border-radius: inherit;
   border: 3px dashed var(--userColor);
+  transition: all 0.2s ease;
 }
 
 </style>

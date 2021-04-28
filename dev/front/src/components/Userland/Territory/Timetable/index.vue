@@ -110,11 +110,11 @@ export default {
   methods: {
     orderContentByDays() {
       const 
-        parentDays = { 'firstDay': {}, 'secondDay': {}, },
+        parentDays    = { 'firstDay': {}, 'secondDay': {}, },
         sessionsArray = Object.values(this.content).sort((a, b) => new Date(a.Start) - new Date(b.Start)),
-        dates = sessionsArray.map(session => this.getDay(session['Start'])),
-        uniqueDates = Array.from(new Set(dates)),
-        fifteen = 15 * 60000
+        dates         = sessionsArray.map(session => this.getDay(session['Start'])),
+        uniqueDates   = Array.from(new Set(dates)),
+        fifteen       = 15 * 60000
 
       uniqueDates.forEach(day => {
         let sessionsInDay = sessionsArray.filter(s => this.sessionInDay(s, day))
@@ -122,8 +122,8 @@ export default {
         for (let s = 0; s < sessionsInDay.length; s++) {
           let 
             previous = sessionsInDay[s-1],
-            current = sessionsInDay[s],
-            next = sessionsInDay[s+1]
+            current  = sessionsInDay[s],
+            next     = sessionsInDay[s+1]
   
           if (current && previous && next &&
             ((this.getUnixTime(current.Start) - this.getUnixTime(previous.Start)) <= fifteen)) {
@@ -154,9 +154,9 @@ export default {
 
           for (let startTime in staggered) {
             const 
-              firstSessionToGo = sessionsInDay.find(s => this.getUnixTime(s.Start) === startTime),
-              indexOfFirstSessionToGo = sessionsInDay.indexOf(firstSessionToGo),
-              substituteSessions = staggered[startTime],
+              firstSessionToGo         = sessionsInDay.find(s => this.getUnixTime(s.Start) === startTime),
+              indexOfFirstSessionToGo  = sessionsInDay.indexOf(firstSessionToGo),
+              substituteSessions       = staggered[startTime],
               numberOfSessionsToSplice = Object.values(substituteSessions).length
 
             sessionsInDay[indexOfFirstSessionToGo] = substituteSessions
@@ -186,26 +186,36 @@ export default {
 
     getNextEvent() {
       const
-        buffer         = 2 * 86400000 - 20 * 60 * 60000, // 5 days
-        // fifteen        = 15 * 60000, // 15 minutes
+        // buffer         = 3 * 86400000, // 1 days
+        // buffer         = 4 * 86400000 + 0 * 60 * 60000, // 1 days
+        // buffer         =  26 * 60 * 60000,
+        // buffer         = 5 * 86400000, 
+        buffer         = 0, 
         now            = (new Date).getTime() + buffer,
-        liveSessions   = this.sessionsArray.sort((a,b) => (this.getUnixTime(b.End) < this.getUnixTime(a.End))),
+        // fifteen        = 15 * 60000, // 15 minutes
+        sortedSessions = this.sessionsArray.sort((a,b) => (this.getUnixTime(b.Start) < this.getUnixTime(a.Start))),
+        liveSessions   = sortedSessions.filter(s => s.livestream),
         pastSessions   = liveSessions.filter(s => (this.getUnixTime(s.Start) < now)),
         futureSessions = liveSessions.filter(s => (this.getUnixTime(s.Start) > now)),
         currentSession = pastSessions.find(s => (this.getUnixTime(s.End) > now)),
         // nextSession    = futureSessions.find(s => (this.getUnixTime(s.Start) > now - fifteen))
         nextSession    = futureSessions[0]
 
+
       console.log('current session:', currentSession ? currentSession.Title : '')
       console.log('next session:', nextSession ? nextSession.Title : '')
 
       if (currentSession) {
-        console.log('updating store with current session')
-        this.$store.commit('setCurrentLiveSession', currentSession)
+        if (currentSession !== this.currentLiveSession) {
+          console.log('updating store with current session')
+          this.$store.commit('setCurrentLiveSession', currentSession)
+        }
 
       } else if (nextSession) {
-        console.log('current session is undefined, upddating store with next session')
-        this.$store.commit('setCurrentLiveSession', nextSession)
+        if (nextSession !== this.currentLiveSession) {
+          console.log('current session is undefined, updating store with next session')
+          this.$store.commit('setCurrentLiveSession', nextSession)
+        }
       
       } else {
         console.log('no more live events')
@@ -214,14 +224,11 @@ export default {
 
     },
 
-    sessionInDay(session, day) {
-      return this.getDay(session.Start) === day
-    },
-
     toggleTimezone() {
       this.desiresOwnTimezone = !this.desiresOwnTimezone
       moment.tz.setDefault(this.timeZone)
       this.orderContentByDays()
+
       clearInterval(this.getNextEventInterval)
       this.getNextEvent()
       this.getNextEventInterval = setInterval(() => {
@@ -231,24 +238,26 @@ export default {
 
     sizeByDuration(session) {
       const 
-        length = session.length,
-        start = length ? session[0].Start : session.Start,
-        end = length ? 2 * session[length-1].End : session.End,
-        UnixStart = this.getUnixTime(start),
-        UnixEnd = this.getUnixTime(end),
-        duration = UnixEnd - UnixStart,
-        factor = duration / 250000,
+        length       = session.length,
+        start        = length ? session[0].Start : session.Start,
+        end          = length ? 2 * session[length-1].End : session.End,
+        UnixStart    = this.getUnixTime(start),
+        UnixEnd      = this.getUnixTime(end),
+        duration     = UnixEnd - UnixStart,
+        factor       = duration / 250000,
         mobileFactor = this.isMobile ? 0.6 : 1,
-        size = `calc(${ factor * mobileFactor } * var(--one))`
+        size         = `calc(${ factor * mobileFactor } * var(--one))`
       return size
     },
 
-    isBreak: session => session.Title === 'Break',
+    sessionInDay(session, day) { return this.getDay(session.Start) === day },
+
+    isBreak:      session => session.Title === 'Break',
     getHumanTime: date => moment(date).format('HH:mm'),
-    getUnixTime: date => moment(date).format('x'),
-    getDay: date => moment(date).format('D'),
-    cuteDate: date => moment(date).format('dddd, MMMM Do'),
-    notEtc: string => string === 'Etc/UTC' ? 'UTC' : string,
+    getUnixTime:  date => moment(date).format('x'),
+    getDay:       date => moment(date).format('D'),
+    cuteDate:     date => moment(date).format('dddd, MMMM Do'),
+    notEtc:       string => string === 'Etc/UTC' ? 'UTC' : string,
   }
 
 }
@@ -256,16 +265,11 @@ export default {
 
 <style scoped>
 .schedule {
-  /* padding:  */
-    /* calc(5 * var(--one)) */
-    /* calc(10 * var(--one)) */
-  /* ; */
   padding-top: calc(10 * var(--one));
   padding-left: calc(25 * var(--one));
   width: 100%;
   height: 100%;
   display: flex;
-  /* justify-content: center; */
   justify-content: flex-start;
   align-items: flex-start;
   flex-wrap: wrap;
@@ -289,11 +293,9 @@ export default {
 }
 
 .schedule .parentDay  {
-  /* width: 40%; */
   max-width: calc(55 * var(--one));
   display: flex;
   flex-direction: column;
-  /* align-items: stretch; */
 }
 .schedule .parentDay:last-of-type  {
   margin-left: calc(4 * var(--one));
@@ -301,8 +303,6 @@ export default {
 .schedule .day  {
   display: flex;
   flex-direction: column;
-  /* align-items: stretch; */
-  /* align-content: center; */
   z-index: 1;
 }
 
@@ -356,17 +356,14 @@ export default {
   justify-content: flex-start;
   align-items: flex-start;
   align-content: center;
-  /* width: auto; */
   flex-wrap: wrap;
-  /* min-height: calc(50*var(--one)); */
 }
 .schedule .day .sessionsContainer .islandContainer .staggered .island {
-  /* max-width: 50%; */
   flex-basis: 45%;
   flex-shrink: 0;
   flex-grow: 0;
   margin-top: calc(4.5 * var(--one));
-  margin-left: calc(3 * var(--one));
+  margin-left: calc(2.9 * var(--one));
 }
 
 
@@ -418,18 +415,5 @@ export default {
 .buffer + .buffer + .buffer + .buffer + .buffer {
   margin-right: calc(5 * var(--buffer) * var(--one));
 }
-
-
-/* .LIFECYCLE0 #timeZone,
-.LIFECYCLE0 .date,
-.LIFECYCLE0 .time {
-  visibility: hidden;
-} */
-
-/* .LIFECYCLE1 #timeZone,
-.LIFECYCLE1 .date,
-.LIFECYCLE1 .time {
-  visibility: hidden;
-} */
 
 </style>

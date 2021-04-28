@@ -2,6 +2,7 @@
   <div>
     <VideoIsland 
       :playbackId="playbackId"
+      :forcedPlaybackId="forcedPlaybackId"
       @loadedmetadata="status = 'active'"
     />
     <div class="sidebar">
@@ -23,6 +24,8 @@ import VideoIsland from './VideoIsland'
 import InfoIsland from './InfoIsland'
 import Chat from './Chat'
 
+import moment from 'moment-timezone'
+
 export default {
   name: 'Livestream',
   components: { 
@@ -32,15 +35,30 @@ export default {
   },
   data() { 
     return {
-      status: 'idle'
+      status: 'idle',
+      forcedPlaybackId: null,
+      now: (new Date).getTime()
     }
   },
   computed: {
     currentLiveSession() { return this.$store.state.currentLiveSession },
-    playbackId() { return (
-      (this.currentLiveSession && this.currentLiveSession.bbbURL) ?
+
+    soon() { 
+      const 
+        five = 5 * 60000, // 5 minutes
+        // now     = this.now  + 1 * 86400000,
+        now     = this.now,
+        session = this.currentLiveSession
+
+      return (this.getUnixTime(session.Start) < (now + five))
+    },
+
+    playbackId() {  return (
+      this.currentLiveSession && this.currentLiveSession.bbbURL && this.soon ?
       this.currentLiveSession.bbbURL.replace('https://bbb.tbm.tudelft.nl/b/', '') : ''
-    )},
+      )
+    },
+
     chatByTime() { return this.currentLiveSession ? 
       this.$store.getters.messagesArray
       .filter(m => (
@@ -53,17 +71,37 @@ export default {
       ))
       .sort((a, b) => a.time - b.time) : []
     },
+
   },
+
   watch: {
     currentLiveSession(newSession, oldSession) {
       console.log('received update')
       if (newSession !== oldSession) {
         console.log('got new session:', newSession)
+        this.forcedPlaybackId = null
       }
     }
   },
+
+  sockets: {
+    message(message) {
+      if (message.stream) {
+        this.forcedPlaybackId = message.content.replace('/stream ', '')
+        console.log('got a forced playback id: ', this.forcedPlaybackId)
+      }
+    }
+  },
+
   created() {
-  }
+    setInterval(() => {
+      this.now = (new Date).getTime()
+    }, 60000)
+  },
+
+  methods: {
+    getUnixTime: date => moment(date).format('x'),
+  },
 
 }
 </script>

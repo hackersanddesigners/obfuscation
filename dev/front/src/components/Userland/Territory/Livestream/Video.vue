@@ -18,6 +18,7 @@ export default {
   },
   props: [
     'playbackId',
+    'forcedPlaybackId',
     'desiresPosition',
     'muted',
     'playing',
@@ -37,6 +38,11 @@ export default {
       this.retryInterval = setInterval(() => {
         this.updateVideo()
       }, 20 * 1000) // 20 seconds
+    },
+
+    forcedPlaybackId() {
+      clearInterval(this.retryInterval)
+      this.updateVideo()
     },
 
     desiresPosition(newPosition) {
@@ -113,28 +119,33 @@ export default {
     })
 
     this.$el.addEventListener('ended',() => {
+      console.log('video ended')
       this.retryInterval = setInterval(() => {
-        console.log('video ended')
         this.updateVideo()
       }, 20 * 1000) 
       this.$emit('ended')
     })
 
   },
+  beforeDestroy() {
+    clearInterval(this.retryInterval)
+  },
   methods: {
 
-    src: playbackId  => `https://bbb.tbm.tudelft.nl/hls/${playbackId}.m3u8`,    
-    // poster: playbackId => `https://image.mux.com/${playbackId}/thumbnail.jpg?time=15`,
+    src(playbackId) { return this.forcedPlaybackId ? 
+      `https://stream.mux.com/${playbackId}.m3u8` :
+      `https://bbb.tbm.tudelft.nl/hls/${playbackId}.m3u8`
+    },    
 
 
     updateVideo() {
-      console.log('updating video')
+      const 
+        playbackId = this.playbackId,
+        forcedPlaybackId = this.forcedPlaybackId,
+        sourceUrl = this.src(forcedPlaybackId || playbackId),
+        video = this.$el
 
-      const playbackId = this.playbackId
-      const sourceUrl = this.src(playbackId)
-      const video = this.$el
-
-      console.log("src:", sourceUrl)
+      console.log("updating video src:", sourceUrl)
 
       // If HLS.js is supported on this platform
 

@@ -442,7 +442,7 @@ export default {
     // an announcement.
 
     message(message) {
-      if (!message.deleted) {
+      if (!message.deleted && !message.stream) {
         this.handleLinks(`.message${message.uid} a`)
 
         if (message.announcement) {
@@ -452,12 +452,6 @@ export default {
           if (message.mentions.find(m => m === this.me.name)) {
             this.notifications.push(message)
           }
-
-
-        } else if (message.stream) {
-          console.log(message.content)
-          this.$store.commit('setStream', 
-            message.content.replace('/stream ', ''))
         }
       }
     },
