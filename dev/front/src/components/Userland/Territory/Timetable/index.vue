@@ -187,7 +187,7 @@ export default {
     getNextEvent() {
       const
         // buffer         = 3 * 86400000, // 1 days
-        // buffer         = 4 * 86400000 + 0 * 60 * 60000, // 1 days
+        // buffer         = 4 * 86400000 + +1 * 60 * 60000, // 1 days
         // buffer         =  26 * 60 * 60000,
         // buffer         = 5 * 86400000, 
         buffer         = 0, 
@@ -195,13 +195,13 @@ export default {
         // fifteen        = 15 * 60000, // 15 minutes
         sortedSessions = this.sessionsArray.sort((a,b) => (this.getUnixTime(b.Start) < this.getUnixTime(a.Start))),
         liveSessions   = sortedSessions.filter(s => s.livestream),
-        pastSessions   = liveSessions.filter(s => (this.getUnixTime(s.Start) < now)),
+        pastSessions   = liveSessions.filter(s => (this.getUnixTime(s.Start) < now)).reverse(),
         futureSessions = liveSessions.filter(s => (this.getUnixTime(s.Start) > now)),
         currentSession = pastSessions.find(s => (this.getUnixTime(s.End) > now)),
         // nextSession    = futureSessions.find(s => (this.getUnixTime(s.Start) > now - fifteen))
         nextSession    = futureSessions[0]
 
-
+      console.log('current time:', moment(now).format('dddd, MMMM Do HH:mm'))
       console.log('current session:', currentSession ? currentSession.Title : '')
       console.log('next session:', nextSession ? nextSession.Title : '')
 
