@@ -76,9 +76,7 @@ export default {
 
   watch: {
     currentLiveSession(newSession, oldSession) {
-      console.log('received update')
       if (newSession !== oldSession) {
-        console.log('got new session:', newSession)
         this.forcedPlaybackId = null
       }
     }
