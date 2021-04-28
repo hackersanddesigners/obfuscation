@@ -62,6 +62,8 @@ const store = new Vuex.Store({
       status: null,
     },
 
+    currentLiveSession: null,
+
 
     // ticker
 
@@ -192,8 +194,11 @@ const store = new Vuex.Store({
     setStream: (state, playbackId) => {
       Vue.set(state.stream, 'playbackId', playbackId)
     },
+    setCurrentLiveSession: (state, session) => {
+      Vue.set(state, 'currentLiveSession', session)
+    },
     setTicker: (state, ticker) => {
-      state.ticker = ticker
+      Vue.set(state, 'ticker', ticker)
     },
 
     // app interface mutations.
@@ -583,7 +588,8 @@ const store = new Vuex.Store({
         m.uid && 
         !m.deleted && 
         !m.navigation &&
-        !m.stream
+        !m.stream &&
+        (state.currentLiveSession ? m.location !== 'livestream' : true)
       ))
     },
 

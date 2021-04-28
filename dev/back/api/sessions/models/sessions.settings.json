@@ -66,6 +66,10 @@
       "collection": "hosts",
       "via": "notetaking",
       "dominant": true
+    },
+    "livestream": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

@@ -8,7 +8,7 @@
     @mouseover.stop="hover = true"
     @mousemove.stop="handleMousemove($event)"
     @mouseout.stop="hover = false"
-    @mouseup.stop="href ? $router.push(href) : null"
+    @mouseup.stop="ticker.link ? $router.push(ticker.link) : null"
   >
     <div 
       id="ticker"
@@ -39,13 +39,17 @@ export default {
     }
   },
   computed: {
-    location() { return this.$store.state.location },
-    phrase() { return this.$store.state.ticker.phrase },
-    href() { return this.$store.state.ticker.link },
+    currentLiveSession() { return this.$store.state.currentLiveSession },
+    ticker() { return (
+      this.currentLiveSession ? {
+        phrase: `Watch the livestream: "${this.currentLiveSession.Title}".`,
+        link: '/livestream'
+      } : this.$store.state.ticker
+    )},
     content() {
       let content = ''
       for (let i = 0; i < 20; i++ ) {
-        content = content + this.phrase + ' '
+        content = content + this.ticker.phrase + ' '
       }
       return content
     }

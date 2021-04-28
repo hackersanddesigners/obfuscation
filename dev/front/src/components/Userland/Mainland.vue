@@ -75,6 +75,7 @@
           :key='territory.slug'
           :territory='territory'
           @moreInfo="handleIslandClick($event)"
+          @goTo="goTo(users[$event])"
         />
 
         <Cursorr
@@ -300,6 +301,7 @@ export default {
       'territories',
       'location',
       'general',
+      'currentLiveSession',
 
       'isMobile',
       'scale',
@@ -561,7 +563,7 @@ export default {
         }
         pause = this.isMobile ? 0 : 150
 
-        if (this.isMobile) {
+        if (this.isMobile || (name === 'livestream' && this.currentLiveSession)) {
           this.desiresNav = false
           if (page) {
             this.desiresOverlay = true
@@ -575,7 +577,9 @@ export default {
           } else {
             if (page || this.location.slug !== name || force) {
               setTimeout(() => {
-                this.desiresOverlay = true        
+                // if (name === 'livestream' && this.currentLiveSession) {
+                  this.desiresOverlay = true        
+                // }
               }, pause + 150)
             }
           }

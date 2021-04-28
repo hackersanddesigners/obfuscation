@@ -4,7 +4,7 @@
     crossorigin="anonymous"
     :controls="controls"
     autoplay
-    tabindex="-1"
+    tabindex="0"
   >
   </video>
 </template>
@@ -17,6 +17,7 @@ export default {
   components: {
   },
   props: [
+    'playbackId',
     'desiresPosition',
     'muted',
     'playing',
@@ -25,25 +26,18 @@ export default {
   data() {
     return {
       controls: false,
-      // playbackId: 'oliver'
+      retryInterval: null,
     }
   },
   computed: {
-    playbackId() { return this.$store.state.stream.playbackId }
   },
   watch: {
     playbackId() {
       this.updateVideo()
+      this.retryInterval = setInterval(() => {
+        this.updateVideo()
+      }, 20 * 1000) // 20 seconds
     },
-
-    // stream(newState) {
-    //   // if (oldState !== newState && newState.playbackId) {
-    //   if (newState.status === 'active') {
-    //     this.updateVideo()
-    //   } else {
-    //     this.$el.src = null
-    //   }
-    // },
 
     desiresPosition(newPosition) {
       if (this.active) {
@@ -84,12 +78,16 @@ export default {
 
   },
   mounted() {
+    
     if (this.isMobile) {
       this.controls = true
     }
 
     if (this.playbackId)  {
       this.updateVideo()
+      this.retryInterval = setInterval(() => {
+        this.updateVideo()
+      }, 20 * 1000) // 20 seconds
     }
 
     const prefixes = ["", "webkit", "moz", "ms"]
@@ -107,6 +105,19 @@ export default {
     this.$el.addEventListener('timeupdate',() => {
       const elapsedTime = this.$el.currentTime / this.$el.duration
       this.$emit('elapsed', elapsedTime)
+    })
+
+    this.$el.addEventListener('loadedmetadata',() => {
+      clearInterval(this.retryInterval)
+      this.$emit('loadedmetadata')
+    })
+
+    this.$el.addEventListener('ended',() => {
+      this.retryInterval = setInterval(() => {
+        console.log('video ended')
+        this.updateVideo()
+      }, 20 * 1000) 
+      this.$emit('ended')
     })
 
   },
@@ -145,11 +156,6 @@ export default {
         })
       }
 
-      // let myVideo = videoJS(video)
-      // myVideo.src([{
-      //   type: "application/x-mpegURL", src: sourceUrl
-      // }])
-      // myVideo.fluid(true)
 
     }
   }

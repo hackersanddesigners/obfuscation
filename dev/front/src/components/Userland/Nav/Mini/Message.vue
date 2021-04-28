@@ -30,6 +30,7 @@ export default {
 div {
   position: absolute;
   height: 1px;
+  max-width: 20px;
   background: var(--userColor);
 }
 </style>

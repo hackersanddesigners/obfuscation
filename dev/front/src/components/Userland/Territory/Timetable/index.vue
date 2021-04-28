@@ -86,20 +86,26 @@ export default {
       desiresOwnTimezone: true,
       sessionsArray: [],
       parentDays: {},
+      getNextEventInterval: null,
+      firstLoad: true,
     }
   },
   computed: {
     timeZone() { return this.desiresOwnTimezone ? this.ownTimeZone : this.defaultTimeZone },
     isInDefaultTimeZone() { return this.ownTimeZone === this.defaultTimeZone },
-    isMobile() { return this.$store.state.isMobile }
+    isMobile() { return this.$store.state.isMobile },
+    currentLiveSession() { return this.$store.state.currentLiveSession }
   },
   created() {
     moment.tz.setDefault(this.ownTimeZone)
     this.orderContentByDays()
     this.getNextEvent()
-    setInterval(() => {
+    this.getNextEventInterval = setInterval(() => {
       this.getNextEvent()
     }, 60000) // every minute
+  },
+  beforeDestroy() {
+    clearInterval(this.getNextEventInterval)
   },
   methods: {
     orderContentByDays() {
@@ -179,17 +185,32 @@ export default {
     },
 
     getNextEvent() {
-      const 
-        buffer = 2 * 86400000, // 5 days
-        fifteen = 15 * 60000, // 15 minutes
-        now = (new Date).getTime() + buffer,
-        pastSessions = this.sessionsArray.filter(s => this.getUnixTime(s.Start) < now),
-        futureSessions = this.sessionsArray.filter(s => this.getUnixTime(s.Start) > now),
-        next = futureSessions.find(s => this.getUnixTime(s.Start) < now + fifteen)
+      const
+        buffer         = 2 * 86400000 - 20 * 60 * 60000, // 5 days
+        // fifteen        = 15 * 60000, // 15 minutes
+        now            = (new Date).getTime() + buffer,
+        liveSessions   = this.sessionsArray.sort((a,b) => (this.getUnixTime(b.End) < this.getUnixTime(a.End))),
+        pastSessions   = liveSessions.filter(s => (this.getUnixTime(s.Start) < now)),
+        futureSessions = liveSessions.filter(s => (this.getUnixTime(s.Start) > now)),
+        currentSession = pastSessions.find(s => (this.getUnixTime(s.End) > now)),
+        // nextSession    = futureSessions.find(s => (this.getUnixTime(s.Start) > now - fifteen))
+        nextSession    = futureSessions[0]
 
-      console.log('past sessions:', pastSessions)
-      console.log('future sessions:', futureSessions)
-      console.log('next session:', next)
+      console.log('current session:', currentSession ? currentSession.Title : '')
+      console.log('next session:', nextSession ? nextSession.Title : '')
+
+      if (currentSession) {
+        console.log('updating store with current session')
+        this.$store.commit('setCurrentLiveSession', currentSession)
+
+      } else if (nextSession) {
+        console.log('current session is undefined, upddating store with next session')
+        this.$store.commit('setCurrentLiveSession', nextSession)
+      
+      } else {
+        console.log('no more live events')
+        this.$store.commit('setCurrentLiveSession', null)
+      }
 
     },
 
@@ -201,7 +222,11 @@ export default {
       this.desiresOwnTimezone = !this.desiresOwnTimezone
       moment.tz.setDefault(this.timeZone)
       this.orderContentByDays()
+      clearInterval(this.getNextEventInterval)
       this.getNextEvent()
+      this.getNextEventInterval = setInterval(() => {
+        this.getNextEvent()
+      }, 60000) // every minute
     },
 
     sizeByDuration(session) {
@@ -218,12 +243,12 @@ export default {
       return size
     },
 
-    notEtc: string => string === 'Etc/UTC' ? 'UTC' : string,
     isBreak: session => session.Title === 'Break',
     getHumanTime: date => moment(date).format('HH:mm'),
     getUnixTime: date => moment(date).format('x'),
     getDay: date => moment(date).format('D'),
     cuteDate: date => moment(date).format('dddd, MMMM Do'),
+    notEtc: string => string === 'Etc/UTC' ? 'UTC' : string,
   }
 
 }

@@ -93,6 +93,7 @@
       :class="slug"
       :content="content"
       @moreInfo="$emit('moreInfo', $event)"
+      @goTo="$emit('goTo', $event)"
     />
 
     <div 
