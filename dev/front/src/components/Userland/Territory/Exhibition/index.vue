@@ -1,11 +1,12 @@
 <template>
   <div>
     <Island
-      v-for="section in content"
-      :id="section.slug + 'Island'"
-      :key="section.slug"
-      :section="section"
-      @moreInfo="$emit('moreInfo', `/exhibition/${section.slug}`)"
+      v-for="artwork in content"
+      :id="artwork.slug + 'Island'"
+      :style="{ left: artwork.x + '%', top: artwork.y + '%' }"
+      :key="artwork.slug"
+      :artwork="artwork"
+      @moreInfo="$emit('moreInfo', `/exhibition/${artwork.slug}`)"
     />
   </div>
 </template>
@@ -17,10 +18,35 @@ export default {
   name: 'Exhibition',
   components: { Island },
   props: [ 'content' ],
+  mounted() {
+    setTimeout(() => {
+      this.handleLinks()
+    }, 2000)
+  },
+  methods: {
+    handleLinks() {
+      setTimeout(() => {
+        Array
+        .from(document.querySelectorAll(`#exhibition a`))
+        .forEach(a => {
+          const href = a.attributes.href.value 
+          if (href && (href.startsWith('/') || href.startsWith(this.$sokURL))) {
+            a.addEventListener('click', (e) => {
+              const newhref = href.replace(this.$sokURL, '/')
+              this.$router.push(newhref)
+              e.preventDefault()
+            })
+          }
+        })
+      }, 500)
+    }
+  
+  }
 }
 </script>
 
 <style scoped>
+
 .exhibition {
   box-sizing: border-box;
   height: 100%;
@@ -28,30 +54,7 @@ export default {
   /* margin: calc(2.5 * var(--one)); */
 }
 
-.exhibition .island:nth-last-of-type(1) {
-  top: 10%; left: 0%;
-}
-.exhibition .island:nth-last-of-type(2) {
-  top: 40%; left: 10%;
-}
-.exhibition .island:nth-last-of-type(3) {
-  top: 0%; left: 20%;
-}
-.exhibition .island:nth-last-of-type(4) {
-  top: 60%; left: 35%;
-}
-.exhibition .island:nth-last-of-type(5) {
-  top: 70%; left: 55%;
-}
-.exhibition .island:nth-last-of-type(6) {
-  top: 30%; left: 70%;
-}
-.exhibition .island:nth-last-of-type(7) {
-  top: 60%; left: 85%;
-}
-.exhibition .island:nth-last-of-type(8) {
-  top: 10%; left: 50%;
-}
+
 
 
 </style>

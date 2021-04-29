@@ -109,7 +109,7 @@
 
 <script>
 import moment from 'moment'
-import SemanticList from './SemanticList.vue'
+import SemanticList from '../SemanticList.vue'
 
 
 export default {
@@ -240,6 +240,7 @@ section {
   margin-top: 1.6vh;
 }
 section a {
+  
 }
 section .header {
 }

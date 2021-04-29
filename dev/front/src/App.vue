@@ -139,8 +139,12 @@ html, body {
 
 }
 
-a, a:hover, a:active, a:visited {
+section a, 
+section a:hover, 
+section a:active, 
+section a:visited {
   color: blue;
+  text-decoration: underline;
 }
 
 h1 {

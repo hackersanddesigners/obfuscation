@@ -1,90 +1,71 @@
 <template>
-  <div 
-    :class="[
-      'island',
-      { active: active }
-    ]"
-  >
+  <div class="island">
     
-    <!-- <div class="header">
+    <div class="body">
+      <VideoArt
+        v-if="type === 'video'"
+        :artwork="artwork"
+      />
+      <PdfArt
+        v-else-if="type === 'pdf'"
+        :artwork="artwork"
+      />
+    </div>
+    <div class="header">
       <h1
         class="title"
         :class="{ zxx: $store.state.desiresTexture }"
-        @mousedown.stop="$emit('moreInfo', `/exhibition/${section.slug}`)"
+        @mousedown.stop="$emit('moreInfo', `/exhibition/${artwork.slug}`)"
       > 
-        {{ section.Name }} 
+        {{ artwork.Name }} 
       </h1>
-      <h1
-        class="play"
-        @click.stop="play()"
-      >
-        {{ active ? 'pause' : 'play' }}
-      </h1>
+      <h3 class="authors">
+        <SemanticList
+          v-if="authors && authors.length > 0"
+          :list="authors"
+          collection="contributors"
+        />
+      </h3>
     </div>
-    <div class="body">
-      <video 
-        ref="player"
-        :loop="active"
-        @mouseover.stop
-        @mouseleave.stop
-        crossorigin="anonymous"
-      >
-        <source :src="videoUrl" type="video/mp4">
-        <track :src="trackUrl" srclang="en" label="English" kind="subtitles" default>
-      </video>
-    </div> -->
 
 
   </div>
 </template>
 
 <script>
+import SemanticList from '../../SemanticList'
+import PdfArt from './PdfArt'
+import VideoArt from './VideoArt'
+
 export default {
   name: 'Island',
   components: {
+    SemanticList,
+    VideoArt,
+    PdfArt
   },
   props: [
-    'section'
+    'artwork'
   ],
   data() {
     return {
-      active: false,
-      trackSrc: null,
     }
   },
   computed: {
-    videoUrl() { return this.$apiURL + this.section.File.url },
-    trackUrl() { 
-      return this.section.Track ? 
-        this.$apiURL + this.section.Track.url : null
+    type() { return (
+        this.artwork.File ?
+          this.artwork.File.mime.includes('video') ? 'video' :
+          this.artwork.File.mime.includes('image') ? 'image' :
+          this.artwork.File.mime.includes('pdf') ? 'pdf' : null : null
+      )
     },
+    authors() { return this.artwork.authors }
     
   },
   created() {
-    // if (this.section.Track) {
-    //   this.$http
-    //     .get(this.trackUrl)
-    //     .then(response => {
-    //       console.log(response.data)
-    //       const blob = new Blob([response.data], { type: 'text/vtt' })
-    //       this.trackSrc = URL.createObjectURL(blob)
-    //       // track.setAttribute("src", URL.createObjectURL(blob));
-    //     })
-    //     .catch(error => console.log(error))
-    // }
+    console.log(this.type)
   },
   methods: {
-    play() {
-      if (!this.active) {
-        this.$refs.player.play()
-        this.active = true
-      } else {
-        this.$refs.player.pause()
-        this.active = false
-      
-      }
-    }
-
   }
 
 }
@@ -93,79 +74,65 @@ export default {
 <style scoped>
 .island {
   position: absolute;
-  width: calc(50 * var(--one));
-  height: calc(30 * var(--one));
+  min-width: calc(20 * var(--one));
+  min-height: calc(20 * var(--one));
+  max-width: calc(40 * var(--one));
+  max-height: calc(40 * var(--one));
   margin: calc(6 * var(--one));
-  padding: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  transition: background-color 0.2s ease;
+  box-shadow:
+      0 0 
+      calc(1 * var(--one))
+      calc(0.5 * var(--one))
+    rgba(0, 0, 0, 0.267);;
 }
 
 .island .header {
   box-sizing: border-box;
+  position: absolute;
+  bottom: calc(-6 * var(--one));
+  width: 100%;
+  height: 0;
   padding: 
     calc(2 * var(--one)) 
-    calc(4 * var(--one))
+    calc(2 * var(--one))
   ;
-  position: absolute;
-  height: 100%;
-  width: 100%;
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
-  justify-content: center;
-  font-size: calc(2 * var(--one));
-  z-index: 1;
-  background: rgba(255, 255, 255, 0.315);
-  border-radius: inherit;
 }
 .island .header h1 { 
   font-size: calc(3 * var(--one));
   font-weight: normal;
   text-align: center;
   cursor: pointer;
+  /* border-bottom: 1px solid; */
+}
+
+.island .header h3 a,
+.island .header h3 a:visited,
+.island .header h3 a:hover,
+.island .header h3 a:active {
+  /* color: black !important; */
+  /* text-decoration: underline; */
 }
 
 .island .header .title:hover {
   text-decoration: underline;
 }
-.island .header .play { 
-  font-family: sans-serif;
-}
-.island .header .play:hover {
-  text-decoration: underline;
-}
+
 
 .island .body {
   display: flex;
   width: 100%;
   height: 100%;
-  overflow: hidden;
   justify-content: center;
   border-radius: inherit;
+
 }
 
-.island .body video {
-  height: 100%;
-  max-width: 100%;
-  max-height: 100%;
-}
-
-.island .body video::cue {
-  /* background: red; */
-  padding-bottom: 1vh !important;
-}
-
-.island.active .header {
-  height: 150%;
-  top: -30%;
-  background-color: transparent;
-  justify-content: space-between;
-}
-.island.active .body video {
-  z-index: 1;
-}
 </style>
