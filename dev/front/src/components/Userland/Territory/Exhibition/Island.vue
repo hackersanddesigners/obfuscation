@@ -10,6 +10,10 @@
         v-else-if="type === 'pdf'"
         :artwork="artwork"
       />
+      <PictureArt
+        v-else-if="type === 'image'"
+        :artwork="artwork"
+      />
     </div>
     <div class="header">
       <h1
@@ -35,6 +39,7 @@
 <script>
 import SemanticList from '../../SemanticList'
 import PdfArt from './PdfArt'
+import PictureArt from './PictureArt'
 import VideoArt from './VideoArt'
 
 export default {
@@ -42,7 +47,8 @@ export default {
   components: {
     SemanticList,
     VideoArt,
-    PdfArt
+    PdfArt,
+    PictureArt
   },
   props: [
     'artwork'
@@ -63,7 +69,6 @@ export default {
     
   },
   created() {
-    console.log(this.type)
   },
   methods: {
   }
@@ -88,6 +93,8 @@ export default {
       calc(1 * var(--one))
       calc(0.5 * var(--one))
     rgba(0, 0, 0, 0.267);;
+
+    /* overflow: hidden; */
 }
 
 .island .header {
@@ -95,6 +102,7 @@ export default {
   position: absolute;
   bottom: calc(-6 * var(--one));
   width: 100%;
+  min-width: calc(40 * var(--one));
   height: 0;
   padding: 
     calc(2 * var(--one)) 
@@ -113,6 +121,11 @@ export default {
   /* border-bottom: 1px solid; */
 }
 
+.island .header h3 {
+  margin-top: calc(1 * var(--one));
+}
+
+
 .island .header h3 a,
 .island .header h3 a:visited,
 .island .header h3 a:hover,
@@ -127,6 +140,7 @@ export default {
 
 
 .island .body {
+  position: relative;
   display: flex;
   width: 100%;
   height: 100%;

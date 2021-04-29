@@ -4,7 +4,7 @@ module.exports = {
     cors: {
       enabled: true,
       headers: '*',
-      // origin: ["http://localhost", "https://3rd.obfuscationworkshop.org", "https://obfuscation.karls.computer"],
+      // origin: ["http://localhost:8080", "https://3rd.obfuscationworkshop.org", "https://obfuscation.karls.computer"],
     },
     xframe: {
       enabled: false,

@@ -202,11 +202,11 @@ export default {
         laterSession   = futureSessions[0],
         lastSession    = liveSessions[liveSessions.indexOf(futureSessions[0])-1]
 
-      // console.log('current time:', moment(now).format('dddd, MMMM Do HH:mm'))
-      // console.log('current session:', currentSession ? currentSession.Title : '')
-      // console.log('next session:', nextSession ? nextSession.Title : '')
-      // console.log('last session:', lastSession ? lastSession.Title : '')
-      // console.log('later session:', laterSession ? laterSession.Title : '')
+      console.log('current time:', moment(now).format('dddd, MMMM Do HH:mm'))
+      console.log('current session:', currentSession ? currentSession.Title : '')
+      console.log('next session:', nextSession ? nextSession.Title : '')
+      console.log('last session:', lastSession ? lastSession.Title : '')
+      console.log('later session:', laterSession ? laterSession.Title : '')
 
       if (currentSession) {
         if (currentSession !== this.currentLiveSession) {
