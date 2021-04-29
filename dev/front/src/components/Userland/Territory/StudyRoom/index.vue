@@ -73,7 +73,7 @@ export default {
 
       bbbRoom: {
         name: 'Study Room',
-        url: ''
+        url: 'https://bbb.tbm.tudelft.nl/b/3rd-pvb-xah-r8w'
       }
     }
   },

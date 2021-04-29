@@ -37,7 +37,7 @@ export default {
     }
   },
   computed: {
-    day() { return this.session ? moment(this.session.Start).format('dddd, MMMM Do') : null },
+    day() { return this.session ? moment(this.session.Start).format('dddd, MMMM Do z') : null },
     HumanStart() { return this.session ? this.getHumanTime(this.session.Start) : null },
     HumanEnd() { return this.session ? this.getHumanTime(this.session.End) : null }
   },

@@ -136,7 +136,7 @@ export default {
 
 .messageContainer .message {
   position: relative;
-  max-width: 500px;
+  max-width: calc(40 * var(--one));
   box-sizing: border-box;
   border: 1px solid;
   border-color: transparent;

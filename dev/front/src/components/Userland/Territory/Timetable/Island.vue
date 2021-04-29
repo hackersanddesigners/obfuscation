@@ -18,8 +18,8 @@
     </div>
 
     <BBB-link
-      v-if="soon"
-      :BBBLink="session.bbbURL"
+      v-if="soon && !ended && room.url"
+      :room="room"
       @mousedown.native.stop
       @mouseup.native.stop
       @click.native.stop
@@ -45,16 +45,31 @@ export default {
   data() {
     return {
       HumanStart: this.getHumanTime(this.session.Start),
-      HumanEnd: this.getHumanTime(this.session.End)
+      HumanEnd: this.getHumanTime(this.session.End),
+      now: (new Date).getTime(),
+      fifteen: 15 * 60000,
+      soonInterval: null,
+      room: {
+        name: 'BBB room',
+        url: this.session.bbbURL ? this.session.bbbURL : ''
+      },
     }
   },
   computed: {
-    soon() { return false },  
+    soon() { return this.getUnixTime(this.session.Start) < (this.now + this.fifteen) },  
+    ended() { return this.getUnixTime(this.session.End) < this.now },  
   },
   created() {
+    this.soonInterval = setInterval(() => {
+      this.now = (new Date).getTime()
+    }, 60000)
+  },
+  beforeDestroy() {
+    clearInterval(this.soonInterval)
   },
   methods: {
     getHumanTime: date => moment(date).format('HH:mm'),
+    getUnixTime:  date => moment(date).format('x'),
   }
 
 }
@@ -124,19 +139,5 @@ export default {
   text-align: left;
 }
 
-/* 
-.LIFECYCLE0 .island {
-  pointer-events: none;
-}
-.LIFECYCLE0 .island h1 {
-  visibility: hidden;
-} */
-
-/* .LIFECYCLE1 .island {
-  pointer-events: none;
-}
-.LIFECYCLE1 .island h1 {
-  visibility: hidden;
-} */
 
 </style>

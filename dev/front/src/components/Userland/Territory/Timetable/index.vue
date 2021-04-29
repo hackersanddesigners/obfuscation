@@ -188,7 +188,7 @@ export default {
       const
         // buffer         = 1 * 86400000, // 1 days
         // buffer         = 4 * 86400000 - 1.25 * 60 * 60000, // 1 days
-        // buffer         =  26 * 60 * 60000,
+        // buffer         =  8 * 60 * 60000,
         // buffer         = 5 * 86400000, 
         buffer         = 0, 
         now            = (new Date).getTime() + buffer,
@@ -202,11 +202,11 @@ export default {
         laterSession   = futureSessions[0],
         lastSession    = liveSessions[liveSessions.indexOf(futureSessions[0])-1]
 
-      console.log('current time:', moment(now).format('dddd, MMMM Do HH:mm'))
-      console.log('current session:', currentSession ? currentSession.Title : '')
-      console.log('next session:', nextSession ? nextSession.Title : '')
-      console.log('last session:', lastSession ? lastSession.Title : '')
-      console.log('later session:', laterSession ? laterSession.Title : '')
+      // console.log('current time:', moment(now).format('dddd, MMMM Do HH:mm'))
+      // console.log('current session:', currentSession ? currentSession.Title : '')
+      // console.log('next session:', nextSession ? nextSession.Title : '')
+      // console.log('last session:', lastSession ? lastSession.Title : '')
+      // console.log('later session:', laterSession ? laterSession.Title : '')
 
       if (currentSession) {
         if (currentSession !== this.currentLiveSession) {
@@ -362,13 +362,13 @@ export default {
   flex-shrink: 1;
   display: flex;
   min-width: calc(75 * var(--one));
-  justify-content: flex-start;
+  justify-content: center;
   align-items: flex-start;
   align-content: center;
   flex-wrap: wrap;
 }
 .schedule .day .sessionsContainer .islandContainer .staggered .island {
-  flex-basis: 45%;
+  flex-basis: 43%;
   flex-shrink: 0;
   flex-grow: 0;
   margin-top: calc(4.5 * var(--one));

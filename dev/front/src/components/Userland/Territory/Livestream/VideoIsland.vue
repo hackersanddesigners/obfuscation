@@ -60,6 +60,18 @@ export default {
       loadedmetadata: false
     }
   },
+  computed: {
+    location() { return this.$store.state.location },
+  },
+  watch: {
+    location() {
+      if (this.location.slug === 'livestream') {
+        console.log("we're in livestream")
+      } else {
+        console.log('leaving livestream')
+      }
+    },
+  }
 }
 </script>
 

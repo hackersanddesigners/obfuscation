@@ -2,7 +2,7 @@
   "kind": "collectionType",
   "collectionName": "videos",
   "info": {
-    "name": "Videos",
+    "name": "Artwork",
     "description": ""
   },
   "options": {
@@ -30,8 +30,8 @@
       "targetField": "Name"
     },
     "sessions": {
-      "via": "videos",
-      "collection": "sessions"
+      "collection": "sessions",
+      "via": "videos"
     },
     "Track": {
       "model": "file",

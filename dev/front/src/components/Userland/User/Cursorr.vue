@@ -29,6 +29,15 @@
       placeholder="type message & press enter"
       autofocus
     />
+<!-- 
+    <textarea 
+      v-if="isMe(user)" 
+      ref="input"
+      tabindex="-1"
+      class="input"
+      placeholder="type message & press enter"
+      autofocus
+    /> -->
 
     <span 
       v-else
@@ -343,7 +352,22 @@ export default {
         typing: key == 27 || input.value == '' ? '' : "typing..."
       })
 
+      // this.adjustHeight()
+
     }, 
+
+    adjustHeight() {
+      let 
+        minHeight = 100,
+        el = this.$refs.input,
+        outerHeight = parseInt(window.getComputedStyle(el).height, 10),
+        diff = outerHeight - el.clientHeight + 5
+
+      el.style.height = 0 + 'px'
+      el.style.height = Math.max(minHeight, el.scrollHeight + diff) + 'px'
+    }
+
+
   }
 }
 </script>
@@ -401,7 +425,7 @@ export default {
   margin-left: 5px;
   margin-bottom: 3px;
   pointer-events: none;
-  transition: all 0.2s ease;
+  /* transition: all 0.2s ease; */
 }
 .cursorContainer input::selection,
 .cursorContainer .input::selection {
@@ -418,6 +442,22 @@ export default {
   outline: none;
   background: transparent;
   cursor: none;
+}
+
+.cursorContainer textarea,
+.cursorContainer textarea:hover,
+.cursorContainer textarea:active {
+  overflow: hidden;
+  line-height: 1.6;
+  resize: none;
+  border: none;
+  outline: none;
+  box-sizing: border-box;
+  position: relative;
+  background: transparent;
+  cursor: none;
+  transition: all 0s ease;
+  flex-shrink: 1;
 }
 
 .cursorContainer.hovered .cursor {
@@ -438,7 +478,10 @@ export default {
 .cursorContainer.hovered .input, 
 .cursorContainer.hovered input,
 .cursorContainer.hovered input:hover,
-.cursorContainer.hovered input:active {
+.cursorContainer.hovered input:active,
+.cursorContainer.hovered textarea,
+.cursorContainer.hovered textarea:hover,
+.cursorContainer.hovered textarea:active {
   width: 700px;
   max-width: 700px;
 }

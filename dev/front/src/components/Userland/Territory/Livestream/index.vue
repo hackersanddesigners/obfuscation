@@ -75,11 +75,13 @@ export default {
   },
 
   watch: {
+
     currentLiveSession(newSession, oldSession) {
       if (newSession !== oldSession) {
         this.forcedPlaybackId = null
       }
-    }
+    },
+
   },
 
   sockets: {
