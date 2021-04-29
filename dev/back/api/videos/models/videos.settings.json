@@ -41,6 +41,22 @@
       ],
       "plugin": "upload",
       "required": false
+    },
+    "authors": {
+      "collection": "hosts",
+      "via": "artworks",
+      "dominant": true
+    },
+    "Description": {
+      "type": "richtext"
+    },
+    "x": {
+      "type": "integer",
+      "required": true
+    },
+    "y": {
+      "type": "integer",
+      "required": true
     }
   }
 }

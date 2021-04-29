@@ -46,6 +46,10 @@
     "notetaking": {
       "via": "notetakers",
       "collection": "sessions"
+    },
+    "artworks": {
+      "via": "authors",
+      "collection": "videos"
     }
   }
 }
