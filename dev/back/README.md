@@ -32,7 +32,7 @@ Collections contain many entries. When choosing a collection, you can view, filt
 The collections are: 
   - — **Statics**: The static information (about, contact, etc...) of the Reception area.
   - — **Readmes**: The articles of the Readme area.
-  - — **Videos**: The videos of the Exhibition Space.
+  - — **Artworks**: The peices in the Exhibition Space.
   - — **Sessions**: The entries of the Schedule of the workshop.
   - — **StudySessions**: The entries of the study room schedule of the workshop.
   - — **Resources**: The links, files, or texts that are displayed in the Resource Library.
@@ -45,7 +45,7 @@ The collections are:
 Some entries in the regions have their URLs mapped to collections based on their slugs:
   - — the **Reception** region maps to the **Statics** collection (e.g. **/reception/about**).
   - — the **Readme** region maps to the **Readmes** collection (e.g. **/readme/tour**).
-  - — the **Exhibition Space** region maps to the **Video** collection (e.g. **/exhibition/hearbeat-to-print**).
+  - — the **Exhibition Space** region maps to the **Artworks** collection (e.g. **/exhibition/hearbeat-to-print**).
   - — the **Schedule** region maps to the **Sessions** collection (e.g. **/timetable/obfuscating-software**).
   - — the **Study-Room** region maps to the **StudySessions** collection (e.g. **/study-room/session-1-introduction-study-group-participants**).
   - — the **Contributors** region maps to the **People** collection (e.g. **/contributors/karl**).
