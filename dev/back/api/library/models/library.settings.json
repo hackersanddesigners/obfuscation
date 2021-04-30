@@ -30,8 +30,8 @@
       "type": "string"
     },
     "sessions": {
-      "via": "references",
-      "collection": "sessions"
+      "collection": "sessions",
+      "via": "references"
     },
     "slug": {
       "type": "uid",
@@ -39,9 +39,6 @@
     },
     "author": {
       "type": "richtext"
-    },
-    "Poster": {
-      "type": "boolean"
     }
   }
 }

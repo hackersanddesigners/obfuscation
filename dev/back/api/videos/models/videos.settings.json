@@ -57,6 +57,16 @@
     "y": {
       "type": "integer",
       "required": true
+    },
+    "Category": {
+      "type": "enumeration",
+      "enum": [
+        "SessionVideo",
+        "Poster",
+        "Other"
+      ],
+      "default": "SessionVideo",
+      "required": true
     }
   }
 }

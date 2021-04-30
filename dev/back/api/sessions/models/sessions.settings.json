@@ -32,8 +32,8 @@
       "dominant": true
     },
     "references": {
-      "collection": "library",
       "via": "sessions",
+      "collection": "library",
       "dominant": true
     },
     "slug": {
