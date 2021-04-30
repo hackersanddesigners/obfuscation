@@ -400,8 +400,14 @@ export default {
     }, 1500)
 
     this.handleLinks('.message a')
-    
 
+    setTimeout(() => {
+      if (this.networkConservationMode) {
+        console.log('network conservation mode enabled')
+        this.notifications.push(this.highCPUNotifiction)
+      }
+    }, 1000)
+    
     this.$el.addEventListener("wheel", (e) => {
       if (e.ctrlKey) {
         e.preventDefault()

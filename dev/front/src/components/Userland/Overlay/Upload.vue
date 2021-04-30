@@ -8,6 +8,7 @@
     <p>Posting...</p>
   </div>
   <form v-else>
+
     <input 
       v-if="!isGlossary"
       ref="author" 
@@ -75,18 +76,6 @@
     </div>
     <p v-if="tooBig" class="error">File must be smaller than 20MB.</p>
 
-    <div 
-      v-if="!isGlossary"
-      class="postertoggle"
-    >
-      <span>Poster: </span>
-      <input 
-        ref="poster" 
-        :class="['ui', 'footer']"
-        type="checkbox" 
-        @input="isPoster != isPoster"
-      />
-    </div>
   </form>
  </section>
 </template>
@@ -178,7 +167,6 @@ export default {
         formData = new FormData()
 
       formData.append('data', JSON.stringify(data))
-      // formData.append('files.message', this.voiceMessage.data, this.voiceMessage.name)
 
       this.$http
         .post(`${ this.$apiURL }/${ collection }`, formData)

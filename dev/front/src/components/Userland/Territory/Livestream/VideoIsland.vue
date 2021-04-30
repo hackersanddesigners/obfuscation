@@ -88,9 +88,13 @@ export default {
   flex-direction: column;
   justify-content: center;
   overflow: hidden;
+  background: none;
 }
 .island:hover {
-  background-color: initial;
+  background: none;
+}
+.island::before {
+  /* background: none !important; */
 }
 .island .body {
   height: 100%;

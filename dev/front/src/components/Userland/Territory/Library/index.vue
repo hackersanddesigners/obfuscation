@@ -1,25 +1,12 @@
 <template>
   <div>
-    <div class="posterListContainer">
-      <div class="nonposters">
-        <Island
-          v-for="section in nonposters"
-          :id="section.slug + 'Island'"
-          :ref="section.slug"
-          :key="section.slug"
-          :section="section"
-        />
-      </div>
-      <div class="posters">
-        <Island
-          v-for="section in posters"
-          :id="section.slug + 'Island'"
-          :ref="section.slug"
-          :key="section.slug"
-          :section="section"
-        />
-      </div>
-    </div>
+    <Island
+      v-for="section in resources"
+      :id="section.slug + 'Island'"
+      :ref="section.slug"
+      :key="section.slug"
+      :section="section"
+    />
     <Island
       ref="upload"
       class="submit"
@@ -38,14 +25,8 @@ export default {
   components: { Island },
   props: [ 'content' ],
   computed: {
-    nonposters() { return Object
+    resources() { return Object
       .values(this.content)
-      .filter(l => l.Poster !== true) 
-      .sort((a, b) => (new Date(b.updated_at)) - (new Date(a.updated_at)))
-    },
-    posters() { return Object
-      .values(this.content)
-      .filter(l => l.Poster === true) 
       .sort((a, b) => (new Date(b.updated_at)) - (new Date(a.updated_at)))
     },
     
@@ -66,23 +47,8 @@ export default {
   box-sizing: border-box;
   max-height: 100%;
   width: 100%;
-  margin: calc(20 * var(--one));;
   margin-top: calc(10 * var(--one));
   overflow: auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center; 
-}
-.posterListContainer {
-  width: 100%;
-  display: flex;
-  align-items: flex-start; 
-}
-.posters,
-.nonposters {
-  flex-basis: 50%;
-  box-sizing: border-box;
-  max-height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center; 

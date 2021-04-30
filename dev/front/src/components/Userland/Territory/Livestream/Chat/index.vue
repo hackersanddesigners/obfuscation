@@ -35,6 +35,9 @@ export default {
   created() {
   },
   mounted() {
+    setTimeout(() => {
+      this.scrollToBottom(true)
+    }, 1000)
   },
   sockets: {
     message(m) {
