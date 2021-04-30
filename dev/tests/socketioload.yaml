@@ -7,7 +7,7 @@ config:
   engines:
    socketio-v3: {}
   phases:
-    - duration: 60 # Run scenario for 30 seconds
+    - duration: 30 # Run scenario for 30 seconds
       arrivalCount: 1000 # Create 400 virtual users per scenario
       name: Warm up
     # - duration: 3600 # Run scenario for 30 seconds
@@ -25,19 +25,20 @@ scenarios:
             "name": "testBot",
             "x":0.5850520833333334,
             "y":0.24128440366972478,
-            "color": "black",
+            "color": "red",
             "connected":true,
             "deleted":false
           }
-      # - emit:
-      #     channel: "appearance"
-      #     json: 
-      #       uid: "TaIHaUATdEy"
-      #       name: "bot"
-      #       connected: true
-      #       x: "0.5850520833333334"
-      #       y: "0.24128440366972478"
-      # - emit:
-      #     channel: "position"
-      #     data: "{\"x\":0.5850520833333334,\"y\":0.24128440366972478,\"connected\":true,\"uid\":\"f3706935e29\"}"
+      - think: 0.5 # do nothing for 5 seconds, then disconnect
+      - emit:
+          channel: "appearance"
+          data: {
+            "uid":"TaIHaUATdEya",
+            "name": "testBot",
+            "x":0.5850520833333334,
+            "y":0.24128440366972478,
+            "color": "red",
+            "connected":false,
+            "deleted":false
+          }
       - think: 3600 # do nothing for 5 seconds, then disconnect
