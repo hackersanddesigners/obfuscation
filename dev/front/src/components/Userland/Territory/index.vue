@@ -40,7 +40,7 @@
     />
 
     <Exhibition
-      v-else-if="slug === 'exhibition'"
+      v-else-if="slug === 'exhibition' && lifecycle >= 2"
       :class="slug"
       :content="content"
       @moreInfo="$emit('moreInfo', $event)"
