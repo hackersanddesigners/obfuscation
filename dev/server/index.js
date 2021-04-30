@@ -27,7 +27,7 @@ const
   root = path.resolve(__dirname, '../front/dist'),
   port = process.env.PORT || 3090,
   room = 'obfuscation',
-  maxLiveCount = 100,
+  maxLiveCount = 300,
   getCount = () => (
     io.sockets.adapter.rooms.get(room) ?
     Array.from(io.sockets.adapter.rooms.get(room)).length : 0

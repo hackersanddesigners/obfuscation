@@ -36,7 +36,7 @@ const store = new Vuex.Store({
     messages: {},
 
     connectedCount: 1,
-    maxLiveCount: 100,
+    maxLiveCount: 300,
     wait: false,
     highCPUNotifiction: {
       time: ((new Date).getTime()),
