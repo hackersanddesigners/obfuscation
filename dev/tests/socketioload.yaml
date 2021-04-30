@@ -1,7 +1,7 @@
 config:
   # target: "http://localhost:3070"
-  target: "https://obfuscation.karls.computer"
-  # target: "https://3rd.obfuscationworkshop.org"
+  # target: "https://obfuscation.karls.computer"
+  target: "https://3rd.obfuscationworkshop.org"
   socketio:
     transports: ["websocket"]
   engines:
@@ -41,4 +41,4 @@ scenarios:
             "connected":false,
             "deleted":false
           }
-      - think: 3600 # do nothing for 5 seconds, then disconnect
+      - think: 360 # do nothing for 5 seconds, then disconnect

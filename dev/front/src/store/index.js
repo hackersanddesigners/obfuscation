@@ -1,10 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-// import _ from 'lodash'
 
 Vue.use(Vuex)
 
-const store = new Vuex.Store({
+export default new Vuex.Store({
 
 
   // strict mode is only enabled for dev environment.
@@ -13,62 +12,13 @@ const store = new Vuex.Store({
 
   state: {
 
+    ////////////////////////////////////////////
+    //////////////////// UI ////////////////////
+    ////////////////////////////////////////////
 
     // initial values for application state.
 
-    version: 8,
-    lifecycle: process.env.VUE_APP_LIFECYCLE || 0,
-    save: true,
-
-    uid: null,
-
-    registered: false,
-    visited: false,
-    blocked: false,
-
-    moderator: false,
-
-    // users and messages are populated by a combi-
-    // nation of local storage and conflict-free data
-    // replication with other peers over the socket.
-
-    users: {},
-    messages: {},
-
-    connectedCount: 1,
-    maxLiveCount: 400,
-    wait: false,
-    highCPUNotifiction: {
-      time: ((new Date).getTime()),
-      author: 'Server',
-      content: "The platframe is currently experiencing a high number of concurrent visitors. To remain functional, it will stop displaying the correct positions of participants' cursors. You can still send and receive messages."
-    },
-
-
-    // territories are defined in Strapi.
-
-    territories: {},
-    general: {
-      name: 'general',
-      slug: 'general'
-    },
-    location: {},
-
-
-    // livestream
-
-    stream: {
-      playbackId: null,
-      status: null,
-    },
-
-    currentLiveSession: null,
-
-
-    // ticker
-
-    ticker: {},
-
+    // version: 8,
 
     // default vlaues for map position, dimensions, 
     // grid, and scale (zoom).
@@ -92,6 +42,49 @@ const store = new Vuex.Store({
       y: null,
     },
 
+
+    ////////////////////////////////////////////
+    //////////////////// CHAT /////////////////
+    ////////////////////////////////////////////
+
+    save: true,
+    uid: null,
+    registered: false,
+    visited: false,
+    blocked: false,
+    moderator: false,
+
+    // users and messages are populated by a combi-
+    // nation of local storage and conflict-free data
+    // replication with other peers over the socket.
+
+    users: {},
+    messages: {},
+
+    connectedCount: 1,
+    maxLiveCount: 250,
+    wait: false,
+    highCPUNotifiction: {
+      time: ((new Date).getTime()),
+      author: 'Server',
+      content: "The platframe is currently experiencing a high number of concurrent visitors. To remain functional, it will stop displaying the correct positions of participants' cursors. You can still send and receive messages."
+    },
+
+
+    ////////////////////////////////////////////
+    //////////////////// REGIONS ///////////////
+    ////////////////////////////////////////////
+
+
+    territories: {},
+    location: {},
+    general: {
+      name: 'general',
+      slug: 'general'
+    },
+    currentLiveSession: null,
+    ticker: {},
+
   },
 
 
@@ -100,14 +93,13 @@ const store = new Vuex.Store({
 
     // app state mutations.
 
-    setLifecycle: (state, lifecycle) => state.lifecycle = lifecycle,
     doNotSave: state => state.save = false,
     setUID: (state, uid) => state.uid = uid,
-
     register: state => state.registered = true,
     deregister: state => state.registered = false,
     visit: state => state.visited = true,
     block: state => state.blocked = true,
+
 
     // app database mutations.
 
@@ -228,13 +220,6 @@ const store = new Vuex.Store({
 
   actions: {
 
-
-    // SOCKET actions: all actions preceded with a 
-    // 'socket_' describe the client behaviour when
-    // recieving a message from other sockets.
-
-    // '$socket.client.emit(...) sends messages of
-    // different kinds to ALL other connected peers.
 
     socket_user({ state, commit }, user) {
       commit('setUser', user)
@@ -457,133 +442,70 @@ const store = new Vuex.Store({
 
     me: state => state.users[state.uid],
     isMe: state => user => user.uid === state.uid,
-    networkConservationMode: state => state.connectedCount > state.maxLiveCount,
-    emitsPerSecond: state => 2 * state.maxLiveCount / state.connectedCount,
 
-    userByName: (state, getters) => (name) => {
-      const found = getters.usersArray.find(u => u.name == name) 
-      if (found) {
-        return state.users[found.uid] 
-      }
-    },
-
-    territoryByName: getters => name => {
-      return getters.territoriesArray.find(t => t.name == name) 
-    },
+    networkConservationMode: state => (
+      state.connectedCount > state.maxLiveCount
+    ),
+    emitsPerSecond: state => (
+      2 * state.maxLiveCount / state.connectedCount
+    ),
 
 
-    territoryBySlug: state => slug => {
-      return state.territories[slug] 
-    },
+    usersArray: state => ( 
+      Object.values(
+        state.users
+      ) 
+    ),
+    notDeletedUsers: (state, getters) => ( getters
+      .usersArray
+      .filter(u => 
+        !u.deleted && 
+        !u.blocked &&
+        !u.isMobile
+      )
+      .sort((a, b) =>
+        b.moderator - a.moderator
+      )
+    ),
+    connectedUsers: (state, getters) => ( getters
+      .notDeletedUsers
+      .filter(u => 
+        u.connected
+      )
+    ),
+    connectedUsersFirst: (state, getters) => ( getters
+      .notDeletedUsers
+      .sort((a, b) => 
+        b.connected - a.connected
+      )
+    ),
+    userNames: (state, getters) => ( getters
+      .notDeletedUsers
+      .map(
+        user => user.name
+      )
+    ),
+    userColors: (state, getters) => ( getters
+      .usersArray
+      .map(u => 
+        ({
+          [`--${u.uid}`]: ( 
+            state.desiresContrast ? 'black' : 
+            u.connected ? u.color : 'var(--disconnected)'
+          )
+        })
+      )
+    ),
 
-    territoryByBorders: (state, getters) => pos => {
-      let 
-        diff = 0.5 / state.scale,
-        coords = getters.coordsFrom(pos),
-        found = getters.territoriesArray.find((territory) => {
-          const 
-            borders = {
-              x: territory.borders.x * state.widthFactor,
-              y: territory.borders.y,
-              w: territory.borders.w * state.widthFactor,
-              h: territory.borders.h,
-            },
-            minX = borders.x - diff,
-            minY = borders.y - diff,
-            maxX = borders.w + borders.x - diff,
-            maxY = borders.h + borders.y - diff
-
-          if ( coords.x > minX && coords.x < maxX
-            && coords.y > minY && coords.y < maxY ) {
-            return territory
-          }
-          // if (territory.slug === 'glossary') {
-          //   console.log('* territory:  ', territory.slug)
-          //   console.log('**********************************')
-          //   console.log('* minX:       ', minX)
-          //   console.log('* borderX:    ', territory.borders.x)
-          //   console.log('* maxX:       ', maxX)
-          //   console.log('* coordsX:    ', coords.x)
-          //   console.log('* minY:       ', minY)
-          //   console.log('* borderY:    ', territory.borders.y)
-          //   console.log('* maxY:       ', maxY)
-          //   console.log('* coordsY:    ', coords.y)
-          //   console.log('**********************************')
-          // }
-        }) 
-      return found || state.general
-    },
-
-    messagesByUser: state => user => {
-      let userMessages = []
-      for(let uid in state.messages) {
-        const message = state.messages[uid]
-        if (message.authorUID == user.uid && !message.deleted) {
-          userMessages.push(message)
-        }
-      }
-      return userMessages
-    },
-
-    regionColors: state => {
-      let regionColors = {}
-      for (let slug in state.territories) {
-        const terr = state.territories[slug]
-        regionColors[`--${slug}`] = terr.color
-      }
-      return regionColors
-    },
-
-    userColors: state => {
-      let userColors = {}
-      for (let uid in state.users) {
-        const user = state.users[uid]
-        userColors[`--${uid}`] = 
-          state.desiresContrast ? 'black' : 
-          user.connected === true ? user.color : 'var(--disconnected)'
-      }
-      return userColors
-    },
-
-    userNames: (state, getters) => {
-      return getters.notDeletedUsers.map(user => user.name)
-    },
-
-    connectedUsers: (state, getters) => {
-      return getters.notBlockedUsers
-        .filter(u => (
-          ( u.connected === true ) &&
-          ( u.isMobile ? u.isMobile === false : true )
-        ))
-        .sort((a, b) => (
-          ( a.moderator || b.moderator ) ?
-          ( 
-            !a.moderator ? 1 : b.moderator ? -1 :
-            b.moderator - a.moderator
-          ) : -1
-        ))
-    },
-
-    connectedUsersFirst: (state, getters) => {
-      return getters.notDeletedUsers.sort((a, b) => (
-        ( a.moderator || b.moderator ) ?
-        ( 
-          !a.moderator ? 1 : b.moderator ? -1 :
-          b.moderator - a.moderator
-        ) : b.connected - a.connected
-      ))
-    },
-
-    notBlockedUsers: (state, getters) => {
-      return getters.notDeletedUsers.filter(u => !u.blocked)
-    },
-
-    notDeletedUsers: (state, getters) => {
-      return getters.usersArray.filter(u => !u.deleted && !u.isMobile)
-    },
-
-    notDeletedMessages: (state, getters) => {
-      return getters.messagesArray.filter(m => (
+  
+    messagesArray: state => ( 
+      Object.values(
+        state.messages
+      ) 
+    ),
+    notDeletedMessages: (state, getters) => ( getters
+      .messagesArray
+      .filter(m => (
         state.users[m.authorUID] &&
         m.uid && 
         !m.deleted && 
@@ -591,103 +513,112 @@ const store = new Vuex.Store({
         !m.stream &&
         (state.currentLiveSession ? m.location !== 'livestream' : true)
       ))
+    ),
+    messagesByUser: (state, getters) => user => ( getters
+      .messagesArray
+      .filter(m => 
+        m.authorUID === user.uid
+      )
+    ),
+
+
+    territoriesArray: state => ( 
+      Object.values(
+        state.territories
+      )
+    ),
+    regionColors: (state, getters) => ( getters
+      .territoriesArray
+      .map(t => 
+        ({
+          [`--${t.slug}`]: state.scale > 7 ? t.color : null
+        })
+      )
+    ),
+    territoryByBorders: (state, getters) => pos => {
+      const 
+        diff   = 0.5 / state.scale,
+        coords = getters.coordsFrom(pos)
+
+      return ( getters
+        .territoriesArray
+        .find(territory => {
+          const 
+            bordersX = territory.borders.x * state.widthFactor,
+            bordersY = territory.borders.y,
+            bordersW = territory.borders.w * state.widthFactor,
+            bordersH = territory.borders.h,
+            minX     = bordersX - diff,
+            minY     = bordersY - diff,
+            maxX     = bordersW + bordersX - diff,
+            maxY     = bordersH + bordersY - diff
+
+          return ( 
+            coords.x > minX && coords.x < maxX && 
+            coords.y > minY && coords.y < maxY 
+          )
+        }) 
+      ) || state.general
+    },
+    positionOfIsland: state => slug => {
+      const 
+        selector = slug + 'Island',
+        island   = document.getElementById(selector)
+
+      if (!island) return
+
+      const 
+        parent   = island.offsetParent,
+        gParent  = parent.offsetParent,
+        ggParent = gParent.offsetParent,
+        left     = 
+          island.offsetLeft +
+          parent.offsetLeft +
+          gParent.offsetLeft +
+          ggParent.offsetLeft,
+        top      = 
+          island.offsetTop +
+          parent.offsetTop +
+          gParent.offsetTop +
+          ggParent.offsetTop,
+        x        = left - (state.windowSize.w - island.offsetWidth) / 2,
+        y        = state.isMobile ? top - 100 : top - 100
+        
+      return { x, y }
     },
 
-    usersArray: state => {
-      return Object.values(state.users)
-    },
-
-    messagesArray: state => {
-      return Object.values(state.messages)
-    },
-
-    territoriesArray: state => {
-      return Object.values(state.territories)
-    },
 
     centerOf: (state, getters) => obj => {
       obj = getters.pixelsFrom(obj)
       const 
-        shiftX = 
-          // state.isMobile ? 50 :
-          // ((state.windowSize.w - obj.w) / 2) >= 0 ? 
-          // ((state.windowSize.w - obj.w) / 2) : 0,
-          (state.isMobile || ((state.windowSize.w - obj.w) / 2)) >= 0 ? 
-          ((state.windowSize.w - obj.w) / 2) : 0,
-        shiftY = 
+        centerX = (state.windowSize.w - obj.w) / 2,
+        centerY = (state.windowSize.h - obj.h) / 2,
+        shiftX  = (
+          state.isMobile || centerX >= 0 ? 
+          centerX : 0
+        ),
+        shiftY  = (
           state.isMobile ? 50 :
-          ((state.windowSize.h - obj.h) / 2) >= 0 ? 
-          ((state.windowSize.h - obj.h) / 2) : 0,
-        x = obj.x - shiftX,
-        y = obj.y - shiftY
-      return {
-        x: x,
-        y: y,
-      }
+          centerY >= 0 ? centerY : 0
+        ),
+        x       = obj.x - shiftX,
+        y       = obj.y - shiftY
+      return { x, y }
     },
+    pixelsFrom: state => coords => ({
+      x: coords.x * state.scale * state.windowSize.w,
+      y: coords.y * state.scale * state.windowSize.h,
+      w: coords.w * state.scale * state.windowSize.w || 0,
+      h: coords.h * state.scale * state.windowSize.h || 0,
+    }),
+    coordsFrom: state => pixels => ({
+      x: pixels.x / (state.scale * state.windowSize.w),
+      y: pixels.y / (state.scale * state.windowSize.h),
+      w: pixels.w / (state.scale * state.windowSize.w) || 0,
+      h: pixels.h / (state.scale * state.windowSize.h) || 0,
+    }),
 
-    positionOfIsland: state => slug => {
-      const 
-        selector = slug + 'Island',
-        island = document.getElementById(selector)
-
-      if (island) {
-        const 
-          parent = island.offsetParent,
-          grandparent = parent.offsetParent,
-          greatgrandparent = grandparent.offsetParent,
-          ancestor = greatgrandparent.offsetParent,
-          ancestor2 = ancestor.offsetParent,
-          buffer = parent.classList.contains('staggered') ? 2000 : 50,
-          left = 
-            island.offsetLeft <= buffer ?
-            island.offsetLeft + parent.offsetLeft + grandparent.offsetLeft + greatgrandparent.offsetLeft + ancestor.offsetLeft + ancestor2.offsetLeft :
-            island.offsetLeft + parent.offsetLeft,
-          top = 
-            island.offsetTop <= buffer ?
-            island.offsetTop + parent.offsetTop + grandparent.offsetTop + greatgrandparent.offsetTop + ancestor.offsetTop + ancestor2.offsetTop:
-            island.offsetTop + parent.offsetTop,
-          centerX = left - (state.windowSize.w - island.offsetWidth) / 2,
-          centerY = state.isMobile ? top - 100 : top - 100
-        return {
-          x: centerX,
-          y: centerY
-        }
-      } else {
-        return null
-      }
-    },
-
-    positionOf: (state, getters) => obj => {
-      obj = getters.pixelsFrom(obj)
-      return {
-        x: obj.x - state.windowSize.w / 2,
-        y: obj.y - state.windowSize.h / 2
-      }
-    },
-
-    pixelsFrom: state => coords => {
-      return {
-        x: coords.x * state.scale * state.windowSize.w,
-        y: coords.y * state.scale * state.windowSize.h,
-        w: coords.w * state.scale * state.windowSize.w || 0,
-        h: coords.h * state.scale * state.windowSize.h || 0,
-      }
-    },
-
-    coordsFrom: state => pixels => {
-      return {
-        x: pixels.x / (state.scale * state.windowSize.w),
-        y: pixels.y / (state.scale * state.windowSize.h),
-        w: pixels.w / (state.scale * state.windowSize.w) || 0,
-        h: pixels.h / (state.scale * state.windowSize.h) || 0,
-      }
-    },
-  
   },
 
 
 })
-
-
-export default store

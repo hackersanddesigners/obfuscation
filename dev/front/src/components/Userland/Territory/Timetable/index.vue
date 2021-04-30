@@ -188,7 +188,7 @@ export default {
       const
         // buffer         = 1 * 86400000, // 1 days
         // buffer         = 4 * 86400000 - 1.25 * 60 * 60000, // 1 days
-        // buffer         =  8 * 60 * 60000,
+        // buffer         =  -30 * 60 * 60000,
         // buffer         = 5 * 86400000, 
         buffer         = 0, 
         now            = (new Date).getTime() + buffer,

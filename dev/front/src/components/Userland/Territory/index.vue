@@ -26,63 +26,63 @@
     </svg>
 
     <Reception
-      v-if="slug === 'reception' && lifecycle >= 0"
+      v-if="slug === 'reception' && $lifecycle >= 0"
       :class="slug"
       :content="content"
       @moreInfo="$emit('moreInfo', $event)"
     />
 
     <Readme
-      v-if="slug === 'readme' && lifecycle >= 1"
+      v-if="slug === 'readme' && $lifecycle >= 1"
       :class="slug"
       :content="content"
       @moreInfo="$emit('moreInfo', $event)"
     />
 
     <Exhibition
-      v-else-if="slug === 'exhibition' && lifecycle >= 2"
+      v-else-if="slug === 'exhibition' && $lifecycle >= 2"
       :class="slug"
       :content="content"
       @moreInfo="$emit('moreInfo', $event)"
     />
 
     <Timetable
-      v-else-if="slug === 'schedule' && lifecycle >= 1"
+      v-else-if="slug === 'schedule' && $lifecycle >= 1"
       :class="slug"
       :content="content"
       @moreInfo="$emit('moreInfo', $event)"
     />
 
     <Contributors
-      v-else-if="slug === 'contributors' && lifecycle >= 1"
+      v-else-if="slug === 'contributors' && $lifecycle >= 1"
       :class="slug"
       :content="content"
       @moreInfo="$emit('moreInfo', $event)"
     />
 
     <StudyRoom
-      v-else-if="slug === 'study-room' && lifecycle >= 1"
+      v-else-if="slug === 'study-room' && $lifecycle >= 1"
       :class="slug"
       :content="content"
       @moreInfo="$emit('moreInfo', $event)"
     />
 
     <Library
-      v-else-if="slug === 'library' && lifecycle >= 1"
+      v-else-if="slug === 'library' && $lifecycle >= 1"
       :class="slug"
       :content="content"
       @moreInfo="$emit('moreInfo', $event)"
     />
 
     <Glossary
-      v-else-if="slug === 'glossary' && lifecycle >= 1"
+      v-else-if="slug === 'glossary' && $lifecycle >= 1"
       :class="slug"
       :content="content"
       @moreInfo="$emit('moreInfo', $event)"
     />
 
     <Hangout
-      v-else-if="slug === 'hangout' && lifecycle >= 1"
+      v-else-if="slug === 'hangout' && $lifecycle >= 1"
       :class="slug"
       :content="content"
       @moreInfo="$emit('moreInfo', $event)"
@@ -143,7 +143,7 @@ export default {
   },
   computed: { 
     scale() { return this.$store.state.scale },
-    lifecycle() { return this.$store.state.lifecycle },
+    // lifecycle() { return this.$store.state.lifecycle },
     slug() { return this.territory.slug },
     content() { return this.territory.content },
   },

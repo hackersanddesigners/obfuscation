@@ -1,8 +1,8 @@
 <template>
   <main 
     :style="[
-      userColors,
-      scale > 7 ? regionColors : '',
+      ...userColors,
+      ...regionColors,
       { '--scale': scale }
     ]"
     :class="{ 
@@ -49,7 +49,7 @@
       ref="userlandContainer"
       tabindex="-1"
       :class="[
-        'LIFECYCLE' + lifecycle,
+        'LIFECYCLE' + $lifecycle,
         { dragging: dragging },
       ]"
       @click="handleClick($event)"
@@ -317,8 +317,6 @@ export default {
       'networkConservationMode',
 
       'territoryByBorders',
-      'territoryBySlug',
-      'userByName',
 
       'regionColors',
       'userColors',
@@ -326,7 +324,6 @@ export default {
       'notDeletedUsers',
       'notDeletedMessages',
 
-      'positionOf',
       'positionOfIsland',
       'centerOf',
       'pixelsFrom',
@@ -485,66 +482,53 @@ export default {
       console.log(name, page)
       
 
-      // routing to users
-      
-      if (slug.startsWith('~') ) {
-        const user = this.userByName(name.replace('~',''))
-        if (!user) {
-          console.log('user not found')
-          this.notfound = true
-        } else {
-          position = this.positionOf(user)
-        }
-
-
       // routing to territoriees
 
+      const territory = this.territories[name]
+      if (!territory) {
+        if (name !== 'general') {
+          console.log('territory not found')
+          this.notfound = true
+        }
       } else {
-        const territory = this.territories[name]
-        if (!territory) {
-          if (name !== 'general') {
-            console.log('territory not found')
+        position = this.centerOf({
+          x: territory.borders.x * this.widthFactor,
+          y: territory.borders.y,
+          w: territory.borders.w * this.widthFactor,
+          h: territory.borders.h,
+        })
+        // position = this.centerOf(territory.borders)
+        content = territory
+
+    
+        // routing to pages
+
+        if (page) {
+          // console.log("going to page", page)
+          this.secondPath = true
+          position = this.positionOfIsland(page)
+
+          if (position) {
+            content = 
+              page === 'upload' || page === 'submit' ? { 
+                slug: page, 
+                collection: name
+              } : this.territories[name].content[page]
+
+            setTimeout(() => {
+              this.secondPath = false
+            }, 1000)
+
+          } else {
             this.notfound = true
-          }
-        } else {
-          position = this.centerOf({
-            x: territory.borders.x * this.widthFactor,
-            y: territory.borders.y,
-            w: territory.borders.w * this.widthFactor,
-            h: territory.borders.h,
-          })
-          // position = this.centerOf(territory.borders)
-          content = territory
-
-      
-          // routing to pages
-
-          if (page) {
-            // console.log("going to page", page)
-            this.secondPath = true
-            position = this.positionOfIsland(page)
-
-            if (position) {
-              content = 
-                page === 'upload' || page === 'submit' ? { 
-                  slug: page, 
-                  collection: name
-                } : this.territories[name].content[page]
-
-              setTimeout(() => {
-                this.secondPath = false
-              }, 1000)
-
-            } else {
-              this.notfound = true
-
-            }
 
           }
 
         }
 
-      }      
+      }
+
+     
       
       // scroll action
 
@@ -671,7 +655,7 @@ export default {
     handleNotificationClick(notification) {
       this.notifications = []
       this.scrollTo(
-        this.positionOf(notification), 
+        this.centerOf(notification), 
       'smooth')
     },
 

@@ -398,10 +398,10 @@ export default {
   min-width: calc(0.07vh * var(--scale));
   max-width: calc(0.07vh * var(--scale));
   height: calc(0.1vh * var(--scale));
-  background: var(--userColor);
-  box-shadow: var(--userColor) 5px 5px 20px;
   padding: 1px 5px 3px 5px;
   border-radius: 6px 10px 6px 10px;
+  background: var(--userColor);
+  box-shadow: var(--userColor) 5px 5px 20px;
   transition: all 0.2s ease;
   overflow: hidden;
   display: flex;
