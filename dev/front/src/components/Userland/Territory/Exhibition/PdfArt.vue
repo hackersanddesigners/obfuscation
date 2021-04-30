@@ -11,8 +11,13 @@
       ref="canvas" 
       @click.stop="enterFullscreen"
     />
+
+    <img 
+      :src="imgURL" 
+      @click.stop="enterFullscreen"
+    /> 
     
-    <div class="controls">
+    <div v-if="!isMobile" class="controls">
       <h3
         class="fullscreen"
         @click.stop="enterFullscreen"
@@ -33,17 +38,12 @@ export default {
   data() {
     return {
       fullscreen: false,
+      imgURL: null,
     }
   },
   computed: {
     pdfURL() { return this.$apiURL + this.artwork.File.url },
-
-    
-  },
-  created() {
-    
-
-
+    isMobile() { return this.$store.state.isMobile }
   },
   mounted() {
 
@@ -65,30 +65,35 @@ export default {
       pdfjs.getDocument(this.pdfURL).then(pdf => {
         pdf.getPage(1).then(page => {
           const 
-            viewport = page.getViewport({ scale: 0.5 }),
+            viewport = page.getViewport({ scale: 1 }),
             canvas = this.$refs.canvas,
             context = canvas.getContext('2d')
 
           canvas.height = viewport.height
           canvas.width = viewport.width
 
-          page.render({ canvasContext: context, viewport: viewport })
-
+          page
+            .render({ canvasContext: context, viewport: viewport })
+            .then(() => {
+              this.imgURL = canvas.toDataURL()
+            })
         })
       })
     },
 
     enterFullscreen() {
-      if (this.$refs.viewer.requestFullScreen) {
-        this.$refs.viewer.requestFullScreen()
-      } else if (this.$refs.viewer.mozRequestFullScreen) {
-        this.$refs.viewer.mozRequestFullScreen()
-      } else if (this.$refs.viewer.webkitRequestFullScreen) {
-        this.$refs.viewer.webkitRequestFullScreen()
+      if (!this.isMobile) {
+        if (this.$refs.viewer.requestFullScreen) {
+          this.$refs.viewer.requestFullScreen()
+        } else if (this.$refs.viewer.mozRequestFullScreen) {
+          this.$refs.viewer.mozRequestFullScreen()
+        } else if (this.$refs.viewer.webkitRequestFullScreen) {
+          this.$refs.viewer.webkitRequestFullScreen()
+        }
+        setTimeout(() => {
+          this.fullscreen = true
+        }, 300)
       }
-      setTimeout(() => {
-        this.fullscreen = true
-      }, 300)
     }
     
 
@@ -101,24 +106,28 @@ export default {
 .pdfArt {
   box-sizing: border-box;
   position: relative;
-  height: 100%;
-  width: 100%;
+  max-height: 100%;
+  max-width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   border-radius: inherit;
-  overflow: visible;
 }
 
-.pdfArt canvas {
+.pdfArt img {
   border-radius: inherit;
   box-sizing: border-box;
   position: relative;
-  max-width: 100%;
-  max-height: 100%;
+  object-fit: cover;
+  width: 100%;
+  min-width: calc(20 * var(--one));
+  min-height: calc(20 * var(--one));
+  max-width: calc(40 * var(--one));
+  max-height: calc(40 * var(--one));
 }
 
+.pdfArt canvas,
 .pdfArt embed {
   height: 0;
   width: 0;

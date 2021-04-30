@@ -12,7 +12,7 @@
       @click.stop="enterFullscreen"
     /> 
     
-    <div class="controls">
+    <div v-if="!isMobile" class="controls">
       <h3
         class="fullscreen"
         @click.stop="enterFullscreen"
@@ -35,11 +35,7 @@ export default {
   },
   computed: {
     imgURL() { return this.$apiURL + this.artwork.File.url },
-  },
-  created() {
-    
-
-
+    isMobile() { return this.$store.state.isMobile }
   },
   mounted() {
 
@@ -57,16 +53,18 @@ export default {
   methods: {
 
     enterFullscreen() {
-      if (this.$refs.viewer.requestFullScreen) {
-        this.$refs.viewer.requestFullScreen()
-      } else if (this.$refs.viewer.mozRequestFullScreen) {
-        this.$refs.viewer.mozRequestFullScreen()
-      } else if (this.$refs.viewer.webkitRequestFullScreen) {
-        this.$refs.viewer.webkitRequestFullScreen()
+      if (!this.isMobile) {
+        if (this.$refs.viewer.requestFullScreen) {
+          this.$refs.viewer.requestFullScreen()
+        } else if (this.$refs.viewer.mozRequestFullScreen) {
+          this.$refs.viewer.mozRequestFullScreen()
+        } else if (this.$refs.viewer.webkitRequestFullScreen) {
+          this.$refs.viewer.webkitRequestFullScreen()
+        }
+        setTimeout(() => {
+          this.fullscreen = true
+        }, 300)
       }
-      setTimeout(() => {
-        this.fullscreen = true
-      }, 300)
     }
     
 
