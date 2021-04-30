@@ -139,6 +139,10 @@ html, body {
 
 }
 
+
+section img {
+  max-width: 100%;
+}
 section a, 
 section a:hover, 
 section a:active, 

@@ -1,5 +1,5 @@
 <template>
-  <div class="pictureArt">
+  <div :class="['pictureArt', artwork.Category ]">
 
     <embed
       ref="viewer"
@@ -92,11 +92,31 @@ export default {
   box-sizing: border-box;
   position: relative;
   object-fit: cover;
-  width: 100%;
+  width: 100%;  
+  cursor: pointer;
+  min-width: calc(10 * var(--one));
+  min-height: calc(10 * var(--one));
+  max-width: calc(40 * var(--one));
+  max-height: calc(40 * var(--one));
+}
+
+.pictureArt.SessionVideo img {
   min-width: calc(20 * var(--one));
   min-height: calc(20 * var(--one));
   max-width: calc(40 * var(--one));
   max-height: calc(40 * var(--one));
+}
+.pictureArt.Other img {
+  min-width: calc(20 * var(--one));
+  min-height: calc(20 * var(--one));
+  max-width: calc(30 * var(--one));
+  max-height: calc(30 * var(--one));
+}
+.pictureArt.Poster img {
+  min-width: calc(10 * var(--one));
+  min-height: calc(10 * var(--one));
+  max-width: calc(15 * var(--one));
+  max-height: calc(15 * var(--one));
 }
 
 .pictureArt embed {

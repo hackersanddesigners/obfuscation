@@ -113,15 +113,15 @@ export default {
   padding: calc(1 * var(--one));
   height: 100%;
   width: 100%;
-  max-height: 100vh;
-  max-width: 100vw;
+  /* max-height: 100vh;
+  max-width: 100vw; */
   display: flex;
   justify-content: center;
   align-items: stretch;
 }
 .livestream .sidebar {
-  min-width: calc(25 * var(--one));
-  max-width: calc(30 * var(--one));
+  min-width: calc(27 * var(--one));
+  max-width: calc(27 * var(--one));
   position: relative;
   box-sizing: border-box;
   margin-left: calc(1 * var(--one));

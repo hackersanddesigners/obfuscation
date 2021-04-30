@@ -79,8 +79,8 @@ export default {
 <style scoped>
 .island {
   position: absolute;
-  min-width: calc(20 * var(--one));
-  min-height: calc(20 * var(--one));
+  min-width: calc(10 * var(--one));
+  min-height: calc(10 * var(--one));
   max-width: calc(40 * var(--one));
   max-height: calc(40 * var(--one));
   margin: calc(6 * var(--one));
@@ -94,7 +94,15 @@ export default {
       calc(0.5 * var(--one))
     rgba(0, 0, 0, 0.267);;
 
-    /* overflow: hidden; */
+}
+
+.island .body {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  border-radius: inherit;
 }
 
 .island .header {
@@ -125,28 +133,8 @@ export default {
   margin-top: calc(1 * var(--one));
 }
 
-
-.island .header h3 a,
-.island .header h3 a:visited,
-.island .header h3 a:hover,
-.island .header h3 a:active {
-  /* color: black !important; */
-  /* text-decoration: underline; */
-}
-
 .island .header .title:hover {
   text-decoration: underline;
-}
-
-
-.island .body {
-  position: relative;
-  display: flex;
-  width: 100%;
-  height: 100%;
-  justify-content: center;
-  border-radius: inherit;
-
 }
 
 </style>

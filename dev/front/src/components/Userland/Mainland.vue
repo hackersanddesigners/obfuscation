@@ -977,7 +977,11 @@ main nav.hidden {
   background-color: var(--island-back-color);
   box-shadow: var(--island-shadow);
   border-radius: var(--small-island-curve);
-  transition: all 0.2s ease;
+  transition: 
+    borderRadius 0.2s ease, 
+    boxShadow 0.2s ease, 
+    background-color 0.2s ease
+  ;
 }
 .island::before {
   content: '';

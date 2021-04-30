@@ -1,5 +1,5 @@
 <template>
-  <div class="island" >
+  <div :class="['island', { playing: playing }]" >
 
     <div class="body">
       <Video 
@@ -8,6 +8,7 @@
         :playing="playing"
         :muted="muted"
         :fullscreen="fullscreen"
+        @playing="playing = true"
         @unfullscreened="fullscreen = false"
         @loadedmetadata="loadedmetadata = true; $emit('loadedmetadata')"
       />
@@ -54,7 +55,7 @@ export default {
   ],
   data() {
     return {
-      playing: true,
+      playing: false,
       muted: true,
       fullscreen: false,
       loadedmetadata: false
@@ -67,8 +68,12 @@ export default {
     location() {
       if (this.location.slug === 'livestream') {
         console.log("we're in livestream")
+        if (this.playbackId || this.forcedPlaybackId) {
+          this.playing = true
+        }
       } else {
         console.log('leaving livestream')
+        this.playing = false
       }
     },
   }
@@ -88,13 +93,11 @@ export default {
   flex-direction: column;
   justify-content: center;
   overflow: hidden;
-  background: none;
 }
-.island:hover {
+.island:hover,
+.island.playing,
+.island.playing::before {
   background: none;
-}
-.island::before {
-  /* background: none !important; */
 }
 .island .body {
   height: 100%;

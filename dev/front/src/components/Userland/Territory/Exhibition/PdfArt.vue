@@ -1,5 +1,5 @@
 <template>
-  <div class="pdfArt">
+  <div :class="['pdfArt', artwork.Category ]">
 
     <embed
       ref="viewer"
@@ -121,10 +121,30 @@ export default {
   position: relative;
   object-fit: cover;
   width: 100%;
+  cursor: pointer;
+  min-width: calc(10 * var(--one));
+  min-height: calc(10 * var(--one));
+  max-width: calc(40 * var(--one));
+  max-height: calc(40 * var(--one));
+}
+
+.pdfArt.SessionVideo img {
   min-width: calc(20 * var(--one));
   min-height: calc(20 * var(--one));
   max-width: calc(40 * var(--one));
   max-height: calc(40 * var(--one));
+}
+.pdfArt.Other img {
+  min-width: calc(20 * var(--one));
+  min-height: calc(20 * var(--one));
+  max-width: calc(30 * var(--one));
+  max-height: calc(30 * var(--one));
+}
+.pdfArt.Poster img {
+  min-width: calc(10 * var(--one));
+  min-height: calc(10 * var(--one));
+  max-width: calc(15 * var(--one));
+  max-height: calc(15 * var(--one));
 }
 
 .pdfArt canvas,

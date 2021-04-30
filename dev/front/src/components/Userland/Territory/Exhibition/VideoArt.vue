@@ -1,5 +1,5 @@
 <template>
-  <div class="videoArt">
+  <div :class="['videoArt', artwork.Category ]">
     <video 
       :class="{ fullscreen: controls }"
       ref="player"
@@ -146,6 +146,57 @@ export default {
   overflow: visible;
 }
 
+/* .videoArt video {
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: inherit;
+  object-fit: cover;
+  overflow: hidden;
+} */
+
+.videoArt video {
+  border-radius: inherit;
+  box-sizing: border-box;
+  position: relative;
+  object-fit: cover;
+  width: 100%;
+  min-width: calc(10 * var(--one));
+  min-height: calc(10 * var(--one));
+  max-width: calc(40 * var(--one));
+  max-height: calc(40 * var(--one));
+}
+
+.videoArt.SessionVideo video {
+  min-width: calc(20 * var(--one));
+  min-height: calc(20 * var(--one));
+  max-width: calc(40 * var(--one));
+  max-height: calc(40 * var(--one));
+}
+.videoArt.Other video {
+  min-width: calc(20 * var(--one));
+  min-height: calc(20 * var(--one));
+  max-width: calc(30 * var(--one));
+  max-height: calc(30 * var(--one));
+}
+.videoArt.Poster video {
+  min-width: calc(10 * var(--one));
+  min-height: calc(10 * var(--one));
+  max-width: calc(15 * var(--one));
+  max-height: calc(15 * var(--one));
+}
+
+
+
+.videoArt video.fullscreen {
+  object-fit: contain;
+  border-radius: unset;
+}
+
+.videoArt video::cue {
+  margin-bottom: 1vh !important;
+}
+
 .videoArt .controls {
   box-sizing: border-box;
   position: absolute;
@@ -178,20 +229,4 @@ export default {
   text-decoration: underline;
 }
 
-.videoArt video {
-  height: 100%;
-  max-width: 100%;
-  max-height: 100%;
-  border-radius: inherit;
-  object-fit: cover;
-  overflow: hidden;
-}
-.videoArt video.fullscreen {
-  object-fit: contain;
-  border-radius: unset;
-}
-
-.videoArt video::cue {
-  margin-bottom: 1vh !important;
-}
 </style>

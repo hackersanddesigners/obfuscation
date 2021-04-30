@@ -1,5 +1,5 @@
 <template>
-  <video 
+  <video :class="{ fullscreen: controls }"
     muted
     crossorigin="anonymous"
     :controls="controls"
@@ -109,8 +109,7 @@ export default {
     })
 
     this.$el.addEventListener('timeupdate',() => {
-      const elapsedTime = this.$el.currentTime / this.$el.duration
-      this.$emit('elapsed', elapsedTime)
+      this.$emit('playing')
     })
 
     this.$el.addEventListener('loadedmetadata',() => {
@@ -175,13 +174,17 @@ export default {
 
 <style>
 video {
+  position: relative;
   width: 100%;
   height: 100%;
   max-width: 100%;
   max-height: 100%;
   object-fit: cover;
-  /* background: whites; */
-  animation: comein 2s ease-in;
+  animation: comein 1s ease-in;
+}
+video.fullscreen {
+  object-fit: contain;
+  height: unset;
 }
 @keyframes comein {
   0% { opacity: 0;}

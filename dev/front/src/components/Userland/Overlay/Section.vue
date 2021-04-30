@@ -252,6 +252,7 @@ section .header h1 {
 section .body {
   font-size: 12.5pt;
 }
+
 section .footer {
   font-size: 10pt;
 }
