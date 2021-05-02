@@ -8,6 +8,13 @@ module.exports = {
     },
     xframe: {
       enabled: false,
+    },
+    parser: {
+      enabled: true,
+      multipart: true,
+      formidable: {
+        maxFileSize: 1000 * 1024 * 1024 // 1gb
+      }
     }
   },
 };

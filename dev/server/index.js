@@ -194,10 +194,6 @@ mongoose.connection.once('open', () => {
 
     })
 
-    socket.on('reconnect_attempt', () => {
-      console.log(socket.id, 'recconnect attempt')
-    })
-
 
   })
 

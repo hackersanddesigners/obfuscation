@@ -79,8 +79,6 @@ export default {
 
   created() {
 
-    console.log(this.$version)
-
     console.log(`ENVIRONMENT: ${ this.$env }`)
     console.log(`SOCKETS: ${ this.$sokURL }`)
     console.log(`VERSION: ${ localStorage.version }`)
@@ -109,6 +107,7 @@ export default {
     // get ticker from CMS
 
     api
+      .territories
       .getTicker()
       .then((response) => {
         this.$store.commit('setTicker', response)
@@ -125,7 +124,8 @@ export default {
     this.loadingMessage = 'Getting regions...'
 
     api
-      .getRegions()
+      .territories
+      .getAll()
       .then((response) => {
         regions = response
         this.$store.commit('setTerritories', regions)
@@ -141,7 +141,8 @@ export default {
     // get message db from server.
 
     api 
-      .getMessages()
+      .chat
+      .get('messages')
       .then((response) => { 
         messages = response
         this.$store.commit('setMessages', messages)
@@ -157,7 +158,8 @@ export default {
     // get user db from server.
 
     api 
-      .getUsers()
+      .chat
+      .get('users')
       .then((response) => { 
         users = response
         this.$store.commit('setUsers', users)
@@ -231,7 +233,6 @@ export default {
         
         this.$socket.client.emit('user', self)
         this.selfEvaluated = true
-        // this.loadingMessage = 'Ready.'
 
       })
       .catch((error) => { 

@@ -428,7 +428,7 @@ export default {
     })
 
     window.onbeforeunload = () => {
-      if (this.me && this.me.deleted === false) {
+      if (this.me && !this.me.deleted) {
         this.$store.dispatch('disconnect')
         if (this.isMobile || this.me.name.includes(this.me.uid)) {
           this.$store.dispatch('deleteUser', this.me)
