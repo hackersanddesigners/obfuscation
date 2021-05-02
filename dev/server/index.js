@@ -204,6 +204,7 @@ mongoose.connection.once('open', () => {
   // HTTP SERVER
 
   http.listen(port, () => {
+    console.log('**************************************')
     console.log('* Your app is listening on port ' + port + ' *')
     console.log('**************************************')
     console.log('')
