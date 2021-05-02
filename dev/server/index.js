@@ -101,7 +101,10 @@ mongoose.connection.on('error', () => {
   console.log('Failed to connect to MongoDB') 
 })
 mongoose.connection.once('open', () => {
-  console.log('Connected to MongoDB')
+  console.log('')
+  console.log('**************************************')
+  console.log('* Connected to MongoDB on port ' + mPort + ' *')
+  console.log('**************************************')
 
 
   // REQUESTS
@@ -202,10 +205,9 @@ mongoose.connection.once('open', () => {
   // HTTP SERVER
 
   http.listen(port, () => {
-    console.log('')
-    console.log('**********************************************************')
-    console.log('Your app is listening on port ' + port)
-    console.log('**********************************************************')
+    console.log('**************************************')
+    console.log('* Your app is listening on port ' + port + ' *')
+    console.log('**************************************')
     console.log('')
   })
 
