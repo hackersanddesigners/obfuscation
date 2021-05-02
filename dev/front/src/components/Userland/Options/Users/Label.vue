@@ -6,15 +6,11 @@
     @mouseleave.stop="hovered=false"
   >
 
-    <!-- <span class="bullet"> ● </span> -->
-    <!-- <span class="bullet"></span> -->
-
     <span 
       :class="[
         'name',
          { moderator: user.moderator }
       ]"
-      
     >
       {{ isMe ? user.name + " (you)" : user.name }} 
     </span>
@@ -28,16 +24,18 @@
       <span 
         class="ui button messages"
         @click.stop="messagesVisible = !messagesVisible"
-        >messages</span>
+      >
+        messages
+      </span>
 
       <span 
         class="ui button block"
-        @click.stop="$store.dispatch('blockUser', user)"
+        @click.stop="$store.dispatch('users/blockUser', user)"
         >block</span>
 
       <span 
         class="ui button delete"
-        @click.stop="$store.dispatch('deleteUser', user)"
+        @click.stop="$store.dispatch('users/deleteUser', user)"
         >delete</span>
 
     </div>
@@ -80,10 +78,6 @@ export default {
       messagesVisible: false,
     }
   },
-  mounted() {
-  },
-  methods: {
-  }
 }
 </script>
 <style scoped>

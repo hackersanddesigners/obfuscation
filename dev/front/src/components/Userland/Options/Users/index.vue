@@ -46,7 +46,7 @@
       >
         <span 
           class="ui button delete"
-          @click.stop="$store.dispatch('deleteAllUnamed')"
+          @click.stop="$store.dispatch('users/deleteAllUnamed')"
         >delete all unnamed users</span>
       </li>
       <Label
@@ -65,8 +65,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-
+import { mapGetters  } from 'vuex'
 import Label from './Label'
 
 export default {
@@ -74,8 +73,6 @@ export default {
   components: {
     Label
   },
-  props: [ 
-  ], 
   data() {
     return {
       authenticating: false,
@@ -83,27 +80,22 @@ export default {
     }
   },
   computed: {
-    moderator() { return this.$store.getters.me.moderator },
-    ...mapGetters([
+    ...mapGetters('users', [
       'me',
       'connectedUsers',
       'connectedUsersFirst',
-      'notDeletedUsers',
+    ]),
+    ...mapGetters('messages', [
       'notDeletedMessages',
       'messagesByUser',
-    ])
-  },
-  mounted() {
-  },
-
-  sockets:  {
+    ]),
+    moderator() { return this.me.moderator },
   },
   methods: {
-
     authenticate() {
       const password = this.$refs.password.value
       if (password === 'yellowsubmarine') {
-        this.$store.dispatch('updateModerator', {
+        this.$store.dispatch('users/updateModerator', {
           moderator: true
         })
         this.authenticating = false
@@ -115,7 +107,6 @@ export default {
 </script>
 
 <style scoped>
-
 #userlist {
   margin-top: 1vh;
   padding: 0;

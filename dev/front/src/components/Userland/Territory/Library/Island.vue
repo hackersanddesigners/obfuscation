@@ -18,9 +18,9 @@ export default {
   computed: {
     src() {
       return (
-        this.section.File ? 
+        this.section.File ?
         this.$apiURL + this.section.File.url :
-        this.section.URL 
+        this.section.URL
       )
     }
   },
@@ -30,19 +30,19 @@ export default {
 <style scoped>
 .island.resource {
   --bevel:
-    inset 0 
-    calc(-0.7 * var(--one)) 
+    inset 0
+    calc(-0.7 * var(--one))
     calc(1 * var(--one))
     rgba(0, 0, 0, 0.4),
-    inset 0 
-    calc(0.7 * var(--one)) 
+    inset 0
+    calc(0.7 * var(--one))
     calc(1 * var(--one))
-    rgba(255, 255, 255, 0.4); 
+    rgba(255, 255, 255, 0.4);
   ;
   max-width: 60%;
-  padding: 
-    calc(1 * var(--one)) 
-    calc(4 * var(--one)) 
+  padding:
+    calc(1 * var(--one))
+    calc(4 * var(--one))
   ;
   display: flex;
   flex-direction: column;
@@ -53,12 +53,12 @@ export default {
 }
 .island.resource .header {
   text-decoration: none;
-  cursor: none;
+  cursor: pointer;
   z-index: 1;
   color: var(--ui-front);
   text-align: center;
 }
-.island.resource .header h1 { 
+.island.resource .header h1 {
   font-family: serif;
 }
 .island.resource .header h3 {

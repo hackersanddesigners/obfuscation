@@ -3,20 +3,18 @@
     :id="message.uid"
     :class="[
       'messageContainer', 
-      `message${message.uid}`,
-      {
-        hover: hovered,
-        announcement: message.announcement
-      } 
-    ]"
+      `message${message.uid}`, {
+      hover: hovered,
+      announcement: message.announcement
+    }]"
     :style="{ 
       left: `${ toNearestX(message.x, 0.2) }%`,
       top: `${ toNearestX(message.y, 0.2) }%`,
       '--blur': blur,
       '--userColor': `var(--${ message.authorUID })`,
     }"
-      @mouseover="hovered=true"
-      @mouseleave="hovered=false"
+    @mouseover="hovered=true"
+    @mouseleave="hovered=false"
   >
 
     <vue-markdown 
@@ -60,7 +58,7 @@
 
 <script>
 import moment from 'moment'
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters, mapState } from 'vuex'
 
 export default {
   name: 'Message',
@@ -78,12 +76,19 @@ export default {
     }
   },
   computed: {
-    moderator() { return this.$store.getters.me.moderator }, 
+    ...mapState('users', [
+      'users',
+    ]),
+    ...mapGetters('users', [
+      'me',
+    ]),
+    moderator() { return this.me.moderator },
+    lifetime() { return this.users[this.message.authorUID].messageLifetime },
     blur() {
       if (this.isCompatible) {
         const
           now = this.now,
-          lifetime = this.$store.state.users[this.message.authorUID].messageLifetime,
+          lifetime = this.lifetime,
           timeSent = this.message.time,
           timeElapsed = now - timeSent,
           blurString = `blur(${ 5 * timeElapsed / lifetime }px)` 
@@ -99,7 +104,7 @@ export default {
     }, 60000)
   },
   methods: {
-    ...mapActions([
+    ...mapActions('messages', [
       'deleteMessage',
       'censorMessage'
     ]),
@@ -142,10 +147,6 @@ export default {
   border-color: transparent;
   line-height: calc(1.5 * var(--one));
   transition: all 0.2s ease;
-  /* filter: 
-    drop-shadow(0 0 
-    calc(0.15 * var(--one))
-    rgba(0, 0, 0, 0.37)); */
 }
 .messageContainer .message p,
 .messageContainer .message * {

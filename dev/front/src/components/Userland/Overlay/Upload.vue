@@ -9,38 +9,38 @@
   </div>
   <form v-else>
 
-    <input 
+    <input
       v-if="!isGlossary"
-      ref="author" 
+      ref="author"
       :class="[
         'ui', 'authors',
       ]"
-      type="text" 
+      type="text"
       required
       placeholder="Author(s)"
       @input="bodyShort = false"
-    /> 
+    />
     <p v-if="bodyShort" class="error">This field is required</p>
 
-    <input 
-      ref="title" 
+    <input
+      ref="title"
       :class="[
         'ui', 'title',
-        { 
+        {
           invalid: titleShort,
           zxx: $store.state.desiresTexture,
         }
       ]"
-      type="text" 
+      type="text"
       required
       :placeholder="titlePlaceholder"
       @input="titleShort = false"
-    /> 
+    />
     <p v-if="titleShort" class="error">This field is required</p>
 
-    <textarea 
+    <textarea
       v-if="isGlossary"
-      ref="body" 
+      ref="body"
       :class="[
         'ui', 'body',
         { invalid: bodyShort }
@@ -48,29 +48,29 @@
       :placeholder="bodyPlaceholder"
       required
       @input="adjustHeight"
-    /> 
+    />
     <p v-if="bodyShort" class="error">This field is required</p>
 
-    <input 
-      ref="source" 
+    <input
+      ref="source"
       :class="[
         'ui', 'footer',
         { invalid: sourceShort }
       ]"
-      type="url" 
+      type="url"
       placeholder="Enter source URL"
       @input="sourceShort = false"
-    /> 
+    />
     <p v-if="sourceShort" class="error">This field is required</p>
-    <div 
+    <div
       v-if="!isGlossary"
       class="fileupload"
     >
       <span>Or upload a file:</span>
-      <input 
-        ref="file" 
+      <input
+        ref="file"
         :class="['ui', 'footer']"
-        type="file" 
+        type="file"
         @input="handleFile"
       />
     </div>
@@ -94,7 +94,6 @@ export default {
       bodyShort: false,
       sourceShort: false,
       tooBig: false,
-      isPoster: false
     }
   },
 
@@ -133,7 +132,7 @@ export default {
         return
       }
 
-      const 
+      const
         title = this.$refs.title.value,
         body = this.$refs.body.value,
         source = this.$refs.source.value
@@ -141,12 +140,12 @@ export default {
       if (title.length == 0) {
         this.titleShort = true
         return
-      } 
+      }
       if (body.length == 0) {
         this.bodyShort = true
         return
-      } 
-      
+      }
+
       if (!this.titleShort && !this.bodyShort) {
         this.sendTerm(title, body, source)
       }
@@ -156,7 +155,7 @@ export default {
     sendTerm(title, body, source) {
       this.$emit('sending')
 
-      const 
+      const
         collection = 'glossaries',
         data = {
           Term: title,
@@ -170,8 +169,8 @@ export default {
 
       this.$http
         .post(`${ this.$apiURL }/${ collection }`, formData)
-        .then(res => { 
-          console.log(res.status) 
+        .then(res => {
+          console.log(res.status)
           this.$emit('sent')
         })
         .catch(err => { console.log(err) })
@@ -183,39 +182,37 @@ export default {
         return
       }
 
-      const 
+      const
         author = this.$refs.author.value,
         name = this.$refs.title.value,
         source = this.$refs.source.value,
-        file = this.$refs.file.files[0],
-        isPoster = this.$refs.poster.checked
+        file = this.$refs.file.files[0]
 
       if (name.length == 0) {
         this.titleShort = true
         return
-      } 
+      }
       if (author.length == 0) {
         this.bodyShort = true
         return
-      } 
-      
+      }
+
       if (!this.titleShort && !this.bodyShort && !this.tooBig) {
-        this.sendResource(author, name, source, file, isPoster)
+        this.sendResource(author, name, source, file)
       }
 
     },
 
-    sendResource(author, name, source, file, isPoster) {
+    sendResource(author, name, source, file) {
       this.$emit('sending')
 
-      const 
+      const
         collection = 'libraries',
         data = {
           Name: name,
           author: author,
           URL: source,
           published_at: null,
-          Poster: isPoster
         },
         formData = new FormData()
 
@@ -228,8 +225,8 @@ export default {
 
       this.$http
         .post(`${ this.$apiURL }/${ collection }`, formData)
-        .then(res => { 
-          console.log(res.status) 
+        .then(res => {
+          console.log(res.status)
           this.$emit('sent')
         })
         .catch(err => { console.log(err) })
@@ -241,7 +238,7 @@ export default {
 
     adjustHeight() {
       this.bodyShort = false
-      let 
+      let
         minHeight = 100,
         el = this.$refs.body,
         outerHeight = parseInt(window.getComputedStyle(el).height, 10),
@@ -263,16 +260,16 @@ section {
 section .status {
   margin: 0vh 1vh;
 }
-section .title {  
+section .title {
   font-size: 25pt;
   font-weight: normal;
   padding: 2px 10px;
   margin-top: 0.6vh;
 }
-section.isLibrary .title { 
+section.isLibrary .title {
   font-family: 'Times New Roman', Times, serif;
   padding: 2px 6px;
-} 
+}
 
 section .body {
   box-sizing: border-box;
@@ -290,25 +287,17 @@ section .footer {
   margin-top: 1vh;
   font-size: 12.5pt;
 }
-section .fileupload,
-section .postertoggle {
+section .fileupload {
   display: flex;
   justify-content: flex-start;
   align-items: center;
 }
-section .fileupload span,
-section .postertoggle span {
+section .fileupload span {
   margin-top: 1.5vh;
   margin-right: 1vh;
   margin-left: 0.5vh;
   flex-shrink: 0;
   font-size: 12.5pt;
-}
-section .postertoggle span {
-  margin-top: 1vh;
-}
-section .postertoggle input[type="checkbox"] {
-  width: auto;
 }
 input,
 textarea {

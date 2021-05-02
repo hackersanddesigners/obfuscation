@@ -30,9 +30,9 @@ export default {
         .from(document.querySelectorAll(`#exhibition a`))
         .forEach(a => {
           const href = a.attributes.href.value 
-          if (href && (href.startsWith('/') || href.startsWith(this.$sokURL))) {
+          if (href && (href.startsWith('/') || href.startsWith(this.$appURL))) {
             a.addEventListener('click', (e) => {
-              const newhref = href.replace(this.$sokURL, '/')
+              const newhref = href.replace(this.$appURL, '/')
               this.$router.push(newhref)
               e.preventDefault()
             })

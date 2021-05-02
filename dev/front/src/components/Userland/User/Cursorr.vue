@@ -1,22 +1,18 @@
 <template>
   <div
     :class="[
-      'cursorContainer',
-      {
-        hovered: user.typing || hovered,
-        dragging: dragging,
-        me: isMe(user),
-        moderator: user.moderator == true,
-      }
-    ]"
-
+      'cursorContainer', {
+      hovered: user.typing || hovered,
+      dragging: dragging,
+      me: isMe(user),
+      moderator: user.moderator == true,
+    }]"
     :style="{ 
       left: ( 100 * user.x -  0.1) + '%',
       top: ( 100 * user.y - 0.15) + '%',
       '--scale': 15,
       '--userColor': `var(--${ user.uid })`,
     }"
-
     @mouseover.stop="hovered=true"
     @mouseout.stop="hovered=false"
   >
@@ -65,8 +61,6 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex'
-// import _ from 'lodash'
-
 
 export default {
 
@@ -80,7 +74,7 @@ export default {
   data() {
     return {
       hovered: false,
-      current: String,
+      current: '',
       navigation: false,
       announcement: false,
       mention: false,
@@ -97,22 +91,25 @@ export default {
 
   computed: {
     ...mapState([
-
       'isMobile',
       'scale',
       'windowSize',
       'windowPos'
-    
     ]),
-    ...mapGetters([
-
+    ...mapState('territories', [
+      'location'
+    ]),
+    ...mapGetters('territories', [
+      'territoryByBorders',
+    ]),
+    ...mapGetters('users', [
       'me',
       'isMe',
       'networkConservationMode',
+    ]),
+    ...mapGetters('messages', [
       'messagesByUser',
-      'territoryByBorders',
-
-    ])
+    ]),
   },
 
   mounted() {
@@ -121,7 +118,6 @@ export default {
       document.addEventListener('mousemove', this.trackCursor)
       this.resetDisconnectTimer()
     }
-
 
   },
   
@@ -167,10 +163,11 @@ export default {
       if (
         message.content && 
         message.content != ' ' &&
+        message.content != '\n' &&
         !this.badWords.some(v => message.content.includes(v))
       ) {
         if ((msgs && msgs.length == 0) && (this.me.name.includes(this.me.uid))) {
-          this.$store.commit('deregister')
+          this.$store.commit('users/deregister')
         } else {
           this.$socket.client.emit('message', message)
           if (this.networkConservationMode) {
@@ -212,7 +209,7 @@ export default {
           announcement: this.announcement,
           navigation: this.navigation,
           stream: this.stream,
-          location: this.$store.state.location.slug,
+          location: this.location,
         }
         return message
     },
@@ -225,12 +222,12 @@ export default {
     },
 
     disconnect() {
-      this.$store.dispatch('updatePosition', {
+      this.$store.dispatch('users/updatePosition', {
         x: this.me.x,
         y: this.me.y,
         connected: false,
       })
-      this.$store.dispatch('updateTyping', {
+      this.$store.dispatch('users/updateTyping', {
         typing: null
       })
     },
@@ -248,16 +245,11 @@ export default {
           y: (this.windowPos.y + e.clientY) / (this.windowSize.h * this.scale),
           connected: true,
         }
-        this.$store.dispatch('updatePosition', pos)
+        this.$store.dispatch('users/updatePosition', pos)
         this.pos = pos
         e.preventDefault()
       }
         
-    },
-
-    emitPos() {
-      console.log('emit')
-      this.$socket.client.emit('position', this.pos)
     },
 
     // handle user input, triggered from parent.
@@ -346,8 +338,7 @@ export default {
 
       // announce every key press to your peers.
 
-      this.$store.dispatch('updateTyping', {
-        // typing: input.value
+      this.$store.dispatch('users/updateTyping', {
         uid: this.me.uid,
         typing: key == 27 || input.value == '' ? '' : "typing..."
       })

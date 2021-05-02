@@ -9,7 +9,7 @@
   >
     <span class="message"> {{ message.content }} </span>
     <span class="time"> {{ format(message.time) }} </span>
-    <span class="goto"> {{ hovered ? '→' : ''  }}</span> 
+    <!-- <span class="goto"> {{ hovered ? '→' : ''  }}</span>  -->
     <span 
       class="delete"
       @click.stop="deleteMessage(message)"
@@ -44,19 +44,14 @@ export default {
       hovered: false,
     }
   },
-  mounted() {
-  },
   methods: {
-    ...mapActions([
-
+    ...mapActions('messages', [
       'deleteMessage',
       'censorMessage'
-      
     ]),
-
-    format(time) {
-      return moment(time).format('MMM Do @ HH:mm:ss ')
-    },
+    format: time => (
+      moment(time).format('MMM Do @ HH:mm:ss ')
+    ),
   }
 }
 </script>
@@ -65,13 +60,14 @@ export default {
 .miniMessageContainer {
   padding-left: 1vh;
   display: flex;
-  align-items: center;  
+  align-items: baseline;  
 }
 .miniMessageContainer .message {
-  flex: 0 0 40%;
+  flex: 0 0 50%;
   width: 100%;
   box-sizing: border-box;
-  padding: 0px 5px;
+  padding: 5px 5px;
+  font-size: 10pt;
   cursor: pointer;
   overflow: hidden;
 }

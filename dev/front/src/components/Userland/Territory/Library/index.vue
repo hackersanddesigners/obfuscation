@@ -1,7 +1,7 @@
 <template>
   <div>
     <Island
-      v-for="section in resources"
+      v-for="section in content"
       :id="section.slug + 'Island'"
       :ref="section.slug"
       :key="section.slug"
@@ -24,13 +24,6 @@ export default {
   name: 'Library',
   components: { Island },
   props: [ 'content' ],
-  computed: {
-    resources() { return Object
-      .values(this.content)
-      .sort((a, b) => (new Date(b.updated_at)) - (new Date(a.updated_at)))
-    },
-    
-  },
   data() {
     return {
       uploadSection: {
@@ -51,7 +44,7 @@ export default {
   overflow: auto;
   display: flex;
   flex-direction: column;
-  align-items: center; 
+  align-items: center;
 }
 .submit {
   margin-top: calc(3 * var(--one));

@@ -34,6 +34,7 @@ export default {
   },
   watch: {
     playbackId() {
+      console.log('PLAYBACKID WATCHER')
       this.updateVideo()
       this.retryInterval = setInterval(() => {
         this.updateVideo()
@@ -48,7 +49,7 @@ export default {
     desiresPosition(newPosition) {
       if (this.active) {
         this.$el.currentTime = newPosition * this.$el.duration
-      }    
+      }
     },
 
     playing(newState) {
@@ -84,7 +85,7 @@ export default {
 
   },
   mounted() {
-    
+
     if (this.isMobile) {
       this.controls = true
     }
@@ -97,10 +98,10 @@ export default {
     }
 
     const prefixes = ["", "webkit", "moz", "ms"]
-    prefixes.forEach((prefix) => { 
+    prefixes.forEach((prefix) => {
       this.$el.addEventListener(prefix+"fullscreenchange", () => {
         if( window.innerHeight !== screen.height) {
-         this.$emit('unfullscreened') 
+         this.$emit('unfullscreened')
          if (!this.isMobile) {
           this.controls = false
          }
@@ -121,7 +122,7 @@ export default {
       console.log('video ended')
       this.retryInterval = setInterval(() => {
         this.updateVideo()
-      }, 20 * 1000) 
+      }, 20 * 1000)
       this.$emit('ended')
     })
 
@@ -131,14 +132,14 @@ export default {
   },
   methods: {
 
-    src(playbackId) { return this.forcedPlaybackId ? 
+    src(playbackId) { return this.forcedPlaybackId ?
       `https://stream.mux.com/${playbackId}.m3u8` :
       `https://bbb.tbm.tudelft.nl/hls/${playbackId}.m3u8`
-    },    
+    },
 
 
     updateVideo() {
-      const 
+      const
         playbackId = this.playbackId,
         forcedPlaybackId = this.forcedPlaybackId,
         sourceUrl = this.src(forcedPlaybackId || playbackId),

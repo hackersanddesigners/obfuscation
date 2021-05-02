@@ -1,10 +1,7 @@
 <template>
   <div 
     id="tickerContainer"
-    :class="{
-      hover: hover,
-    }"
-
+    :class="{ hover: hover }"
     @mouseover.stop="hover = true"
     @mousemove.stop="handleMousemove($event)"
     @mouseout.stop="hover = false"
@@ -27,8 +24,6 @@ import Smarquee from 'smarquee'
 
 export default {
   name: 'Ticker',
-  components: {
-  },
   props: [
     'marquee'
   ],
@@ -39,12 +34,12 @@ export default {
     }
   },
   computed: {
-    currentLiveSession() { return this.$store.state.currentLiveSession },
+    currentLiveSession() { return this.$store.state.territories.currentLiveSession },
     ticker() { return (
       this.currentLiveSession ? {
         phrase: `Watch the livestream: "${this.currentLiveSession.Title}".`,
         link: '/livestream'
-      } : this.$store.state.ticker
+      } : this.$store.state.territories.ticker
     )},
     content() {
       let content = ''
@@ -60,23 +55,19 @@ export default {
     }
   },
   mounted() {
-
     this.smarquee = new Smarquee({
       element: this.$refs.smarq,
       iterationCount: 'infinite',
     })
     this.smarquee.init()
     this.handleSmarquee()
-
   },
   methods: {
-
     handleMousemove(e) {
       if (!this.marquee) {
         this.x = e.clientX
       }
     },
-
     handleSmarquee() {
       if (this.marquee) {
         this.smarquee.play()
@@ -84,7 +75,6 @@ export default {
         this.smarquee.pause()
       }
     }
-
   }
 }
 </script>
@@ -103,7 +93,6 @@ export default {
   transition: all 0.4s ease;
   font-size: 24pt;
   bottom: -25px;
-  box-shadow: 0 0 30px 0 rgba(0, 0, 0, 0.534);
   border-top: var(--ui-border);
   box-shadow: var(--ui-box-shadow);
 }
@@ -117,12 +106,12 @@ export default {
   position: absolute;
   left: -100vw;
   height: 100%;
-  overflow: visible;
+  /* overflow: visible; */
   word-break: keep-all;
 }
 #ticker .content {
   text-align: center;
-  overflow: visible;
+  /* overflow: vi≥sible; */
 }
 
 #ticker .content a,

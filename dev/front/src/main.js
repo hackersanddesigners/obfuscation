@@ -11,37 +11,35 @@ import App from './App'
 import router from './router'
 import store from './store'
 
-Vue.config.productionTip = false
+Vue.config.productionTip  = false
 
 Vue.prototype.$http       = Axios
 Vue.prototype.$apiURL     = process.env.VUE_APP_API_URL
-Vue.prototype.$sokURL     = process.env.VUE_APP_URL
+Vue.prototype.$appURL     = process.env.VUE_APP_URL
 Vue.prototype.$aanURL     = process.env.VUE_APP_AAN_URL
 Vue.prototype.$publicPath = process.env.BASE_URL || '/'
 Vue.prototype.$env        = process.env.NODE_ENV
 Vue.prototype.$lifecycle  = process.env.VUE_APP_LIFECYCLE
 Vue.prototype.$version    = process.env.VUE_APP_VERSION
 
-VueMarkdown.props.anchorAttributes.default = () => ({
-  target: '_blank',
-  rel: 'noopener noreferrer nofollow'
-})
-
-Vue.component('vue-markdown', VueMarkdown)
-
-smoothscroll.polyfill()
-
-const url = process.env.VUE_APP_URL
-
 Vue.use(
   VueSocketIOExt, 
-  io(url, { transports: ['websocket'] }),
+  io(Vue.prototype.$appURL, { 
+    transports: ['websocket'] 
+  }),
   { store }
 )
 
 require('vue-tour/dist/vue-tour.css')
 Vue.use(VueTour)
 
+VueMarkdown.props.anchorAttributes.default = () => ({
+  target: '_blank',
+  rel: 'noopener noreferrer nofollow'
+})
+Vue.component('vue-markdown', VueMarkdown)
+
+smoothscroll.polyfill()
 
 new Vue({
   router,

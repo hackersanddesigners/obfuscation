@@ -11,29 +11,20 @@
 
 export default {
   name: 'Nomansland',
-  components: {
-  },
-  props: [
-  ],
-  data() {
-    return {
-    }
-  },
-  created() {
-  },
+
   mounted() {
-    const main = this.$el
-
-    const rows = window.innerHeight / 14
-    const cols = window.innerWidth / 10
-
-    const tbl = this.tableCreate(rows, cols)
+    const 
+      main = this.$el,
+      rows = window.innerHeight / 14,
+      cols = window.innerWidth / 10,
+      tbl = this.tableCreate(rows, cols)
     main.appendChild(tbl)
-
   },
+  
   methods: {
+
     tableCreate(rows, cols) {
-      let tbl  = document.createElement('table')
+      let tbl = document.createElement('table')
       for(let i = 0; i < rows; i++){
         let tr = tbl.insertRow()
         for(let j = 0; j < cols; j++){

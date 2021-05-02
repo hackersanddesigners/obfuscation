@@ -41,6 +41,12 @@
     />
 
     <SemanticList
+      v-if="artworks && artworks.length > 0"
+      :collection="'exhibition'"
+      :list="artworks"
+      :name="'Artwork'"
+    />
+    <SemanticList
       v-if="chairing && chairing.length > 0"
       :collection="'schedule'"
       :list="chairing"
@@ -78,7 +84,7 @@
     </div>
 
 
-    <div 
+    <div
       class="body"
       v-if="resources"
     >
@@ -89,7 +95,7 @@
           :key="resource.Name"
         >
           <li>
-            <a 
+            <a
               :href="`/library/${resource.slug}`"
               class="name"
             >{{ resource.Name }}</a>
@@ -97,7 +103,7 @@
         </ul>
       </div>
     </div>
-    
+
     <div class="footer">
       <vue-markdown
         v-if="source"
@@ -134,6 +140,7 @@ export default {
     moderators() { return this.section.moderators },
     notetakers() { return this.section.notetakers },
     mentors() { return this.section.Mentors },
+    artworks() { return this.section.artworks },
     chairing() { return this.section.chairing },
     hosting() { return this.section.hosting },
     moderating() { return this.section.moderating },
@@ -157,18 +164,18 @@ export default {
   methods: {
     getSubtitle() {
       return (
-        this.section.Subtitle ? 
+        this.section.Subtitle ?
           this.section.Subtitle :
-        this.section.Institution ? 
+        this.section.Institution ?
           this.section.Institution :
-        this.section.Start ? 
+        this.section.Start ?
           moment(this.section.Start).format('dddd, MMMM Do [at] HH:mm z') : ''
       )
     },
 
     getTitle() {
       return (
-        this.section.Title || 
+        this.section.Title ||
         this.section.title ||
         this.section.Name ||
         this.section.name ||
@@ -179,8 +186,8 @@ export default {
     getBody() {
       return (
         this.processBody(
-          this.section.Body || 
-          this.section.body || 
+          this.section.Body ||
+          this.section.body ||
           this.section.Description ||
           this.section.description ||
           this.section.Bio ||
@@ -219,10 +226,10 @@ export default {
         Array
         .from(document.querySelectorAll(`section a`))
         .forEach(a => {
-          const href = a.attributes.href.value 
-          if (href && (href.startsWith('/') || href.startsWith(this.$sokURL))) {
+          const href = a.attributes.href.value
+          if (href && (href.startsWith('/') || href.startsWith(this.$appURL))) {
             a.addEventListener('click', (e) => {
-              const newhref = href.replace(this.$sokURL, '/')
+              const newhref = href.replace(this.$appURL, '/')
               this.$router.push(newhref)
               e.preventDefault()
             })
@@ -240,13 +247,13 @@ section {
   margin-top: 1.6vh;
 }
 section a {
-  
+
 }
 section .header {
 }
-section .header h3 { 
+section .header h3 {
 }
-section .header h1 {  
+section .header h1 {
   margin-top: 0;
 }
 section .body {

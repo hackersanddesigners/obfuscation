@@ -1,66 +1,98 @@
 <template>
-  <div 
-    id="app"
-    :class="{ mobile: isMobile }"  
-  >
-    <Home 
-      :slug="slug"
-    />
+  <div id="app" :class="{ mobile: isMobile }" >
+    <Home :slug="slug" />
   </div>
 </template>
 
 <script>
-import Home from './views/Home.vue'
+import Home from './views/Home'
 
 export default {
-
   name: 'App',
-
   components: {
     Home
   },
-
   data() {
     return {
       slug: null,
       isMobile: null,
     }
   },
-
   created() {
-  
-    this.isMobile = this.checkIfMobile()
-    if (this.isMobile) {
-      this.$store.commit('makeMobile')  
-    }
+
+    console.log('*****************************************************')
+    console.log(`* ENVIRONMENT : ${ this.$env }`)
+    console.log(`* VERSION     : ${ localStorage.version }`)
+    console.log(`* APP URL     : ${ this.$appURL }`)
+    console.log(`* LIFECYCLE   : ${ this.$lifecycle }`)
+    console.log('*****************************************************')
+
+
+    // delete everything if local storage version is older than this
+    // version. This is to prevent older users' data strutures from
+    // conflicting with the most recent structure.
+
+    if (localStorage.version != this.$version) {
+      console.log('this version is outdated, clearing your storage.')
+
+      localStorage.clear()
+      localStorage.version = this.$version
+    } 
+
 
     // get "slug"
 
     this.slug = window.location.pathname
 
 
+    // check browser compatibility
+
+    this.checkCompatibility()
+
+
+    // mobile setters and listeners
+  
+    this.isMobile = this.checkIfMobile()
+    if (this.isMobile) {
+      this.$store.commit('setMobile', true)  
+      this.$store.commit('setScale', 8)
+      this.$store.commit('setWidthFactor', 3.4)
+    }
+    window.addEventListener('resize', () => {
+      this.isMobile = this.checkIfMobile()
+      this.$store.commit('setMobile', this.isMobile)  
+      this.$store.commit('resize', {
+        w: window.innerWidth,
+        h: window.innerHeight,
+      })
+    })
+
+
+    // prevent scroll restoration
+
     if ('scrollRestoration' in history) {
       history.scrollRestoration = 'manual';
     }
 
 
-    // window dimensions: important for positioning!
-
-    window.addEventListener('resize', () => {
-      this.isMobile = this.checkIfMobile()
-      if (this.isMobile) {
-        this.$store.commit('makeMobile')  
-      } else {
-        this.$store.commit('makeDesktop')  
-      }
-    })
-
   },
 
   methods: {
 
-    checkIfMobile() {
-      return window.innerWidth < 750
+    checkIfMobile: () => ( window.innerWidth < 750 ),
+
+    checkCompatibility() {
+      let 
+        ua = navigator.userAgent,
+        chrome = ua.indexOf("Chrome") > -1,
+        firefox = ua.indexOf("Firefox") > -1,
+        safari = ua.indexOf("Safari") < -1
+      
+      if (chrome && safari) {
+        safari = false
+      }
+
+      this.$store.commit('setCompatibility', (chrome || firefox))
     },
 
   }
@@ -104,12 +136,6 @@ export default {
   font-weight: bold;
 }
 
-:root {
-
-
-
-
-}
 
 html, body {
   margin: 0; padding: 0;

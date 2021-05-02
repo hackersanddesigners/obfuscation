@@ -1,6 +1,6 @@
 <template>
   <div>
-    <VideoIsland 
+    <VideoIsland
       :playbackId="playbackId"
       :forcedPlaybackId="forcedPlaybackId"
       @loadedmetadata="status = 'active'"
@@ -11,7 +11,7 @@
         :status="status"
         @click.native="$emit('moreInfo', `/schedule/${currentLiveSession.slug}`)"
       />
-      <Chat 
+      <Chat
         :messages="chatByTime"
         @goTo="$emit('goTo', $event)"
       />
@@ -25,32 +25,84 @@ import InfoIsland from './InfoIsland'
 import Chat from './Chat'
 
 import moment from 'moment-timezone'
+import { mapGetters, mapState } from 'vuex'
 
 export default {
   name: 'Livestream',
-  components: { 
-    VideoIsland, 
+  components: {
+    VideoIsland,
     InfoIsland,
-    Chat 
+    Chat
   },
-  data() { 
+  data() {
     return {
       status: 'idle',
       forcedPlaybackId: null,
-      now: (new Date).getTime()
+      now: (new Date).getTime(),
+      fifteen: 15 * 60000,
     }
   },
   computed: {
-    currentLiveSession() { return this.$store.state.currentLiveSession },
+    ...mapState('territories', [
+      'currentLiveSession'
+    ]),
+    ...mapGetters('territories', [
+      'liveSessions'
+    ]),
+    pastSessions() {
+      return ( this
+        .liveSessions
+        .filter(s => (
+          this.getTime(s.Start) < this.now
+        ))
+        .reverse()
+      )
+    },
+    futureSessions() {
+      return ( this
+        .liveSessions
+        .filter(s => (
+          this.getTime(s.Start) > this.now
+        ))
+      )
+    },
+    currentSession() {
+      return ( this
+        .pastSessions
+        .find(s => (
+          this.getTime(s.End) > this.now
+        ))
+      )
+    },
+    nextSession() {
+      return ( this
+        .futureSessions
+        .find(s => (
+          this.getTime(s.Start) < this.now + this.fifteen
+        ))
+      )
+    },
+    laterSession() {
+      return ( this
+        .futureSessions[0]
+      )
+    },
+    previousSession() {
+      return ( this
+        .liveSessions[this
+          .liveSessions
+          .indexOf(this
+            .futureSessions[0]
+          )-1
+        ]
+      )
+    },
 
-    soon() { 
-      const 
-        five = 5 * 60000, // 5 minutes
-        // now     = this.now  + 1 * 86400000,
+    soon() {
+      const
         now     = this.now,
         session = this.currentLiveSession
-
-      return (this.getUnixTime(session.Start) < (now + five))
+      return (this.getTime(session.Start) < (now))
     },
 
     playbackId() {  return (
@@ -59,12 +111,16 @@ export default {
       )
     },
 
-    chatByTime() { return this.currentLiveSession ? 
-      this.$store.getters.messagesArray
+    ...mapGetters('messages', [
+      'messagesArray'
+    ]),
+
+    chatByTime() { return this.currentLiveSession ?
+      this.messagesArray
       .filter(m => (
           this.$store.state.users[m.authorUID] &&
-          m.uid && 
-          !m.deleted && 
+          m.uid &&
+          !m.deleted &&
           !m.navigation &&
           !m.stream &&
           m.location === 'livestream'
@@ -75,6 +131,10 @@ export default {
   },
 
   watch: {
+
+    now() {
+      this.getNextEvent()
+    },
 
     currentLiveSession(newSession, oldSession) {
       if (newSession !== oldSession) {
@@ -94,13 +154,61 @@ export default {
   },
 
   created() {
+
+    this.getNextEvent()
+
     setInterval(() => {
       this.now = (new Date).getTime()
+      // this.getNextEvent()
     }, 60000)
+
   },
 
   methods: {
-    getUnixTime: date => moment(date).format('x'),
+    getNextEvent() {
+      const
+        buffer         = 0,
+        fifteen         = 15 * 60000, // 15 minutes
+        now             = this.now + buffer,
+        currentSession  = this.currentSession,
+        nextSession     = this.nextSession,
+        laterSession    = this.laterSession,
+        previousSession = this.previousSession
+
+      console.log('*****************************************************')
+      console.log('current time     :', moment(now).format('dddd, MMMM Do HH:mm'))
+      console.log('current session  :', currentSession ? currentSession.Title : '')
+      console.log('next session     :', nextSession ? nextSession.Title : '')
+      console.log('previous session :', previousSession ? previousSession.Title : '')
+      console.log('later session    :', laterSession ? laterSession.Title : '')
+      console.log('*****************************************************')
+
+      if (currentSession) {
+        if (currentSession !== this.currentLiveSession) {
+          console.log('updating store with current session')
+          this.$store.commit('territories/setCurrentLiveSession', currentSession)
+        }
+
+      } else if (nextSession) {
+        if (nextSession !== this.currentLiveSession) {
+          console.log('current session is undefined, updating store with next session')
+          this.$store.commit('territories/setCurrentLiveSession', nextSession)
+        }
+
+      } else if (previousSession && laterSession &&
+        ((this.getTime(laterSession.Start) - this.getTime(previousSession.End)) < 3 * fifteen)
+      ) {
+        console.log('last session could be running late, using that.')
+        this.$store.commit('territories/setCurrentLiveSession', previousSession)
+
+      } else {
+        console.log('no more live events')
+        this.$store.commit('territories/setCurrentLiveSession', null)
+      }
+
+    },
+
+    getTime: date => moment(date).format('x'),
   },
 
 }
@@ -113,8 +221,6 @@ export default {
   padding: calc(1 * var(--one));
   height: 100%;
   width: 100%;
-  /* max-height: 100vh;
-  max-width: 100vw; */
   display: flex;
   justify-content: center;
   align-items: stretch;

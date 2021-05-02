@@ -1,13 +1,11 @@
 <template>
   <div id="list" class="ui">
-
     <Territory
       v-for="territory in territories"
       :key='territory.slug'
       :territory='territory'
-      @click.native="handleTerritoryClick(territory)"
+      @click.native="$emit('goTo', territory.slug)"
     />
-
   </div>
 </template>
 
@@ -16,25 +14,15 @@ import { mapState } from 'vuex'
 import Territory from './Territory'
 
 export default {
-
   name: 'List',
   components: {
     Territory,
   },
   computed: {
-    ...mapState({
-      territories: state => state.territories,
-    }),
+    ...mapState('territories', [
+      'territories'
+    ]),
   },
-  methods: {
-
-    handleTerritoryClick(territory) {
-      this.$emit('goTo', territory.slug)
-    }
-
-  }
-
-
 }
 </script>
 

@@ -1,13 +1,13 @@
 <template>
-  <div 
+  <div
     id="tour"
-    :class="{ navigating: navigating }"  
-    :style="{ '--region': $store.state.location.color }"
+    :class="{ navigating: navigating }"
+    :style="{ '--region': $store.state.territories.location.color }"
   >
-    <v-tour 
-      name="tour" 
-      :steps="steps" 
-      :callbacks="callbacks" 
+    <v-tour
+      name="tour"
+      :steps="steps"
+      :callbacks="callbacks"
       :options="options"
     >
       <template slot-scope="tour">
@@ -28,32 +28,26 @@
             :class="{ isLast: tour.currentStep == tour.steps.length - 1 }"
           >
             <div slot="actions" class="actions">
-              <!-- <input 
+              <input
+                v-if="isException(tour.steps[tour.currentStep]) || tour.currentStep == 0"
                 class="ui button"
-                type="button" 
-                value="previous"
-                @click.stop="tour.previousStep" 
-              > -->
-              <input 
-                v-if="isException(tour.steps[tour.currentStep]) || tour.currentStep == 0" 
-                class="ui button"
-                type="button" 
+                type="button"
                 value="next"
-                @click.stop="tour.nextStep" 
+                @click.stop="tour.nextStep"
               >
-              <input 
+              <input
                 v-if="tour.currentStep !== tour.steps.length - 1"
                 class="ui button skip"
-                type="button" 
+                type="button"
                 value="skip tour"
-                @click.stop="tour.skip" 
+                @click.stop="tour.skip"
               >
-              <input 
+              <input
                 v-else
                 class="ui button end"
-                type="button" 
+                type="button"
                 value="end tour"
-                @click.stop="tour.skip" 
+                @click.stop="tour.skip"
               >
             </div>
           </v-step>
@@ -105,22 +99,21 @@ export default {
           },
         },
         {
-          target: '#navHandle .map',  
+          target: '#navHandle .map',
           content: `You can also switch to the map view.`,
           params: {
             enableScrolling: false,
             placement: 'right'
           },
-          // before: async() => { await this.wait('500') },
           before: () => new Promise(res => {
-            setTimeout(() => { 
-              if (this.$store.state.location.slug === 'schedule')
-              res('1') 
+            setTimeout(() => {
+              if (this.$store.state.territories.location.slug === 'schedule')
+              res('1')
             }, 1000)
           })
         },
         {
-          target: '#minimap',  
+          target: '#minimap',
           content: `Here, you can zoom in or out or pan around.<br><br> Zoom out to proceed.`,
           params: {
             enableScrolling: false,
@@ -128,7 +121,7 @@ export default {
           },
         },
         {
-          target: '#minimap .zero',  
+          target: '#minimap .zero',
           content: `Click the "o" button to zoom back to default.`,
           params: {
             enableScrolling: false,
@@ -136,8 +129,8 @@ export default {
           },
           before: () => new Promise(res => {
             if (this.$store.state.scale < 7) {
-              setTimeout(() => { 
-                res('1') 
+              setTimeout(() => {
+                res('1')
               }, 700)
             }
           })
@@ -153,7 +146,7 @@ export default {
             this.$emit('goTo', '/schedule')
             this.$emit('focusOverlay')
             setTimeout(() => {
-              res('1') 
+              res('1')
             }, 1000)
           })
         },
@@ -189,7 +182,7 @@ export default {
             this.$emit('hideNav')
             this.$emit('focusIsland')
             res('1')
-            setTimeout(() => { 
+            setTimeout(() => {
               this.$emit('unfocusLocation')
             }, 300)
           })
@@ -217,8 +210,8 @@ export default {
           before: () => new Promise(res => {
             this.$emit('unfocusOverlay')
             this.$emit('showNav')
-            setTimeout(() => { 
-              res('1') 
+            setTimeout(() => {
+              res('1')
             }, 300)
           })
         },
@@ -232,15 +225,15 @@ export default {
           },
           before: () => new Promise(res => {
             setTimeout(() => {
-              if (this.$store.state.location.slug === 'hangout') {
-                res('1') 
+              if (this.$store.state.territories.location.slug === 'hangout') {
+                res('1')
               }
             }, 1000)
           })
         },
         {
           target: '#options .edituser .button',
-          content: 'When you first landed, you were prompted to create a user profile. You can always edit your profile in the "options" dialogue box.',
+          content: 'When you first landed, you were assigned a random user profile. You can always edit your profile in the "options" dialogue box.',
           params: {
             enableScrolling: false,
             placement: 'right'
@@ -254,9 +247,6 @@ export default {
             placement: 'top',
             highlight: false,
           },
-          // before: () => new Promise(res => {
-          //   setTimeout(() => { res('1') }, 400)
-          // })
         },
         {
           target: '#jsonMe',
@@ -277,7 +267,7 @@ export default {
           },
           before: () => new Promise(res => {
             if (!this.editing) {
-              res('1') 
+              res('1')
             }
           })
         },
@@ -307,12 +297,12 @@ export default {
           },
           before: () => new Promise(res => {
             let timeout = 0
-            if (this.$store.state.location.slug !== 'hangout') {
+            if (this.$store.state.territories.location.slug !== 'hangout') {
               this.$emit('goTo', '/hangout')
               timeout = 1000
             }
             setTimeout(() => {
-              res('1') 
+              res('1')
               this.$emit('hideNav')
               this.$emit('hideOverlay')
             }, timeout)
@@ -344,42 +334,35 @@ export default {
             this.$emit('goTo', '/readme/tour')
             setTimeout(() => {
               this.$emit('showNav')
-              res('1')            
+              res('1')
             }, 400)
           })
         },
 
       ],
       callbacks: {
-        // onPreviousStep: this.myCustomPreviousStepCallback,
-        // onNextStep: this.myCustomNextStepCallback,
         onFinish: this.end,
         onSkip: this.end,
       }
     }
   },
-  created() {
-  },
   mounted () {
     this.$tours['tour'].start()
     document.addEventListener('click', this.validate)
-  },
-  computed: {
-    
   },
   methods: {
 
     validate(e) {
       console.log('click')
 
-      const 
+      const
         target = e.target,
         tour = this.$tours['tour'],
         currentStep = tour.currentStep,
         tourTarget = document.querySelector(tour.steps[currentStep].target)
-      
+
       // this.target = target
-      
+
       if (tourTarget == target || this.isDescendant(tourTarget, target) ||
          (target.classList && target.classList.contains('save')) ||
          (target.classList && target.classList.contains('showParticipants'))
@@ -391,8 +374,12 @@ export default {
       }
     },
 
-    nextStep () { this.$tours['tour'].nextStep() },
-    showLastStep () { this.$tours['tour'].currentStep = this.steps.length - 1 },
+    nextStep () {
+      this.$tours['tour'].nextStep()
+    },
+    showLastStep () {
+      this.$tours['tour'].currentStep = this.steps.length - 1
+    },
     myCustomPreviousStepCallback (currentStep) {
       console.log('custom previousStep callback on step ' + (currentStep + 1))
     },
@@ -421,6 +408,7 @@ export default {
     isException(step) {
       return this.exceptions.indexOf(step.target) > -1
     },
+
     end() {
       this.$emit('unfocusOverlay')
       this.$emit('unfocusIsland')
@@ -430,6 +418,7 @@ export default {
       document.removeEventListener('click', this.validate)
       console.log('end tour')
     }
+
   }
 }
 </script>

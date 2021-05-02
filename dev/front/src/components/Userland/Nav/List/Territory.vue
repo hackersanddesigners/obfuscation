@@ -5,10 +5,7 @@
       'list-territory',
       { active: isActive }
     ]"
-    :style="{
-      '--ground': territory.color,
-      '--image': shape,
-    }"
+    :style="{ '--ground': territory.color }"
     tabindex="0"
   >
     <span class="name">{{ territory.name }}</span>
@@ -18,20 +15,14 @@
 
 <script>
 export default {
-
   name: 'Territory',
-
   props: [ 
     'territory'
   ], 
-
   computed: {
-    location() { return this.$store.state.location },
-    shape() { return `url("${this.$apiURL}${this.territory.shape.url}#svgView(preserveAspectRatio(none))")` },
+    location() { return this.$store.state.territories.location },
     isActive() { return this.territory.slug === this.location.slug },
   },
-  
-
 }
 </script>
 
@@ -40,7 +31,6 @@ export default {
 .list-territory {
   box-sizing: border-box;
   list-style: none;
-  /* margin: 0.3vh 0.5vh; */
   padding: 0.3vh 0.5vh;
   margin-bottom: 0vh;
   font-size: var(--ui-font-size);
@@ -48,7 +38,6 @@ export default {
   border-radius: var(--ui-border-radius);
 }
 .list-territory:last-of-type {
-  /* margin-bottom: 0.5vh; */
 }
 .list-territory span {
   margin-right: 10px;
@@ -62,10 +51,6 @@ export default {
 .list-territory:hover .name {
   color: var(--ground);
 }
-/* .list-territory:focus {
-  border: 2px solid var(--ground);
-  outline: none;
-} */
 .list-territory.active {
   color: var(--ground);
 }

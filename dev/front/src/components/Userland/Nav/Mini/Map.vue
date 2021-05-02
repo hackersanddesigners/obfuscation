@@ -33,7 +33,6 @@
       />
     </div>
 
-
     <div class="cursorContainer">
       <Cursorr
         v-for="user in users"
@@ -107,22 +106,17 @@ export default {
 
   computed: {
     ...mapState({
-
-      territories: state => state.territories,
-
-      left: state => state.windowPos.x / 5,
-      top: state => state.windowPos.y / 5,
-      width: state => state.windowSize.w / 5,
-      height: state => state.windowSize.h / 5,
-      scale: state => state.scale,
-      zoomIndex: state => state.scale * 5
-    
+      territories: state => state.territories.territories,
+      left:        state => state.windowPos.x / 5,
+      top:         state => state.windowPos.y / 5,
+      width:       state => state.windowSize.w / 5,
+      height:      state => state.windowSize.h / 5,
+      scale:       state => state.scale,
+      zoomIndex:   state => state.scale * 5
     }),
     ...mapGetters({
-
-      users: 'connectedUsers',
-      messages: 'notDeletedMessages',
-
+      users: 'users/notDeletedUsers',
+      messages: 'messages/notDeletedMessages',
     })
   },
 
@@ -154,7 +148,7 @@ export default {
         centerY = this.height / (2 * this.scale),
         y = (clickY - centerY) * this.zoomIndex
 
-      this.$emit('newPosition', {x, y})
+      this.$emit('newPosition', { x, y })
     },
 
   }

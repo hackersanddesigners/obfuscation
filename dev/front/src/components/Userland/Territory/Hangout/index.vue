@@ -1,12 +1,12 @@
 <template>
   <div>
-    <div 
+    <div
       v-for="(room, name) in rooms"
       :key="name"
       :class="['island', `BBBisland${name}`]"
     >
-      <BBBLink 
-        :room="room" 
+      <BBBLink
+        :room="room"
       />
     </div>
     <div id="participantsIndicator"></div>
@@ -25,17 +25,17 @@ export default {
       rooms: {
         '1': {
           name: 'Room 1',
-          url: 'https://bbb.tbm.tudelft.nl/b/3rd-yns-svo-fbn'        
+          url: 'https://bbb.tbm.tudelft.nl/b/3rd-yns-svo-fbn'
         },
         '2': {
           name: 'Room 2',
-          url: 'https://bbb.tbm.tudelft.nl/b/3rd-qmb-3gn-3ql'        
+          url: 'https://bbb.tbm.tudelft.nl/b/3rd-qmb-3gn-3ql'
         },
         '3': {
           name: 'Room 3',
-          url: 'https://bbb.tbm.tudelft.nl/b/3rd-scf-jhq-5qv'        
+          url: 'https://bbb.tbm.tudelft.nl/b/3rd-scf-jhq-5qv'
         },
-      
+
       }
     }
   }

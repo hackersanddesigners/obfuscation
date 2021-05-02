@@ -1,14 +1,6 @@
 <template>
   <div id="options">
 
-    <!-- <div class="grid">
-      <input 
-        type="button" 
-        :value="grid ? 'hide grid' : 'show grid'" 
-        @click.stop="toggleGrid"
-      />
-    </div> -->
-
     <div class="registerAgain">
       <div
         class="ui button"
@@ -49,7 +41,7 @@
     <div class="storage">
       <div
         class="ui button"
-        @click="$store.dispatch('deleteUser', me)"
+        @click="$store.dispatch('users/deleteUser', me)"
         tabindex="0"
       >
         delete self
@@ -60,13 +52,12 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 import Userslist from './Users'
 
 export default {
 
   name: 'Options',
-
   components: {
     Userslist
   },
@@ -75,20 +66,12 @@ export default {
       showParticipants: false,
     }
   },
-
   computed: {
-    ...mapState([
-      'grid',
-    ]),
-    ...mapGetters([
+    ...mapGetters('users', [
       'me'
     ])
   },
-  methods: {
-    ...mapMutations([
-      'toggleGrid'
-    ]),
-  }
+
 }
 </script>
 
@@ -114,7 +97,6 @@ export default {
 .button:focus {
   box-shadow: 0 0 10px 0 var(--back);
   outline: 2px solid blue;
-  /* background: green; */
 }
 
 </style>

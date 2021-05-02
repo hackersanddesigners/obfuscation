@@ -1,5 +1,5 @@
 <template>
-  <div 
+  <div
     :class="[
       'island',
     ]"
@@ -11,8 +11,8 @@
     </div>
     <div class="info">
       <div class="header">
-        <h1 class="title" :class="{ zxx: $store.state.desiresTexture }"> 
-          {{ session.Title }} 
+        <h1 class="title" :class="{ zxx: $store.state.desiresTexture }">
+          {{ session.Title }}
         </h1>
       </div>
     </div>
@@ -56,8 +56,8 @@ export default {
     }
   },
   computed: {
-    soon() { return this.getUnixTime(this.session.Start) < (this.now + this.fifteen) },  
-    ended() { return this.getUnixTime(this.session.End) < this.now },  
+    soon() { return this.getUnixTime(this.session.Start) < (this.now + this.fifteen) },
+    ended() { return this.getUnixTime(this.session.End) < this.now },
   },
   created() {
     this.soonInterval = setInterval(() => {
@@ -83,6 +83,7 @@ export default {
   max-width: 100%;
   display: flex;
   /* align-items: center; */
+  transition: border-radius 0.2s ease;
 }
 
 .island:hover {
@@ -127,7 +128,7 @@ export default {
 .island .info {
   flex: 1 0 50%;
   box-sizing: border-box;
-  padding: 
+  padding:
     calc(2 * var(--one))
     calc(4 * var(--one))
     calc(4 * var(--one))

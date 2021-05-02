@@ -1,5 +1,5 @@
 <template>
-  <a 
+  <a
     target="_blank"
     :class="{ disabled: !room.url ? true : false }"
     :href="room.url ? room.url : null"
@@ -14,23 +14,7 @@
 <script>
 export default {
   name: 'BBBLink',
-  components: {
-  },
-  props: [
-    'room',
-  ],
-  data() {
-    return {
-    }
-  },
-  computed: {
-  },
-  created() {
-  },
-  methods: {
-
-  }
-
+  props: [ 'room' ],
 }
 </script>
 
@@ -54,7 +38,6 @@ export default {
   top: 0; left: 0;
   width: 100%; height: 100%;
   content: '';
-  /* background: var(--island-back); */
   border-top-left-radius: inherit;
   border-bottom-right-radius: inherit;
   border-top-right-radius:inherit;

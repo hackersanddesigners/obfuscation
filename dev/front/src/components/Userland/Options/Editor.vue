@@ -1,13 +1,13 @@
 <template>
   <div id="registerContainer">
-    <div 
-      id="register" 
+    <div
+      id="register"
       class="ui"
       @keyup.enter="save"
     >
 
-      <div 
-        class="introText" 
+      <div
+        class="introText"
         v-if="!registered"
       >
         <h3>Welcome.</h3>
@@ -18,17 +18,17 @@
 
           <div class="name">
             <label for="name">Name: </label>
-            <input 
-              ref="name" 
+            <input
+              ref="name"
               name="name"
               class="ui"
-              type="text" 
+              type="text"
               placeholder="pick a display name"
               tabindex="0"
             />
           </div>
 
-          <p 
+          <p
             class="error"
             v-if="invalid || tooshort || inuse"
           >
@@ -42,21 +42,21 @@
 
           <div class="color">
             <label for="color">Color: </label>
-            <input 
-              ref="color" 
+            <input
+              ref="color"
               name="color"
               class="ui"
-              type="text" 
+              type="text"
               data-jscolor
               @input="updateColor"
               tabindex="0"
-            /> 
+            />
           </div>
 
           <div class="messagesOptions">
             <label for="lifetime">Message lifetime (days): </label>
             <input
-              ref="messageLifetime" 
+              ref="messageLifetime"
               name="lifetime"
               class="ui"
               type="number"
@@ -68,7 +68,7 @@
           <div class="texture">
             <label for="texture">Obfuscated texture: </label>
             <input
-              ref="texture" 
+              ref="texture"
               name="texture"
               class="ui"
               type="checkbox"
@@ -81,7 +81,7 @@
           <div class="contrast">
             <label for="contrast">Higher contrast: </label>
             <input
-              ref="contrast" 
+              ref="contrast"
               name="contrast"
               class="ui"
               type="checkbox"
@@ -91,15 +91,15 @@
             />
           </div>
       <div class="introText" v-if="!registered">
-        <p>The messages you post will be visible to every other participant and remain available on the website.</p>  
+        <p>The messages you post will be visible to every other participant and remain available on the website.</p>
       </div>
 
-          <input 
+          <input
             class="ui save"
-            ref="submit" 
-            type="button" 
+            ref="submit"
+            type="button"
             value="save"
-            @click="save" 
+            @click="save"
             tabindex="0"
           >
 
@@ -126,13 +126,13 @@ export default {
       inuse: false,
 
       colorPickerOpts: {
-        format: 'rgba', 
-        previewPosition: 'right', 
-        previewSize: 30, 
-        borderRadius: 0, 
-        padding: 0, 
-        controlBorderColor:'rgba(255,255,255,0)', 
-        sliderSize: 13, 
+        format: 'rgba',
+        previewPosition: 'right',
+        previewSize: 30,
+        borderRadius: 0,
+        padding: 0,
+        controlBorderColor:'rgba(255,255,255,0)',
+        sliderSize: 13,
         shadow: false
       },
 
@@ -142,11 +142,13 @@ export default {
 
   computed: {
     ...mapState([
-      'registered',
       'desiresTexture',
       'desiresContrast',
     ]),
-    ...mapGetters([
+    ...mapState('users', [
+      'registered',
+    ]),
+    ...mapGetters('users', [
       'me',
       'userNames',
     ]),
@@ -166,7 +168,7 @@ export default {
 
     jscolor.presets.default = this.colorPickerOpts
     this.$refs.color.value = this.me.color
-    new jscolor(this.$refs.color)  
+    new jscolor(this.$refs.color)
     jscolor.init()
 
     this.$refs.messageLifetime.value = (this.me.messageLifetime / 86400000) || 30
@@ -175,7 +177,7 @@ export default {
   methods: {
 
     save() {
-      const 
+      const
         name = this.$refs.name.value,
         color = this.$refs.color.value,
         messageLifetime = this.$refs.messageLifetime.value * 86400000
@@ -200,7 +202,7 @@ export default {
     },
 
     register(name, color, messageLifetime) {
-      this.$store.dispatch('updateAppearance', {
+      this.$store.dispatch('users/updateAppearance', {
         name: name,
         color: color,
         x: this.me.x,
@@ -208,11 +210,11 @@ export default {
         messageLifetime: messageLifetime
       })
       this.$emit('stopEdit')
-      this.$store.commit('register')
+      this.$store.commit('users/register')
     },
 
     updateColor() {
-      this.$store.dispatch('updateColor', {
+      this.$store.dispatch('users/updateColor', {
         color: this.$refs.color.value
       })
     },
@@ -226,7 +228,7 @@ export default {
     },
 
     existingUser(string) {
-      const 
+      const
         existing = this.userNames.find(n => (
           n.toLowerCase() === string.toLowerCase()
         )),
@@ -310,7 +312,7 @@ export default {
 .form .texture,
 .form .contrast {
   justify-content: space-between;
-} 
+}
 
 .form .texture input,
 .form .contrast input {
@@ -318,16 +320,12 @@ export default {
   max-width: 2vh;
 }
 
-
 input {
   flex-shrink: 1;
   width: 300px;
   outline: none;
   box-shadow: none;
   padding: 2px 10px;
-}
-.name input {
-  /* margin-bottom: 0.5vh; */
 }
 
 input[type="button"] {
@@ -351,7 +349,6 @@ p.error  {
 #jsonMe {
   font-size: 15pt;
   margin: 10vh;
-  /* font-family: 'jet' !important; */
 }
 
 </style>

@@ -64,7 +64,7 @@ const
       options = { upsert: true, new: true }
     User.findOneAndUpdate(filter, update, options, (err, res) => {
       if (err) console.log(err)
-      console.log(`${res.uid} | (${res.name}) | ${status}`) 
+      console.log(`${user.uid} | (${user.name}) | ${status}`) 
     })
   },
 
@@ -75,7 +75,7 @@ const
       options = { upsert: true, new: true }
     Message.findOneAndUpdate(filter, update, options, (err, res) => {
       if (err) console.log(err)
-      console.log(`${res.uid} | ${res.author}: ${res.content} | sent`) 
+      console.log(`${message.uid} | ${message.author}: ${message.content} | sent`) 
     })
   },
 

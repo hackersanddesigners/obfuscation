@@ -23,7 +23,7 @@ export default {
 <style scoped>
 .reception {
   width: 100%;
-  height: 100%; 
+  height: 100%;
 }
 #aboutIsland {
   top: 20%; left: 35%;
@@ -46,7 +46,6 @@ export default {
 #study-groupIsland {
   top: 20%; left: 60%;
 }
-
 #privacy-policyIsland {
   top: 52%; left: 50%;
 }

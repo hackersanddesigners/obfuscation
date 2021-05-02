@@ -7,19 +7,19 @@
           v-if="!isInDefaultTimeZone"
           class="toggle"
           @click.stop="toggleTimezone"
-        > {{ 
+        > {{
               desiresOwnTimezone ?
               `View sessions in ${ notEtc(defaultTimeZone) } time.` :
               `View sessions in ${ notEtc(ownTimeZone) } time.`
           }}
         </h3>
       </div>
-      <div 
+      <div
         v-for="day in sessionsByDay"
         :key="getDay(day.date)"
         class="day"
       >
-        <div 
+        <div
           class="islandContainer"
           v-for="session in day.sessions"
           :key="session.slug"
@@ -56,7 +56,7 @@ import BBBLink from '../BBBLink'
 
 export default {
   name: 'StudyRoom',
-  components: { 
+  components: {
     Island ,
     BBBLink
   },
@@ -64,9 +64,6 @@ export default {
   data() {
     return {
       defaultTimeZone: 'Etc/UTC',
-      // defaultTimeZone: "Europe/Amsterdam",
-      // defaultTimeZone: "Australia/Sydney",
-      // defaultTimeZone: "Pacific/Funafuti",
       ownTimeZone: moment.tz.guess(),
       desiresOwnTimezone: true,
       sessionsByDay: {},
@@ -87,14 +84,14 @@ export default {
   },
   methods: {
     orderContentByDays() {
-      const 
+      const
         sessionsByDay = {},
         sessionsArray = Object.values(this.content).sort((a, b) => new Date(a.Start) - new Date(b.Start)),
         dates = sessionsArray.map(session => this.getDay(session['Start'])),
         uniqueDates = Array.from(new Set(dates))
 
       uniqueDates.forEach(day => {
-        const 
+        const
           sessionsInDay = sessionsArray.filter(s => this.sessionInDay(s, day)),
           dayObject = {
             date: sessionsInDay[0].Start,
@@ -117,7 +114,7 @@ export default {
     },
 
     sizeByDuration(session) {
-      const 
+      const
         UnixStart = this.getUnixTime(session.Start),
         UnixEnd = this.getUnixTime(session.End),
         duration = UnixEnd - UnixStart,
@@ -142,7 +139,7 @@ export default {
 <style scoped>
 .studyRoom {
   box-sizing: border-box;
-  padding: 
+  padding:
     calc(5 * var(--one))
     calc(0 * var(--one))
     calc(0 * var(--one))
@@ -183,7 +180,7 @@ export default {
 
 .studyRoom .day .date {
   text-align: center;
-  margin: 
+  margin:
     calc(3 * var(--one))
     calc(2 * var(--one))
     calc(3 * var(--one))
@@ -231,7 +228,7 @@ export default {
   padding: 20%;
 }
 
-/* 
+/*
 .LIFECYCLE0 #timeZone,
 .LIFECYCLE0 .date,
 .LIFECYCLE0 .time {

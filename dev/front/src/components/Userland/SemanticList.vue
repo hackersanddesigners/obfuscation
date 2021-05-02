@@ -27,11 +27,6 @@ export default {
     'name',
     'collection'
   ],
-  data() {
-    return {
-    }
-  },
-
   computed: {
     title() { 
       return (
@@ -40,23 +35,18 @@ export default {
           this.list.length === 1 ? this.name + `:` : this.name + `s:` 
         : null 
       )
-  },
-
-  },
-  created() {
+    },
   },
   methods: {
-    isLast(item, array) {
-      return array.indexOf(item) === array.length - 1
-    },
-    isBeforeLast(item, array) {
-      return array.indexOf(item) === array.length - 2
-    },
-
-    alphabetical(array) {
-      return array.sort((a, b) => a.Name.length - b.Name.length)
-    },
-
+    isLast: (item, array) => (
+      array.indexOf(item) === array.length - 1
+    ),
+    isBeforeLast: (item, array) => (
+      array.indexOf(item) === array.length - 2
+    ),
+    alphabetical: array => (
+      array.sort((a, b) => a.Name.length - b.Name.length)
+    ),
   }
 }
 </script>

@@ -1,14 +1,14 @@
 <template>
-  <main 
+  <main
     :style="[
+      { '--scale': scale },
       ...userColors,
       ...regionColors,
-      { '--scale': scale }
     ]"
-    :class="{ 
+    :class="{
       blur: notfound || !registered || editing || notifications.length > 0,
       touring: touring,
-      obfuscated: $store.state.desiresTexture,
+      obfuscated: desiresTexture,
       tourIsAtOverlay: tourIsAtOverlay,
       tourIsAtLocation: tourIsAtLocation,
       tourIsAtIsland: tourIsAtIsland,
@@ -16,22 +16,21 @@
       tourIsAtBBB: tourIsAtBBB,
     }"
   >
-
     <transition name="fade">
       <Notfound v-if="notfound" />
     </transition>
 
     <transition name="fade">
       <Editor
-        v-if="!registered || editing" 
+        v-if="!registered || editing"
         :touring="touring"
         @stopEdit="editing = false"
       />
     </transition>
 
     <transition name="fade">
-      <div 
-        v-if="notifications.length > 0"
+      <div
+        v-if="!isMobile && notifications.length > 0"
         id="notificationContainer"
       >
         <Notification
@@ -44,8 +43,8 @@
       </div>
     </transition>
 
-    <div 
-      id="userlandContainer" 
+    <div
+      id="userlandContainer"
       ref="userlandContainer"
       tabindex="-1"
       :class="[
@@ -53,11 +52,12 @@
         { dragging: dragging },
       ]"
       @click="handleClick($event)"
+      @scroll="setViewerPosition($event)"
     >
-      
-      <div 
+
+      <div
         v-if="true"
-        id="userland" 
+        id="userland"
         ref="userland"
         tabindex="-1"
         :class="location.slug"
@@ -85,7 +85,7 @@
           :user="user"
           :dragging="isMe(user) ? dragging : null"
         />
-        
+
         <Message
           v-for="message in notDeletedMessages"
           :key="message.uid"
@@ -94,16 +94,16 @@
           :isMe="message.authorUID === me.uid"
           @goTo="goTo(users[$event])"
         />
-        
+
       </div>
 
        <div id="location">
-        <div 
+        <div
           class="ui tag"
           @click="handleIslandClick('/' + location.slug)"
           tabindex="0"
-        > 
-          #{{ location.slug }} 
+        >
+          #{{ location.slug }}
         </div>
       </div>
 
@@ -121,12 +121,12 @@
         :isMobile="isMobile"
       />
 
-      <Minilist 
+      <Minilist
         v-if="desiresList"
         @goTo="route($event, false, false, true)"
       />
 
-      <Minimap 
+      <Minimap
         v-else
         :dragging="dragging"
         :miniDragging="miniDragging"
@@ -180,7 +180,7 @@
       @hideOverlay="handleOverlayClose"
       @startTour="startTour"
     />
-    
+
     <Tour
       v-if="touring"
       :editing="editing"
@@ -207,9 +207,8 @@
 </template>
 
 
-
-
 <script>
+
 import { mapState, mapGetters } from 'vuex'
 
 import NavHandle from './Nav/Handle'
@@ -247,32 +246,30 @@ export default {
     Tour,
   },
 
-  props: {
-    wantsToView: String,
-  },
+  props: [
+    'wantsToView',
+  ],
 
   data () {
-    return { 
-      
+    return {
+
       notfound: false,
-      moreInformation: {},
       secondPath: false,
+      moreInformation: {},
 
       desiresNav: true,
-      desiresList: true, 
-      desiresOverlay: false, 
+      desiresList: true,
+      desiresOverlay: false,
 
       editing: false,
       scrolling: false,
       firstScroll: true,
       dragging: false,
       miniDragging: false,
-      notifications: [],
-
       lastScrollX: 0,
       lastScrollY: 0,
 
-      isCompatible: true,
+      notifications: [],
 
       touring: false,
       tourIsAtOverlay: false,
@@ -286,49 +283,44 @@ export default {
 
   computed: {
     ...mapState([
-
-      'lifecycle',      
-
-      'registered',
-      'visited',
-      'blocked',
-
-      'users',
-      'messages',
-
-      'highCPUNotifiction',
-
-      'territories',
-      'location',
-      'general',
-      'currentLiveSession',
-
       'isMobile',
+      'isCompatible',
       'scale',
+      'desiresTexture',
       'widthFactor',
       'windowPos',
       'windowSize',
-
+    ]),
+    ...mapState('territories', [
+      'territories',
+      'location',
+      'currentLiveSession',
+    ]),
+    ...mapState('users', [
+      'registered',
+      'visited',
+      'users',
+      'highCPUNotifiction',
     ]),
     ...mapGetters([
-
+      'centerOf',
+    ]),
+    ...mapGetters('territories', [
+      'regionColors',
+      'territoryByBorders',
+      'positionOfIsland',
+    ]),
+    ...mapGetters('users', [
+      'userColors',
       'me',
       'isMe',
       'networkConservationMode',
-
-      'territoryByBorders',
-
-      'regionColors',
-      'userColors',
-      'connectedUsers',
       'notDeletedUsers',
-      'notDeletedMessages',
-
-      'positionOfIsland',
-      'centerOf',
-      'pixelsFrom',
-
     ]),
+    ...mapGetters('messages', [
+      'notDeletedMessages',
+    ]),
+
   },
 
   watch: {
@@ -347,102 +339,56 @@ export default {
       }
     },
 
-    scale(newScale, oldScale) {  
+    scale(newScale, oldScale) {
       if (newScale && oldScale) {
-        this.recenter(newScale, oldScale) 
+        this.recenter(newScale, oldScale)
       }
     },
 
     networkConservationMode(newState, oldState) {
       if (newState > oldState) {
-        console.log('network conservation mode enabled')
-        this.notifications.push(this.highCPUNotifiction)
+        this.notifyNCM()
       } else {
-        console.log('network conservation mode disabled')
-        this.notifications.forEach(n => {
-          if (n.author == 'Server') {
-            this.notifications.splice(this.notifications.indexOf(n), 1)
-          }
-        })
+        this.unnotifyNCM()
       }
     }
-
-  },
-
-  created() {   
-
-    if (this.isMobile) {
-      this.$store.commit('setScale', 8)
-      this.$store.commit('setWidthFactor', 3.4)
-    }
-
-    this.checkCompatibility()
 
   },
 
   mounted() {
-  
+
 
     // if there is a slug, navigate to it.
 
-    if ( this.wantsToView && 
-        this.wantsToView !== '/' &&
-        this.wantsToView !== '/general') {
+    if (
+      this.wantsToView &&
+      this.wantsToView !== '/' &&
+      this.wantsToView !== '/general'
+    ) {
       this.route(this.wantsToView, 'smooth')
     } else {
       this.$router.push('reception')
     }
+
     setTimeout(() => {
       this.firstScroll = false
-    }, 1500)
-
-    this.handleLinks('.message a')
-
-    setTimeout(() => {
+      this.handleLinks('.message a')
       if (this.networkConservationMode) {
-        console.log('network conservation mode enabled')
-        this.notifications.push(this.highCPUNotifiction)
+        this.notifyNCM()
       }
-    }, 1000)
-    
-    this.$el.addEventListener("wheel", (e) => {
-      if (e.ctrlKey) {
-        e.preventDefault()
-        e.stopPropagation()
-      }
-    })
-
-    this.$refs.userlandContainer.addEventListener('scroll', (e) => {
-      this.setViewerPosition(e)
-    })
+    }, 1500)
 
     document.addEventListener('keyup', (e) => {
       this.handleInput(e)
     })
-
-    window.addEventListener('resize', () => {
-      this.$store.commit('resize', {
-        w: window.innerWidth,
-        h: window.innerHeight,
-      })
-    })
-
-    window.onbeforeunload = () => {
-      if (this.me && !this.me.deleted) {
-        this.$store.dispatch('disconnect')
-        if (this.isMobile || this.me.name.includes(this.me.uid)) {
-          this.$store.dispatch('deleteUser', this.me)
-        }
-      }
-    }
 
   },
 
   sockets: {
 
 
-    // navigate to a recieved message if it's 
-    // an announcement.
+    // notify if a recieved message if is a
+    // mention or announcement.
 
     message(message) {
       if (!message.deleted && !message.stream) {
@@ -459,6 +405,7 @@ export default {
       }
     },
 
+
   },
 
   methods: {
@@ -468,7 +415,7 @@ export default {
 
     route(slug, behavior, pause, force) {
 
-      slug = 
+      slug =
         slug.startsWith('/') ?
         slug.slice(1) :
         slug
@@ -480,7 +427,7 @@ export default {
         content
 
       console.log(name, page)
-      
+
 
       // routing to territoriees
 
@@ -500,7 +447,7 @@ export default {
         // position = this.centerOf(territory.borders)
         content = territory
 
-    
+
         // routing to pages
 
         if (page) {
@@ -509,9 +456,9 @@ export default {
           position = this.positionOfIsland(page)
 
           if (position) {
-            content = 
-              page === 'upload' || page === 'submit' ? { 
-                slug: page, 
+            content =
+              page === 'upload' || page === 'submit' ? {
+                slug: page,
                 collection: name
               } : this.territories[name].content[page]
 
@@ -528,8 +475,6 @@ export default {
 
       }
 
-     
-      
       // scroll action
 
       if (!this.notfound) {
@@ -539,11 +484,11 @@ export default {
           }, pause || 0)
         }
 
-        
+
         // setting overlay content
 
         if (this.location.slug !== name) {
-          this.desiresOverlay = false      
+          this.desiresOverlay = false
         }
         pause = this.isMobile ? 0 : 150
 
@@ -562,7 +507,7 @@ export default {
             if (page || this.location.slug !== name || force) {
               setTimeout(() => {
                 // if (name === 'livestream' && this.currentLiveSession) {
-                  this.desiresOverlay = true        
+                  this.desiresOverlay = true
                 // }
               }, pause + 150)
             }
@@ -578,7 +523,7 @@ export default {
             const position = this.centerOf(this.territories['reception'].borders)
             this.scrollTo(position, 'smooth')
             this.notfound = false
-          }, 1000)  
+          }, 1000)
         } else {
           setTimeout(() => {
             this.$router.go(-1)
@@ -613,6 +558,35 @@ export default {
     },
 
 
+    // tells the cursor component to handle click.
+
+    handleClick() {
+      if (!this.editing && !this.isMobile) {
+        this.$refs.me[0].sendMessage()
+      }
+    },
+
+
+    // scroll to mini position.
+
+    handleMini(position) {
+      this.scrollTo(
+        position,
+        this.miniDragging ? 'auto' : 'smooth'
+      )
+    },
+
+
+    // notifications
+
+    handleNotificationClick(notification) {
+      this.notifications = []
+      this.scrollTo(
+        this.centerOf(notification),
+      'smooth')
+    },
+
+
     // tells the cursor component to handle input.
 
     handleInput(e) {
@@ -631,37 +605,7 @@ export default {
     },
 
 
-    // tells the cursor component to handle click.
-
-    handleClick() {
-      if (!this.editing && !this.isMobile) {
-        this.$refs.me[0].sendMessage()
-      }
-    },
-
-
-    // scroll to mini position.
-
-    handleMini(position) {
-      this.scrollTo(
-        position, 
-        this.miniDragging ? 'auto' : 'smooth'
-      )
-    },
-
-
-    // notifications
-
-    handleNotificationClick(notification) {
-      this.notifications = []
-      this.scrollTo(
-        this.centerOf(notification), 
-      'smooth')
-    },
-
-
     // tour
-
 
     startTour() {
       console.log('tour started')
@@ -676,15 +620,15 @@ export default {
 
     goTo(zone, behavior) {
       this.scrollTo(
-        this.centerOf(zone), 
+        this.centerOf(zone),
       behavior || 'smooth')
     },
 
 
-    // for scaling
+    // recenter when scaling
 
     recenter(newScale, oldScale) {
-      const 
+      const
         ratio = newScale / oldScale,
         diff = (oldScale - newScale) / (oldScale + newScale),
         center = {
@@ -694,6 +638,7 @@ export default {
       this.scrollTo(center, 'auto')
     },
 
+
     // drag the userland div to scroll it.
 
     drag(e) {
@@ -702,11 +647,11 @@ export default {
           x: this.windowPos.x - e.movementX,
           y: this.windowPos.y - e.movementY
         }
-        if (e.clientX <= 10 || 
+        if (e.clientX <= 10 ||
             e.clientX >= this.windowSize.w - 20 ||
-            e.clientY <= 10 || 
+            e.clientY <= 10 ||
             e.clientY >= this.windowSize.h - 20) {
-          this.dragging = false  
+          this.dragging = false
         } else {
           this.scrollTo(position)
         }
@@ -716,7 +661,6 @@ export default {
     release() {
       this.dragging = false
     },
-
 
 
     // core of app navigation is this following:
@@ -743,7 +687,7 @@ export default {
 
     // the 'viewerPosition' is the distance of the
     // top-left corner of the window from the top-
-    // left corner of the (larger) userland div. 
+    // left corner of the (larger) userland div.
 
     setViewerPosition() {
       const
@@ -756,26 +700,24 @@ export default {
         currPos = {
           x: this.me.x * this.windowSize.w * this.scale,
           y: this.me.y * this.windowSize.h * this.scale
-        },  
+        },
         mePos = {
           x: (currPos.x + deltaScrollX) / (this.windowSize.w * this.scale),
           y:(currPos.y + deltaScrollY) / (this.windowSize.h * this.scale),
           connected: true,
         },
         territory = this.territoryByBorders(viewerPos)
-    
-
 
       this.$store.commit('viewerPosition', viewerPos)
 
       if (this.location.slug !== territory.slug) {
-        this.$store.commit('setLocation', territory)
-      }  
+        this.$store.commit('territories/setLocation', territory)
+      }
 
       if (!this.firstScroll) {
-    
+
         if (!this.dragging) {
-          this.$store.dispatch('updatePosition', mePos)
+          this.$store.dispatch('users/updatePosition', mePos)
         }
 
         this.lastScrollX = viewerPos.x
@@ -789,16 +731,30 @@ export default {
         Array
         .from(document.querySelectorAll(selector))
         .forEach(a => {
-          const href = a.attributes.href.value 
-          if (href && (href.startsWith('/') || href.startsWith(this.$sokURL))) {
+          const href = a.attributes.href.value
+          if (href && (href.startsWith('/') || href.startsWith(this.$appURL))) {
             a.addEventListener('click', (e) => {
-              const newhref = href.replace(this.$sokURL, '')
+              const newhref = href.replace(this.$appURL, '')
               this.$router.push(newhref)
               e.preventDefault()
             })
           }
         })
       }, 1000)
+    },
+
+    notifyNCM() {
+      console.log('network conservation mode enabled')
+      this.notifications.push(this.highCPUNotifiction)
+    },
+
+    unnotifyNCM() {
+      console.log('network conservation mode disabled')
+      this.notifications.splice(
+        this.notifications.indexOf(
+          this.highCPUNotifiction
+        ), 1
+      )
     },
 
     showNav() {
@@ -819,23 +775,9 @@ export default {
       this.desiresOverlay = true
     },
 
-    checkCompatibility() {
-      let 
-        ua = navigator.userAgent,
-        chrome = ua.indexOf("Chrome") > -1,
-        firefox = ua.indexOf("Firefox") > -1,
-        safari = ua.indexOf("Safari") < -1
-      
-      if (chrome && safari) {
-        safari = false
-      }
-
-      this.isCompatible = chrome || firefox
-    },
-
   },
-  
-  
+
+
 }
 </script>
 
@@ -855,8 +797,8 @@ main {
   ;
   --island-curve: calc(7 * var(--one));
   --small-island-curve: calc(3 * var(--one));
-  --island-shadow: 
-      inset 0 0 
+  --island-shadow:
+      inset 0 0
       calc(1 * var(--one))
       calc(0.5 * var(--one))
     rgba(0, 0, 0, 0.267);
@@ -920,7 +862,7 @@ main nav.hidden {
 
 
 
-#userlandContainer {  
+#userlandContainer {
   position: absolute;
   height: 100%; width: 100%;
   overflow: scroll;
@@ -939,7 +881,7 @@ main nav.hidden {
   color: var(--ui-front);
   background: var(--ui-back);
   overflow: hidden;
-  transition: 
+  transition:
     background-color 0.2s ease,
     /* height 0.2s ease,
     width 0.2s ease, */
@@ -961,9 +903,9 @@ main nav.hidden {
   background-color: var(--island-back-color);
   box-shadow: var(--island-shadow);
   border-radius: var(--small-island-curve);
-  transition: 
-    borderRadius 0.2s ease, 
-    boxShadow 0.2s ease, 
+  transition:
+    borderRadius 0.2s ease,
+    boxShadow 0.2s ease,
     background-color 0.2s ease
   ;
 }
@@ -979,7 +921,7 @@ main nav.hidden {
 .island:hover {
   background-color: var(--island-back-darker);
 }
-.island h1 { 
+.island h1 {
   margin: 0;
   font-size: calc(2.5 * var(--one));
   line-height: 1.1;
@@ -1039,13 +981,13 @@ main nav.hidden {
 
 
 main.obfuscated #userland::before {
-  background: 
+  background:
     url("../../assets/textures/1.png") repeat calc(200px * var(--scale))
   , url("../../assets/textures/2.png") repeat calc(400px * var(--scale))
   ;
 }
 main.obfuscated .island {
-  border-radius: 
+  border-radius:
     var(--small-island-curve)
     var(--island-curve)
     var(--small-island-curve)
@@ -1138,7 +1080,7 @@ main.touring.tourIsAtBBB #userlandContainer {
 .mobile nav {
 }
 
-.mobile #userlandContainer {  
+.mobile #userlandContainer {
   cursor: default;
 }
 </style>

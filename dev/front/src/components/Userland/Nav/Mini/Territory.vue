@@ -10,7 +10,6 @@
       top: `${ territory.borders.y * 100 }%`,
       width: `${ territory.borders.w * 100 }%`,
       height: `${ territory.borders.h * 100 }%`,
-      '--ground': territory.color,
     }"
   >
     <svg 
@@ -20,13 +19,6 @@
     >       
      <path :fill="territory.color" :d="d"/>
     </svg>
-
-    <!-- <div class="background">
-      <vue-markdown>
-        {{ territory.name }}
-      </vue-markdown>
-    </div> -->
-
   </div>
 </template>
 
@@ -44,30 +36,20 @@ export default {
     }
   },
   created() {
-    this.$http
-      .get(`${this.$apiURL}${this.territory.shape.url}`)
-      .then((res) => {
-        this.d = res.data
-          .match(/ d="([\s\S]*?)"/g)[0]
-          .replace(' d="', '')
-          .replace('"', '')
-        this.viewBox = res.data
-          .match(/ viewBox="([\s\S]*?)"/g)[0]
-          .replace(' viewBox="', '')
-          .replace('"', '')
-      })
+    this
+    .$http
+    .get(`${this.$apiURL}${this.territory.shape.url}`)
+    .then((res) => {
+      this.d = res.data
+        .match(/ d="([\s\S]*?)"/g)[0]
+        .replace(' d="', '')
+        .replace('"', '')
+      this.viewBox = res.data
+        .match(/ viewBox="([\s\S]*?)"/g)[0]
+        .replace(' viewBox="', '')
+        .replace('"', '')
+    })
   },
-
-  mounted() {
-  },
-
-  methods: {
-
-    toNearestX(num, X) {
-      return Math.floor(100 * num / X) * X
-    },
-
-  }
 }
 </script>
 
@@ -78,7 +60,6 @@ export default {
   display: flex;
   z-index: 0;
 }
-
 .mini-territory .background {
   position: absolute;
   top: 0; left: 0;
@@ -94,7 +75,6 @@ export default {
   transition: all 0.1s ease;
   overflow: visible;
 }
-
 .mini-territory svg.shape {
   box-sizing: border-box;
   position: absolute;
@@ -105,7 +85,6 @@ export default {
   mix-blend-mode: multiply;
   overflow: visible;
 }
-
 .mini-territory .background div {
   max-width: 100%;
 }

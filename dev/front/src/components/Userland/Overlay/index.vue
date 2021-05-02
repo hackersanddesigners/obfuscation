@@ -1,5 +1,5 @@
 <template>
-  <div 
+  <div
     :class="[
       'overlayContainer',
       { visible: desiresOverlay },
@@ -8,7 +8,7 @@
   >
 
     <div id="infoTitle">
-      <span 
+      <span
         :class="[
           'ui', 'infoToggle', 'hide',
           { hidden: !desiresOverlay }
@@ -16,28 +16,28 @@
         @click="$emit('hideOverlay')"
         :tabindex="desiresOverlay ? 0 : -1"
       > hide &gt; </span>
-      <span 
+      <span
         :class="[
           'ui', 'infoToggle', 'show',
           { hidden: desiresOverlay }
         ]"
         @click="!dragging ? $emit('showOverlay') : null"
         :tabindex="desiresOverlay ? -1 : 0"
-      > 
+      >
         &lt; info
       </span>
     </div>
 
-    <div 
+    <div
       v-if="content"
       :class="[
-        'ui', 'overlay', content.slug 
+        'ui', 'overlay', content.slug
       ]"
       ref="overlay"
       tabindex="-1"
     >
 
-      <article 
+      <article
         v-if="!content.Sections"
         class="content"
       >
@@ -55,9 +55,9 @@
         <Section
           v-else
           :section="content"
-        /> 
+        />
 
-      </article>     
+      </article>
 
       <article
         v-else-if="content.Sections"
@@ -69,7 +69,7 @@
           :section="section"
         />
 
-        <div 
+        <div
           v-if="isRegister"
           id="aanmelderContainer"
         ><a id="backupLink"
@@ -77,36 +77,36 @@
           >Register online for the event.</a>
           <div id="AanmelderRootDiv"></div>
         </div>
-        
+
       </article>
 
     </div>
 
-    <div 
+    <div
       v-if="content && isUpload"
       class="submitContainer"
     >
-      <input 
+      <input
         v-if="!sending"
-        ref="submit" 
+        ref="submit"
         class="ui submit"
-        type="button" 
+        type="button"
         :collection="content.type"
         :value="sent ? 'submit another' : 'submit'"
-        @click.stop="$refs.upload.submit" 
+        @click.stop="$refs.upload.submit"
       >
     </div>
 
-    <div 
+    <div
       v-if="content && content.slug === 'tour' && !isMobile && !touring"
       class="submitContainer"
     >
-      <input 
-        ref="startTour" 
+      <input
+        ref="startTour"
         class="ui submit"
-        type="button" 
+        type="button"
         value="Start Guided Tour"
-        @click.stop="$emit('startTour')" 
+        @click.stop="$emit('startTour')"
       >
     </div>
   </div>
@@ -122,9 +122,9 @@ export default {
 
   name: 'Overlay',
 
-  components: { 
+  components: {
     Section,
-    Upload 
+    Upload
   },
 
   props: [

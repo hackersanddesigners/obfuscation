@@ -23,11 +23,12 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
+import { uid } from 'uid'
+import api from '../api'
+
 import Mainland from '../components/Userland/Mainland'
 import Nomansland from '../components/Userland/Nomansland'
-import api from '../api'
-import { uid } from 'uid'
 
 export default {
 
@@ -44,21 +45,28 @@ export default {
 
   data() {
     return {
+
       wantsToView: null,
 
       loadingMessage: 'Loading...',
       serverError: 'server error.',
-
       tickerLoaded: false,
       territoriesLoaded: false,
       messagesLoaded: false,
       usersLoaded: false,
       selfEvaluated: false,
+
     }
   },
 
   computed: {
-  
+    ...mapState({
+      isMobile: state => state.isMobile,
+      blocked:  state => state.users.blocked
+    }),
+    ...mapGetters('users', [
+      'me'
+    ]),
     contentLoaded() {
       return (
         this.tickerLoaded &&
@@ -68,192 +76,176 @@ export default {
         this.selfEvaluated
       ) 
     },
-
-    ...mapState([
-
-      'blocked',
-      'isMobile'
-
-    ])
   },
 
-  created() {
-
-    console.log(`ENVIRONMENT: ${ this.$env }`)
-    console.log(`SOCKETS: ${ this.$sokURL }`)
-    console.log(`VERSION: ${ localStorage.version }`)
-    console.log(`LIFECYCLE: ${ this.$lifecycle }`)
-
-    // delete everything if local storage version is older than this
-    // version. This is to prevent older users' data strutures from
-    // conflicting with the most recent structure.
-
-    if (localStorage.version != this.$version) {
-      console.log('this version is outdated, clearing your storage.')
-
-      localStorage.clear()
-      localStorage.version = this.$version
-    }  
+  created() { 
 
 
+    // initialize routing
 
-    let 
-      regions,
-      messages,
-      users,
-      self
+    if (this.slug) {
+      this.wantsToView = this.slug
+    }
+    this.$router.afterEach((to) => {
+      this.wantsToView = to.fullPath
+    })
 
 
     // get ticker from CMS
 
     api
-      .territories
-      .getTicker()
-      .then((response) => {
-        this.$store.commit('setTicker', response)
-        this.tickerLoaded = true
-      })
-      .catch((error) => {
-        console.log(error)
-        this.loadingMessage = this.serverError
-      })
+    .territories
+    .getTicker()
+    .then(response => {
+      this.$store.commit('territories/setTicker', response)
+      this.tickerLoaded = true
+      this.loadingMessage = 'Getting regions...'
+    })
+    .catch(error => {
+      console.log(error)
+      this.loadingMessage = this.serverError
+    })
 
 
     // get regions from CMS
 
-    this.loadingMessage = 'Getting regions...'
-
     api
-      .territories
-      .getAll()
-      .then((response) => {
-        regions = response
-        this.$store.commit('setTerritories', regions)
-        this.territoriesLoaded = true
-        this.loadingMessage = 'Getting users...'
-      })
-      .catch((error) => { 
-        console.log(error)
-        this.loadingMessage = this.serverError
-      })
-
+    .territories
+    .getAll()
+    .then(response => {
+      this.$store.commit('territories/setTerritories', response)
+      this.territoriesLoaded = true
+      this.loadingMessage = 'Getting users...'
+    })
+    .catch((error) => { 
+      console.log(error)
+      this.loadingMessage = this.serverError
+    })
 
     // get message db from server.
 
     api 
-      .chat
-      .get('messages')
-      .then((response) => { 
-        messages = response
-        this.$store.commit('setMessages', messages)
-        this.messagesLoaded = true
-        // this.loadingMessage = 'Building terrain...'
-      })
-      .catch((error) => { 
-        console.log(error)
-        this.loadingMessage = this.serverError
-      })
-
+    .chat
+    .get('messages')
+    .then(response => { 
+      this.$store.commit('messages/setMessages', response)
+      this.messagesLoaded = true
+    })
+    .catch(error => { 
+      console.log(error)
+      this.loadingMessage = this.serverError
+    })
 
     // get user db from server.
 
     api 
-      .chat
-      .get('users')
-      .then((response) => { 
-        users = response
-        this.$store.commit('setUsers', users)
-        this.usersLoaded = true
+    .chat
+    .get('users')
+    .then(response => { 
+      users = response
+      this.$store.commit('users/setUsers', users)
+      this.usersLoaded = true
 
-        // check if user is registered and get their datas.
+      let users, self
 
-        if (localStorage.uid && users[localStorage.uid]) {
-          console.log("You've visited.")
-          this.$store.commit('visit')
+      // check if user is registered and get their datas.
 
-          self = users[localStorage.uid]
-
-
-          // if they changed their user name they registered
-
-          if (!users[self.uid].name.includes(self.uid)) {
-            console.log("You're a local.")
-            this.$store.commit('register')
-          }
+      if (localStorage.uid && users[localStorage.uid]) {
+        console.log("You've visited.")
+        this.$store.commit('users/visit')
+        self = users[localStorage.uid]
 
 
-          // if the user is marked as blocked, they have 
-          // been blocked. The component is unmounted here.
+        // if they changed their user name they registered
 
-          if (self.blocked) {
-            console.log("You're not welcome here.")
-            this.$store.commit('block')
-          }
-
-
-        // if not visited, store the generated UID and 
-        // color for later reference (i.e. when the user 
-        // comes back to register).
-
-        } else {
-          console.log('youre new')
-          const id = uid()
-          self = {
-            uid: id,
-            name: 'newUser-' + id,
-            connected: true,
-            color: this.randomColor(),
-            x: 0,
-            y: 0,
-            typing: null,
-            moderator: false,
-            deleted: false,
-            blocked: false,
-          },
-          localStorage.uid = self.uid
-          localStorage.color = self.color
-
+        if (!users[self.uid].name.includes(self.uid)) {
+          console.log("You're a local.")
+          this.$store.commit('users/register')
         }
 
-        if (this.isMobile) {
-          self.isMobile = true
-          this.$store.commit('visit')
+
+        // if the user is marked as blocked, destroy 
+        // mainland component
+
+        if (self.blocked) {
+          console.log("You're not welcome here.")
+          this.$store.commit('users/block')
         }
 
-        this.$store.commit('register')
-        
-        // update the app store with the UID and user.
 
-        this.$store.commit('setUID', self.uid)
-        this.$store.commit('setUser', self)
+      // if not visited, generate a new user and store UID 
+      // and color for future reference
+
+      } else {
+        console.log("you're new")
+        const id = uid()
+        self = {
+          uid: id,
+          name: 'newUser-' + id,
+          connected: true,
+          color: this.randomColor(),
+          x: 0,
+          y: 0,
+          typing: null,
+          messageLifetime: 30 * 86400000, // 30 days
+          moderator: false,
+          deleted: false,
+          blocked: false,
+        },
+        localStorage.uid = self.uid
+        localStorage.color = self.color
+
+      }
 
 
-        // announce existence to server and peers.
+      // filter mobile users by default, they are deleted
+      // on before unload.
 
-        
-        this.$socket.client.emit('user', self)
-        this.selfEvaluated = true
+      if (this.isMobile) {
+        this.$store.commit('users/visit')
+        self.isMobile = true
+      }
 
-      })
-      .catch((error) => { 
-        console.log(error)
-        this.loadingMessage = this.serverError
-      })
+      // register user anyway so pop-up is hidden.
+
+      this.$store.commit('users/register')
+
+      // update the app store with the UID and user.
+
+      this.$store.commit('users/setUID', self.uid)
+      this.$store.commit('users/setUser', self)
+
+      // announce existence to server and peers.
+
+      this.$socket.client.emit('user', self)
+
+      // last condition to mount mainland is met:
+
+      this.selfEvaluated = true
+
+    })
+    .catch(error => { 
+      console.log(error)
+      this.loadingMessage = this.serverError
+    })
 
 
-    // handle routing.
+    // before leaving, emit user disconnection
+    // if not registered or mobile, delete
 
-    if (this.slug) {
-      this.wantsToView = this.slug
+    window.onbeforeunload = () => {
+      if (this.me && !this.me.deleted) {
+        this.$store.dispatch('users/disconnect')
+        if (this.isMobile || this.me.name.includes(this.me.uid)) {
+          this.$store.dispatch('users/deleteUser', this.me)
+        }
+      }
     }
+
 
   },
 
   mounted() {
-
-    this.$router.afterEach((to) => {
-      this.wantsToView = to.fullPath
-    })
 
   },
 

@@ -1,5 +1,5 @@
 <template>
-  <div 
+  <div
     class="territory"
     :id="slug"
     :style="{
@@ -10,16 +10,10 @@
       '--ground': territory.color,
     }"
   >
-  
-    <!-- <div class="background">
-      <vue-markdown>
-        {{ territory.name || territory.body }}
-      </vue-markdown>
-    </div> -->
 
-    <svg 
+    <svg
       v-if="scale <= 7"
-      class="shape" 
+      class="shape"
       :viewBox="viewBox"
       preserveAspectRatio="none"
     ><path :fill="territory.color" :d="d"/>
@@ -96,12 +90,11 @@
       @goTo="$emit('goTo', $event)"
     />
 
-    <div 
+    <div
       class="placeholder"
       :class="slug"
       v-else-if="content"
-    >
-    </div>
+    ></div>
 
   </div>
 </template>
@@ -141,32 +134,26 @@ export default {
       viewBox: null,
     }
   },
-  computed: { 
-    scale() { return this.$store.state.scale },
-    // lifecycle() { return this.$store.state.lifecycle },
-    slug() { return this.territory.slug },
+  computed: {
+    scale()   { return this.$store.state.scale },
+    slug()    { return this.territory.slug },
     content() { return this.territory.content },
   },
   created() {
-    this.$http
-      .get(`${this.$apiURL}${this.territory.shape.url}`)
-      .then((res) => {
-        this.d = res.data
-          .match(/ d="([\s\S]*?)"/g)[0]
-          .replace(' d="', '')
-          .replace('"', '')
-        this.viewBox = res.data
-          .match(/ viewBox="([\s\S]*?)"/g)[0]
-          .replace(' viewBox="', '')
-          .replace('"', '')
-      })
+    this
+    .$http
+    .get(`${this.$apiURL}${this.territory.shape.url}`)
+    .then((res) => {
+      this.d = res.data
+        .match(/ d="([\s\S]*?)"/g)[0]
+        .replace(' d="', '')
+        .replace('"', '')
+      this.viewBox = res.data
+        .match(/ viewBox="([\s\S]*?)"/g)[0]
+        .replace(' viewBox="', '')
+        .replace('"', '')
+    })
   },
-  mounted() {
-  },
-  methods: {
-
-  }
-
 }
 </script>
 
@@ -215,7 +202,7 @@ export default {
 }
 
 .mobile .territory::before {
-  
+
   mask-image: var(--mobileImage);
   -webkit-mask-image: var(--mobileImage);
 
