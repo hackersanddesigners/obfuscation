@@ -61,6 +61,7 @@ export default {
   actions: {
 
     socket_message({ commit }, message) {
+      console.log('* MESSAGE:', message.content)
       commit('setMessage', message)
     },
     deleteMessage({ commit }, message ) {

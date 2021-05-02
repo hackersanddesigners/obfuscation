@@ -28,6 +28,8 @@ export default {
     return {
       controls: false,
       retryInterval: null,
+      attempts: 0,
+      maxAttempts: 6,
     }
   },
   computed: {
@@ -36,9 +38,7 @@ export default {
     playbackId() {
       console.log('PLAYBACKID WATCHER')
       this.updateVideo()
-      this.retryInterval = setInterval(() => {
-        this.updateVideo()
-      }, 20 * 1000) // 20 seconds
+      this.resetRetryInterval()
     },
 
     forcedPlaybackId() {
@@ -86,15 +86,13 @@ export default {
   },
   mounted() {
 
-    if (this.isMobile) {
-      this.controls = true
-    }
-
     if (this.playbackId)  {
       this.updateVideo()
-      this.retryInterval = setInterval(() => {
-        this.updateVideo()
-      }, 20 * 1000) // 20 seconds
+      this.resetRetryInterval()
+    }
+
+    if (this.isMobile) {
+      this.controls = true
     }
 
     const prefixes = ["", "webkit", "moz", "ms"]
@@ -115,22 +113,31 @@ export default {
 
     this.$el.addEventListener('loadedmetadata',() => {
       clearInterval(this.retryInterval)
+      this.attempts = 0
       this.$emit('loadedmetadata')
     })
 
     this.$el.addEventListener('ended',() => {
       console.log('video ended')
-      this.retryInterval = setInterval(() => {
-        this.updateVideo()
-      }, 20 * 1000)
+      this.resetRetryInterval()
       this.$emit('ended')
     })
 
   },
   beforeDestroy() {
     clearInterval(this.retryInterval)
+    this.attempts = 0
   },
   methods: {
+
+    resetRetryInterval() {
+      this.retryInterval = setInterval(() => {
+        if (this.attempts < this.maxAttempts) {
+          this.updateVideo()
+          this.attempts++
+        }
+      }, 20 * 1000)
+    },
 
     src(playbackId) { return this.forcedPlaybackId ?
       `https://stream.mux.com/${playbackId}.m3u8` :
@@ -145,7 +152,7 @@ export default {
         sourceUrl = this.src(forcedPlaybackId || playbackId),
         video = this.$el
 
-      console.log("Video source:", sourceUrl)
+      console.log("* SOURCE:", sourceUrl)
 
       // If HLS.js is supported on this platform
 

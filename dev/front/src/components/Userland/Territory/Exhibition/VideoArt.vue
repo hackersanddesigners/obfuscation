@@ -1,6 +1,6 @@
 <template>
   <div :class="['videoArt', artwork.Category ]">
-    <video 
+    <video
       :class="{ fullscreen: controls }"
       ref="player"
       loop
@@ -11,12 +11,12 @@
       @click="play"
     >
       <source :src="videoUrl" type="video/mp4">
-      <track 
-        :src="trackUrl" 
-        srclang="en" 
-        label="English" 
-        kind="subtitles" 
-        default 
+      <track
+        :src="trackUrl"
+        srclang="en"
+        label="English"
+        kind="subtitles"
+        default
       >
     </video>
     <div class="controls">
@@ -60,13 +60,13 @@ export default {
   },
   computed: {
     videoUrl() { return this.$apiURL + this.artwork.File.url },
-    trackUrl() { 
-      return ( 
-        this.artwork.Track ? 
+    trackUrl() {
+      return (
+        this.artwork.Track ?
         this.$apiURL + this.artwork.Track.url : null
       )
     },
-    
+
   },
   created() {
     // if (this.artwork.Track) {
@@ -92,10 +92,10 @@ export default {
     })
 
     const prefixes = ["", "webkit", "moz", "ms"]
-    prefixes.forEach((prefix) => { 
+    prefixes.forEach((prefix) => {
       player.addEventListener(prefix+"fullscreenchange", () => {
         if( window.innerHeight !== screen.height) {
-         this.fullscreen = false 
+         this.fullscreen = false
          this.controls = false
         }
       })
@@ -191,6 +191,7 @@ export default {
 .videoArt video.fullscreen {
   object-fit: contain;
   border-radius: unset;
+  cursor: default;
 }
 
 .videoArt video::cue {
@@ -208,7 +209,7 @@ export default {
   align-items: center;
   z-index: 1;
 }
-.videoArt .controls h3 { 
+.videoArt .controls h3 {
   flex-basis: 15%;
   cursor: pointer;
   /* text-align: center; */
@@ -228,5 +229,6 @@ export default {
 .videoArt .controls .play:hover {
   text-decoration: underline;
 }
+
 
 </style>

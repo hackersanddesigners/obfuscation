@@ -174,29 +174,36 @@ export default {
       console.log('* later session    :', laterSession ? laterSession.Title : '')
       console.log('*****************************************************')
 
+      let
+        sessionToCommit,
+        reason
+
       if (currentSession) {
-        if (currentSession !== this.currentLiveSession) {
-          console.log('Updating store with current session.')
-          this.$store.commit('territories/setCurrentLiveSession', currentSession)
-        }
+        sessionToCommit = currentSession
+        reason = 'Using current session.'
 
       } else if (nextSession) {
-        if (nextSession !== this.currentLiveSession) {
-          console.log('Current session is undefined, updating store with next session.')
-          this.$store.commit('territories/setCurrentLiveSession', nextSession)
-        }
+        sessionToCommit = nextSession
+        reason = 'Current session is undefined, using next session.'
 
-      } else if (previousSession && laterSession &&
+      } else if (
+        previousSession && laterSession &&
         ((this.getTime(laterSession.Start) - this.getTime(previousSession.End)) < 3 * fifteen)
       ) {
-        console.log('Previous session could be running late, keeping it.')
-        this.$store.commit('territories/setCurrentLiveSession', previousSession)
+        sessionToCommit = previousSession
+        reason = 'Previous session could be running late, keeping it.'
 
       } else {
-        console.log('No more live events.')
-        this.$store.commit('territories/setCurrentLiveSession', null)
+        sessionToCommit = null
+        reason = 'No more live events.'
       }
 
+      if (currentSession === this.currentLiveSession) {
+        console.log('* STREAM: Not making unnecessary commits.')
+      } else {
+        this.$store.commit('territories/setCurrentLiveSession', sessionToCommit)
+        console.log('* STREAM:', reason)
+      }
     },
 
     getTime: date => moment(date).format('x'),

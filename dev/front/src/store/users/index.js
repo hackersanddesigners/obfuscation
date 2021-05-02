@@ -130,19 +130,17 @@ export default {
     socket_user({ state, commit }, user) {
       commit("setUser", user)
       const status =
-        user.deleted === true
-          ? "deleted"
-          : user.blocked === true
-          ? "blocked"
-          : "connected"
-      console.log("user", user.name, status)
+        user.deleted === true ? "deleted"
+      : user.blocked === true ? "blocked"
+      : "connected"
+      console.log('* USER:', user.name, status)
       if (user.uid === state.uid) {
         if (user.blocked) {
           commit("block")
         }
         if (user.deleted) {
           commit("doNotSave")
-          console.log("you're deleted")
+          console.log("You're deleted.")
           localStorage.clear()
           window.location.reload(true)
         }
@@ -154,7 +152,7 @@ export default {
         commit("setUserAppearance", user)
       }
       if (user.connected === false) {
-        console.log("user", user.name, "disconnected")
+        console.log('* USER:', user.name, "disconnected")
       }
       if (user.messageLifetime) {
         const now = new Date().getTime(),
@@ -163,7 +161,7 @@ export default {
           const message = rootState.messages.messages[uid]
           if (message.authorUID == user.uid) {
             if (message.time < now - (user.messageLifetime || twodays)) {
-              console.log(message.content)
+              console.log("* MESSAGE DIED:", message.content)
               dispatch("messages/deleteMessage", message, { root: true })
             }
           }
@@ -174,7 +172,7 @@ export default {
     socket_moderator({ state, commit }, user) {
       if (user.uid !== state.uid) {
         commit("setUserModerator", user)
-        console.log("user", user.name, "upgraded to moderator")
+        console.log("* USER", user.name, "upgraded to moderator")
       }
     },
 
@@ -183,7 +181,7 @@ export default {
         if (state.users[position.uid]) {
           commit("setUserPosition", position)
         } else {
-          console.log(position.uid, " not found.")
+          console.log(position.uid, "not found.")
         }
       }
     },
@@ -193,7 +191,7 @@ export default {
         if (state.users[text.uid]) {
           commit("setUserTyping", text)
         } else {
-          console.log(text.uid, " not found.")
+          console.log(text.uid, "not found.")
         }
       }
     },
@@ -308,7 +306,6 @@ export default {
           user.name.includes(user.uid) &&
           user.connected == false
         ) {
-          console.log("deleting ", user.name)
           dispatch("deleteUser", user)
         }
       }

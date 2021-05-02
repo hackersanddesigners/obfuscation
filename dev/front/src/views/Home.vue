@@ -5,20 +5,20 @@
       v-if="blocked"
     />
 
-    <Mainland 
+    <Mainland
       v-else-if="contentLoaded"
       :wantsToView="wantsToView"
     />
 
     <div
-      v-else 
+      v-else
       id="loading"
     >
       <span class="message">
         {{ loadingMessage }}
       </span>
     </div>
-    
+
   </div>
 </template>
 
@@ -70,15 +70,15 @@ export default {
     contentLoaded() {
       return (
         this.tickerLoaded &&
-        this.territoriesLoaded && 
+        this.territoriesLoaded &&
         this.messagesLoaded &&
         this.usersLoaded &&
         this.selfEvaluated
-      ) 
+      )
     },
   },
 
-  created() { 
+  created() {
 
 
     // initialize routing
@@ -117,54 +117,56 @@ export default {
       this.territoriesLoaded = true
       this.loadingMessage = 'Getting users...'
     })
-    .catch((error) => { 
+    .catch((error) => {
       console.log(error)
       this.loadingMessage = this.serverError
     })
 
     // get message db from server.
 
-    api 
+    api
     .chat
     .get('messages')
-    .then(response => { 
+    .then(response => {
       this.$store.commit('messages/setMessages', response)
       this.messagesLoaded = true
     })
-    .catch(error => { 
+    .catch(error => {
       console.log(error)
       this.loadingMessage = this.serverError
     })
 
     // get user db from server.
 
-    api 
+    api
     .chat
     .get('users')
-    .then(response => { 
+    .then(response => {
       users = response
       this.$store.commit('users/setUsers', users)
       this.usersLoaded = true
 
-      let users, self
+      let users, self, authMessage
 
       // check if user is registered and get their datas.
 
       if (localStorage.uid && users[localStorage.uid]) {
-        console.log("You've visited.")
         this.$store.commit('users/visit')
+        authMessage = "You've visited."
         self = users[localStorage.uid]
 
 
         // if they changed their user name they registered
 
         if (!users[self.uid].name.includes(self.uid)) {
-          console.log("You're a local.")
           this.$store.commit('users/register')
+          authMessage = "You're a local."
         }
 
+        console.log('* AUTH:', authMessage)
 
-        // if the user is marked as blocked, destroy 
+
+        // if the user is marked as blocked, destroy
         // mainland component
 
         if (self.blocked) {
@@ -173,7 +175,7 @@ export default {
         }
 
 
-      // if not visited, generate a new user and store UID 
+      // if not visited, generate a new user and store UID
       // and color for future reference
 
       } else {
@@ -224,7 +226,7 @@ export default {
       this.selfEvaluated = true
 
     })
-    .catch(error => { 
+    .catch(error => {
       console.log(error)
       this.loadingMessage = this.serverError
     })
@@ -252,7 +254,7 @@ export default {
   methods: {
 
    randomColor() {
-      const 
+      const
         r = Math.floor(Math.random() * 256),
         g = Math.floor(Math.random() * 256),
         b = Math.floor(Math.random() * 256),

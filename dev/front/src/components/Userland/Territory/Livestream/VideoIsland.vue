@@ -2,7 +2,7 @@
   <div :class="['island', { playing: playing }]" >
 
     <div class="body">
-      <Video 
+      <Video
         :playbackId="playbackId"
         :forcedPlaybackId="forcedPlaybackId"
         :playing="playing"
@@ -37,7 +37,7 @@
           value="⤢"
           @click="fullscreen=true"
         />
-      </div>  
+      </div>
     </div>
 
   </div>
@@ -49,7 +49,7 @@ import Video from './Video'
 export default {
   name: 'VideoIsland',
   components: { Video },
-  props: [ 
+  props: [
     'playbackId',
     'forcedPlaybackId'
   ],
@@ -86,7 +86,7 @@ export default {
   flex-grow: 1;
   box-sizing: border-box;
   position: relative;
-  height: 90%; 
+  height: 90%;
   width: 80%;
   padding: 0;
   display: flex;
@@ -105,7 +105,7 @@ export default {
 }
 .island .controls {
   z-index: 1;
-  width: 100%;  
+  width: 100%;
   box-sizing: border-box;
   position: absolute;
   bottom: 0;
@@ -114,7 +114,7 @@ export default {
   justify-content: flex-end;
   align-items: flex-end;
 }
-.island .controls .buttonContainer { 
+.island .controls .buttonContainer {
   position: relative;
   box-sizing: border-box;
   min-width: calc(4 * var(--one));
@@ -135,7 +135,7 @@ export default {
   font-family: 'auth';
   border-radius: inherit;
   padding: calc(1 * var(--one));
-  
+
 }
 .island .controls .buttonContainer::before {
   content: '';
@@ -146,6 +146,10 @@ export default {
   overflow: hidden;
   opacity: 0.5;
   background: var(--island-back);
+}
+
+.mobile .island .controls {
+  display: none;
 }
 
 </style>
