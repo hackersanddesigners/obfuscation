@@ -426,7 +426,7 @@ export default {
         position,
         content
 
-      console.log(name, page)
+      console.log('* ROUTE:', name, page)
 
 
       // routing to territoriees

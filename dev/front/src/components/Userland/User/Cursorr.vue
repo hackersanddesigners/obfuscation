@@ -7,7 +7,7 @@
       me: isMe(user),
       moderator: user.moderator == true,
     }]"
-    :style="{ 
+    :style="{
       left: ( 100 * user.x -  0.1) + '%',
       top: ( 100 * user.y - 0.15) + '%',
       '--scale': 15,
@@ -16,18 +16,18 @@
     @mouseover.stop="hovered=true"
     @mouseout.stop="hovered=false"
   >
-    <!-- <input 
-      v-if="isMe(user)" 
+    <!-- <input
+      v-if="isMe(user)"
       ref="input"
       tabindex="-1"
       class="input"
-      type="text" 
+      type="text"
       placeholder="type message & press enter"
       autofocus
     /> -->
 
-    <textarea 
-      v-if="isMe(user)" 
+    <textarea
+      v-if="isMe(user)"
       ref="input"
       tabindex="-1"
       class="input"
@@ -35,7 +35,7 @@
       autofocus
     />
 
-    <span 
+    <span
       v-else
       class="input"
     >
@@ -43,15 +43,15 @@
     </span>
 
     <div class="cursor">
-      <span 
+      <span
         class="name"
         @mouseover.stop="hovered=true"
         @mouseout.stop="hovered=false"
       >
-        {{ 
-          isMe(user) ? "me" : 
-          user.connected === true ? user.name : 
-          user.name + ' (offline)' 
+        {{
+          isMe(user) ? "me" :
+          user.connected === true ? user.name :
+          user.name + ' (offline)'
         }}
       </span>
     </div>
@@ -69,7 +69,7 @@ export default {
   props: {
     user: Object,
     dragging: Boolean,
-  }, 
+  },
 
   data() {
     return {
@@ -120,15 +120,15 @@ export default {
     }
 
   },
-  
+
   methods: {
 
 
     // construct, sanitize and send the message through
     // the $socket.
-  
+
     sendMessage() {
-      const 
+      const
         input = this.$refs.input,
         message = this.constructMessage(input.value),
         msgs = this.messagesByUser(this.me)
@@ -161,7 +161,7 @@ export default {
       // sanitize and send through $socket:
 
       if (
-        message.content && 
+        message.content &&
         message.content != ' ' &&
         message.content != '\n' &&
         !this.badWords.some(v => message.content.includes(v))
@@ -175,7 +175,7 @@ export default {
           }
         }
       }
-        
+
 
         // clear variables for next event.
 
@@ -186,14 +186,14 @@ export default {
         this.current = null
         input.value = ''
         input.placeholder = ''
-      
+
     },
 
 
     // construct message from self and input.
 
     constructMessage(text) {
-      const 
+      const
         time = ((new Date()).getTime()),
         message = {
           uid: this.me.uid + time,
@@ -209,16 +209,16 @@ export default {
           announcement: this.announcement,
           navigation: this.navigation,
           stream: this.stream,
-          location: this.location,
+          location: this.location.slug,
         }
         return message
     },
 
     resetDisconnectTimer() {
       clearTimeout(this.disconnectTimeoutID)
-      this.disconnectTimeoutID = setTimeout(() => { 
+      this.disconnectTimeoutID = setTimeout(() => {
         this.disconnect()
-      }, 5 * 60000) 
+      }, 5 * 60000)
     },
 
     disconnect() {
@@ -249,7 +249,7 @@ export default {
         this.pos = pos
         e.preventDefault()
       }
-        
+
     },
 
     // handle user input, triggered from parent.
@@ -257,7 +257,7 @@ export default {
     trackInput(key) {
       let input = this.$refs.input
 
-      // starting a messge with '~' will navigate 
+      // starting a messge with '~' will navigate
       // to a user instead of sending the message.
 
       if (input.value == "~") {
@@ -293,7 +293,7 @@ export default {
         next = msgs[msgs.indexOf(this.current) + 1]
 
 
-      // UP and DOWN keys are used to scroll up 
+      // UP and DOWN keys are used to scroll up
       // and down the user's message history.
 
       if (key == 38) {
@@ -305,7 +305,7 @@ export default {
             this.current = previous
           } else {
             this.current = first
-          } 
+          }
           input.value = this.current.content
           input.select()
         }
@@ -345,10 +345,10 @@ export default {
 
       this.adjustHeight()
 
-    }, 
+    },
 
     adjustHeight() {
-      let 
+      let
         minHeight = 10,
         el = this.$refs.input,
         outerHeight = parseInt(window.getComputedStyle(el).height, 10),
@@ -468,7 +468,7 @@ export default {
   opacity: 1;
   transition: all 0.2s ease;
 }
-.cursorContainer.hovered .input, 
+.cursorContainer.hovered .input,
 .cursorContainer.hovered input,
 .cursorContainer.hovered input:hover,
 .cursorContainer.hovered input:active,

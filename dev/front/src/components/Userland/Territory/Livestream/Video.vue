@@ -145,7 +145,7 @@ export default {
         sourceUrl = this.src(forcedPlaybackId || playbackId),
         video = this.$el
 
-      console.log("updating video src:", sourceUrl)
+      console.log("Video source:", sourceUrl)
 
       // If HLS.js is supported on this platform
 
@@ -186,6 +186,7 @@ video {
 video.fullscreen {
   object-fit: contain;
   height: unset;
+  cursor: default;
 }
 @keyframes comein {
   0% { opacity: 0;}

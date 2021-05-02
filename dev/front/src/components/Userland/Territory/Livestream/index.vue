@@ -12,7 +12,7 @@
         @click.native="$emit('moreInfo', `/schedule/${currentLiveSession.slug}`)"
       />
       <Chat
-        :messages="chatByTime"
+        :sessionOngoing="currentLiveSession"
         @goTo="$emit('goTo', $event)"
       />
     </div>
@@ -28,12 +28,15 @@ import moment from 'moment-timezone'
 import { mapGetters, mapState } from 'vuex'
 
 export default {
+
   name: 'Livestream',
+
   components: {
     VideoIsland,
     InfoIsland,
     Chat
   },
+
   data() {
     return {
       status: 'idle',
@@ -42,13 +45,16 @@ export default {
       fifteen: 15 * 60000,
     }
   },
+
   computed: {
+
     ...mapState('territories', [
       'currentLiveSession'
     ]),
     ...mapGetters('territories', [
       'liveSessions'
     ]),
+
     pastSessions() {
       return ( this
         .liveSessions
@@ -111,23 +117,6 @@ export default {
       )
     },
 
-    ...mapGetters('messages', [
-      'messagesArray'
-    ]),
-
-    chatByTime() { return this.currentLiveSession ?
-      this.messagesArray
-      .filter(m => (
-          this.$store.state.users[m.authorUID] &&
-          m.uid &&
-          !m.deleted &&
-          !m.navigation &&
-          !m.stream &&
-          m.location === 'livestream'
-      ))
-      .sort((a, b) => a.time - b.time) : []
-    },
-
   },
 
   watch: {
@@ -165,7 +154,9 @@ export default {
   },
 
   methods: {
+
     getNextEvent() {
+
       const
         buffer         = 0,
         fifteen         = 15 * 60000, // 15 minutes
@@ -176,33 +167,33 @@ export default {
         previousSession = this.previousSession
 
       console.log('*****************************************************')
-      console.log('current time     :', moment(now).format('dddd, MMMM Do HH:mm'))
-      console.log('current session  :', currentSession ? currentSession.Title : '')
-      console.log('next session     :', nextSession ? nextSession.Title : '')
-      console.log('previous session :', previousSession ? previousSession.Title : '')
-      console.log('later session    :', laterSession ? laterSession.Title : '')
+      console.log('* current time     :', moment(now).format('dddd, MMMM Do HH:mm'))
+      console.log('* current session  :', currentSession ? currentSession.Title : '')
+      console.log('* next session     :', nextSession ? nextSession.Title : '')
+      console.log('* previous session :', previousSession ? previousSession.Title : '')
+      console.log('* later session    :', laterSession ? laterSession.Title : '')
       console.log('*****************************************************')
 
       if (currentSession) {
         if (currentSession !== this.currentLiveSession) {
-          console.log('updating store with current session')
+          console.log('Updating store with current session.')
           this.$store.commit('territories/setCurrentLiveSession', currentSession)
         }
 
       } else if (nextSession) {
         if (nextSession !== this.currentLiveSession) {
-          console.log('current session is undefined, updating store with next session')
+          console.log('Current session is undefined, updating store with next session.')
           this.$store.commit('territories/setCurrentLiveSession', nextSession)
         }
 
       } else if (previousSession && laterSession &&
         ((this.getTime(laterSession.Start) - this.getTime(previousSession.End)) < 3 * fifteen)
       ) {
-        console.log('last session could be running late, using that.')
+        console.log('Previous session could be running late, keeping it.')
         this.$store.commit('territories/setCurrentLiveSession', previousSession)
 
       } else {
-        console.log('no more live events')
+        console.log('No more live events.')
         this.$store.commit('territories/setCurrentLiveSession', null)
       }
 

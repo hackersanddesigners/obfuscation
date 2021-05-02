@@ -1,38 +1,47 @@
 <template>
   <div id="chatContainer" class="island">
 
-    <div id="chat" ref="chat"> 
+    <div id="chat" ref="chat">
       <Message
-        v-for="message in messages"
+        v-for="message in chatByTime"
         :key="message.time"
         :message="message"
         @goTo="$emit('goTo', $event)"
       />
     </div>
 
-    <div id="chatInput">
-      <!-- <span>Messages sent during livestreamed sessions are grouped here.</span> -->
-    </div>
+    <!-- <div id="chatInput">
+      <span>Messages sent during livestreamed sessions are grouped here.</span>
+    </div> -->
 
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import Message from './Message'
 
 export default {
 
 	name: 'Chat',
   components: { Message },
-  props: [ 'messages' ],
-  data() {
-    return {
-    }
-  },
+  props: [ 'sessionOngoing' ],
   computed: {
-    
-  },
-  created() {
+    ...mapGetters('messages', [
+      'messagesArray'
+    ]),
+    chatByTime() { return this.sessionOngoing ?
+      this.messagesArray
+      .filter(m => (
+          m.uid &&
+          !m.deleted &&
+          !m.navigation &&
+          !m.stream &&
+          m.location === 'livestream'
+      ))
+      .sort((a, b) => a.time - b.time) : []
+    },
+
   },
   mounted() {
     setTimeout(() => {
@@ -42,7 +51,7 @@ export default {
   sockets: {
     message(m) {
       if (
-        !m.deleted && 
+        !m.deleted &&
         !m.navigation &&
         !m.stream &&
         !m.censored
@@ -51,7 +60,6 @@ export default {
       }
     },
   },
-
   methods: {
     scrollToBottom(first) {
       setTimeout(() => {

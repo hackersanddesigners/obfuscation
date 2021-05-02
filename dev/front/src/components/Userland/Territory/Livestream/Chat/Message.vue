@@ -2,11 +2,11 @@
   <div
     :id="message.uid"
     :class="[
-      'liveMessageContainer', 
+      'liveMessageContainer',
       `message${message.uid}`,
-      { 
+      {
         hovered: hovered,
-        censored: message.censored 
+        censored: message.censored
       }
     ]"
     :style="{ '--userColor': `var(--${ message.authorUID })`}"
@@ -15,7 +15,7 @@
   >
 
     <div class="message">
-      <span 
+      <span
         class="author"
         @click.stop="$emit('goTo', message.authorUID)"
       >{{ message.author }}</span>
@@ -28,13 +28,13 @@
     <div class="details">
       <span class="time">{{ time }}</span>
       <span v-if="isMe || moderator"> ● </span>
-      <span 
+      <span
         v-if="isMe || moderator"
         class="delete"
         @click.stop="deleteMessage(message)"
       >delete</span>
       <span v-if="moderator"> ● </span>
-      <span 
+      <span
         v-if="moderator"
         class="delete"
         @click.stop="censorMessage(message)"
@@ -46,11 +46,11 @@
 
 <script>
 import moment from 'moment'
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'Message',
-  props: [ 'message'], 
+  props: [ 'message'],
   data() {
     return {
       time: null,
@@ -58,10 +58,13 @@ export default {
     }
   },
   computed: {
-    moderator() { return this.$store.getters.me.moderator }, 
-    isMe() { return this.message.authorUID === this.$store.state.uid },
-    content() { return this.message.censored ? 
-      'This message has been censored by a moderator.' : this.message.content 
+    ...mapGetters('users', [
+      'me',
+    ]),
+    moderator() { return this.me.moderator },
+    isMe() { return this.message.authorUID === this.me.uid },
+    content() { return this.message.censored ?
+      'This message has been censored by a moderator.' : this.message.content
     }
   },
   created() {
@@ -71,7 +74,7 @@ export default {
     }, 60000)
   },
   methods: {
-    ...mapActions([
+    ...mapActions('messages', [
       'deleteMessage',
       'censorMessage'
     ]),
@@ -88,7 +91,6 @@ export default {
   position: relative;
   font-family: jet;
   font-size: calc(1 * var(--one));
-  /* color: var(--userColor); */
   color: black;
   display: flex;
   flex-direction: column;
