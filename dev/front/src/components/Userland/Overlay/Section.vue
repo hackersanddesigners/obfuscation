@@ -197,7 +197,7 @@ export default {
     mentoring() { return this.section.Mentoring },
     resources() { return this.section.references },
     titleGoesFirst() { return this.section.Name },
-    sessionMaterial() { return this.section.videos },
+    sessionMaterial() { return this.section.videos || [] },
     sessionVideos() { return this
       .sessionMaterial
       .filter(s => (
