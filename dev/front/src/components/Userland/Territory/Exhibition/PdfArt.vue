@@ -6,24 +6,29 @@
       :class="{ fullscreen: fullscreen }"
       :src="pdfURL"
     />
-    
-    <canvas 
-      ref="canvas" 
-      @click.stop="enterFullscreen"
+
+    <canvas
+      ref="canvas"
     />
 
-    <img 
-      :src="imgURL" 
-      @click.stop="enterFullscreen"
-    /> 
-    
-    <div v-if="!isMobile" class="controls">
-      <h3
-        class="fullscreen"
-        @click.stop="enterFullscreen"
-      >⤢</h3>
-    </div>
+    <a
+      class="externalLink"
+      target="_blank"
+      :href="pdfURL"
+    >
+      <img
+        :src="imgURL"
+      />
+    </a>
 
+    <div v-if="!isMobile" class="controls">
+      <a
+        target="_blank"
+        :href="pdfURL"
+      >
+        <h3 class="">↗</h3>
+      </a>
+    </div>
 
   </div>
 </template>
@@ -50,21 +55,21 @@ export default {
     this.renderThumbnail()
 
     const prefixes = ["", "webkit", "moz", "ms"]
-    prefixes.forEach((prefix) => { 
+    prefixes.forEach((prefix) => {
       this.$refs.viewer.addEventListener(prefix+"fullscreenchange", () => {
         if( window.innerHeight !== screen.height) {
-         this.fullscreen = false 
+         this.fullscreen = false
         }
       })
     })
 
-    
+
   },
   methods: {
     renderThumbnail() {
       pdfjs.getDocument(this.pdfURL).then(pdf => {
         pdf.getPage(1).then(page => {
-          const 
+          const
             viewport = page.getViewport({ scale: 1 }),
             canvas = this.$refs.canvas,
             context = canvas.getContext('2d')
@@ -95,7 +100,7 @@ export default {
         }, 300)
       }
     }
-    
+
 
   }
 
@@ -115,6 +120,7 @@ export default {
   border-radius: inherit;
 }
 
+.pdfArt a.externalLink,
 .pdfArt img {
   border-radius: inherit;
   box-sizing: border-box;
@@ -140,6 +146,7 @@ export default {
   max-width: calc(30 * var(--one));
   max-height: calc(30 * var(--one));
 }
+.pdfArt.Poster a.externalLink,
 .pdfArt.Poster img {
   min-width: calc(10 * var(--one));
   min-height: calc(10 * var(--one));
@@ -171,11 +178,10 @@ export default {
   align-items: center;
   z-index: 1;
 }
-.pdfArt .controls h3 { 
+.pdfArt .controls a {
   flex-basis: 15%;
   cursor: pointer;
-}
-.pdfArt .controls h3.fullscreen {
+  text-decoration: none;
   text-align: right;
 }
 

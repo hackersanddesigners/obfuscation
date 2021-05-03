@@ -7,16 +7,18 @@
       :src="imgURL"
     />
 
-    <img 
-      :src="imgURL" 
+    <img
+      :src="imgURL"
       @click.stop="enterFullscreen"
-    /> 
-    
+    />
+
     <div v-if="!isMobile" class="controls">
-      <h3
-        class="fullscreen"
-        @click.stop="enterFullscreen"
-      >⤢</h3>
+      <a
+        target="_blank"
+        :href="imgURL"
+      >
+        <h3>↗</h3>
+      </a>
     </div>
 
 
@@ -40,15 +42,15 @@ export default {
   mounted() {
 
     const prefixes = ["", "webkit", "moz", "ms"]
-    prefixes.forEach((prefix) => { 
+    prefixes.forEach((prefix) => {
       this.$refs.viewer.addEventListener(prefix+"fullscreenchange", () => {
         if( window.innerHeight !== screen.height) {
-         this.fullscreen = false 
+         this.fullscreen = false
         }
       })
     })
 
-    
+
   },
   methods: {
 
@@ -66,7 +68,7 @@ export default {
         }, 300)
       }
     }
-    
+
 
   }
 
@@ -92,7 +94,7 @@ export default {
   box-sizing: border-box;
   position: relative;
   object-fit: cover;
-  width: 100%;  
+  width: 100%;
   cursor: pointer;
   min-width: calc(10 * var(--one));
   min-height: calc(10 * var(--one));
@@ -142,12 +144,11 @@ export default {
   align-items: center;
   z-index: 1;
 }
-.pictureArt .controls h3 { 
+.pictureArt .controls a {
+  text-align: right;
+  text-decoration: none;
   flex-basis: 15%;
   cursor: pointer;
-}
-.pictureArt .controls h3.fullscreen {
-  text-align: right;
 }
 
 </style>

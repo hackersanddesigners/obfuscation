@@ -63,11 +63,9 @@ export default {
       fullscreen: false,
       controls: false,
       timeLeft: '0',
-      // videoUrl: null,
     }
   },
   computed: {
-    // videoUrl() { return this.$apiURL + this.artwork.File.url },
     mimeType() { return this.artwork.File.mime },
     trackUrl() {
       return (
@@ -77,8 +75,6 @@ export default {
     },
 
   },
-  created() {
-  },
   mounted() {
 
     const player = this.$refs.player
@@ -86,9 +82,14 @@ export default {
     player.addEventListener('loadedmetadata',() => {
       this.timeLeft = moment(player.duration * 1000).format('mm:ss')
     })
-
     player.addEventListener('timeupdate',() => {
       this.timeLeft = moment((player.duration - player.currentTime) * 1000).format('mm:ss')
+    })
+    player.addEventListener('playing', () => {
+      this.playing = true
+    })
+    player.addEventListener('pause', () => {
+      this.playing = false
     })
 
     const prefixes = ["", "webkit", "moz", "ms"]
@@ -106,10 +107,8 @@ export default {
     play(e) {
       if (!this.playing) {
         this.$refs.player.play()
-        this.playing = true
       } else {
         this.$refs.player.pause()
-        this.playing = false
       }
       if (e) e.preventDefault()
     },
@@ -192,7 +191,7 @@ export default {
 .videoArt video.fullscreen {
   object-fit: contain;
   border-radius: unset;
-  cursor: default;
+  cursor: default !important;
 }
 
 .videoArt video::cue {
