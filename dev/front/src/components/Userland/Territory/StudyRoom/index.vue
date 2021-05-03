@@ -39,12 +39,12 @@
         </div>
       </div>
     </div>
-    <div class="room">
-      <div class="island">
+    <div class="room ">
+      <!-- <div class="island"> -->
         <BBBLink
           :room="bbbRoom"
         />
-      </div>
+      <!-- </div> -->
     </div>
   </div>
 </template>

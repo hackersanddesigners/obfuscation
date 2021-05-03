@@ -10,7 +10,6 @@
 </template>
 <script>
 import Hls from 'hls.js'
-// import videoJS from 'video.js'
 
 export default {
   name: 'Video',
@@ -36,7 +35,7 @@ export default {
   },
   watch: {
     playbackId() {
-      console.log('PLAYBACKID WATCHER')
+      console.log('* New Playback ID:', this.playbackId)
       this.updateVideo()
       this.resetRetryInterval()
     },

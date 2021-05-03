@@ -3,7 +3,7 @@
     <div
       v-for="(room, name) in rooms"
       :key="name"
-      :class="['island', `BBBisland${name}`]"
+      :class="['BBBisland', `BBBisland${name}`]"
     >
       <BBBLink
         :room="room"
@@ -49,23 +49,20 @@ export default {
   width: 100%;
 }
 
-.hangout .island,
+.hangout .BBBisland,
 #participantsIndicator,
 #BBBIndicator {
   position: absolute;
 }
 
-.hangout .island:nth-of-type(1) {
+.hangout .BBBisland:nth-of-type(1) {
   top: 20%; left: 50%;
 }
-.hangout .island:nth-of-type(2) {
+.hangout .BBBisland:nth-of-type(2) {
   top: 60%; left: 20%;
 }
-.hangout .island:nth-of-type(3) {
+.hangout .BBBisland:nth-of-type(3) {
   top: 70%; left: 70%;
-}
-
-.hangout .island {
 }
 
 #participantsIndicator {

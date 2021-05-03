@@ -1,5 +1,5 @@
 <template>
-  <div 
+  <div
     id="tickerContainer"
     :class="{ hover: hover }"
     @mouseover.stop="hover = true"
@@ -7,7 +7,7 @@
     @mouseout.stop="hover = false"
     @mouseup.stop="ticker.link ? $router.push(ticker.link) : null"
   >
-    <div 
+    <div
       id="ticker"
       ref="smarq"
       :style="{ transform: 'translateX(' + x + 'px)' }"
@@ -21,6 +21,7 @@
 
 <script>
 import Smarquee from 'smarquee'
+import { mapState } from 'vuex'
 
 export default {
   name: 'Ticker',
@@ -34,7 +35,9 @@ export default {
     }
   },
   computed: {
-    currentLiveSession() { return this.$store.state.territories.currentLiveSession },
+    ...mapState('territories', [
+      'currentLiveSession'
+    ]),
     ticker() { return (
       this.currentLiveSession ? {
         phrase: `Watch the livestream: "${this.currentLiveSession.Title}".`,

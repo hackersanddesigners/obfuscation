@@ -1,12 +1,6 @@
 <template>
   <div :class="['pdfArt', artwork.Category ]">
 
-    <embed
-      ref="viewer"
-      :class="{ fullscreen: fullscreen }"
-      :src="pdfURL"
-    />
-
     <canvas
       ref="canvas"
     />
@@ -21,7 +15,7 @@
       />
     </a>
 
-    <div v-if="!isMobile" class="controls">
+    <div class="controls">
       <a
         target="_blank"
         :href="pdfURL"
@@ -42,30 +36,19 @@ export default {
   props: ['artwork'],
   data() {
     return {
-      fullscreen: false,
       imgURL: null,
     }
   },
   computed: {
     pdfURL() { return this.$apiURL + this.artwork.File.url },
-    isMobile() { return this.$store.state.isMobile }
   },
   mounted() {
 
     this.renderThumbnail()
 
-    const prefixes = ["", "webkit", "moz", "ms"]
-    prefixes.forEach((prefix) => {
-      this.$refs.viewer.addEventListener(prefix+"fullscreenchange", () => {
-        if( window.innerHeight !== screen.height) {
-         this.fullscreen = false
-        }
-      })
-    })
-
-
   },
   methods: {
+
     renderThumbnail() {
       pdfjs.getDocument(this.pdfURL).then(pdf => {
         pdf.getPage(1).then(page => {
@@ -85,22 +68,6 @@ export default {
         })
       })
     },
-
-    enterFullscreen() {
-      if (!this.isMobile) {
-        if (this.$refs.viewer.requestFullScreen) {
-          this.$refs.viewer.requestFullScreen()
-        } else if (this.$refs.viewer.mozRequestFullScreen) {
-          this.$refs.viewer.mozRequestFullScreen()
-        } else if (this.$refs.viewer.webkitRequestFullScreen) {
-          this.$refs.viewer.webkitRequestFullScreen()
-        }
-        setTimeout(() => {
-          this.fullscreen = true
-        }, 300)
-      }
-    }
-
 
   }
 
@@ -155,18 +122,11 @@ export default {
   max-height: calc(15 * var(--one));
 }
 
-.pdfArt canvas,
-.pdfArt embed {
+.pdfArt canvas {
   height: 0;
   width: 0;
   visibility: none;
   cursor: default;
-}
-.pdfArt embed.fullscreen {
-  height: 100vh;
-  width: 100vw;
-  visibility:visible;
-
 }
 .pdfArt .controls {
   box-sizing: border-box;

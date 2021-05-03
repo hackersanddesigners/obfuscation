@@ -15,7 +15,7 @@ export default {
     moderator  : false,
 
     connectedCount     : 1,
-    maxLiveCount       : 250,
+    maxLiveCount       : 200,
     wait               : false,
     highCPUNotifiction : {
       time: new Date().getTime(),

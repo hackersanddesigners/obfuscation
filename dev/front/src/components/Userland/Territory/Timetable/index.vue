@@ -161,12 +161,8 @@ export default {
             sessions: sessionsInDay
           },
           parentDay =
-            this.$env === 'production' ?
-              day == 3 || day == 4 || day == 5 ? 'firstDay' :
-              day == 6 || day == 7 || day == 8 ? 'secondDay' : null
-            :
-              day == 28 || day == 29 || day == 30 ? 'firstDay' :
-              day == 1 || day == 2 || day == 3 ? 'secondDay' : null
+            day == 3 || day == 4 || day == 5 ? 'firstDay' :
+            day == 6 || day == 7 || day == 8 ? 'secondDay' : null
 
           parentDays[parentDay][day] = dayObject
       })

@@ -44,6 +44,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import Video from './Video'
 
 export default {
@@ -51,18 +52,20 @@ export default {
   components: { Video },
   props: [
     'playbackId',
-    'forcedPlaybackId'
   ],
   data() {
     return {
+      forcedPlaybackId: null,
       playing: false,
       muted: true,
       fullscreen: false,
-      loadedmetadata: false
+      loadedmetadata: false,
     }
   },
   computed: {
-    location() { return this.$store.state.location },
+    ...mapState('territories', [
+      'location'
+    ])
   },
   watch: {
     location() {
@@ -76,7 +79,15 @@ export default {
         this.playing = false
       }
     },
-  }
+  },
+  sockets: {
+    message(message) {
+      if (message.stream && !message.deleted) {
+        this.forcedPlaybackId = message.content.replace('/stream ', '')
+        console.log('* Got a forced playback id: ', this.forcedPlaybackId)
+      }
+    }
+  },
 }
 </script>
 
@@ -94,8 +105,8 @@ export default {
   justify-content: center;
   overflow: hidden;
 }
-.island:hover,
-.island.playing,
+/* .island:hover, */
+.island.playing::hover,
 .island.playing::before {
   background: none;
 }

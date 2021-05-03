@@ -6,7 +6,7 @@ import {
 } from '../utils'
 
 const
-  ENV = process.env.NODE_ENV || 'development',
+
   URL = process.env.VUE_APP_API_URL + '/',
 
   regions = {
@@ -34,20 +34,6 @@ const
     null
   ),
 
-  correctTime = datestring => (
-    datestring
-      .replace('-05-04T', '-04-29T')
-      .replace('-05-07T', '-05-02T')
-  ),
-
-  correctDates = sessions => {
-    for (const key in sessions) {
-      sessions[key].Start = correctTime(sessions[key].Start)
-      sessions[key].End   = correctTime(sessions[key].End)
-    }
-    return sessions
-  },
-
   getRegionContent = slug => {
     return new Promise ((resolve, reject) => {
       const query = queryFromSlug(slug)
@@ -63,8 +49,6 @@ const
           content[page.slug] = page
         }
         resolve(
-          slug === 'schedule'     ?
-            ENV === 'development' ? correctDates(content) : content   :
           slug === 'contributors' ?
             toObject( sortAlphabetically( content, 'Name' ), 'slug' ) :
           slug === 'glossary'     ?

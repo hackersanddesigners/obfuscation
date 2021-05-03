@@ -1,7 +1,6 @@
 <template>
   <div :class="['pictureArt', artwork.Category ]">
 
-
    <a
       class="externalLink"
       target="_blank"
@@ -12,7 +11,7 @@
       />
     </a>
 
-    <div v-if="!isMobile" class="controls">
+    <div class="controls">
       <a
         target="_blank"
         :href="imgURL"
@@ -20,7 +19,6 @@
         <h3>↗</h3>
       </a>
     </div>
-
 
   </div>
 </template>
@@ -30,48 +28,9 @@
 export default {
   name: 'PictureArt',
   props: ['artwork'],
-  data() {
-    return {
-      fullscreen: false,
-    }
-  },
   computed: {
     imgURL() { return this.$apiURL + this.artwork.File.url },
-    isMobile() { return this.$store.state.isMobile }
   },
-  mounted() {
-
-    const prefixes = ["", "webkit", "moz", "ms"]
-    prefixes.forEach((prefix) => {
-      this.$refs.viewer.addEventListener(prefix+"fullscreenchange", () => {
-        if( window.innerHeight !== screen.height) {
-         this.fullscreen = false
-        }
-      })
-    })
-
-
-  },
-  methods: {
-
-    enterFullscreen() {
-      if (!this.isMobile) {
-        if (this.$refs.viewer.requestFullScreen) {
-          this.$refs.viewer.requestFullScreen()
-        } else if (this.$refs.viewer.mozRequestFullScreen) {
-          this.$refs.viewer.mozRequestFullScreen()
-        } else if (this.$refs.viewer.webkitRequestFullScreen) {
-          this.$refs.viewer.webkitRequestFullScreen()
-        }
-        setTimeout(() => {
-          this.fullscreen = true
-        }, 300)
-      }
-    }
-
-
-  }
-
 }
 </script>
 
@@ -121,19 +80,6 @@ export default {
   min-height: calc(10 * var(--one));
   max-width: calc(15 * var(--one));
   max-height: calc(15 * var(--one));
-}
-
-.pictureArt embed {
-  height: 0;
-  width: 0;
-  visibility: none;
-  cursor: default;
-}
-.pictureArt embed.fullscreen {
-  height: 100vh;
-  width: 100vw;
-  visibility:visible;
-
 }
 .pictureArt .controls {
   box-sizing: border-box;

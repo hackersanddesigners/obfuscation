@@ -20,6 +20,7 @@ export default {
 
 <style scoped>
 .BBB-container {
+  position: relative;
   max-width: 20vh;
   box-sizing: border-box;
   margin: calc(1 * var(--one));
@@ -29,20 +30,24 @@ export default {
   display: flex;
   background-color: var(--island-back-color);
   box-shadow: var(--island-shadow);
-  border-radius: inherit;
+  /* border-radius: inherit; */
+  border-radius:
+    var(--small-island-curve)
+    var(--island-curve)
+    var(--small-island-curve)
+    var(--island-curve);
   transition: all 0.2s ease;
 }
 
 .BBB-container::before {
+  box-sizing: border-box;
   position: absolute;
   top: 0; left: 0;
   width: 100%; height: 100%;
   content: '';
-  border-top-left-radius: inherit;
-  border-bottom-right-radius: inherit;
-  border-top-right-radius:inherit;
-  border-bottom-left-radius: inherit;
   overflow: hidden;
+  background: var(--island-back);
+  border-radius: inherit;
 }
 
 .BBB-container.disabled {

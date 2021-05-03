@@ -1,15 +1,15 @@
 <template>
-  <div 
+  <div
     :class="[
       'island',
       { break: isBreak }
     ]"
   >
     <div class="info">
-    
+
       <div class="header">
-        <h1 class="title" :class="{ zxx: $store.state.desiresTexture }"> 
-          {{ session.Title }} 
+        <h1 class="title" :class="{ zxx: $store.state.desiresTexture }">
+          {{ session.Title }}
         </h1>
       </div>
 
@@ -39,7 +39,7 @@ export default {
   },
   computed: {
     // soon() { return this.getUnixTime(this.session.Start) - new Date() < 90000 },
-    soon() { return false },  
+    soon() { return false },
     hosts() { return this.session.hosts },
     moderators() { return this.session.moderators },
     isBreak() {
@@ -61,6 +61,7 @@ export default {
   max-width: 90%;
   display: flex;
   /* align-items: center; */
+  transition: border-radius 0.2s ease;
 }
 
 .island:hover {
@@ -90,7 +91,7 @@ export default {
 }
 .island.break .info {
   /* position: absolute;
-  padding: 
+  padding:
     calc(3 * var(--one))
     calc(5 * var(--one))
     calc(3 * var(--one))

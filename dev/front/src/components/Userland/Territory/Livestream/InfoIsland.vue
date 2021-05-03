@@ -1,5 +1,5 @@
 <template>
-  <div 
+  <div
     :class="[
       'island',
     ]"
@@ -14,8 +14,8 @@
     </div>
     <div v-if="session" class="info">
       <div class="header">
-        <h1 class="title" :class="{ zxx: $store.state.desiresTexture }"> 
-          {{ session.Title }} 
+        <h1 class="title" :class="{ zxx: $store.state.desiresTexture }">
+          {{ session.Title }}
         </h1>
       </div>
       <div class="status">
@@ -32,16 +32,29 @@ import moment from 'moment-timezone'
 export default {
   name: 'InfoIsland',
   props: [ 'session', 'status' ],
-  data() {
-    return {
-    }
-  },
   computed: {
-    day() { return this.session ? moment(this.session.Start).format('dddd, MMMM Do z') : null },
-    HumanStart() { return this.session ? this.getHumanTime(this.session.Start) : null },
-    HumanEnd() { return this.session ? this.getHumanTime(this.session.End) : null }
-  },
-  created() {
+    day() {
+      return (
+        this.session ?
+          moment(this.session.Start)
+          .format('dddd, MMMM Do z')
+        : null
+      )
+    },
+    HumanStart() {
+      return (
+        this.session ?
+          this.getHumanTime(this.session.Start)
+        : null
+      )
+    },
+    HumanEnd() {
+      return (
+        this.session ?
+          this.getHumanTime(this.session.End)
+        : null
+      )
+    },
   },
   methods: {
     getHumanTime: date => moment(date).format('HH:mm'),
@@ -76,7 +89,7 @@ export default {
 .island .info {
   flex: 1 0 50%;
   box-sizing: border-box;
-  padding: 
+  padding:
     calc(0 * var(--one))
     calc(4 * var(--one))
     calc(4 * var(--one))

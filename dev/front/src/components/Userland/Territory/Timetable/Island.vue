@@ -79,10 +79,8 @@ export default {
 .island {
   height: 100%;
   width: 100%;
-  /* max-width: 90%; */
   max-width: 100%;
   display: flex;
-  /* align-items: center; */
   transition: border-radius 0.2s ease;
 }
 
@@ -138,6 +136,9 @@ export default {
   overflow: hidden;
   /* text-align: center; */
   text-align: left;
+}
+.island:hover .BBB-container {
+  border-radius: inherit;
 }
 
 

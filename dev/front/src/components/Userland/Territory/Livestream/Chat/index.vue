@@ -81,7 +81,7 @@ export default {
   box-sizing: border-box;
   flex-grow: 1;
   height: 70%;
-  margin-top: calc(1 * var(--one));
+  /* margin-top: calc(1 * var(--one)); */
 }
 
 #chat {

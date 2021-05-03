@@ -2,7 +2,6 @@
   <div>
     <VideoIsland
       :playbackId="playbackId"
-      :forcedPlaybackId="forcedPlaybackId"
       @loadedmetadata="status = 'active'"
     />
     <div class="sidebar">
@@ -40,9 +39,9 @@ export default {
   data() {
     return {
       status: 'idle',
-      forcedPlaybackId: null,
-      now: (new Date).getTime(),
-      fifteen: 15 * 60000,
+      // buffer: 90 * 60 * 60000,
+      buffer: 0,
+      now: null,
     }
   },
 
@@ -83,7 +82,7 @@ export default {
       return ( this
         .futureSessions
         .find(s => (
-          this.getTime(s.Start) < this.now + this.fifteen
+          this.getTime(s.Start) < this.now + 2 * 60000 // 2 minutes
         ))
       )
     },
@@ -127,6 +126,16 @@ export default {
 
   },
 
+  created() {
+
+    this.now = (new Date).getTime() + this.buffer
+
+    setInterval(() => {
+      this.now = (new Date).getTime() + this.buffer
+    }, 60000)
+
+  },
+
   watch: {
 
     now() {
@@ -138,25 +147,6 @@ export default {
         this.forcedPlaybackId = null
       }
     },
-
-  },
-
-  sockets: {
-    message(message) {
-      if (message.stream && !message.deleted) {
-        this.forcedPlaybackId = message.content.replace('/stream ', '')
-        console.log('got a forced playback id: ', this.forcedPlaybackId)
-      }
-    }
-  },
-
-  created() {
-
-    this.getNextEvent()
-
-    setInterval(() => {
-      this.now = (new Date).getTime()
-    }, 60000)
 
   },
 
@@ -172,10 +162,10 @@ export default {
 
       console.log('*****************************************************')
       console.log('* Current time     :', moment(this.now).format('dddd, MMMM Do HH:mm'))
-      console.log('* Current session  :', currentSession ? currentSession.Title : '')
-      console.log('* Next session     :', nextSession ? nextSession.Title : '')
+      console.log('* Current session  :', currentSession  ? currentSession.Title  : '')
+      console.log('* Next session     :', nextSession     ? nextSession.Title     : '')
       console.log('* Previous session :', previousSession ? previousSession.Title : '')
-      console.log('* Later session    :', laterSession ? laterSession.Title : '')
+      console.log('* Later session    :', laterSession    ? laterSession.Title    : '')
       console.log('*****************************************************')
 
       let
@@ -191,11 +181,16 @@ export default {
         reason = 'Current session is undefined, using next session.'
 
       } else if (
-        previousSession && laterSession &&
-        ((this.getTime(laterSession.Start) - this.getTime(previousSession.End)) < 3 * this.fifteen)
+        previousSession &&
+        laterSession &&
+        this.isDelay(previousSession, laterSession)
       ) {
         sessionToCommit = previousSession
         reason = 'Previous session could be running late, keeping it.'
+
+      } else if (laterSession) {
+        sessionToCommit = laterSession
+        reason = 'Nothing happening soon, using later session'
 
       } else {
         sessionToCommit = null
@@ -210,7 +205,16 @@ export default {
       }
     },
 
+    isDelay(previousSession, laterSession) {
+      const
+        fifteen =  15 * 60000, // 15 minutes
+        startOfLater = this.getTime(laterSession.Start),
+        endOfPrev = this.getTime(previousSession.End)
+      return ( (startOfLater - endOfPrev) < (3 * fifteen) )
+    },
+
     getTime: date => moment(date).format('x'),
+
   },
 
 }
@@ -232,7 +236,7 @@ export default {
   max-width: calc(27 * var(--one));
   position: relative;
   box-sizing: border-box;
-  margin-left: calc(1 * var(--one));
+  /* margin-left: calc(1 * var(--one)); */
   max-height: 90%;
   display: flex;
   flex-direction: column;
