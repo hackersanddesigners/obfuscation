@@ -9,6 +9,7 @@
       @mouseover.stop
       @mouseleave.stop
       @click="play"
+      preload="metadata"
     >
       <source :src="videoUrl" type="video/mp4">
       <track

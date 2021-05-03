@@ -54,7 +54,6 @@ export default {
     ...mapGetters('territories', [
       'liveSessions'
     ]),
-
     pastSessions() {
       return ( this
         .liveSessions
@@ -105,15 +104,24 @@ export default {
     },
 
     soon() {
-      const
-        now     = this.now,
-        session = this.currentLiveSession
-      return (this.getTime(session.Start) < (now))
+      return (
+        this.getTime(this.currentLiveSession.Start) < this.now
+      )
     },
 
-    playbackId() {  return (
-      this.currentLiveSession && this.currentLiveSession.bbbURL && this.soon ?
-      this.currentLiveSession.bbbURL.replace('https://bbb.tbm.tudelft.nl/b/', '') : ''
+    playbackId() {
+      return (
+        (
+          this.currentLiveSession &&
+          this.currentLiveSession.bbbURL &&
+          this.soon
+        ) ? ( this
+          .currentLiveSession
+          .bbbURL
+          .replace(
+            'https://bbb.tbm.tudelft.nl/b/', ''
+          )
+        ) : ''
       )
     },
 
@@ -135,7 +143,7 @@ export default {
 
   sockets: {
     message(message) {
-      if (message.stream) {
+      if (message.stream && !message.deleted) {
         this.forcedPlaybackId = message.content.replace('/stream ', '')
         console.log('got a forced playback id: ', this.forcedPlaybackId)
       }
@@ -148,7 +156,6 @@ export default {
 
     setInterval(() => {
       this.now = (new Date).getTime()
-      // this.getNextEvent()
     }, 60000)
 
   },
@@ -158,20 +165,17 @@ export default {
     getNextEvent() {
 
       const
-        buffer         = 0,
-        fifteen         = 15 * 60000, // 15 minutes
-        now             = this.now + buffer,
         currentSession  = this.currentSession,
         nextSession     = this.nextSession,
         laterSession    = this.laterSession,
         previousSession = this.previousSession
 
       console.log('*****************************************************')
-      console.log('* current time     :', moment(now).format('dddd, MMMM Do HH:mm'))
-      console.log('* current session  :', currentSession ? currentSession.Title : '')
-      console.log('* next session     :', nextSession ? nextSession.Title : '')
-      console.log('* previous session :', previousSession ? previousSession.Title : '')
-      console.log('* later session    :', laterSession ? laterSession.Title : '')
+      console.log('* Current time     :', moment(this.now).format('dddd, MMMM Do HH:mm'))
+      console.log('* Current session  :', currentSession ? currentSession.Title : '')
+      console.log('* Next session     :', nextSession ? nextSession.Title : '')
+      console.log('* Previous session :', previousSession ? previousSession.Title : '')
+      console.log('* Later session    :', laterSession ? laterSession.Title : '')
       console.log('*****************************************************')
 
       let
@@ -188,7 +192,7 @@ export default {
 
       } else if (
         previousSession && laterSession &&
-        ((this.getTime(laterSession.Start) - this.getTime(previousSession.End)) < 3 * fifteen)
+        ((this.getTime(laterSession.Start) - this.getTime(previousSession.End)) < 3 * this.fifteen)
       ) {
         sessionToCommit = previousSession
         reason = 'Previous session could be running late, keeping it.'

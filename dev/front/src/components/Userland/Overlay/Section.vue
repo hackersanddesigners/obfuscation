@@ -7,7 +7,14 @@
     <div v-else class="header">
       <h3 class="byline subtitle">{{ subtitle }}</h3>
       <h1 class="title" :class="{ zxx: $store.state.desiresTexture }">{{ title }}</h1>
+      <h3
+        v-if="bbbURL"
+        class="bbbURL"
+      >
+        <a :href="bbbURL" target="_blank">Join Session</a>
+      </h3>
     </div>
+
 
     <SemanticList
       v-if="chairs && chairs.length > 0"
@@ -135,6 +142,7 @@ export default {
     title() { return this.getTitle() },
     body() { return this.getBody() },
     source() { return this.getSource() },
+    bbbURL() { return this.section.bbbURL },
     chairs() { return this.section.chairs },
     hosts() { return this.section.hosts },
     moderators() { return this.section.moderators },
