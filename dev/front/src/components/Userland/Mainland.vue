@@ -603,6 +603,9 @@ export default {
           }
         } else {
           this.$refs.me[0].trackInput(key)
+          if (key == 13) {
+            e.preventDefault()
+          }
         }
       }
     },

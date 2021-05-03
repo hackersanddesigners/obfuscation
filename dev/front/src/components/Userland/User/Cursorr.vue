@@ -199,7 +199,7 @@ export default {
           uid: this.me.uid + time,
           author: this.me.name,
           authorUID: this.me.uid,
-          content: text,
+          content: text.trim(),
           time: time,
           color: this.me.color,
           x: this.me.x,
