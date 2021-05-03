@@ -1,16 +1,16 @@
 <template>
   <div :class="['pictureArt', artwork.Category ]">
 
-    <embed
-      ref="viewer"
-      :class="{ fullscreen: fullscreen }"
-      :src="imgURL"
-    />
 
-    <img
-      :src="imgURL"
-      @click.stop="enterFullscreen"
-    />
+   <a
+      class="externalLink"
+      target="_blank"
+      :href="imgURL"
+    >
+      <img
+        :src="imgURL"
+      />
+    </a>
 
     <div v-if="!isMobile" class="controls">
       <a
@@ -76,6 +76,7 @@ export default {
 </script>
 
 <style scoped>
+.pictureArt a.externalLink,
 .pictureArt {
   box-sizing: border-box;
   position: relative;
@@ -87,7 +88,6 @@ export default {
   align-items: center;
   border-radius: inherit;
 }
-
 
 .pictureArt img {
   border-radius: inherit;
@@ -108,12 +108,14 @@ export default {
   max-width: calc(40 * var(--one));
   max-height: calc(40 * var(--one));
 }
+.pictureArt.Other a.externalLink,
 .pictureArt.Other img {
   min-width: calc(20 * var(--one));
   min-height: calc(20 * var(--one));
   max-width: calc(30 * var(--one));
   max-height: calc(30 * var(--one));
 }
+.pictureArt.Poster a.externalLink,
 .pictureArt.Poster img {
   min-width: calc(10 * var(--one));
   min-height: calc(10 * var(--one));

@@ -108,6 +108,7 @@ export default {
 </script>
 
 <style scoped>
+.pdfArt a.externalLink,
 .pdfArt {
   box-sizing: border-box;
   position: relative;
