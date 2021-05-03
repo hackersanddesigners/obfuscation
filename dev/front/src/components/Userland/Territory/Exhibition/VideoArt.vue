@@ -84,12 +84,7 @@ export default {
     const player = this.$refs.player
 
     player.addEventListener('loadedmetadata',() => {
-      console.log('meta data loaded for', this.videoUrl)
       this.timeLeft = moment(player.duration * 1000).format('mm:ss')
-    })
-
-    player.addEventListener('loadstart', () => {
-      console.log('loadstart')
     })
 
     player.addEventListener('timeupdate',() => {
@@ -173,16 +168,16 @@ export default {
 }
 
 .videoArt.SessionVideo video {
-  min-width: calc(25 * var(--one));
-  min-height: calc(25 * var(--one));
-  max-width: calc(40 * var(--one));
-  max-height: calc(40 * var(--one));
-}
-.videoArt.Other video {
-  min-width: calc(20 * var(--one));
+  min-width: calc(30 * var(--one));
   min-height: calc(20 * var(--one));
   max-width: calc(30 * var(--one));
-  max-height: calc(30 * var(--one));
+  max-height: calc(20 * var(--one));
+}
+.videoArt.Other video {
+  min-width: calc(30 * var(--one));
+  min-height: calc(20 * var(--one));
+  max-width: calc(30 * var(--one));
+  max-height: calc(20 * var(--one));
 }
 .videoArt.Poster video {
   min-width: calc(10 * var(--one));

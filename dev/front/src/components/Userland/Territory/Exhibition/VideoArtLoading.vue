@@ -2,9 +2,9 @@
   <div :class="['videoArt', artwork.Category ]">
     <div class="placeholder"></div>
     <div class="controls">
-      <h3 class="play">play</h3>
+      <!-- <h3 class="play">play</h3> -->
       <h3 class="timeLeft">loading</h3>
-      <h3 class="fullscreen">⤢</h3>
+      <!-- <h3 class="fullscreen">⤢</h3> -->
     </div>
   </div>
 </template>
@@ -36,23 +36,23 @@ export default {
   /* position: relative; */
   /* object-fit: cover; */
   /* width: 100%; */
-  min-width: calc(40 * var(--one));
-  min-height: calc(25 * var(--one));
-  max-width: calc(40 * var(--one));
-  max-height: calc(40 * var(--one));
+  min-width: calc(30 * var(--one));
+  min-height: calc(20 * var(--one));
+  max-width: calc(30 * var(--one));
+  max-height: calc(20 * var(--one));
 }
 
 .videoArt.SessionVideo .placeholder {
-  min-width: calc(40 * var(--one));
-  min-height: calc(25 * var(--one));
-  max-width: calc(40 * var(--one));
-  max-height: calc(40 * var(--one));
-}
-.videoArt.Other .placeholder {
-  min-width: calc(20 * var(--one));
+  min-width: calc(30 * var(--one));
   min-height: calc(20 * var(--one));
   max-width: calc(30 * var(--one));
-  max-height: calc(30 * var(--one));
+  max-height: calc(20 * var(--one));
+}
+.videoArt.Other .placeholder {
+  min-width: calc(30 * var(--one));
+  min-height: calc(20 * var(--one));
+  max-width: calc(30 * var(--one));
+  max-height: calc(20 * var(--one));
 }
 .videoArt.Poster .placeholder {
   min-width: calc(10 * var(--one));
@@ -70,7 +70,7 @@ export default {
   width: 110%;
   padding: 0 calc(1 * var(--one));
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   z-index: 1;
 }

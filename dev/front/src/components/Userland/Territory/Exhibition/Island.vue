@@ -76,7 +76,6 @@ export default {
     authors() { return this.artwork.authors },
   },
   created() {
-    console.log(this.artwork.File.url)
     if (this.type == 'video') {
       setTimeout(() => {
         this.videoUrl = this.$apiURL + this.artwork.File.url
