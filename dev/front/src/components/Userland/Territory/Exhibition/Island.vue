@@ -80,7 +80,7 @@ export default {
     if (this.type == 'video') {
       setTimeout(() => {
         this.videoUrl = this.$apiURL + this.artwork.File.url
-      }, 100 * this.artwork.id)
+      }, 500 * this.artwork.id)
     }
   },
   methods: {
