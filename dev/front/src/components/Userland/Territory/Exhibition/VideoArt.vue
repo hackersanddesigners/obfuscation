@@ -161,6 +161,7 @@ export default {
   position: relative;
   object-fit: cover;
   width: 100%;
+  background: black;
   min-width: calc(10 * var(--one));
   min-height: calc(10 * var(--one));
   max-width: calc(40 * var(--one));
