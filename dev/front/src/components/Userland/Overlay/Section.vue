@@ -7,12 +7,21 @@
     <div v-else class="header">
       <h3 class="byline subtitle">{{ subtitle }}</h3>
       <h1 class="title" :class="{ zxx: $store.state.desiresTexture }">{{ title }}</h1>
-      <h3
-        v-if="bbbURL"
-        class="bbbURL"
-      >
-        <a :href="bbbURL" target="_blank">Join Session</a>
-      </h3>
+      <h3>
+        <span
+          v-if="sessionVideo"
+          class="sessionVideoLink"
+        >
+          <a :href="sessionVideo">Watch video</a>
+        </span>
+        <span v-if="sessionVideo && bbbURL">, </span>
+        <span
+          v-if="bbbURL"
+          class="bbbURL"
+        >
+          <a :href="bbbURL" target="_blank">Join session</a>
+        </span>
+        </h3>
     </div>
 
 
@@ -21,6 +30,12 @@
       :collection="'contributors'"
       :list="chairs"
       :name="'Chair'"
+    />
+    <SemanticList
+      v-if="sessions && sessions.length > 0"
+      :collection="'schedule'"
+      :list="sessions"
+      :name="'Session'"
     />
     <SemanticList
       v-if="hosts && hosts.length > 0"
@@ -149,13 +164,18 @@ export default {
     notetakers() { return this.section.notetakers },
     mentors() { return this.section.Mentors },
     artworks() { return this.section.artworks },
+    sessions() { return this.section.sessions },
     chairing() { return this.section.chairing },
     hosting() { return this.section.hosting },
     moderating() { return this.section.moderating },
     notetaking() { return this.section.notetaking },
     mentoring() { return this.section.Mentoring },
     resources() { return this.section.references },
-    titleGoesFirst() { return this.section.Name }
+    titleGoesFirst() { return this.section.Name },
+    sessionVideo() { return (
+      this.section.videos && this.section.videos.length > 0 ?
+      '/exhibition/' + this.section.videos[0].slug : null
+    )}
   },
   watch: {
     body() {
