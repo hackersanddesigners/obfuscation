@@ -23,7 +23,7 @@ mongoose.Promise = require("bluebird")
 
 dotenv.config()
 
-const 
+const
   root = path.resolve(__dirname, '../front/dist'),
   port = process.env.PORT || 3090,
   room = 'obfuscation',
@@ -56,26 +56,26 @@ const
   mOptions = { useNewUrlParser: true, useUnifiedTopology: true },
   User = require("./models/User"),
   Message = require("./models/Message"),
-  
+
   findUserAndUpdate = (user, status) => {
-    const 
+    const
       filter = { uid: user.uid },
       update = user,
       options = { upsert: true, new: true }
     User.findOneAndUpdate(filter, update, options, (err, res) => {
       if (err) console.log(err)
-      console.log(`${user.uid} | (${user.name}) | ${status}`) 
+      console.log(`${user.uid} | (${user.name}) | ${status}`)
     })
   },
 
   findMessageAndUpdate = message => {
-    const 
+    const
       filter = { uid: message.uid },
       update = message,
       options = { upsert: true, new: true }
     Message.findOneAndUpdate(filter, update, options, (err, res) => {
       if (err) console.log(err)
-      console.log(`${message.uid} | ${message.author}: ${message.content} | sent`) 
+      console.log(`${message.uid} | ${message.author}: ${message.content} | sent`)
     })
   },
 
@@ -83,7 +83,7 @@ const
     const conditions = { uid: user.uid }
     User.findOneAndDelete(conditions, (err, res) => {
       if (err) console.log(err)
-      console.log(`${user.uid} | (${user.name}) | deleted`) 
+      console.log(`${user.uid} | (${user.name}) | deleted`)
     })
   },
 
@@ -91,14 +91,14 @@ const
     const conditions = { uid: message.uid }
     Message.findOneAndDelete(conditions, (err, res) => {
       if (err) console.log(err)
-      console.log(`${message.uid} | ${message.author}: ${message.content} | deleted`) 
+      console.log(`${message.uid} | ${message.author}: ${message.content} | deleted`)
     })
   }
 
 
 mongoose.connect(`${mURL}:${mPort}`, mOptions)
-mongoose.connection.on('error', () => { 
-  console.log('Failed to connect to MongoDB') 
+mongoose.connection.on('error', () => {
+  console.log('Failed to connect to MongoDB')
 })
 mongoose.connection.once('open', () => {
   console.log('')
@@ -142,7 +142,7 @@ mongoose.connection.once('open', () => {
     if (count < maxLiveCount + 10) {
       io.sockets.emit('count', count)
     }
-    
+
     socket.on('user', user => {
       io.sockets.emit('user', user)
       user.deleted == true ?
@@ -165,7 +165,7 @@ mongoose.connection.once('open', () => {
       io.sockets.emit('moderator', user)
       findUserAndUpdate(user, 'moderator')
     })
-    
+
     socket.on('position', position => {
       if (getCount() < maxLiveCount) {
         io.sockets.emit('position', position)

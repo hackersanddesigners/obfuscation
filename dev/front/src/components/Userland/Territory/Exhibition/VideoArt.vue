@@ -1,9 +1,11 @@
 <template>
   <div :class="['videoArt', artwork.Category ]">
     <video
+      v-if="videoUrl"
       :class="{ fullscreen: controls }"
       ref="player"
       loop
+      preload="metadata"
       crossorigin="anonymous"
       :controls="controls"
       @mouseover.stop
@@ -13,7 +15,7 @@
       <source
         ref="vidSrc"
         :src="videoUrl"
-        type="video/mp4"
+        :type="'video/mp4'"
       >
       <track
         :src="trackUrl"
@@ -47,12 +49,12 @@
 
 <script>
 import moment from 'moment'
-// import videojs from 'video.js'
 
 export default {
   name: 'VideoArt',
   props: [
-    'artwork'
+    'artwork',
+    'videoUrl'
   ],
   data() {
     return {
@@ -61,13 +63,11 @@ export default {
       fullscreen: false,
       controls: false,
       timeLeft: '0',
-      altServer: 'https://karls.computer/obfuscation-uploads',
       // videoUrl: null,
     }
   },
   computed: {
-    // videoUrl() { return this.altServer + this.artwork.File.url },
-    videoUrl() { return this.$apiURL + this.artwork.File.url },
+    // videoUrl() { return this.$apiURL + this.artwork.File.url },
     mimeType() { return this.artwork.File.mime },
     trackUrl() {
       return (
@@ -78,35 +78,18 @@ export default {
 
   },
   created() {
-    // setTimeout(() => {
-    //   if (this.artwork.File.url === '/uploads/SALLY_720_eb54b8847b.mov')
-    //   this.videoUrl = this.$apiURL + this.artwork.File.url
-    //   console.log(this.videoUrl)
-    // }, 100 * this.artwork.id)
   },
   mounted() {
 
     const player = this.$refs.player
-    const vidSrc = this.$refs.vidSrc
 
     player.addEventListener('loadedmetadata',() => {
       console.log('meta data loaded for', this.videoUrl)
       this.timeLeft = moment(player.duration * 1000).format('mm:ss')
     })
 
-    player.addEventListener('loadstart', msg => {
-      console.log('loadstart', msg)
-    })
-    player.addEventListener('buffered', msg => {
-      console.log('buffered', msg)
-    })
-
-    player.addEventListener('error', error => {
-      console.log(error)
-    })
-
-    vidSrc.addEventListener('error', error => {
-      console.log(error)
+    player.addEventListener('loadstart', () => {
+      console.log('loadstart')
     })
 
     player.addEventListener('timeupdate',() => {
@@ -122,16 +105,6 @@ export default {
         }
       })
     })
-
-        // const player = videojs(
-    //   this.$refs.player,
-    //   this.options, function onPlayerReady() {
-    //     // console.log('player re')
-    //   console.log('meta data loaded for', this.videoUrl)
-    //   }
-    // )
-
-    // console.log(player)
 
   },
   methods: {
@@ -200,8 +173,8 @@ export default {
 }
 
 .videoArt.SessionVideo video {
-  min-width: calc(20 * var(--one));
-  min-height: calc(20 * var(--one));
+  min-width: calc(25 * var(--one));
+  min-height: calc(25 * var(--one));
   max-width: calc(40 * var(--one));
   max-height: calc(40 * var(--one));
 }

@@ -1,9 +1,14 @@
 <template>
-  <div class="island">
+  <div class="island" :class="type">
 
     <div class="body">
       <VideoArt
-        v-if="type === 'video'"
+        v-if="type === 'video' && videoUrl"
+        :artwork="artwork"
+        :videoUrl="videoUrl"
+      />
+      <VideoArtLoading
+        v-else-if="type === 'video'"
         :artwork="artwork"
       />
       <PdfArt
@@ -38,23 +43,26 @@
 
 <script>
 import SemanticList from '../../SemanticList'
+import VideoArt from './VideoArt'
+import VideoArtLoading from './VideoArtLoading'
 import PdfArt from './PdfArt'
 import PictureArt from './PictureArt'
-import VideoArt from './VideoArt'
 
 export default {
   name: 'Island',
   components: {
     SemanticList,
     VideoArt,
+    VideoArtLoading,
     PdfArt,
-    PictureArt
+    PictureArt,
   },
   props: [
     'artwork',
   ],
   data() {
     return {
+      videoUrl: null
     }
   },
   computed: {
@@ -68,6 +76,12 @@ export default {
     authors() { return this.artwork.authors },
   },
   created() {
+    console.log(this.artwork.File.url)
+    if (this.type == 'video') {
+      setTimeout(() => {
+        this.videoUrl = this.$apiURL + this.artwork.File.url
+      }, 100 * this.artwork.id)
+    }
   },
   methods: {
   }
