@@ -7,21 +7,28 @@
     <div v-else class="header">
       <h3 class="byline subtitle">{{ subtitle }}</h3>
       <h1 class="title" :class="{ zxx: $store.state.desiresTexture }">{{ title }}</h1>
-      <h3>
+      <!-- <h3>
         <span
           v-if="sessionVideo"
           class="sessionVideoLink"
         >
           <a :href="sessionVideo">Watch video</a>
         </span>
-        <span v-if="sessionVideo && bbbURL">, </span>
+        <span v-if="sessionVideo && sessionPoster">, </span>
+        <span
+          v-if="sessionPoster"
+          class="sessionVideoLink"
+        >
+          <a :href="sessionPoster">See poster</a>
+        </span>
+        <span v-if="sessionPoster && bbbURL">, </span>
         <span
           v-if="bbbURL"
           class="bbbURL"
         >
           <a :href="bbbURL" target="_blank">Join session</a>
         </span>
-        </h3>
+        </h3> -->
     </div>
 
 
@@ -54,6 +61,24 @@
       :list="notetakers"
       :collection="'contributors'"
       :name="'Note-taker'"
+    />
+    <SemanticList
+      v-if="sessionVideos && sessionVideos.length > 0"
+      :list="sessionVideos"
+      :collection="'exhibition'"
+      :name="'Video'"
+    />
+    <SemanticList
+      v-if="sessionPosters && sessionPosters.length > 0"
+      :list="sessionPosters"
+      :collection="'exhibition'"
+      :name="'Poster'"
+    />
+    <SemanticList
+      v-if="sessionArtwork && sessionArtwork.length > 0"
+      :list="sessionArtwork"
+      :collection="'exhibition'"
+      :name="'Artwork'"
     />
     <SemanticList
       v-if="mentors && mentors.length > 0"
@@ -172,10 +197,46 @@ export default {
     mentoring() { return this.section.Mentoring },
     resources() { return this.section.references },
     titleGoesFirst() { return this.section.Name },
-    sessionVideo() { return (
-      this.section.videos && this.section.videos.length > 0 ?
-      '/exhibition/' + this.section.videos[0].slug : null
-    )}
+    sessionMaterial() { return this.section.videos },
+    sessionVideos() { return this
+      .sessionMaterial
+      .filter(s => (
+        s.Category == 'SessionVideo'
+      ))
+    },
+    sessionPosters() { return this
+      .sessionMaterial
+      .filter(s => (
+        s.Category == 'Poster'
+      ))
+    },
+    sessionArtwork() { return this
+      .sessionMaterial
+      .filter(s => (
+        s.Category == 'Other'
+      ))
+    },
+    // sessionVideo() {
+    //   let url
+    //   if (this.sessionMaterial && this.sessionMaterial.length > 0) {
+    //     const video = this.sessionMaterial.find(v => v.Category == 'SessionVideo')
+    //     if (video) {
+    //       url = '/exhibition/' + video.slug
+    //     }
+    //   }
+    //   return url
+    // },
+    // sessionPoster() {
+    //   let url
+    //   if (this.sessionMaterial && this.sessionMaterial.length > 0) {
+    //     const poster = this.sessionMaterial.find(v => v.Category == 'Poster')
+    //     if (poster) {
+    //       url = '/exhibition/' + poster.slug
+    //     }
+    //   }
+    //   return url
+    // },
+
   },
   watch: {
     body() {
