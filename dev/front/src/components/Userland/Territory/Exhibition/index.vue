@@ -2,9 +2,9 @@
   <div>
     <Island
       v-for="artwork in content"
-      :id="artwork.slug + 'Island'"
+      :id="artwork.slug + 'Exhib' +'Island'"
       :style="{ left: artwork.x + '%', top: artwork.y + '%' }"
-      :key="artwork.slug"
+      :key="artwork.id"
       :artwork="artwork"
       @moreInfo="$emit('moreInfo', `/exhibition/${artwork.slug}`)"
     />
@@ -29,7 +29,7 @@ export default {
         Array
         .from(document.querySelectorAll(`#exhibition a`))
         .forEach(a => {
-          const href = a.attributes.href.value 
+          const href = a.attributes.href.value
           if (href && (href.startsWith('/') || href.startsWith(this.$appURL))) {
             a.addEventListener('click', (e) => {
               const newhref = href.replace(this.$appURL, '/')
@@ -40,7 +40,7 @@ export default {
         })
       }, 500)
     }
-  
+
   }
 }
 </script>

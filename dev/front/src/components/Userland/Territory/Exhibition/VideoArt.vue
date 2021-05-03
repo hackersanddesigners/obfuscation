@@ -9,9 +9,12 @@
       @mouseover.stop
       @mouseleave.stop
       @click="play"
-      preload="metadata"
     >
-      <source :src="videoUrl" type="video/mp4">
+      <source
+        ref="vidSrc"
+        :src="videoUrl"
+        type="video/mp4"
+      >
       <track
         :src="trackUrl"
         srclang="en"
@@ -44,6 +47,7 @@
 
 <script>
 import moment from 'moment'
+// import videojs from 'video.js'
 
 export default {
   name: 'VideoArt',
@@ -56,11 +60,15 @@ export default {
       playing: false,
       fullscreen: false,
       controls: false,
-      timeLeft: 0,
+      timeLeft: '0',
+      altServer: 'https://karls.computer/obfuscation-uploads',
+      // videoUrl: null,
     }
   },
   computed: {
+    // videoUrl() { return this.altServer + this.artwork.File.url },
     videoUrl() { return this.$apiURL + this.artwork.File.url },
+    mimeType() { return this.artwork.File.mime },
     trackUrl() {
       return (
         this.artwork.Track ?
@@ -70,22 +78,35 @@ export default {
 
   },
   created() {
-    // if (this.artwork.Track) {
-    //   this.$http
-    //     .get(this.trackUrl)
-    //     .then(response => {
-    //       const blob = new Blob([response.data], { type: 'text/vtt' })
-    //       this.trackSrc = URL.createObjectURL(blob)
-    //     })
-    //     .catch(error => console.log(error))
-    // }
+    // setTimeout(() => {
+    //   if (this.artwork.File.url === '/uploads/SALLY_720_eb54b8847b.mov')
+    //   this.videoUrl = this.$apiURL + this.artwork.File.url
+    //   console.log(this.videoUrl)
+    // }, 100 * this.artwork.id)
   },
   mounted() {
 
     const player = this.$refs.player
+    const vidSrc = this.$refs.vidSrc
 
     player.addEventListener('loadedmetadata',() => {
+      console.log('meta data loaded for', this.videoUrl)
       this.timeLeft = moment(player.duration * 1000).format('mm:ss')
+    })
+
+    player.addEventListener('loadstart', msg => {
+      console.log('loadstart', msg)
+    })
+    player.addEventListener('buffered', msg => {
+      console.log('buffered', msg)
+    })
+
+    player.addEventListener('error', error => {
+      console.log(error)
+    })
+
+    vidSrc.addEventListener('error', error => {
+      console.log(error)
     })
 
     player.addEventListener('timeupdate',() => {
@@ -101,6 +122,16 @@ export default {
         }
       })
     })
+
+        // const player = videojs(
+    //   this.$refs.player,
+    //   this.options, function onPlayerReady() {
+    //     // console.log('player re')
+    //   console.log('meta data loaded for', this.videoUrl)
+    //   }
+    // )
+
+    // console.log(player)
 
   },
   methods: {

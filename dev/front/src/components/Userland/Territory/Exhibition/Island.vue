@@ -1,6 +1,6 @@
 <template>
   <div class="island">
-    
+
     <div class="body">
       <VideoArt
         v-if="type === 'video'"
@@ -20,8 +20,8 @@
         class="title"
         :class="{ zxx: $store.state.desiresTexture }"
         @mousedown.stop="$emit('moreInfo', `/exhibition/${artwork.slug}`)"
-      > 
-        {{ artwork.Name }} 
+      >
+        {{ artwork.Name }}
       </h1>
       <h3 class="authors">
         <SemanticList
@@ -51,7 +51,7 @@ export default {
     PictureArt
   },
   props: [
-    'artwork'
+    'artwork',
   ],
   data() {
     return {
@@ -65,8 +65,7 @@ export default {
           this.artwork.File.mime.includes('pdf') ? 'pdf' : null : null
       )
     },
-    authors() { return this.artwork.authors }
-    
+    authors() { return this.artwork.authors },
   },
   created() {
   },
@@ -89,7 +88,7 @@ export default {
   justify-content: center;
   align-items: center;
   box-shadow:
-      0 0 
+      0 0
       calc(1 * var(--one))
       calc(0.5 * var(--one))
     rgba(0, 0, 0, 0.267);;
@@ -112,8 +111,8 @@ export default {
   width: 100%;
   min-width: calc(40 * var(--one));
   height: 0;
-  padding: 
-    calc(2 * var(--one)) 
+  padding:
+    calc(2 * var(--one))
     calc(2 * var(--one))
   ;
   display: flex;
@@ -121,7 +120,7 @@ export default {
   justify-content: flex-start;
   align-items: center;
 }
-.island .header h1 { 
+.island .header h1 {
   font-size: calc(3 * var(--one));
   font-weight: normal;
   text-align: center;

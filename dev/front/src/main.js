@@ -23,12 +23,14 @@ Vue.prototype.$lifecycle  = process.env.VUE_APP_LIFECYCLE
 Vue.prototype.$version    = process.env.VUE_APP_VERSION
 
 Vue.use(
-  VueSocketIOExt, 
-  io(Vue.prototype.$appURL, { 
-    transports: ['websocket'] 
+  VueSocketIOExt,
+  io(Vue.prototype.$appURL, {
+    transports: ['websocket']
   }),
   { store }
 )
+
+require('video.js/dist/video-js.css')
 
 require('vue-tour/dist/vue-tour.css')
 Vue.use(VueTour)

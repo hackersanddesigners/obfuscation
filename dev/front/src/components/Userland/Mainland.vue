@@ -453,7 +453,10 @@ export default {
         if (page) {
           // console.log("going to page", page)
           this.secondPath = true
-          position = this.positionOfIsland(page)
+          const selector =
+            name === 'exhibition' ?
+            page + 'Exhib' : page
+          position = this.positionOfIsland(selector)
 
           if (position) {
             content =

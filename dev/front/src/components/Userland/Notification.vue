@@ -1,30 +1,30 @@
 <template>
-  <div 
-    id="notification" 
+  <div
+    id="notification"
     class="ui"
     :style="{ '--userColor': color }"
   >
     <p class="time"> {{ time }} </p>
-    <p class="author"> 
+    <p class="author">
       <span class="name"> {{ notification.author }} </span>
       <span> says: </span>
     </p>
-    <vue-markdown class="body"> 
-      {{ notification.content }} 
+    <vue-markdown class="body">
+      {{ notification.content }}
     </vue-markdown>
     <div id="notiButtons">
-      <input 
+      <input
         class="ui button"
-        type="button" 
+        type="button"
         value="dismiss"
-        @click.stop="$emit('dismiss')" 
+        @click.stop="$emit('dismiss')"
       >
-      <input 
+      <input
         v-if="notification.authorUID"
         class="ui button"
-        type="button" 
+        type="button"
         value="view"
-        @click.stop="$emit('goTo', notification)" 
+        @click.stop="$emit('goTo', notification)"
       >
     </div>
   </div>
@@ -32,6 +32,7 @@
 
 <script>
 import moment from 'moment'
+import { mapState } from 'vuex'
 
 export default {
 
@@ -43,10 +44,13 @@ export default {
   computed: {
     time() { return (
       moment(this.notification.time)
-      .format('dddd, MMMM Do [at] HH:mm') 
+      .format('dddd, MMMM Do [at] HH:mm')
     )},
-    color() { return this.notification.authorUID ? 
-      this.$store.state.users[this.notification.authorUID].color : 'black' 
+    ...mapState('users', [
+      'users'
+    ]),
+    color() { return this.notification.authorUID ?
+      this.users[this.notification.authorUID].color : 'black'
     }
   },
 }
