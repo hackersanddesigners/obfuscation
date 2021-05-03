@@ -75,7 +75,7 @@ const
       options = { upsert: true, new: true }
     Message.findOneAndUpdate(filter, update, options, (err, res) => {
       if (err) console.log(err)
-      console.log(`${res.uid} | ${res.author}: ${res.content} | sent`)
+      console.log(`${res.uid} | ${res.author}: ${res.content}`)
     })
   },
 
