@@ -12,8 +12,11 @@
       ref="smarq"
       :style="{ transform: 'translateX(' + x + 'px)' }"
     >
-      <vue-markdown class="content" inline>
-        {{ content }}
+      <vue-markdown
+        class="content"
+        inline
+        :source="content"
+      >
       </vue-markdown>
     </div>
   </div>
@@ -58,12 +61,14 @@ export default {
     }
   },
   mounted() {
-    this.smarquee = new Smarquee({
-      element: this.$refs.smarq,
-      iterationCount: 'infinite',
-    })
-    this.smarquee.init()
-    this.handleSmarquee()
+    if (this.marquee) {
+      this.smarquee = new Smarquee({
+        element: this.$refs.smarq,
+        iterationCount: 'infinite',
+      })
+      this.smarquee.init()
+      this.handleSmarquee()
+    }
   },
   methods: {
     handleMousemove(e) {
