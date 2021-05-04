@@ -75,7 +75,7 @@ const
       options = { upsert: true, new: true }
     Message.findOneAndUpdate(filter, update, options, (err, res) => {
       if (err) console.log(err)
-      console.log(`${res.authorUID} | ${res.author}: ${res.content} | sent`)
+      console.log(`${res.authorUID} | (${res.author}) | ${res.content} | sent`)
     })
   },
 
@@ -91,7 +91,7 @@ const
     const conditions = { uid: message.uid }
     Message.findOneAndDelete(conditions, (err, res) => {
       if (err) console.log(err)
-      console.log(`${message.authorUID} | ${message.author}: ${message.content} | deleted`)
+      console.log(`${message.authorUID} | (${message.author}) | ${message.content} | deleted`)
     })
   }
 
