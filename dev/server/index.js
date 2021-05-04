@@ -1,11 +1,13 @@
-const dotenv = require('dotenv')
-const path = require('path')
-const express = require('express')
-const fallback = require('express-history-api-fallback')
+const dotenv     = require('dotenv')
+const path       = require('path')
+const mongoose   = require("mongoose")
+mongoose.Promise = require("bluebird")
+const express    = require('express')
 const bodyParser = require('body-parser')
-const app = express()
-const http = require('http').createServer(app)
-const io = require('socket.io')(http, {
+const fallback   = require('express-history-api-fallback')
+const app        = express()
+const http       = require('http').createServer(app)
+const io         = require('socket.io')(http, {
   cors: {
     origin: "*",
     methods: ["GET", "POST"],
@@ -15,8 +17,6 @@ const io = require('socket.io')(http, {
   perMessageDeflate: false,
   transports: ['websocket'],
 })
-const mongoose = require("mongoose")
-mongoose.Promise = require("bluebird")
 
 
 // DEFAULTS
@@ -24,16 +24,16 @@ mongoose.Promise = require("bluebird")
 dotenv.config()
 
 const
-  root = path.resolve(__dirname, '../front/dist'),
-  port = process.env.PORT || 3090,
-  room = 'obfuscation',
+  root         = path.resolve(__dirname, '../front/dist'),
+  port         = process.env.PORT || 3090,
+  room         = 'obfuscation',
   maxLiveCount = 200,
-  getCount = () => (
+  getCount     = () => (
     io.sockets.adapter.rooms.get(room) ?
     Array.from(io.sockets.adapter.rooms.get(room)).length : 0
   )
 
-let count = getCount()
+let count      = getCount()
 
 
 // EXPRESS CONFIGURATION
@@ -51,11 +51,11 @@ app.use('/', express.static(root))
 // MONGOOSE CONFIGURATION & FUNCTIONS
 
 const
-  mURL = "mongodb://localhost",
-  mPort = process.env.MONGOPORT || 27018,
+  mURL     = "mongodb://localhost",
+  mPort    = process.env.MONGOPORT || 27018,
   mOptions = { useNewUrlParser: true, useUnifiedTopology: true },
-  User = require("./models/User"),
-  Message = require("./models/Message"),
+  User     = require("./models/User"),
+  Message  = require("./models/Message"),
 
   findUserAndUpdate = (user, status) => {
     const
@@ -75,7 +75,7 @@ const
       options = { upsert: true, new: true }
     Message.findOneAndUpdate(filter, update, options, (err, res) => {
       if (err) console.log(err)
-      console.log(`${res.uid} | ${res.author}: ${res.content}`)
+      console.log(`${res.authorUID} | ${res.author}: ${res.content} | sent`)
     })
   },
 
@@ -91,7 +91,7 @@ const
     const conditions = { uid: message.uid }
     Message.findOneAndDelete(conditions, (err, res) => {
       if (err) console.log(err)
-      console.log(`${message.uid} | ${message.author}: ${message.content} | deleted`)
+      console.log(`${message.authorUID} | ${message.author}: ${message.content} | deleted`)
     })
   }
 
@@ -192,8 +192,9 @@ mongoose.connection.once('open', () => {
     socket.on('disconnect', reason => {
       count = getCount()
       console.log(socket.id, 'disconnect:', reason, 'total:', count)
-      io.sockets.emit('count', count)
-
+      if (count < maxLiveCount + 10) {
+        io.sockets.emit('count', count)
+      }
     })
 
 
