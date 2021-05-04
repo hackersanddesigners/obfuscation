@@ -18,7 +18,7 @@ export default {
     maxLiveCount       : 200,
     wait               : false,
     highCPUNotifiction : {
-      time: new Date().getTime(),
+      time: (new Date()).getTime(),
       author: "Server",
       content:
         "The platframe is currently experiencing a high number of concurrent visitors. To remain functional, it will stop displaying the correct positions of participants' cursors. You can still send and receive messages.",
@@ -90,6 +90,8 @@ export default {
     notDeletedUsers: (state, getters) => ( getters
       .usersArray
       .filter(u => (
+        u.uid &&
+        u.name &&
         !u.deleted &&
         !u.blocked &&
         !u.isMobile
@@ -103,10 +105,14 @@ export default {
       .filter(u => (
         u.connected
       ))
+      .sort((a, b) => (
+        getters.isNamed(b) - getters.isNamed(a)
+      ))
     ),
     connectedUsersFirst: (state, getters) => ( getters
       .notDeletedUsers
       .sort((a, b) => (
+        getters.isNamed(b) - getters.isNamed(a) ||
         b.connected - a.connected
       ))
     ),
@@ -124,6 +130,7 @@ export default {
           u.color : "var(--disconnected)",
       }))
     ),
+    isNamed: () => u => !(u.name && u.name.includes(u.uid))
   },
 
   actions: {
