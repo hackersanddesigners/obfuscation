@@ -1,10 +1,6 @@
 <template>
   <div :class="['pdfArt', artwork.Category ]">
 
-    <canvas
-      ref="canvas"
-    />
-
     <a
       class="externalLink"
       target="_blank"
@@ -28,54 +24,18 @@
 </template>
 
 <script>
-import pdfjs from 'pdfjs-dist/build/pdf'
-pdfjs.GlobalWorkerOptions.workerSrc = 'pdfjs-dist/build/pdf.worker.entry'
-
 export default {
   name: 'PdfArt',
   props: ['artwork'],
-  data() {
-    return {
-      // imgURL: null,
-    }
-  },
   computed: {
     pdfURL() { return this.$apiURL + this.artwork.File.url },
     imgURL() {
       return (
-        this.artwork.Track && this.artwork.Track.formats ?
+        this.artwork.Track ?
         this.$apiURL + this.artwork.Track.formats.small.url : null
       )
     },
   },
-  mounted() {
-
-    // this.renderThumbnail()
-
-  },
-  methods: {
-
-    renderThumbnail() {
-      pdfjs.getDocument(this.pdfURL).then(pdf => {
-        pdf.getPage(1).then(page => {
-          const
-            viewport = page.getViewport({ scale: 1 }),
-            canvas = this.$refs.canvas,
-            context = canvas.getContext('2d')
-
-          canvas.height = viewport.height
-          canvas.width = viewport.width
-
-          page
-            .render({ canvasContext: context, viewport: viewport })
-            .then(() => {
-              this.imgURL = canvas.toDataURL()
-            })
-        })
-      })
-    },
-
-  }
 
 }
 </script>
@@ -128,12 +88,6 @@ export default {
   max-height: calc(15 * var(--one));
 }
 
-.pdfArt canvas {
-  height: 0;
-  width: 0;
-  visibility: none;
-  cursor: default;
-}
 .pdfArt .controls {
   box-sizing: border-box;
   position: absolute;
