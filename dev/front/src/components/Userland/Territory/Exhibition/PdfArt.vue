@@ -36,15 +36,21 @@ export default {
   props: ['artwork'],
   data() {
     return {
-      imgURL: null,
+      // imgURL: null,
     }
   },
   computed: {
     pdfURL() { return this.$apiURL + this.artwork.File.url },
+    imgURL() {
+      return (
+        this.artwork.Track && this.artwork.Track.formats ?
+        this.$apiURL + this.artwork.Track.formats.small.url : null
+      )
+    },
   },
   mounted() {
 
-    this.renderThumbnail()
+    // this.renderThumbnail()
 
   },
   methods: {

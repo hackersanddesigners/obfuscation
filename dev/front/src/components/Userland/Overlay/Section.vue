@@ -78,7 +78,7 @@
       v-if="sessionArtwork && sessionArtwork.length > 0"
       :list="sessionArtwork"
       :collection="'exhibition'"
-      :name="'Artwork'"
+      :name="'Artwork/Tool'"
     />
     <SemanticList
       v-if="mentors && mentors.length > 0"
@@ -87,12 +87,12 @@
       :name="'Mentor'"
     />
 
-    <SemanticList
+    <!-- <SemanticList
       v-if="artworks && artworks.length > 0"
       :collection="'exhibition'"
       :list="artworks"
       :name="'Artwork'"
-    />
+    /> -->
     <SemanticList
       v-if="chairing && chairing.length > 0"
       :collection="'schedule'"
@@ -188,7 +188,6 @@ export default {
     moderators() { return this.section.moderators },
     notetakers() { return this.section.notetakers },
     mentors() { return this.section.Mentors },
-    artworks() { return this.section.artworks },
     sessions() { return this.section.sessions },
     chairing() { return this.section.chairing },
     hosting() { return this.section.hosting },
@@ -197,21 +196,27 @@ export default {
     mentoring() { return this.section.Mentoring },
     resources() { return this.section.references },
     titleGoesFirst() { return this.section.Name },
-    sessionMaterial() { return this.section.videos || [] },
+    artworks() {
+      return (
+        this.section.videos ||
+        this.section.artworks ||
+        []
+      )
+    },
     sessionVideos() { return this
-      .sessionMaterial
+      .artworks
       .filter(s => (
         s.Category == 'SessionVideo'
       ))
     },
     sessionPosters() { return this
-      .sessionMaterial
+      .artworks
       .filter(s => (
         s.Category == 'Poster'
       ))
     },
     sessionArtwork() { return this
-      .sessionMaterial
+      .artworks
       .filter(s => (
         s.Category == 'Other'
       ))

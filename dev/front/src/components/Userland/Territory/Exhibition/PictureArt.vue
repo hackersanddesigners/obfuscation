@@ -7,7 +7,7 @@
       :href="imgURL"
     >
       <img
-        :src="imgURL"
+        :src="icoURL"
       />
     </a>
 
@@ -30,6 +30,13 @@ export default {
   props: ['artwork'],
   computed: {
     imgURL() { return this.$apiURL + this.artwork.File.url },
+    icoURL() {
+        return (
+        this.artwork.File.formats ?
+        this.$apiURL + this.artwork.File.formats.small.url :
+        this.imgURL
+      )
+    }
   },
 }
 </script>
