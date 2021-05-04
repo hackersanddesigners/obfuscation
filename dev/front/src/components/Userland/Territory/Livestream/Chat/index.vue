@@ -1,6 +1,5 @@
 <template>
   <div id="chatContainer" class="island">
-
     <div id="chat" ref="chat">
       <Message
         v-for="message in chatByTime"
@@ -9,11 +8,6 @@
         @goTo="$emit('goTo', $event)"
       />
     </div>
-
-    <!-- <div id="chatInput">
-      <span>Messages sent during livestreamed sessions are grouped here.</span>
-    </div> -->
-
   </div>
 </template>
 
@@ -48,16 +42,9 @@ export default {
       this.scrollToBottom(true)
     }, 1000)
   },
-  sockets: {
-    message(m) {
-      if (
-        !m.deleted &&
-        !m.navigation &&
-        !m.stream &&
-        !m.censored
-      ) {
-        this.scrollToBottom(true)
-      }
+  watch: {
+    chatByTime() {
+      this.scrollToBottom(true)
     },
   },
   methods: {

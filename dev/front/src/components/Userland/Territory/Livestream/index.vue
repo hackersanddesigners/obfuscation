@@ -39,8 +39,6 @@ export default {
   data() {
     return {
       status: 'idle',
-      // buffer: 90 * 60 * 60000,
-      buffer: 0,
       now: null,
     }
   },
@@ -128,10 +126,10 @@ export default {
 
   created() {
 
-    this.now = (new Date).getTime() + this.buffer
+    this.now = (new Date).getTime()
 
     setInterval(() => {
-      this.now = (new Date).getTime() + this.buffer
+      this.now = (new Date).getTime()
     }, 60000)
 
   },
@@ -140,12 +138,6 @@ export default {
 
     now() {
       this.getNextEvent()
-    },
-
-    currentLiveSession(newSession, oldSession) {
-      if (newSession !== oldSession) {
-        this.forcedPlaybackId = null
-      }
     },
 
   },
@@ -160,25 +152,17 @@ export default {
         laterSession    = this.laterSession,
         previousSession = this.previousSession
 
-      console.log('*****************************************************')
-      console.log('* Current time     :', moment(this.now).format('dddd, MMMM Do HH:mm'))
-      console.log('* Current session  :', currentSession  ? currentSession.Title  : '')
-      console.log('* Next session     :', nextSession     ? nextSession.Title     : '')
-      console.log('* Previous session :', previousSession ? previousSession.Title : '')
-      console.log('* Later session    :', laterSession    ? laterSession.Title    : '')
-      console.log('*****************************************************')
-
       let
         sessionToCommit,
         reason
 
       if (currentSession) {
         sessionToCommit = currentSession
-        reason = 'Using current session.'
+        reason          = 'Using current session.'
 
       } else if (nextSession) {
         sessionToCommit = nextSession
-        reason = 'Current session is undefined, using next session.'
+        reason          = 'Current session is undefined, using next session.'
 
       } else if (
         previousSession &&
@@ -186,23 +170,34 @@ export default {
         this.isDelay(previousSession, laterSession)
       ) {
         sessionToCommit = previousSession
-        reason = 'Previous session could be running late, keeping it.'
+        reason          = 'Previous session could be running late, keeping it.'
 
       } else if (laterSession) {
         sessionToCommit = laterSession
-        reason = 'Nothing happening soon, using later session'
+        reason          = 'Nothing happening soon, using later session'
 
       } else {
         sessionToCommit = null
-        reason = 'No more live events.'
+        reason          = 'No more live events.'
       }
 
-      if (currentSession === this.currentLiveSession) {
-        console.log('* STREAM: Not making unnecessary commits.')
+      if (sessionToCommit === this.currentLiveSession) {
+        reason          = 'Nothing has changed, retrying in a minute.'
+
       } else {
         this.$store.commit('territories/setCurrentLiveSession', sessionToCommit)
-        console.log('* STREAM:', reason)
+
+        console.log('*****************************************************')
+        console.log('* Current time     :', moment(this.now).format('dddd, MMMM Do HH:mm'))
+        console.log('* Current session  :', currentSession  ? currentSession.Title  : '')
+        console.log('* Next session     :', nextSession     ? nextSession.Title     : '')
+        console.log('* Previous session :', previousSession ? previousSession.Title : '')
+        console.log('* Later session    :', laterSession    ? laterSession.Title    : '')
+        console.log('*****************************************************')
       }
+
+      console.log('* STREAM:', reason)
+
     },
 
     isDelay(previousSession, laterSession) {
@@ -236,7 +231,6 @@ export default {
   max-width: calc(27 * var(--one));
   position: relative;
   box-sizing: border-box;
-  /* margin-left: calc(1 * var(--one)); */
   max-height: 90%;
   display: flex;
   flex-direction: column;

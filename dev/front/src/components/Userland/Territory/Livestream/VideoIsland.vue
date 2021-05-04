@@ -9,6 +9,7 @@
         :muted="muted"
         :fullscreen="fullscreen"
         @playing="playing = true"
+        @pausing="playing = false"
         @unfullscreened="fullscreen = false"
         @loadedmetadata="loadedmetadata = true; $emit('loadedmetadata')"
       />
@@ -44,7 +45,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import Video from './Video'
 
 export default {
@@ -62,29 +62,23 @@ export default {
       loadedmetadata: false,
     }
   },
-  computed: {
-    ...mapState('territories', [
-      'location'
-    ])
-  },
   watch: {
-    location() {
-      if (this.location.slug === 'livestream') {
-        console.log("we're in livestream")
-        if (this.playbackId || this.forcedPlaybackId) {
-          this.playing = true
-        }
-      } else {
-        console.log('leaving livestream')
-        this.playing = false
+    playbackId(newPlaybackId, oldPlaybackId) {
+      if (newPlaybackId !== oldPlaybackId) {
+        this.forcedPlaybackId = null
       }
     },
   },
   sockets: {
-    message(message) {
-      if (message.stream && !message.deleted) {
-        this.forcedPlaybackId = message.content.replace('/stream ', '')
-        console.log('* Got a forced playback id: ', this.forcedPlaybackId)
+    message(m) {
+      if (
+        m.uid &&
+        !m.deleted &&
+        !m.navigation &&
+        m.stream
+      ) {
+        this.forcedPlaybackId = m.content.replace('/stream ', '')
+        console.log('* STREAM: Got a forced playback id: ', this.forcedPlaybackId)
       }
     }
   },
@@ -106,13 +100,14 @@ export default {
   overflow: hidden;
 }
 /* .island:hover, */
-.island.playing::hover,
+.island.playing:hover,
 .island.playing::before {
   background: none;
 }
 .island .body {
   height: 100%;
   width: 100%;
+  border-radius: inherit;
 }
 .island .controls {
   z-index: 1;
@@ -129,7 +124,7 @@ export default {
   position: relative;
   box-sizing: border-box;
   min-width: calc(4 * var(--one));
-  background-color: var(--livestream);
+  background-color: rgb(200, 130, 125);
   box-shadow: var(--island-shadow);
   margin: calc(1 * var(--one));
   margin-right: 0;

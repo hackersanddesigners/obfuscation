@@ -5,50 +5,46 @@
     :controls="controls"
     autoplay
     tabindex="0"
-  >
-  </video>
+  ></video>
 </template>
 <script>
 import Hls from 'hls.js'
 
 export default {
+
   name: 'Video',
-  components: {
-  },
+
   props: [
     'playbackId',
     'forcedPlaybackId',
-    'desiresPosition',
-    'muted',
     'playing',
+    'muted',
     'fullscreen'
   ],
+
   data() {
     return {
       controls: false,
       retryInterval: null,
       attempts: 0,
-      maxAttempts: 6,
+      maxAttempts: 30,
     }
   },
+
   computed: {
+    isMobile() { return this.$store.state.isMobile }
   },
+
   watch: {
     playbackId() {
-      console.log('* New Playback ID:', this.playbackId)
       this.updateVideo()
       this.resetRetryInterval()
     },
 
     forcedPlaybackId() {
       clearInterval(this.retryInterval)
+      this.attempts = 0
       this.updateVideo()
-    },
-
-    desiresPosition(newPosition) {
-      if (this.active) {
-        this.$el.currentTime = newPosition * this.$el.duration
-      }
     },
 
     playing(newState) {
@@ -94,8 +90,20 @@ export default {
       this.controls = true
     }
 
+    this.$el.addEventListener('loadedmetadata', () => {
+      clearInterval(this.retryInterval)
+      this.attempts = 0
+      this.$emit('loadedmetadata')
+    })
+    this.$el.addEventListener('playing', () => {
+      this.$emit('playing')
+    })
+    this.$el.addEventListener('pause', () => {
+      this.$emit('pausing')
+    })
+
     const prefixes = ["", "webkit", "moz", "ms"]
-    prefixes.forEach((prefix) => {
+    prefixes.forEach(prefix => {
       this.$el.addEventListener(prefix+"fullscreenchange", () => {
         if( window.innerHeight !== screen.height) {
          this.$emit('unfullscreened')
@@ -106,27 +114,13 @@ export default {
       })
     })
 
-    this.$el.addEventListener('timeupdate',() => {
-      this.$emit('playing')
-    })
-
-    this.$el.addEventListener('loadedmetadata',() => {
-      clearInterval(this.retryInterval)
-      this.attempts = 0
-      this.$emit('loadedmetadata')
-    })
-
-    this.$el.addEventListener('ended',() => {
-      console.log('video ended')
-      this.resetRetryInterval()
-      this.$emit('ended')
-    })
-
   },
+
   beforeDestroy() {
     clearInterval(this.retryInterval)
     this.attempts = 0
   },
+
   methods: {
 
     resetRetryInterval() {
@@ -138,18 +132,19 @@ export default {
       }, 20 * 1000)
     },
 
-    src(playbackId) { return this.forcedPlaybackId ?
-      `https://stream.mux.com/${playbackId}.m3u8` :
-      `https://bbb.tbm.tudelft.nl/hls/${playbackId}.m3u8`
+    src(playbackId) {
+      return (
+        this.forcedPlaybackId ?
+          `https://stream.mux.com/${playbackId}.m3u8` :
+          `https://bbb.tbm.tudelft.nl/hls/${playbackId}.m3u8`
+      )
     },
-
 
     updateVideo() {
       const
-        playbackId = this.playbackId,
+        playbackId       = this.playbackId,
         forcedPlaybackId = this.forcedPlaybackId,
-        sourceUrl = this.src(forcedPlaybackId || playbackId),
-        video = this.$el
+        sourceUrl        = this.src(forcedPlaybackId || playbackId)
 
       console.log("* SOURCE:", sourceUrl)
 
@@ -158,18 +153,17 @@ export default {
       if (Hls.isSupported()) {
         const hls = new Hls()
         hls.loadSource(sourceUrl)
-        hls.attachMedia(video)
+        hls.attachMedia(this.$el)
         hls.on(Hls.Events.MANIFEST_PARSED, () => {
-          video.play()
+          this.$emit('playing')
         })
-
 
       // If the player can support HLS natively
 
-      } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-        video.src = sourceUrl
-        video.addEventListener('loadedmetadata', () => {
-          video.play()
+      } else if (this.$el.canPlayType('application/vnd.apple.mpegurl')) {
+        this.$el.src = sourceUrl
+        this.$el.addEventListener('loadedmetadata', () => {
+          this.$emit('playing')
         })
       }
 
@@ -188,6 +182,7 @@ video {
   max-height: 100%;
   object-fit: cover;
   animation: comein 1s ease-in;
+  border-radius: inherit;
 }
 video.fullscreen {
   object-fit: contain;
@@ -199,7 +194,8 @@ video.fullscreen {
   100% { opacity:1;}
 }
 .mobile video {
-  object-fit:unset;
-  height: unset;
+  object-fit: cover;
+  height: 100%;
+  border-radius: inherit;
 }
 </style>
