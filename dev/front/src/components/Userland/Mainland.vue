@@ -378,7 +378,7 @@ export default {
       }
     }, 1500)
 
-    document.addEventListener('keyup', (e) => {
+    document.addEventListener('keydown', (e) => {
       this.handleInput(e)
     })
 
@@ -602,10 +602,7 @@ export default {
             document.activeElement.click()
           }
         } else {
-          this.$refs.me[0].trackInput(key)
-          if (key == 13) {
-            e.preventDefault()
-          }
+          this.$refs.me[0].trackInput(key, e)
         }
       }
     },

@@ -146,6 +146,10 @@ export default {
         message.content = message.content.replace('!!!', '')
       }
 
+      if (!message.content.includes('@')) {
+        this.mention = false
+      }
+
       if (this.mention) {
         let mentions = message.content.match(/@[a-zA-Z0-9_-]*/g)
         for (let m = 0; m < mentions.length; m++) {
@@ -163,7 +167,6 @@ export default {
       if (
         message.content &&
         message.content != ' ' &&
-        message.content != '\n' &&
         !this.badWords.some(v => message.content.includes(v))
       ) {
         if ((msgs && msgs.length == 0) && (this.me.name.includes(this.me.uid))) {
@@ -254,7 +257,7 @@ export default {
 
     // handle user input, triggered from parent.
 
-    trackInput(key) {
+    trackInput(key, e) {
       let input = this.$refs.input
 
       // starting a messge with '~' will navigate
@@ -299,6 +302,7 @@ export default {
       if (key == 38) {
 
         if (msgs && msgs.length > 0) {
+          if (e) e.preventDefault()
           if (!this.current) {
             this.current = last
           } else if (previous) {
@@ -311,8 +315,8 @@ export default {
         }
 
       } else if (key == 40) {
-
         if (msgs && msgs.length > 0) {
+          if (e) e.preventDefault()
           if (this.current && next) {
             this.current = next
           }
@@ -325,6 +329,7 @@ export default {
       // the "send" action.
 
       } else if (key == 13) {
+        if (e) e.preventDefault()
         this.sendMessage()
 
 
