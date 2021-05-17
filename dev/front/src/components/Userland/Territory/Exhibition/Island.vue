@@ -144,6 +144,9 @@ export default {
 .island .header h3 {
   margin-top: calc(1 * var(--one));
 }
+.island .header h3.authors {
+  text-align: center !important;
+}
 
 .island .header .title:hover {
   text-decoration: underline;
