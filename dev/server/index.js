@@ -1,39 +1,113 @@
-const dotenv     = require('dotenv')
-const path       = require('path')
-const mongoose   = require("mongoose")
-mongoose.Promise = require("bluebird")
-const express    = require('express')
-const bodyParser = require('body-parser')
-const fallback   = require('express-history-api-fallback')
-const app        = express()
-const http       = require('http').createServer(app)
-const io         = require('socket.io')(http, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"],
-    credentials: false
-  },
-  serveClient: false,
-  perMessageDeflate: false,
-  transports: ['websocket'],
-})
+
+
+
+const
+  dotenv           = require('dotenv'),
+  path             = require('path'),
+  express          = require('express'),
+  bodyParser       = require('body-parser'),
+  fallback         = require('express-history-api-fallback'),
+  app              = express(),
+
+  http             = require('http').createServer(app),
+  io               = require('socket.io')(http, {
+    cors: {
+      origin: "*",
+      methods: ["GET", "POST"],
+      credentials: false
+    },
+    serveClient: false,
+    perMessageDeflate: false,
+    transports: ['websocket'],
+  }),
+
+  mongoose         = require("mongoose")
+  mongoose.Promise = require("bluebird")
+
+
+dotenv.config()
 
 
 // DEFAULTS
 
-dotenv.config()
-
 const
-  root         = path.resolve(__dirname, '../front/dist'),
-  port         = process.env.PORT || 3090,
-  room         = 'obfuscation',
-  maxLiveCount = 200,
-  getCount     = () => (
+
+  root             = path.resolve(__dirname, '../front/dist'),
+  port             = process.env.PORT || 3090,
+  room             = 'obfuscation',
+  maxLiveCount     = 200,
+
+  mURL             = "mongodb://localhost",
+  mPort            = process.env.MONGOPORT || 27018,
+  mOptions         = { useNewUrlParser: true, useUnifiedTopology: true },
+  User             = require("./models/User"),
+  Message          = require("./models/Message"),
+
+
+// FUNCTIONS
+
+  getCount = () => (
     io.sockets.adapter.rooms.get(room) ?
     Array.from(io.sockets.adapter.rooms.get(room)).length : 0
-  )
+  ),
 
-let count      = getCount()
+  findUserAndUpdate = (user, status) => {
+    User
+    .findOneAndUpdate(
+      { uid: user.uid },
+      user,
+      { upsert: true, new: true },
+      (err, res) => {
+        if (err) {
+          console.log(err)
+        }
+        console.log(`${user.uid} | (${user.name}) | ${status}`)
+      }
+    )
+  },
+
+  findMessageAndUpdate = message => {
+    Message
+    .findOneAndUpdate(
+      { uid: message.uid },
+      message,
+      { upsert: true, new: true },
+      (err, res) => {
+        if (err) {
+          console.log(err)
+        }
+        console.log(`${res.authorUID} | (${res.author}) | ${res.content} | sent`)
+      }
+    )
+  },
+
+  findUserAndDelete = user => {
+    User
+    .findOneAndDelete(
+      { uid: user.uid },
+      (err, res) => {
+        if (err) {
+          console.log(err)
+        }
+        console.log(`${user.uid} | (${user.name}) | deleted`)
+      }
+    )
+  },
+
+  findMessageAndDelete = message => {
+    Message
+    .findOneAndDelete(
+      { uid: message.uid },
+      (err, res) => {
+        if (err) {
+          console.log(err)
+        }
+        console.log(`${message.authorUID} | (${message.author}) | ${message.content} | deleted`)
+      }
+    )
+  }
+
+let count = getCount()
 
 
 // EXPRESS CONFIGURATION
@@ -41,60 +115,19 @@ let count      = getCount()
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*')
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+  res.header(
+    'Access-Control-Allow-Origin', '*'
+  )
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept'
+  )
   next()
 })
 app.use('/', express.static(root))
 
 
-// MONGOOSE CONFIGURATION & FUNCTIONS
-
-const
-  mURL     = "mongodb://localhost",
-  mPort    = process.env.MONGOPORT || 27018,
-  mOptions = { useNewUrlParser: true, useUnifiedTopology: true },
-  User     = require("./models/User"),
-  Message  = require("./models/Message"),
-
-  findUserAndUpdate = (user, status) => {
-    const
-      filter = { uid: user.uid },
-      update = user,
-      options = { upsert: true, new: true }
-    User.findOneAndUpdate(filter, update, options, (err, res) => {
-      if (err) console.log(err)
-      console.log(`${user.uid} | (${user.name}) | ${status}`)
-    })
-  },
-
-  findMessageAndUpdate = message => {
-    const
-      filter = { uid: message.uid },
-      update = message,
-      options = { upsert: true, new: true }
-    Message.findOneAndUpdate(filter, update, options, (err, res) => {
-      if (err) console.log(err)
-      console.log(`${res.authorUID} | (${res.author}) | ${res.content} | sent`)
-    })
-  },
-
-  findUserAndDelete = user => {
-    const conditions = { uid: user.uid }
-    User.findOneAndDelete(conditions, (err, res) => {
-      if (err) console.log(err)
-      console.log(`${user.uid} | (${user.name}) | deleted`)
-    })
-  },
-
-  findMessageAndDelete = message => {
-    const conditions = { uid: message.uid }
-    Message.findOneAndDelete(conditions, (err, res) => {
-      if (err) console.log(err)
-      console.log(`${message.authorUID} | (${message.author}) | ${message.content} | deleted`)
-    })
-  }
-
+// MONGO CONFIGURTION
 
 mongoose.connect(`${mURL}:${mPort}`, mOptions)
 mongoose.connection.on('error', () => {
@@ -110,18 +143,18 @@ mongoose.connection.once('open', () => {
 
   app.get('/users', async (req, res) => {
     User
-      .find({})
-      .then(users  =>  {
-        res.json(users)
-      })
+    .find({})
+    .then(users  =>  {
+      res.json(users)
+    })
   })
 
   app.get('/messages', async (req, res) => {
     Message
-      .find({})
-      .then(messages  =>  {
-        res.json(messages)
-      })
+    .find({})
+    .then(messages  =>  {
+      res.json(messages)
+    })
   })
 
 
@@ -212,3 +245,5 @@ mongoose.connection.once('open', () => {
   })
 
 })
+
+

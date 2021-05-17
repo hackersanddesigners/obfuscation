@@ -1,17 +1,17 @@
-import Vue from 'vue'
-import Axios from 'axios'
-import VueMarkdown from '@adapttive/vue-markdown'
-import VueSocketIOExt from 'vue-socket.io-extended'
-import { io } from 'socket.io-client'
-import VueTour from 'vue-tour'
 
-import smoothscroll from 'smoothscroll-polyfill'
 
-import App from './App'
-import router from './router'
-import store from './store'
 
-Vue.config.productionTip  = false
+import Vue             from 'vue'
+import Axios           from 'axios'
+import VueMarkdown     from '@adapttive/vue-markdown'
+import VueSocketIOExt  from 'vue-socket.io-extended'
+import { io }          from 'socket.io-client'
+import VueTour         from 'vue-tour'
+import smoothscroll    from 'smoothscroll-polyfill'
+
+import App             from './App'
+import router          from './router'
+import store           from './store'
 
 Vue.prototype.$http       = Axios
 Vue.prototype.$apiURL     = process.env.VUE_APP_API_URL
@@ -22,6 +22,8 @@ Vue.prototype.$env        = process.env.NODE_ENV
 Vue.prototype.$lifecycle  = process.env.VUE_APP_LIFECYCLE
 Vue.prototype.$version    = process.env.VUE_APP_VERSION
 
+Vue.config.productionTip  = false
+
 Vue.use(
   VueSocketIOExt,
   io(Vue.prototype.$appURL, {
@@ -31,7 +33,6 @@ Vue.use(
 )
 
 require('video.js/dist/video-js.css')
-
 require('vue-tour/dist/vue-tour.css')
 Vue.use(VueTour)
 
@@ -48,3 +49,5 @@ new Vue({
   store,
   render: h => h(App),
 }).$mount('#app')
+
+
