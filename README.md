@@ -90,7 +90,7 @@ If changes have been made and pushed to the server, re-build the admin interface
 pm2 restart API.OBFS
 ```
 
-Instructions on populating the CMS, specific to this project can be found at [dev/back].
+Instructions on populating the CMS, specific to this project can be found at [dev/back](dev/back).
 
 ### Server
 
