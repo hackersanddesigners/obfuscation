@@ -32,6 +32,9 @@ This project brings together Strapi, VueJS, SocketIO, and some parts of Big Blue
 │   │   ├── package-lock.json       │
 │   │   ├── package.json            │
 │   │   └── public                  │
+│   ├── server
+│   │   ├── index.js                │ << Express, SocketIO, Mongoose
+│   │   └── models                  | ( Database for dynamic content )
 │   ├── front                       
 │   │   ├── README.md               │ << VueJS
 │   │   ├── babel.config.js         │ ( Frontend framewwork )
@@ -43,9 +46,6 @@ This project brings together Strapi, VueJS, SocketIO, and some parts of Big Blue
 │   │   ├── public                  │
 │   │   ├── src                     │
 │   │   └── vue.config.js           │
-│   ├── server
-│   │   ├── index.js                │ << Express, SocketIO, Mongoose
-│   │   └── models                  | ( Database for dynamic content )
 │   └── tests
 │       └── socketioload.yaml       │ << Artillery ( tests ) 
 └── minimap.png
@@ -83,7 +83,7 @@ pm2 start "NODE_ENV=production npm run start" --name "API.OBFS" # name is option
 
 We are using `pm2` to manage the service. 
 
-Strapi will run on http://localhost:1337 .
+Strapi will run on http://localhost:1337.
 
 If changes have been made and pushed to the server, re-build the admin interface if necessary, and then restart the process:
 ```
@@ -94,17 +94,54 @@ Instructions on populating the CMS, specific to this project can be found at [de
 
 ### Server
 
-A node server is set-up with:
+Note that `[back](dev/back)` handles the static content only, and not the chat. For this, we create a separate Mongo database and access it in our node server scripts.
+
+#### MongoDB
+
+On your remote machine create a directory for Mongo to use as a database:
+```
+mkdir /data/obfsdb
+```
+And then, with `mongod` installed, start the chat database server:
+```
+pm2 start "mongod --dbpath /data/obfsdb/ --port 27018" --name DB.OBFS
+```
+
+#### Express, SocketIO, Mongoose
+
+With `mongod` running, start the node server:
+```
+cd dev
+pm2 start server --name OBFS
+```
+
+This scripts will use:
 - Express to serve the statically generated front-end files
 - SocketIO to handle real-time networking ( for the chat functions )
-- Mongoose to communicate with a Mongo database dedicated only to the chat
+- Mongoose to communicate with the Mongo database dedicated only to the chat
 
-
-#### Mongo
-
-#### Express & SocketIO
 #### Apache
 
+The above scripts as well as the front-end will have some load-balancing methods implemented to prevent the server from going down. However, if you are using apache, it is set to only handle 150 active connections. If you are expecting to host more visitors simultaneously, consider changing this setting or enabling the `mpm_prefork` module.
+
+```
+sudo a2enmod mpm_prefork
+```
+And then edit the `mpm_prefork` configuration file:
+```
+sudo nano /etc/apache2/mods-available/mpm_prefork.conf
+
+# my configuration
+
+<IfModule mpm_prefork_module>
+	MinSpareServers		        75
+	MaxSpareServers		        250
+  ServerLimit               250
+  StartServers              10
+  MaxRequestWorkers         1000
+  MaxConnectionsPerChild    500
+</IfModule>
+```
 
 ### Frontend
 
