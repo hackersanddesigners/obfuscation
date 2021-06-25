@@ -143,17 +143,37 @@ sudo nano /etc/apache2/mods-available/mpm_prefork.conf
 </IfModule>
 ```
 
+
 ### Frontend
 
+Make sure to add the correct URLs and PORTS for the backend in the `.env` file.
 
-### Testing
+Install the dependencies
+```
+cd dev/front
+npm install
+```
+
+Serve and hot-reload for development
+```
+npm run serve
+```
+
+Compile and minify for production
+```
+npm run build
+```
+
+After building, stage, commit and push the generated `dist` directory to the appropriate path on your remote server.
+
+## Testing
 
 
-### Authors
+## Authors
 
 [Karl](https://moubarak.eu), [Anja](https://anjagroten.info/)
 
-### License 
+## License 
 
 [Creative Commons Attribution-ShareAlike 4.0](LICENSE)
 
