@@ -122,7 +122,7 @@ This scripts will use:
 
 #### Apache
 
-The above scripts as well as the front-end will have some load-balancing methods implemented to prevent the server from going down. However, if you are using apache, it is set to only handle 150 active connections. If you are expecting to host more visitors simultaneously, consider changing this setting or enabling the `mpm_prefork` module.
+The above scripts as well as the front-end will have some load-balancing methods implemented to prevent the server from going down. However, if you are using apache, it is set to only handle 150 active connections by default. If you are expecting to host more visitors simultaneously and your hardware can handle it, consider changing this setting or enabling the `mpm_prefork` module.
 
 ```
 sudo a2enmod mpm_prefork
@@ -134,8 +134,8 @@ sudo nano /etc/apache2/mods-available/mpm_prefork.conf
 # my configuration
 
 <IfModule mpm_prefork_module>
-	MinSpareServers		        75
-	MaxSpareServers		        250
+  MinSpareServers           75
+  MaxSpareServers           250
   ServerLimit               250
   StartServers              10
   MaxRequestWorkers         1000
