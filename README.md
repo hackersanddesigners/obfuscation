@@ -60,6 +60,7 @@ Using Strapi to create a framework-agnostic API with a draft/publish system for 
 
 First, on your local device:
 ```
+cd dev/back
 npm install
 ```
 Then, 
@@ -69,13 +70,12 @@ npm run develop
 
 Here, you can make changes to the API, add and remove extensions, change user roles, etc... Please note, removing a property from an object could delete all the entries from the database for that object.
 
-Then stage, commit and push your changes to the remote server.
+Then stage, commit and push your changes to your remote server.
 
-The initial set up starts with the build command:
+On the remote server, the initial set up starts with the build command:
 ```
 NODE_ENV=production npm run build
 ```
-
 Then,
 ```
 pm2 start "NODE_ENV=production npm run start" --name "API.OBFS" # name is optional
@@ -89,6 +89,8 @@ If changes have been made and pushed to the server, re-build the admin interface
 ```
 pm2 restart API.OBFS
 ```
+
+Instructions on populating the CMS, specific to this project can be found at [dev/back].
 
 ### Server
 
