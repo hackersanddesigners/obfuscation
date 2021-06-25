@@ -2,7 +2,7 @@
 
 Website (platform, platframe, tool convergence, realm, etc...) for the 3rd Workshop on Obfuscation.
 
->>> https://3rd.obfuscationworkshop.org/ <<<
+-> https://3rd.obfuscationworkshop.org/ <-
 
 ![](minimap.png)
 ## Introduction
