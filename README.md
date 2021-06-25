@@ -11,43 +11,43 @@ This project brings together Strapi, VueJS, SocketIO, and some parts of Big Blue
 
 ## Project Structure
 
-```sh
+```
+# some files ommitted
 ├── LICENSE
 ├── README.md
 ├── dev
-│   ├── back
-│   │   ├── README.md
-│   │   ├── api
-│   │   ├── build
-│   │   ├── components
-│   │   ├── config
-│   │   ├── extensions
-│   │   ├── favicon.ico
-│   │   ├── node_modules
-│   │   ├── package-lock.json
-│   │   ├── package.json
-│   │   └── public
-│   ├── front
-│   │   ├── README.md
-│   │   ├── babel.config.js
-│   │   ├── dist
-│   │   ├── logs
-│   │   ├── node_modules
-│   │   ├── package-lock.json
-│   │   ├── package.json
-│   │   ├── public
-│   │   ├── src
-│   │   └── vue.config.js
-│   ├── node_modules
 │   ├── package-lock.json
 │   ├── package.json
+│   ├── node_modules
+│   ├── back
+│   │   ├── README.md               │ << Strapi 
+│   │   ├── api                     │ Database for static content
+│   │   ├── build                   │   
+│   │   ├── components              │
+│   │   ├── config                  │
+│   │   ├── extensions              │
+│   │   ├── favicon.ico             │
+│   │   ├── node_modules            │
+│   │   ├── package-lock.json       │
+│   │   ├── package.json            │
+│   │   └── public                  │
+│   ├── front
+│   │   ├── README.md               │ << VueJS
+│   │   ├── babel.config.js         │ Frontend framewwork
+│   │   ├── dist                    │
+│   │   ├── logs                    │
+│   │   ├── node_modules            │
+│   │   ├── package-lock.json       │
+│   │   ├── package.json            │
+│   │   ├── public                  │
+│   │   ├── src                     │
+│   │   └── vue.config.js           │
 │   ├── server
-│   │   ├── index.js
-│   │   └── models
+│   │   ├── index.js                │ << Express, SocketIO, Mongoose
+│   │   └── models                  | Database for dynamic content
 │   └── tests
-│       └── socketioload.yaml
-├── minimap.png
-└── package-lock.json
+│       └── socketioload.yaml       │ << Artillery ( tests ) 
+└── minimap.png
 ```
 ## Development
 
