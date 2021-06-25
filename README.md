@@ -168,14 +168,14 @@ After building, stage, commit and push the generated `dist` directory to the app
 
 ## Testing
 
-We are using artillery to run stress-tests on the Socket server, so make sure you have the right URL in `tests/socketioload.yaml`, and then run the tests:
+We are using Artillery to run stress-tests on the Socket server, so make sure you have the right URL in `tests/socketioload.yaml`, and then run the tests:
 
 ```
 cd dev/tests
 artillery run socketioload.yaml 
 ```
 
-Reconfigure apache and/or the load-balancing values of the server/client files accordingly.
+Reconfigure Apache and/or the load-balancing values of the server/client files accordingly.
 
 ## Authors
 
