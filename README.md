@@ -94,7 +94,7 @@ Instructions on populating the CMS, specific to this project can be found at [de
 
 ### Server
 
-Note that `[back](dev/back)` handles the static content only, and not the chat. For this, we create a separate Mongo database and access it in our node server scripts.
+Note that Strapi only handles the static content, and not the chat. For this, we create a separate Mongo database and access it in our node server scripts.
 
 #### MongoDB
 
