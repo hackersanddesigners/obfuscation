@@ -1,3 +1,9 @@
+backup
+.vscode
+.nuxt
+.env
+.data
+
 ############################
 # OS X
 ############################
@@ -5,10 +11,10 @@
 .DS_Store
 .AppleDouble
 .LSOverride
-Icon
+Icon*
 .Spotlight-V100
 .Trashes
-._*
+._
 
 
 ############################
@@ -109,12 +115,3 @@ coverage
 exports
 .cache
 build
-
-# Custom
-.vscode
-#dist
-.nuxt
-.env
-
-
-.data

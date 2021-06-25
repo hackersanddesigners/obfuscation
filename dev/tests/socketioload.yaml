@@ -7,15 +7,10 @@ config:
   engines:
    socketio-v3: {}
   phases:
-    - duration: 2000 # Run scenario for 30 seconds
-      arrivalCount: 1000 # Create 400 virtual users per scenario
+    - duration: 2000 
+      arrivalCount: 1000
       name: Warm up
-    # - duration: 3600 # Run scenario for 30 seconds
-    #   arrivalCount: 0.5 # Create 400 virtual users per scenario
-    #   name: Waiters
-
 scenarios:
-  # - engine: "socketio"
   - engine: socketio-v3
     flow:
       - emit:
@@ -29,7 +24,7 @@ scenarios:
             "connected":true,
             "deleted":false
           }
-      - think: 0.5 # do nothing for 5 seconds, then disconnect
+      - think: 0.5 
       - emit:
           channel: "appearance"
           data: {
@@ -41,7 +36,7 @@ scenarios:
             "connected":true,
             "deleted":false
           }
-      - think: 0.5 # do nothing for 5 seconds, then disconnect
+      - think: 0.5 
       - emit:
           channel: "appearance"
           data: {
@@ -52,7 +47,7 @@ scenarios:
             "color": "blue",
             "connected":true,
           }
-      - think: 0.5 # do nothing for 5 seconds, then disconnect
+      - think: 0.5
       - emit:
           channel: "appearance"
           data: {
@@ -64,4 +59,4 @@ scenarios:
             "connected":false,
             "deleted":false
           }
-      - think: 30 # do nothing for 5 seconds, then disconnect
+      - think: 30 

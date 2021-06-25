@@ -58,9 +58,7 @@ const
       user,
       { upsert: true, new: true },
       (err, res) => {
-        if (err) {
-          console.log(err)
-        }
+        if (err) console.log(err)
         console.log(`${user.uid} | (${user.name}) | ${status}`)
       }
     )
@@ -73,9 +71,7 @@ const
       message,
       { upsert: true, new: true },
       (err, res) => {
-        if (err) {
-          console.log(err)
-        }
+        if (err) console.log(err)
         console.log(`${res.authorUID} | (${res.author}) | ${res.content} | sent`)
       }
     )
@@ -86,9 +82,7 @@ const
     .findOneAndDelete(
       { uid: user.uid },
       (err, res) => {
-        if (err) {
-          console.log(err)
-        }
+        if (err) console.log(err)
         console.log(`${user.uid} | (${user.name}) | deleted`)
       }
     )
@@ -99,9 +93,7 @@ const
     .findOneAndDelete(
       { uid: message.uid },
       (err, res) => {
-        if (err) {
-          console.log(err)
-        }
+        if (err) console.log(err)
         console.log(`${message.authorUID} | (${message.author}) | ${message.content} | deleted`)
       }
     )
@@ -130,9 +122,11 @@ app.use('/', express.static(root))
 // MONGO CONFIGURTION
 
 mongoose.connect(`${mURL}:${mPort}`, mOptions)
+
 mongoose.connection.on('error', () => {
   console.log('Failed to connect to MongoDB')
 })
+
 mongoose.connection.once('open', () => {
   console.log('')
   console.log('**************************************')
@@ -144,7 +138,7 @@ mongoose.connection.once('open', () => {
   app.get('/users', async (req, res) => {
     User
     .find({})
-    .then(users  =>  {
+    .then(users => {
       res.json(users)
     })
   })
@@ -160,7 +154,14 @@ mongoose.connection.once('open', () => {
 
   // IMPORTANT TO SET THE FALLBACK AFTER THE REQUESTS
 
-  app.use(fallback('index.html', { root }))
+  app.use(
+    fallback(
+      'index.html', 
+      { 
+        root 
+      }
+    )
+  )
 
 
   // SOCKETS
@@ -170,6 +171,7 @@ mongoose.connection.once('open', () => {
     socket.join(room)
 
     count = getCount()
+    
     console.log(socket.id, 'connected, total:', count)
 
     if (count < maxLiveCount + 10) {
