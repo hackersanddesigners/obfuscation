@@ -13,6 +13,7 @@ This project brings together Strapi, VueJS, SocketIO, and some parts of Big Blue
 
 ```
 # some files ommitted
+
 ├── LICENSE
 ├── README.md
 ├── dev
@@ -20,7 +21,7 @@ This project brings together Strapi, VueJS, SocketIO, and some parts of Big Blue
 │   ├── package.json
 │   ├── node_modules
 │   ├── back
-│   │   ├── README.md               │ << Strapi 
+│   │   ├── README.md               │ << Strapi, Mongoose 
 │   │   ├── api                     │ ( CMS & Database for static content )
 │   │   ├── build                   │ 
 │   │   ├── components              │
@@ -51,15 +52,57 @@ This project brings together Strapi, VueJS, SocketIO, and some parts of Big Blue
 ```
 ## Development
 
+There needs to be several running processes.
+
+### Backend
+
+Using Strapi to create a framework-agnostic API with a draft/publish system for static content.
+
+First, on your local device:
+```
+npm install
+```
+Then, 
+```
+npm run develop
+```
+
+Here, you can make changes to the API, add and remove extensions, change user roles, etc... Please note, removing a property from an object could delete all the entries from the database for that object.
+
+Then stage, commit and push your changes to the remote server.
+
+The initial set up starts with the build command:
+```
+NODE_ENV=production npm run build
+```
+
+Then,
+```
+pm2 start "NODE_ENV=production npm run start" --name "API.OBFS" # name is optional
+```
+
+We are using `pm2` to manage the service. 
+
+Strapi will run on http://localhost:1337 .
+
+If changes have been made and pushed to the server, re-build the admin interface if necessary, and then restart the process:
+```
+pm2 restart API.OBFS
+```
 
 ### Server
+
+A node server is set-up with:
+- Express to serve the statically generated front-end files
+- SocketIO to handle real-time networking ( for the chat functions )
+- Mongoose to communicate with a Mongo database dedicated only to the chat
+
 
 #### Mongo
 
 #### Express & SocketIO
 #### Apache
 
-### Backend
 
 ### Frontend
 
