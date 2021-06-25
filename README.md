@@ -21,8 +21,8 @@ This project brings together Strapi, VueJS, SocketIO, and some parts of Big Blue
 │   ├── node_modules
 │   ├── back
 │   │   ├── README.md               │ << Strapi 
-│   │   ├── api                     │ Database for static content
-│   │   ├── build                   │   
+│   │   ├── api                     │ ( CMS & Database for static content )
+│   │   ├── build                   │ 
 │   │   ├── components              │
 │   │   ├── config                  │
 │   │   ├── extensions              │
@@ -31,9 +31,9 @@ This project brings together Strapi, VueJS, SocketIO, and some parts of Big Blue
 │   │   ├── package-lock.json       │
 │   │   ├── package.json            │
 │   │   └── public                  │
-│   ├── front
+│   ├── front                       
 │   │   ├── README.md               │ << VueJS
-│   │   ├── babel.config.js         │ Frontend framewwork
+│   │   ├── babel.config.js         │ ( Frontend framewwork )
 │   │   ├── dist                    │
 │   │   ├── logs                    │
 │   │   ├── node_modules            │
@@ -44,7 +44,7 @@ This project brings together Strapi, VueJS, SocketIO, and some parts of Big Blue
 │   │   └── vue.config.js           │
 │   ├── server
 │   │   ├── index.js                │ << Express, SocketIO, Mongoose
-│   │   └── models                  | Database for dynamic content
+│   │   └── models                  | ( Database for dynamic content )
 │   └── tests
 │       └── socketioload.yaml       │ << Artillery ( tests ) 
 └── minimap.png
