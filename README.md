@@ -4,7 +4,7 @@ Website (platform, platframe, tool convergence, realm, etc...) for the 3rd Works
 
 -> https://3rd.obfuscationworkshop.org/ <-
 
-![](minimap.png)
+![](screenshot.png)
 ## Introduction
 
 This project brings together Strapi, VueJS, SocketIO, and some parts of Big Blue Button to leverage an obfuscated yet accessible platform for the 3rd Workshop on Obfuscation, which took place on May 4 & 7, 2021.
@@ -48,7 +48,7 @@ This project brings together Strapi, VueJS, SocketIO, and some parts of Big Blue
 │   │   └── vue.config.js           │
 │   └── tests
 │       └── socketioload.yaml       │ << Artillery ( tests ) 
-└── minimap.png
+└── screenshot.png
 ```
 ## Development
 
